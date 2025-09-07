@@ -1,9 +1,10 @@
-# 📅 DAY 38: THURSDAY - AI Memory and Context
+# 📅 DAY 38: THURSDAY - AI Memory, Context & RAG
 
 ## 🎯 TODAY'S OBJECTIVES
 - Learn AI memory concepts
 - Implement long-term memory systems
 - Build context management
+- Master RAG (Retrieval-Augmented Generation)
 - Master memory optimization
 
 ## ⏰ TIME ALLOCATION
@@ -16,25 +17,28 @@
 
 ## 🌅 MORNING SESSION (1 hour)
 
-### **📹 Video Lesson: "AI Memory and Context"**
+### **📹 Video Lesson: "AI Memory, Context & RAG"**
 **Duration:** 45 minutes
 
 #### **What You'll Learn:**
 - AI memory fundamentals
 - Long-term memory systems
 - Context management
+- RAG (Retrieval-Augmented Generation)
 - Memory optimization
 
 #### **Key Concepts:**
 - **AI Memory:** Storing and retrieving information
 - **Long-term Memory:** Persistent information storage
 - **Context Management:** Managing conversation context
+- **RAG:** Retrieval-Augmented Generation for intelligent responses
 - **Memory Optimization:** Efficient memory usage
 
 #### **Take Notes On:**
 - 5 AI memory concepts
 - Long-term memory techniques
 - Context management strategies
+- RAG implementation patterns
 - Memory optimization methods
 
 ---
@@ -42,16 +46,18 @@
 ### **📖 Reading Assignment**
 **Duration:** 15 minutes
 
-#### **Read: "AI Memory Guide"**
+#### **Read: "AI Memory & RAG Guide"**
 - AI memory fundamentals
 - Long-term memory systems
 - Context management
+- RAG implementation patterns
 - Best practices
 
 #### **Key Takeaways:**
 - AI memory enables persistent learning
 - Long-term memory stores important information
 - Context management improves responses
+- RAG combines retrieval with generation for intelligent responses
 - Memory optimization improves performance
 
 ---
@@ -110,6 +116,154 @@
    - Learning optimization
    - Memory consolidation
 
+4. **RAG Implementation**
+   - Document retrieval
+   - Context augmentation
+   - Intelligent generation
+   - Knowledge synthesis
+
+---
+
+### **🔍 RAG Example: "Intelligent Document Assistant"**
+**Duration:** 30 minutes
+
+#### **Task: Build RAG System**
+
+**Create This RAG Pattern:**
+
+1. **Document Retrieval System**
+   - Set up document storage
+   - Implement search indexing
+   - Build retrieval queries
+   - Test document retrieval
+
+2. **Context Augmentation**
+   - Combine retrieved docs with user query
+   - Build context prompts
+   - Implement context optimization
+   - Test context building
+
+3. **Intelligent Generation**
+   - Generate responses using retrieved context
+   - Implement response synthesis
+   - Add source citations
+   - Test intelligent responses
+
+#### **RAG Workflow Example:**
+```json
+{
+  "name": "RAG Document Assistant",
+  "description": "Retrieval-Augmented Generation system for intelligent document assistance",
+  "nodes": [
+    {
+      "name": "User Query Input",
+      "type": "n8n-nodes-base.webhook",
+      "parameters": {
+        "path": "rag-query",
+        "httpMethod": "POST"
+      }
+    },
+    {
+      "name": "Process Query",
+      "type": "n8n-nodes-base.set",
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "name": "user_query",
+              "value": "={{ $json.query }}"
+            },
+            {
+              "name": "query_type",
+              "value": "document_search"
+            },
+            {
+              "name": "max_results",
+              "value": "5"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "name": "Retrieve Documents",
+      "type": "n8n-nodes-base.httpRequest",
+      "parameters": {
+        "method": "POST",
+        "url": "https://api.document-search.com/search",
+        "bodyContentType": "json",
+        "jsonBody": "={{ { \"query\": $json.user_query, \"max_results\": $json.max_results, \"search_type\": \"semantic\" } }}"
+      }
+    },
+    {
+      "name": "Build Context",
+      "type": "n8n-nodes-base.set",
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "name": "retrieved_docs",
+              "value": "={{ $json.documents }}"
+            },
+            {
+              "name": "context_prompt",
+              "value": "={{ 'Based on the following documents:\\n\\n' + $json.documents.map(doc => `Document: ${doc.title}\\nContent: ${doc.content}\\n\\n`).join('') + '\\nUser Question: ' + $json.user_query + '\\n\\nPlease provide a comprehensive answer based on the retrieved documents.' }}"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "name": "Generate Response",
+      "type": "n8n-nodes-base.openAi",
+      "parameters": {
+        "resource": "chat",
+        "operation": "create",
+        "model": "gpt-4",
+        "messages": {
+          "values": [
+            {
+              "role": "system",
+              "content": "You are an intelligent document assistant. Use the provided documents to answer user questions accurately and comprehensively. Always cite sources when possible."
+            },
+            {
+              "role": "user",
+              "content": "={{ $json.context_prompt }}"
+            }
+          ]
+        },
+        "options": {
+          "temperature": 0.3,
+          "maxTokens": 1000
+        }
+      }
+    },
+    {
+      "name": "Format Response",
+      "type": "n8n-nodes-base.set",
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "name": "ai_response",
+              "value": "={{ $json.choices[0].message.content }}"
+            },
+            {
+              "name": "sources",
+              "value": "={{ $json.retrieved_docs.map(doc => doc.title) }}"
+            },
+            {
+              "name": "final_response",
+              "value": "={{ { \"answer\": $json.ai_response, \"sources\": $json.sources, \"query\": $json.user_query, \"timestamp\": $now } }}"
+            }
+          ]
+        }
+      }
+    }
+  ]
+}
+```
+
 ---
 
 ## 🌙 EVENING SESSION (30 minutes)
@@ -117,12 +271,13 @@
 ### **📸 Share Your AI Memory System**
 **Duration:** 20 minutes
 
-#### **Community Post: "My AI Memory System!"**
+#### **Community Post: "My AI Memory & RAG System!"**
 
 **Share:**
 - Screenshots of your memory system
 - Description of memory features
 - Context management
+- RAG implementation
 - Performance improvements
 
 #### **Post Template:**
@@ -141,6 +296,7 @@ Day 38 Complete! 🎉
 - Conversation memory
 - Knowledge memory
 - Learning memory
+- RAG implementation
 - Memory optimization
 
 **Performance:**
@@ -175,9 +331,9 @@ Ready for Day 39! 🚀
 
 ## 📝 DAILY TASK
 
-### **🎯 Main Task: Build AI Memory and Context System**
+### **🎯 Main Task: Build AI Memory, Context & RAG System**
 
-**Create a comprehensive AI memory system with context management.**
+**Create a comprehensive AI memory system with context management and RAG implementation.**
 
 #### **AI Memory and Context System:**
 ```json
