@@ -6,14 +6,16 @@
 [![Duration](https://img.shields.io/badge/Duration-15%20Weeks-blue)](https://github.com/sagebeme/n8n-workflows)
 [![Level](https://img.shields.io/badge/Level-Beginner%20to%20Expert-orange)](https://github.com/sagebeme/n8n-workflows)
 [![Workflows](https://img.shields.io/badge/Example%20Workflows-60-purple)](https://github.com/sagebeme/n8n-workflows)
+[![RAG](https://img.shields.io/badge/RAG-Enabled-green)](https://github.com/sagebeme/n8n-workflows)
 
 ## 🎯 COURSE OVERVIEW
 
-**Automator Pro** is a comprehensive 15-week course designed to take complete beginners from zero automation knowledge to building their own profitable automation business using n8n and AI agents.
+**Automator Pro** is a comprehensive 15-week course designed to take complete beginners from zero automation knowledge to building their own profitable automation business using n8n, AI agents, and cutting-edge RAG technology.
 
 ### ✨ **What You'll Achieve:**
 - 🏗️ **Build 50+ automation workflows** from scratch
 - 🤖 **Integrate AI agents** into your workflows
+- 🧠 **Master RAG (Retrieval-Augmented Generation)** for intelligent automation
 - 💼 **Start your automation business** and get your first client
 - 📈 **Scale to agency level** with team management
 - 🎓 **Graduate as an automation expert** ready for the market
@@ -44,7 +46,7 @@
 - **Week 5:** Production deployment, monitoring, maintenance
 
 ### **🤖 PHASE 3: AI INTEGRATION (Weeks 6-8)**
-- **Week 6:** AI agents, ChatGPT integration, LLM providers
+- **Week 6:** AI agents, ChatGPT integration, LLM providers, **RAG implementation**
 - **Week 7:** Advanced AI patterns, optimization, intelligent systems
 - **Week 8:** AI deployment, maintenance, scaling
 
@@ -128,6 +130,7 @@ Each day includes:
 - **Claude** - Anthropic's AI models
 - **Mistral** - Open-source AI models
 - **Local LLMs** - Self-hosted AI solutions
+- **RAG (Retrieval-Augmented Generation)** - Advanced AI with document retrieval
 - **Vector Databases** - Pinecone, Qdrant
 
 ### **Business Tools:**
@@ -148,6 +151,7 @@ By the end of this course, you will be able to:
 - ✅ Install and configure n8n on your own server
 - ✅ Build complex automation workflows from scratch
 - ✅ Integrate AI agents into your workflows
+- ✅ Implement RAG (Retrieval-Augmented Generation) systems
 - ✅ Connect real-world tools and APIs
 - ✅ Debug, optimize, and scale automation systems
 
