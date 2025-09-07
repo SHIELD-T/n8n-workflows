@@ -70,9 +70,6 @@ n8n-workflows/
 ├── 📋 AUTOMATOR_PRO_COURSE_OVERVIEW.md     # Complete course overview
 ├── 📚 COURSE_STRUCTURE_OVERVIEW.md         # Detailed structure guide
 ├── 📖 README.md                            # This file
-├── 🐍 enhance_course_workflows.py          # Course workflow enhancement script
-├── 🐍 enhance_workflows.py                 # Original workflow enhancement script
-├── 🐍 merge_enhancements.py                 # Merge enhancements script
 │
 ├── 🏗️ WEEK_01_FOUNDATION/
 │   ├── README.md                           # Week overview
@@ -99,35 +96,6 @@ n8n-workflows/
 
 ---
 
-## 🛠️ PYTHON ENHANCEMENT SCRIPTS
-
-This repository includes powerful Python scripts to enhance workflow metadata and create comprehensive indexes:
-
-### **📊 Scripts Overview:**
-
-| **Script** | **Purpose** | **Effectiveness** |
-|------------|-------------|-------------------|
-| `enhance_course_workflows.py` | **Course-specific enhancement** | ⭐⭐⭐⭐⭐ **Highly Effective** |
-| `enhance_workflows.py` | **General workflow enhancement** | ⭐⭐⭐ **Moderately Effective** |
-| `merge_enhancements.py` | **Merge enhanced metadata** | ⭐⭐⭐ **Moderately Effective** |
-
-### **🚀 Recommended Usage:**
-
-1. **Run Course Enhancement Script:**
-   ```bash
-   python3 enhance_course_workflows.py
-   ```
-   - Enhances all 60 course workflows with proper metadata
-   - Creates course-specific tags and descriptions
-   - Generates comprehensive course workflow index
-
-2. **Benefits:**
-   - ✅ **Enhanced Metadata**: Each workflow gets proper course context
-   - ✅ **Smart Categorization**: Workflows tagged by week and phase
-   - ✅ **Learning Objectives**: Clear learning goals for each workflow
-   - ✅ **Prerequisites**: Required knowledge for each workflow
-   - ✅ **Use Cases**: Real-world applications
-   - ✅ **Course Index**: Comprehensive workflow catalog
 
 ---
 
@@ -221,17 +189,6 @@ By the end of this course, you will be able to:
 5. **Join the community** - Connect with other learners
 6. **Graduate and launch** - Start your automation business
 
-### **4. Enhancement Script Usage:**
-```bash
-# Enhance all course workflows with metadata
-python3 enhance_course_workflows.py
-
-# This will:
-# - Add course-specific metadata to all workflows
-# - Create proper tags and descriptions
-# - Generate learning objectives and prerequisites
-# - Create comprehensive course workflow index
-```
 
 ---
 
@@ -290,7 +247,6 @@ python3 enhance_course_workflows.py
 - 📚 **[Structure Guide](COURSE_STRUCTURE_OVERVIEW.md)** - Weekly breakdown
 - 🏗️ **[Week 1: Foundation](WEEK_01_FOUNDATION/README.md)** - Start here
 - 🎓 **[Week 15: Graduation](WEEK_15_GRADUATION/README.md)** - Course completion
-- 🐍 **[Enhancement Script](enhance_course_workflows.py)** - Workflow enhancement
 
 ---
 
@@ -322,4 +278,4 @@ Special thanks to the n8n community, AI model providers, and all the automation 
 *Last updated: September 2024*
 *Course version: 1.0*
 *Total content: 15 weeks, 105 daily tasks, 60 example workflows*
-*Enhanced with Python scripts for optimal learning experience*
+*Complete automation course with enhanced workflows and comprehensive documentation*
