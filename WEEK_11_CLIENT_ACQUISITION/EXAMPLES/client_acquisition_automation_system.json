@@ -1,0 +1,360 @@
+{
+  "name": "Client Acquisition Automation System",
+  "description": "Automated workflow for Client Acquisition phase learning objectives with intelligent processing and error handling.",
+  "tags": [
+    "marketing",
+    "business",
+    "acquisition",
+    "clients"
+  ],
+  "version": "1.0.0",
+  "author": "Automator Pro Course",
+  "course_metadata": {
+    "week": "Week 11",
+    "phase": "Client Acquisition",
+    "difficulty": "Advanced",
+    "learning_objectives": [
+      "Client acquisition",
+      "Service packaging",
+      "Portfolio building"
+    ],
+    "prerequisites": [
+      "Technical skills",
+      "Business interest",
+      "Client interaction skills"
+    ],
+    "estimated_setup_time": "10-20 minutes",
+    "use_cases": [
+      "Practice Client Acquisition concepts",
+      "Build real-world automation skills",
+      "Prepare for business applications",
+      "Demonstrate course learning objectives"
+    ],
+    "examples": [
+      "Use this workflow to practice Client Acquisition skills",
+      "Customize for your specific learning needs",
+      "Apply concepts to real business scenarios",
+      "Build upon for advanced implementations"
+    ],
+    "next_steps": [
+      "Complete Week 12 objectives",
+      "Practice with additional examples",
+      "Apply skills to real projects"
+    ],
+    "related_workflows": [
+      "Week 12 workflows",
+      "Previous week workflows",
+      "Course example workflows"
+    ]
+  },
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "course-Week 11-client_acquisition_automation_system",
+    "course_version": "1.0",
+    "last_updated": "2025-09-07T14:31:14.419960"
+  },
+  "nodes": [
+    {
+      "parameters": {
+        "path": "client-acquisition",
+        "httpMethod": "POST"
+      },
+      "name": "Client Acquisition Trigger",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 1,
+      "position": [
+        240,
+        300
+      ]
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "name": "lead_id",
+              "value": "={{ $now.format('YYYYMMDDHHmmss') }}"
+            },
+            {
+              "name": "lead_source",
+              "value": "={{ $json.lead_source }}"
+            },
+            {
+              "name": "company_name",
+              "value": "={{ $json.company_name }}"
+            },
+            {
+              "name": "contact_name",
+              "value": "={{ $json.contact_name }}"
+            },
+            {
+              "name": "email",
+              "value": "={{ $json.email }}"
+            },
+            {
+              "name": "phone",
+              "value": "={{ $json.phone }}"
+            },
+            {
+              "name": "company_size",
+              "value": "={{ $json.company_size }}"
+            },
+            {
+              "name": "industry",
+              "value": "={{ $json.industry }}"
+            },
+            {
+              "name": "pain_points",
+              "value": "={{ $json.pain_points }}"
+            }
+          ]
+        }
+      },
+      "name": "Process Lead Data",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 1,
+      "position": [
+        460,
+        300
+      ]
+    },
+    {
+      "parameters": {
+        "resource": "chat",
+        "operation": "create",
+        "model": "gpt-4",
+        "messages": {
+          "values": [
+            {
+              "role": "system",
+              "content": "You are a client acquisition specialist that analyzes leads and generates personalized outreach strategies."
+            },
+            {
+              "role": "user",
+              "content": "={{ 'Analyze this lead for client acquisition:\\nCompany: ' + $json.company_name + '\\nContact: ' + $json.contact_name + '\\nIndustry: ' + $json.industry + '\\nCompany Size: ' + $json.company_size + '\\nPain Points: ' + $json.pain_points + '\\n\\nGenerate: lead qualification score, recommended service package, personalized outreach message, and next steps.' }}"
+            }
+          ]
+        }
+      },
+      "name": "AI Lead Analysis",
+      "type": "n8n-nodes-base.openAi",
+      "typeVersion": 1,
+      "position": [
+        680,
+        300
+      ]
+    },
+    {
+      "parameters": {
+        "operation": "create",
+        "base": "your_base_id",
+        "table": "Client Leads",
+        "fields": {
+          "Lead ID": "={{ $json.lead_id }}",
+          "Lead Source": "={{ $json.lead_source }}",
+          "Company Name": "={{ $json.company_name }}",
+          "Contact Name": "={{ $json.contact_name }}",
+          "Email": "={{ $json.email }}",
+          "Phone": "={{ $json.phone }}",
+          "Company Size": "={{ $json.company_size }}",
+          "Industry": "={{ $json.industry }}",
+          "Pain Points": "={{ $json.pain_points }}",
+          "AI Analysis": "={{ $json.choices[0].message.content }}",
+          "Status": "New",
+          "Created At": "={{ $now }}"
+        }
+      },
+      "name": "Store Lead Data",
+      "type": "n8n-nodes-base.airtable",
+      "typeVersion": 1,
+      "position": [
+        900,
+        300
+      ]
+    },
+    {
+      "parameters": {
+        "operation": "send",
+        "toEmail": "={{ $json.email }}",
+        "subject": "={{ 'Automation Opportunity for ' + $json.company_name }}",
+        "message": "={{ 'Hi ' + $json.contact_name + ',\\n\\nI noticed ' + $json.company_name + ' is in the ' + $json.industry + ' industry, and I believe there\\'s a significant opportunity to automate your processes and save your team valuable time.\\n\\nBased on your company size and industry, I\\'ve helped similar businesses save 10+ hours per week through automation.\\n\\nWould you be interested in a brief 15-minute call to discuss how automation could benefit ' + $json.company_name + '?\\n\\nBest regards,\\n[Your Name]' }}"
+      },
+      "name": "Send Initial Outreach",
+      "type": "n8n-nodes-base.gmail",
+      "typeVersion": 1,
+      "position": [
+        1120,
+        300
+      ]
+    },
+    {
+      "parameters": {
+        "operation": "postMessage",
+        "channel": "#sales-leads",
+        "text": "={{ '🎯 New Lead Generated\\nCompany: ' + $json.company_name + '\\nContact: ' + $json.contact_name + '\\nIndustry: ' + $json.industry + '\\nCompany Size: ' + $json.company_size + '\\nPain Points: ' + $json.pain_points + '\\nLead ID: ' + $json.lead_id }}"
+      },
+      "name": "Notify Sales Team",
+      "type": "n8n-nodes-base.slack",
+      "typeVersion": 1,
+      "position": [
+        1340,
+        300
+      ]
+    },
+    {
+      "parameters": {
+        "operation": "create",
+        "databaseId": "your_database_id",
+        "fields": {
+          "Title": "={{ 'Follow up with ' + $json.contact_name + ' (' + $json.company_name + ')' }}",
+          "Lead ID": "={{ $json.lead_id }}",
+          "Company": "={{ $json.company_name }}",
+          "Contact": "={{ $json.contact_name }}",
+          "Industry": "={{ $json.industry }}",
+          "Priority": "High",
+          "Due Date": "={{ $now.plus({ hours: 24 }) }}",
+          "Status": "To Do",
+          "Assigned To": "Sales Team"
+        }
+      },
+      "name": "Create Follow-up Task",
+      "type": "n8n-nodes-base.notion",
+      "typeVersion": 1,
+      "position": [
+        1560,
+        300
+      ]
+    },
+    {
+      "parameters": {
+        "operation": "sendMessage",
+        "chatId": "your_chat_id",
+        "text": "={{ '📈 New Lead: ' + $json.company_name + '\\nContact: ' + $json.contact_name + '\\nIndustry: ' + $json.industry + '\\nLead ID: ' + $json.lead_id }}"
+      },
+      "name": "Send Telegram Alert",
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1,
+      "position": [
+        1780,
+        300
+      ]
+    },
+    {
+      "parameters": {
+        "operation": "update",
+        "base": "your_base_id",
+        "table": "Client Leads",
+        "recordId": "={{ $json.lead_id }}",
+        "fields": {
+          "Status": "Outreach Sent",
+          "Outreach Sent At": "={{ $now }}",
+          "Next Action": "Follow up in 24 hours"
+        }
+      },
+      "name": "Update Lead Status",
+      "type": "n8n-nodes-base.airtable",
+      "typeVersion": 1,
+      "position": [
+        2000,
+        300
+      ]
+    }
+  ],
+  "connections": {
+    "Client Acquisition Trigger": {
+      "main": [
+        [
+          {
+            "node": "Process Lead Data",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Process Lead Data": {
+      "main": [
+        [
+          {
+            "node": "AI Lead Analysis",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "AI Lead Analysis": {
+      "main": [
+        [
+          {
+            "node": "Store Lead Data",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Store Lead Data": {
+      "main": [
+        [
+          {
+            "node": "Send Initial Outreach",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Send Initial Outreach": {
+      "main": [
+        [
+          {
+            "node": "Notify Sales Team",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Notify Sales Team": {
+      "main": [
+        [
+          {
+            "node": "Create Follow-up Task",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Create Follow-up Task": {
+      "main": [
+        [
+          {
+            "node": "Send Telegram Alert",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Send Telegram Alert": {
+      "main": [
+        [
+          {
+            "node": "Update Lead Status",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "pinData": {},
+  "versionId": "1",
+  "id": "client_acquisition_automation_system"
+}

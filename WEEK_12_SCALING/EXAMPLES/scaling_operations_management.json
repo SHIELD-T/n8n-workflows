@@ -1,0 +1,214 @@
+{
+  "name": "Scaling Operations Management",
+  "description": "Manage scaling operations with automated resource allocation and performance optimization.",
+  "tags": [
+    "management",
+    "growth",
+    "operations",
+    "scaling"
+  ],
+  "version": "1.0.0",
+  "author": "Automator Pro Course",
+  "course_metadata": {
+    "week": "Week 12",
+    "phase": "Scaling",
+    "difficulty": "Advanced",
+    "learning_objectives": [
+      "Scaling strategies",
+      "Template creation",
+      "Team building"
+    ],
+    "prerequisites": [
+      "Technical skills",
+      "Business interest",
+      "Client interaction skills"
+    ],
+    "estimated_setup_time": "5-10 minutes",
+    "use_cases": [
+      "Practice Scaling concepts",
+      "Build real-world automation skills",
+      "Prepare for business applications",
+      "Demonstrate course learning objectives"
+    ],
+    "examples": [
+      "Use this workflow to practice Scaling skills",
+      "Customize for your specific learning needs",
+      "Apply concepts to real business scenarios",
+      "Build upon for advanced implementations"
+    ],
+    "next_steps": [
+      "Complete Week 13 objectives",
+      "Practice with additional examples",
+      "Apply skills to real projects"
+    ],
+    "related_workflows": [
+      "Week 13 workflows",
+      "Previous week workflows",
+      "Course example workflows"
+    ]
+  },
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "course-Week 12-scaling_operations_management",
+    "course_version": "1.0",
+    "last_updated": "2025-09-07T14:31:15.014163"
+  },
+  "nodes": [
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "scaling-operations",
+        "options": {}
+      },
+      "id": "webhook-trigger",
+      "name": "Scaling Operations Trigger",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 1,
+      "position": [
+        240,
+        300
+      ],
+      "webhookId": "scaling-operations-webhook"
+    },
+    {
+      "parameters": {
+        "values": {
+          "string": [
+            {
+              "name": "operation_type",
+              "value": "={{ $json.operation_type }}"
+            },
+            {
+              "name": "scaling_factor",
+              "value": "={{ $json.scaling_factor }}"
+            },
+            {
+              "name": "scaling_status",
+              "value": "={{ $json.scaling_status }}"
+            },
+            {
+              "name": "scaling_timestamp",
+              "value": "={{ new Date().toISOString() }}"
+            },
+            {
+              "name": "scaling_notes",
+              "value": "={{ $json.scaling_notes }}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "set-scaling-data",
+      "name": "Set Scaling Data",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.3,
+      "position": [
+        460,
+        300
+      ]
+    },
+    {
+      "parameters": {
+        "authentication": "predefinedCredentialType",
+        "nodeCredentialType": "notionApi",
+        "resource": "database",
+        "operation": "create",
+        "databaseId": "={{ $json.database_id }}",
+        "title": "Scaling Operations Entry",
+        "propertiesUi": {
+          "propertyValues": [
+            {
+              "key": "Operation Type",
+              "textValue": "={{ $json.operation_type }}"
+            },
+            {
+              "key": "Scaling Factor",
+              "textValue": "={{ $json.scaling_factor }}"
+            },
+            {
+              "key": "Scaling Status",
+              "textValue": "={{ $json.scaling_status }}"
+            },
+            {
+              "key": "Scaling Date",
+              "dateValue": "={{ $json.scaling_timestamp }}"
+            },
+            {
+              "key": "Scaling Notes",
+              "textValue": "={{ $json.scaling_notes }}"
+            }
+          ]
+        }
+      },
+      "id": "create-scaling-entry",
+      "name": "Create Scaling Entry",
+      "type": "n8n-nodes-base.notion",
+      "typeVersion": 2,
+      "position": [
+        680,
+        300
+      ]
+    },
+    {
+      "parameters": {
+        "authentication": "predefinedCredentialType",
+        "nodeCredentialType": "slackApi",
+        "resource": "message",
+        "operation": "post",
+        "channel": "={{ $json.slack_channel }}",
+        "text": "📈 Scaling Operations Update\n\nOperation: {{ $json.operation_type }}\nFactor: {{ $json.scaling_factor }}\nStatus: {{ $json.scaling_status }}\nScaled: {{ $json.scaling_timestamp }}\nNotes: {{ $json.scaling_notes }}",
+        "otherOptions": {}
+      },
+      "id": "send-scaling-notification",
+      "name": "Send Scaling Notification",
+      "type": "n8n-nodes-base.slack",
+      "typeVersion": 2.1,
+      "position": [
+        900,
+        300
+      ]
+    }
+  ],
+  "connections": {
+    "webhook-trigger": {
+      "main": [
+        [
+          {
+            "node": "set-scaling-data",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "set-scaling-data": {
+      "main": [
+        [
+          {
+            "node": "create-scaling-entry",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "create-scaling-entry": {
+      "main": [
+        [
+          {
+            "node": "send-scaling-notification",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "pinData": {},
+  "versionId": "1",
+  "id": "scaling-operations-management"
+}

@@ -1,0 +1,339 @@
+{
+  "name": "Workflow Performance Monitoring System",
+  "description": "Monitor workflow performance with real-time metrics, error tracking, and optimization recommendations.",
+  "tags": [
+    "workflows",
+    "analytics",
+    "monitoring",
+    "tracking",
+    "optimization",
+    "performance",
+    "automation"
+  ],
+  "version": "1.0.0",
+  "author": "Automator Pro Course",
+  "course_metadata": {
+    "week": "Week 03",
+    "phase": "Workflow Building",
+    "difficulty": "Intermediate",
+    "learning_objectives": [
+      "Advanced nodes usage",
+      "Expression writing",
+      "Error handling"
+    ],
+    "prerequisites": [
+      "Completed previous weeks",
+      "n8n instance",
+      "Basic automation knowledge"
+    ],
+    "estimated_setup_time": "10-20 minutes",
+    "use_cases": [
+      "Practice Workflow Building concepts",
+      "Build real-world automation skills",
+      "Prepare for business applications",
+      "Demonstrate course learning objectives"
+    ],
+    "examples": [
+      "Use this workflow to practice Workflow Building skills",
+      "Customize for your specific learning needs",
+      "Apply concepts to real business scenarios",
+      "Build upon for advanced implementations"
+    ],
+    "next_steps": [
+      "Complete Week 4 objectives",
+      "Practice with additional examples",
+      "Apply skills to real projects"
+    ],
+    "related_workflows": [
+      "Week 4 workflows",
+      "Previous week workflows",
+      "Course example workflows"
+    ]
+  },
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "course-Week 03-workflow_performance_monitoring_system",
+    "course_version": "1.0",
+    "last_updated": "2025-09-07T14:31:13.964475"
+  },
+  "nodes": [
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "workflow-performance",
+        "options": {}
+      },
+      "id": "webhook-trigger",
+      "name": "Workflow Performance Trigger",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 1,
+      "position": [
+        240,
+        300
+      ],
+      "webhookId": "workflow-performance-webhook"
+    },
+    {
+      "parameters": {
+        "values": {
+          "string": [
+            {
+              "name": "workflow_id",
+              "value": "={{ $json.workflow_id }}"
+            },
+            {
+              "name": "execution_time",
+              "value": "={{ $json.execution_time }}"
+            },
+            {
+              "name": "success_rate",
+              "value": "={{ $json.success_rate }}"
+            },
+            {
+              "name": "monitoring_timestamp",
+              "value": "={{ new Date().toISOString() }}"
+            },
+            {
+              "name": "performance_notes",
+              "value": "={{ $json.performance_notes }}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "set-performance-data",
+      "name": "Set Performance Data",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.3,
+      "position": [
+        460,
+        300
+      ]
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict"
+          },
+          "conditions": [
+            {
+              "id": "performance-threshold-check",
+              "leftValue": "={{ $json.success_rate }}",
+              "rightValue": "95",
+              "operator": {
+                "type": "number",
+                "operation": "gte"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "id": "performance-threshold-check",
+      "name": "Performance Threshold Check",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2,
+      "position": [
+        680,
+        300
+      ]
+    },
+    {
+      "parameters": {
+        "authentication": "predefinedCredentialType",
+        "nodeCredentialType": "notionApi",
+        "resource": "database",
+        "operation": "create",
+        "databaseId": "={{ $json.database_id }}",
+        "title": "High Performance Workflow",
+        "propertiesUi": {
+          "propertyValues": [
+            {
+              "key": "Workflow ID",
+              "textValue": "={{ $json.workflow_id }}"
+            },
+            {
+              "key": "Execution Time",
+              "textValue": "={{ $json.execution_time }}"
+            },
+            {
+              "key": "Success Rate",
+              "textValue": "={{ $json.success_rate }}"
+            },
+            {
+              "key": "Monitoring Date",
+              "dateValue": "={{ $json.monitoring_timestamp }}"
+            },
+            {
+              "key": "Performance Notes",
+              "textValue": "={{ $json.performance_notes }}"
+            }
+          ]
+        }
+      },
+      "id": "create-high-performance-entry",
+      "name": "Create High Performance Entry",
+      "type": "n8n-nodes-base.notion",
+      "typeVersion": 2,
+      "position": [
+        900,
+        200
+      ]
+    },
+    {
+      "parameters": {
+        "authentication": "predefinedCredentialType",
+        "nodeCredentialType": "notionApi",
+        "resource": "database",
+        "operation": "create",
+        "databaseId": "={{ $json.database_id }}",
+        "title": "Workflow Performance Entry",
+        "propertiesUi": {
+          "propertyValues": [
+            {
+              "key": "Workflow ID",
+              "textValue": "={{ $json.workflow_id }}"
+            },
+            {
+              "key": "Execution Time",
+              "textValue": "={{ $json.execution_time }}"
+            },
+            {
+              "key": "Success Rate",
+              "textValue": "={{ $json.success_rate }}"
+            },
+            {
+              "key": "Monitoring Date",
+              "dateValue": "={{ $json.monitoring_timestamp }}"
+            },
+            {
+              "key": "Performance Notes",
+              "textValue": "={{ $json.performance_notes }}"
+            }
+          ]
+        }
+      },
+      "id": "create-performance-entry",
+      "name": "Create Performance Entry",
+      "type": "n8n-nodes-base.notion",
+      "typeVersion": 2,
+      "position": [
+        900,
+        400
+      ]
+    },
+    {
+      "parameters": {
+        "authentication": "predefinedCredentialType",
+        "nodeCredentialType": "slackApi",
+        "resource": "message",
+        "operation": "post",
+        "channel": "={{ $json.slack_channel }}",
+        "text": "🚀 High Performance Workflow!\n\nWorkflow: {{ $json.workflow_id }}\nExecution Time: {{ $json.execution_time }}\nSuccess Rate: {{ $json.success_rate }}%\nMonitored: {{ $json.monitoring_timestamp }}\nNotes: {{ $json.performance_notes }}",
+        "otherOptions": {}
+      },
+      "id": "send-high-performance-alert",
+      "name": "Send High Performance Alert",
+      "type": "n8n-nodes-base.slack",
+      "typeVersion": 2.1,
+      "position": [
+        1120,
+        200
+      ]
+    },
+    {
+      "parameters": {
+        "authentication": "predefinedCredentialType",
+        "nodeCredentialType": "slackApi",
+        "resource": "message",
+        "operation": "post",
+        "channel": "={{ $json.slack_channel }}",
+        "text": "📊 Workflow Performance Update\n\nWorkflow: {{ $json.workflow_id }}\nExecution Time: {{ $json.execution_time }}\nSuccess Rate: {{ $json.success_rate }}%\nMonitored: {{ $json.monitoring_timestamp }}\nNotes: {{ $json.performance_notes }}",
+        "otherOptions": {}
+      },
+      "id": "send-performance-update",
+      "name": "Send Performance Update",
+      "type": "n8n-nodes-base.slack",
+      "typeVersion": 2.1,
+      "position": [
+        1120,
+        400
+      ]
+    }
+  ],
+  "connections": {
+    "webhook-trigger": {
+      "main": [
+        [
+          {
+            "node": "set-performance-data",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "set-performance-data": {
+      "main": [
+        [
+          {
+            "node": "performance-threshold-check",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "performance-threshold-check": {
+      "main": [
+        [
+          {
+            "node": "create-high-performance-entry",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "create-performance-entry",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "create-high-performance-entry": {
+      "main": [
+        [
+          {
+            "node": "send-high-performance-alert",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "create-performance-entry": {
+      "main": [
+        [
+          {
+            "node": "send-performance-update",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "pinData": {},
+  "versionId": "1",
+  "id": "workflow-performance-monitoring-system"
+}

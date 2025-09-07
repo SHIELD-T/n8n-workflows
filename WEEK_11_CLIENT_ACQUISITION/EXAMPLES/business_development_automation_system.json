@@ -1,0 +1,358 @@
+{
+  "name": "Business Development Automation System",
+  "description": "Automated workflow for Client Acquisition phase learning objectives with intelligent processing and error handling.",
+  "tags": [
+    "strategy",
+    "marketing",
+    "management",
+    "acquisition",
+    "clients",
+    "business"
+  ],
+  "version": "1.0.0",
+  "author": "Automator Pro Course",
+  "course_metadata": {
+    "week": "Week 11",
+    "phase": "Client Acquisition",
+    "difficulty": "Advanced",
+    "learning_objectives": [
+      "Client acquisition",
+      "Service packaging",
+      "Portfolio building"
+    ],
+    "prerequisites": [
+      "Technical skills",
+      "Business interest",
+      "Client interaction skills"
+    ],
+    "estimated_setup_time": "10-20 minutes",
+    "use_cases": [
+      "Practice Client Acquisition concepts",
+      "Build real-world automation skills",
+      "Prepare for business applications",
+      "Demonstrate course learning objectives"
+    ],
+    "examples": [
+      "Use this workflow to practice Client Acquisition skills",
+      "Customize for your specific learning needs",
+      "Apply concepts to real business scenarios",
+      "Build upon for advanced implementations"
+    ],
+    "next_steps": [
+      "Complete Week 12 objectives",
+      "Practice with additional examples",
+      "Apply skills to real projects"
+    ],
+    "related_workflows": [
+      "Week 12 workflows",
+      "Previous week workflows",
+      "Course example workflows"
+    ]
+  },
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "course-Week 11-business_development_automation_system",
+    "course_version": "1.0",
+    "last_updated": "2025-09-07T14:31:14.498504"
+  },
+  "nodes": [
+    {
+      "parameters": {
+        "path": "business-development",
+        "httpMethod": "POST"
+      },
+      "name": "Business Development Trigger",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 1,
+      "position": [
+        240,
+        300
+      ]
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "name": "business_id",
+              "value": "={{ $now.format('YYYYMMDDHHmmss') }}"
+            },
+            {
+              "name": "business_name",
+              "value": "={{ $json.business_name }}"
+            },
+            {
+              "name": "business_type",
+              "value": "={{ $json.business_type }}"
+            },
+            {
+              "name": "industry",
+              "value": "={{ $json.industry }}"
+            },
+            {
+              "name": "business_size",
+              "value": "={{ $json.business_size }}"
+            },
+            {
+              "name": "revenue",
+              "value": "={{ $json.revenue }}"
+            },
+            {
+              "name": "growth_stage",
+              "value": "={{ $json.growth_stage }}"
+            },
+            {
+              "name": "automation_needs",
+              "value": "={{ $json.automation_needs }}"
+            }
+          ]
+        }
+      },
+      "name": "Process Business Data",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 1,
+      "position": [
+        460,
+        300
+      ]
+    },
+    {
+      "parameters": {
+        "resource": "chat",
+        "operation": "create",
+        "model": "gpt-4",
+        "messages": {
+          "values": [
+            {
+              "role": "system",
+              "content": "You are a business development specialist that analyzes businesses and generates growth strategies."
+            },
+            {
+              "role": "user",
+              "content": "={{ 'Analyze this business for development opportunities:\\nBusiness: ' + $json.business_name + '\\nType: ' + $json.business_type + '\\nIndustry: ' + $json.industry + '\\nSize: ' + $json.business_size + '\\nRevenue: ' + $json.revenue + '\\nGrowth Stage: ' + $json.growth_stage + '\\nAutomation Needs: ' + $json.automation_needs + '\\n\\nGenerate: business development strategy, automation opportunities, growth recommendations, and success metrics.' }}"
+            }
+          ]
+        }
+      },
+      "name": "AI Business Analysis",
+      "type": "n8n-nodes-base.openAi",
+      "typeVersion": 1,
+      "position": [
+        680,
+        300
+      ]
+    },
+    {
+      "parameters": {
+        "operation": "create",
+        "base": "your_base_id",
+        "table": "Business Development",
+        "fields": {
+          "Business ID": "={{ $json.business_id }}",
+          "Business Name": "={{ $json.business_name }}",
+          "Business Type": "={{ $json.business_type }}",
+          "Industry": "={{ $json.industry }}",
+          "Business Size": "={{ $json.business_size }}",
+          "Revenue": "={{ $json.revenue }}",
+          "Growth Stage": "={{ $json.growth_stage }}",
+          "Automation Needs": "={{ $json.automation_needs }}",
+          "AI Analysis": "={{ $json.choices[0].message.content }}",
+          "Status": "Active",
+          "Created At": "={{ $now }}"
+        }
+      },
+      "name": "Store Business Data",
+      "type": "n8n-nodes-base.airtable",
+      "typeVersion": 1,
+      "position": [
+        900,
+        300
+      ]
+    },
+    {
+      "parameters": {
+        "operation": "create",
+        "databaseId": "your_database_id",
+        "fields": {
+          "Title": "={{ 'Business Development: ' + $json.business_name }}",
+          "Business ID": "={{ $json.business_id }}",
+          "Business Name": "={{ $json.business_name }}",
+          "Industry": "={{ $json.industry }}",
+          "Growth Stage": "={{ $json.growth_stage }}",
+          "Priority": "High",
+          "Status": "Active",
+          "Created At": "={{ $now }}"
+        }
+      },
+      "name": "Create Business Task",
+      "type": "n8n-nodes-base.notion",
+      "typeVersion": 1,
+      "position": [
+        1120,
+        300
+      ]
+    },
+    {
+      "parameters": {
+        "operation": "send",
+        "toEmail": "={{ $json.business_name }}",
+        "subject": "={{ 'Business Development Opportunity for ' + $json.business_name }}",
+        "message": "={{ 'Hi,\\n\\nWe\\'re excited to explore business development opportunities with ' + $json.business_name + '!\\n\\nBusiness Details:\\n- Business ID: ' + $json.business_id + '\\n- Industry: ' + $json.industry + '\\n- Growth Stage: ' + $json.growth_stage + '\\n- Automation Needs: ' + $json.automation_needs + '\\n\\nWe\\'ll analyze your business and provide recommendations for growth and automation.\\n\\nBest regards,\\nBusiness Development Team' }}"
+      },
+      "name": "Send Business Email",
+      "type": "n8n-nodes-base.gmail",
+      "typeVersion": 1,
+      "position": [
+        1340,
+        300
+      ]
+    },
+    {
+      "parameters": {
+        "operation": "postMessage",
+        "channel": "#business-development",
+        "text": "={{ '📈 New Business Development Opportunity\\nBusiness: ' + $json.business_name + '\\nType: ' + $json.business_type + '\\nIndustry: ' + $json.industry + '\\nSize: ' + $json.business_size + '\\nRevenue: ' + $json.revenue + '\\nGrowth Stage: ' + $json.growth_stage + '\\nBusiness ID: ' + $json.business_id }}"
+      },
+      "name": "Notify Business Team",
+      "type": "n8n-nodes-base.slack",
+      "typeVersion": 1,
+      "position": [
+        1560,
+        300
+      ]
+    },
+    {
+      "parameters": {
+        "operation": "sendMessage",
+        "chatId": "your_chat_id",
+        "text": "={{ '📈 New Business: ' + $json.business_name + '\\nIndustry: ' + $json.industry + '\\nGrowth Stage: ' + $json.growth_stage + '\\nRevenue: ' + $json.revenue }}"
+      },
+      "name": "Send Telegram Alert",
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1,
+      "position": [
+        1780,
+        300
+      ]
+    },
+    {
+      "parameters": {
+        "operation": "create",
+        "base": "your_base_id",
+        "table": "Business Milestones",
+        "fields": {
+          "Business ID": "={{ $json.business_id }}",
+          "Business Name": "={{ $json.business_name }}",
+          "Milestone": "Business Analysis",
+          "Status": "Completed",
+          "Completion Date": "={{ $now }}",
+          "Notes": "Business successfully analyzed and team notified"
+        }
+      },
+      "name": "Log Business Milestone",
+      "type": "n8n-nodes-base.airtable",
+      "typeVersion": 1,
+      "position": [
+        2000,
+        300
+      ]
+    }
+  ],
+  "connections": {
+    "Business Development Trigger": {
+      "main": [
+        [
+          {
+            "node": "Process Business Data",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Process Business Data": {
+      "main": [
+        [
+          {
+            "node": "AI Business Analysis",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "AI Business Analysis": {
+      "main": [
+        [
+          {
+            "node": "Store Business Data",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Store Business Data": {
+      "main": [
+        [
+          {
+            "node": "Create Business Task",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Create Business Task": {
+      "main": [
+        [
+          {
+            "node": "Send Business Email",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Send Business Email": {
+      "main": [
+        [
+          {
+            "node": "Notify Business Team",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Notify Business Team": {
+      "main": [
+        [
+          {
+            "node": "Send Telegram Alert",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Send Telegram Alert": {
+      "main": [
+        [
+          {
+            "node": "Log Business Milestone",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "pinData": {},
+  "versionId": "1",
+  "id": "business_development_automation_system"
+}

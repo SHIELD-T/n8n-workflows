@@ -1,0 +1,214 @@
+{
+  "name": "Client Acquisition Tracking System",
+  "description": "Track client acquisition with automated lead management and conversion monitoring.",
+  "tags": [
+    "marketing",
+    "business",
+    "acquisition",
+    "clients"
+  ],
+  "version": "1.0.0",
+  "author": "Automator Pro Course",
+  "course_metadata": {
+    "week": "Week 11",
+    "phase": "Client Acquisition",
+    "difficulty": "Advanced",
+    "learning_objectives": [
+      "Client acquisition",
+      "Service packaging",
+      "Portfolio building"
+    ],
+    "prerequisites": [
+      "Technical skills",
+      "Business interest",
+      "Client interaction skills"
+    ],
+    "estimated_setup_time": "5-10 minutes",
+    "use_cases": [
+      "Practice Client Acquisition concepts",
+      "Build real-world automation skills",
+      "Prepare for business applications",
+      "Demonstrate course learning objectives"
+    ],
+    "examples": [
+      "Use this workflow to practice Client Acquisition skills",
+      "Customize for your specific learning needs",
+      "Apply concepts to real business scenarios",
+      "Build upon for advanced implementations"
+    ],
+    "next_steps": [
+      "Complete Week 12 objectives",
+      "Practice with additional examples",
+      "Apply skills to real projects"
+    ],
+    "related_workflows": [
+      "Week 12 workflows",
+      "Previous week workflows",
+      "Course example workflows"
+    ]
+  },
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "course-Week 11-client_acquisition_tracking_system",
+    "course_version": "1.0",
+    "last_updated": "2025-09-07T14:31:14.491751"
+  },
+  "nodes": [
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "client-acquisition",
+        "options": {}
+      },
+      "id": "webhook-trigger",
+      "name": "Client Acquisition Trigger",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 1,
+      "position": [
+        240,
+        300
+      ],
+      "webhookId": "client-acquisition-webhook"
+    },
+    {
+      "parameters": {
+        "values": {
+          "string": [
+            {
+              "name": "client_id",
+              "value": "={{ $json.client_id }}"
+            },
+            {
+              "name": "acquisition_source",
+              "value": "={{ $json.acquisition_source }}"
+            },
+            {
+              "name": "acquisition_status",
+              "value": "={{ $json.acquisition_status }}"
+            },
+            {
+              "name": "acquisition_timestamp",
+              "value": "={{ new Date().toISOString() }}"
+            },
+            {
+              "name": "acquisition_notes",
+              "value": "={{ $json.acquisition_notes }}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "set-acquisition-data",
+      "name": "Set Acquisition Data",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.3,
+      "position": [
+        460,
+        300
+      ]
+    },
+    {
+      "parameters": {
+        "authentication": "predefinedCredentialType",
+        "nodeCredentialType": "notionApi",
+        "resource": "database",
+        "operation": "create",
+        "databaseId": "={{ $json.database_id }}",
+        "title": "Client Acquisition Entry",
+        "propertiesUi": {
+          "propertyValues": [
+            {
+              "key": "Client ID",
+              "textValue": "={{ $json.client_id }}"
+            },
+            {
+              "key": "Acquisition Source",
+              "textValue": "={{ $json.acquisition_source }}"
+            },
+            {
+              "key": "Acquisition Status",
+              "textValue": "={{ $json.acquisition_status }}"
+            },
+            {
+              "key": "Acquisition Date",
+              "dateValue": "={{ $json.acquisition_timestamp }}"
+            },
+            {
+              "key": "Acquisition Notes",
+              "textValue": "={{ $json.acquisition_notes }}"
+            }
+          ]
+        }
+      },
+      "id": "create-acquisition-entry",
+      "name": "Create Acquisition Entry",
+      "type": "n8n-nodes-base.notion",
+      "typeVersion": 2,
+      "position": [
+        680,
+        300
+      ]
+    },
+    {
+      "parameters": {
+        "authentication": "predefinedCredentialType",
+        "nodeCredentialType": "slackApi",
+        "resource": "message",
+        "operation": "post",
+        "channel": "={{ $json.slack_channel }}",
+        "text": "🎯 Client Acquisition Update\n\nClient: {{ $json.client_id }}\nSource: {{ $json.acquisition_source }}\nStatus: {{ $json.acquisition_status }}\nAcquired: {{ $json.acquisition_timestamp }}\nNotes: {{ $json.acquisition_notes }}",
+        "otherOptions": {}
+      },
+      "id": "send-acquisition-notification",
+      "name": "Send Acquisition Notification",
+      "type": "n8n-nodes-base.slack",
+      "typeVersion": 2.1,
+      "position": [
+        900,
+        300
+      ]
+    }
+  ],
+  "connections": {
+    "webhook-trigger": {
+      "main": [
+        [
+          {
+            "node": "set-acquisition-data",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "set-acquisition-data": {
+      "main": [
+        [
+          {
+            "node": "create-acquisition-entry",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "create-acquisition-entry": {
+      "main": [
+        [
+          {
+            "node": "send-acquisition-notification",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "pinData": {},
+  "versionId": "1",
+  "id": "client-acquisition-tracking-system"
+}

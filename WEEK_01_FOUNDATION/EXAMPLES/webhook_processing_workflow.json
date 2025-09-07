@@ -1,0 +1,195 @@
+{
+  "name": "Webhook Processing Workflow",
+  "description": "Automated workflow for Foundation phase learning objectives with intelligent processing and error handling.",
+  "tags": [
+    "basics",
+    "progress-tracking",
+    "learning",
+    "foundation"
+  ],
+  "version": "1.0.0",
+  "author": "Automator Pro Course",
+  "course_metadata": {
+    "week": "Week 01",
+    "phase": "Foundation",
+    "difficulty": "Beginner",
+    "learning_objectives": [
+      "Understand automation basics",
+      "Learn n8n interface",
+      "Build first workflows"
+    ],
+    "prerequisites": [
+      "Basic computer skills",
+      "Internet access",
+      "Willingness to learn"
+    ],
+    "estimated_setup_time": "5-10 minutes",
+    "use_cases": [
+      "Practice Foundation concepts",
+      "Build real-world automation skills",
+      "Prepare for business applications",
+      "Demonstrate course learning objectives"
+    ],
+    "examples": [
+      "Use this workflow to practice Foundation skills",
+      "Customize for your specific learning needs",
+      "Apply concepts to real business scenarios",
+      "Build upon for advanced implementations"
+    ],
+    "next_steps": [
+      "Complete Week 2 objectives",
+      "Practice with additional examples",
+      "Apply skills to real projects"
+    ],
+    "related_workflows": [
+      "Week 2 workflows",
+      "Previous week workflows",
+      "Course example workflows"
+    ]
+  },
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "course-Week 01-webhook_processing_workflow",
+    "course_version": "1.0",
+    "last_updated": "2025-09-07T14:31:15.344984"
+  },
+  "nodes": [
+    {
+      "id": "webhook-trigger-1",
+      "name": "Webhook Trigger",
+      "type": "n8n-nodes-base.webhook",
+      "position": [
+        100,
+        100
+      ],
+      "parameters": {
+        "path": "week1-example",
+        "httpMethod": "POST",
+        "options": {
+          "response": {
+            "responseMode": "responseNode"
+          }
+        }
+      }
+    },
+    {
+      "id": "data-processing-1",
+      "name": "Process Incoming Data",
+      "type": "n8n-nodes-base.set",
+      "position": [
+        300,
+        100
+      ],
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "name": "received_data",
+              "value": "={{ $json }}"
+            },
+            {
+              "name": "processed_at",
+              "value": "={{ $now }}"
+            },
+            {
+              "name": "data_type",
+              "value": "webhook_data"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "validation-1",
+      "name": "Validate Data",
+      "type": "n8n-nodes-base.if",
+      "position": [
+        500,
+        100
+      ],
+      "parameters": {
+        "conditions": {
+          "string": [
+            {
+              "value1": "={{ $json.received_data }}",
+              "operation": "isNotEmpty"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "success-response-1",
+      "name": "Success Response",
+      "type": "n8n-nodes-base.respondToWebhook",
+      "position": [
+        700,
+        100
+      ],
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "={{ { \"status\": \"success\", \"processed_at\": $json.processed_at, \"data_type\": $json.data_type } }}"
+      }
+    },
+    {
+      "id": "error-response-1",
+      "name": "Error Response",
+      "type": "n8n-nodes-base.respondToWebhook",
+      "position": [
+        700,
+        300
+      ],
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "={{ { \"status\": \"error\", \"message\": \"Invalid data received\", \"timestamp\": $now } }}"
+      }
+    }
+  ],
+  "connections": {
+    "Webhook Trigger": {
+      "main": [
+        [
+          {
+            "node": "Process Incoming Data",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Process Incoming Data": {
+      "main": [
+        [
+          {
+            "node": "Validate Data",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Validate Data": {
+      "main": [
+        [
+          {
+            "node": "Success Response",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Error Response",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {},
+  "pinData": {},
+  "versionId": "1",
+  "id": "webhook_processing_workflow"
+}

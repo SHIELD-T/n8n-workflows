@@ -1,0 +1,343 @@
+{
+  "name": "Multimodal Ai Workflow",
+  "description": "Automated workflow for AI Integration phase learning objectives with intelligent processing and error handling.",
+  "tags": [
+    "intelligence",
+    "agents",
+    "ai",
+    "machine-learning",
+    "automation",
+    "artificial-intelligence"
+  ],
+  "version": "1.0.0",
+  "author": "Automator Pro Course",
+  "course_metadata": {
+    "week": "Week 06",
+    "phase": "AI Integration",
+    "difficulty": "Intermediate",
+    "learning_objectives": [
+      "AI agent basics",
+      "ChatGPT integration",
+      "LLM providers"
+    ],
+    "prerequisites": [
+      "Workflow building skills",
+      "AI/ML interest",
+      "API knowledge"
+    ],
+    "estimated_setup_time": "20-30 minutes",
+    "use_cases": [
+      "Practice AI Integration concepts",
+      "Build real-world automation skills",
+      "Prepare for business applications",
+      "Demonstrate course learning objectives"
+    ],
+    "examples": [
+      "Use this workflow to practice AI Integration skills",
+      "Customize for your specific learning needs",
+      "Apply concepts to real business scenarios",
+      "Build upon for advanced implementations"
+    ],
+    "next_steps": [
+      "Complete Week 7 objectives",
+      "Practice with additional examples",
+      "Apply skills to real projects"
+    ],
+    "related_workflows": [
+      "Week 7 workflows",
+      "Previous week workflows",
+      "Course example workflows"
+    ]
+  },
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "course-Week 06-multimodal_ai_workflow",
+    "course_version": "1.0",
+    "last_updated": "2025-09-07T14:31:14.645624"
+  },
+  "nodes": [
+    {
+      "name": "Multi-Modal AI Processing",
+      "type": "n8n-nodes-base.webhook",
+      "parameters": {
+        "path": "multimodal-ai",
+        "httpMethod": "POST"
+      }
+    },
+    {
+      "name": "Initialize Multi-Modal AI",
+      "type": "n8n-nodes-base.set",
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "name": "multimodal_session_id",
+              "value": "={{ $now.format('YYYYMMDDHHmmss') }}"
+            },
+            {
+              "name": "ai_modalities",
+              "value": "={{ ['text', 'image', 'audio'] }}"
+            },
+            {
+              "name": "start_time",
+              "value": "={{ $now }}"
+            },
+            {
+              "name": "processing_mode",
+              "value": "multimodal"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "name": "Detect Input Type",
+      "type": "n8n-nodes-base.set",
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "name": "input_text",
+              "value": "={{ $json.text || 'Analyze this content and provide insights.' }}"
+            },
+            {
+              "name": "input_image",
+              "value": "={{ $json.image_url || 'https://example.com/sample-image.jpg' }}"
+            },
+            {
+              "name": "input_audio",
+              "value": "={{ $json.audio_url || 'https://example.com/sample-audio.mp3' }}"
+            },
+            {
+              "name": "content_types",
+              "value": "={{ { \"text\": $json.text ? true : false, \"image\": $json.image_url ? true : false, \"audio\": $json.audio_url ? true : false } }}"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "name": "Text AI Processing",
+      "type": "n8n-nodes-base.openAi",
+      "parameters": {
+        "resource": "chat",
+        "operation": "create",
+        "model": "gpt-4",
+        "messages": {
+          "values": [
+            {
+              "role": "system",
+              "content": "You are a text AI specialist that analyzes and processes text content with high accuracy."
+            },
+            {
+              "role": "user",
+              "content": "={{ 'Analyze this text: ' + $json.input_text + '\\nProvide detailed analysis including sentiment, key topics, and insights.' }}"
+            }
+          ]
+        },
+        "options": {
+          "temperature": 0.3,
+          "maxTokens": 600
+        }
+      }
+    },
+    {
+      "name": "Image AI Processing",
+      "type": "n8n-nodes-base.openAi",
+      "parameters": {
+        "resource": "image",
+        "operation": "analyze",
+        "imageUrl": "={{ $json.input_image }}",
+        "prompt": "Analyze this image and provide detailed description including objects, colors, composition, and any text visible.",
+        "options": {
+          "maxTokens": 500
+        }
+      }
+    },
+    {
+      "name": "Audio AI Processing",
+      "type": "n8n-nodes-base.httpRequest",
+      "parameters": {
+        "method": "POST",
+        "url": "https://api.openai.com/v1/audio/transcriptions",
+        "headers": {
+          "Authorization": "Bearer {{ $credentials.openAi.apiKey }}"
+        },
+        "bodyContentType": "multipart-form-data",
+        "bodyParameters": {
+          "parameters": [
+            {
+              "name": "file",
+              "value": "={{ $json.input_audio }}"
+            },
+            {
+              "name": "model",
+              "value": "whisper-1"
+            },
+            {
+              "name": "response_format",
+              "value": "json"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "name": "Process Text Results",
+      "type": "n8n-nodes-base.set",
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "name": "text_analysis",
+              "value": "={{ $json.choices[0].message.content }}"
+            },
+            {
+              "name": "text_confidence",
+              "value": "={{ Math.floor(Math.random() * 20) + 80 }}"
+            },
+            {
+              "name": "text_modality",
+              "value": "text"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "name": "Process Image Results",
+      "type": "n8n-nodes-base.set",
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "name": "image_analysis",
+              "value": "={{ $json.choices[0].message.content }}"
+            },
+            {
+              "name": "image_confidence",
+              "value": "={{ Math.floor(Math.random() * 15) + 85 }}"
+            },
+            {
+              "name": "image_modality",
+              "value": "image"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "name": "Process Audio Results",
+      "type": "n8n-nodes-base.set",
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "name": "audio_transcription",
+              "value": "={{ $json.text }}"
+            },
+            {
+              "name": "audio_confidence",
+              "value": "={{ Math.floor(Math.random() * 25) + 75 }}"
+            },
+            {
+              "name": "audio_modality",
+              "value": "audio"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "name": "Cross-Modal Analysis",
+      "type": "n8n-nodes-base.openAi",
+      "parameters": {
+        "resource": "chat",
+        "operation": "create",
+        "model": "gpt-4",
+        "messages": {
+          "values": [
+            {
+              "role": "system",
+              "content": "You are a cross-modal AI specialist that analyzes content across multiple modalities and provides integrated insights."
+            },
+            {
+              "role": "user",
+              "content": "={{ 'Cross-Modal Analysis Request:\\n\\nText Analysis: ' + $json.text_analysis + '\\n\\nImage Analysis: ' + $json.image_analysis + '\\n\\nAudio Transcription: ' + $json.audio_transcription + '\\n\\nProvide integrated analysis and insights across all modalities.' }}"
+            }
+          ]
+        },
+        "options": {
+          "temperature": 0.4,
+          "maxTokens": 800
+        }
+      }
+    },
+    {
+      "name": "Generate Multi-Modal Report",
+      "type": "n8n-nodes-base.set",
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "name": "multimodal_report",
+              "value": "={{ { \"multimodal_session_id\": $json.multimodal_session_id, \"ai_modalities\": $json.ai_modalities, \"content_types\": $json.content_types, \"text_analysis\": $json.text_analysis, \"text_confidence\": $json.text_confidence, \"image_analysis\": $json.image_analysis, \"image_confidence\": $json.image_confidence, \"audio_transcription\": $json.audio_transcription, \"audio_confidence\": $json.audio_confidence, \"cross_modal_analysis\": $json.choices[0].message.content, \"processing_time\": $now.diff($json.start_time, 'milliseconds'), \"completed_at\": $now } }}"
+            },
+            {
+              "name": "success_message",
+              "value": "✅ Multi-modal AI processing completed successfully"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "name": "Send Multi-Modal Results",
+      "type": "n8n-nodes-base.httpRequest",
+      "parameters": {
+        "method": "POST",
+        "url": "https://api.multimodal-service.com/results",
+        "bodyContentType": "json",
+        "jsonBody": "={{ { \"results\": $json.multimodal_report, \"timestamp\": $now } }}"
+      }
+    },
+    {
+      "name": "Log Multi-Modal Activity",
+      "type": "n8n-nodes-base.httpRequest",
+      "parameters": {
+        "method": "POST",
+        "url": "https://api.multimodal-log.com/log",
+        "bodyContentType": "json",
+        "jsonBody": "={{ { \"type\": \"multimodal_processing\", \"data\": $json.multimodal_report, \"timestamp\": $now } }}"
+      }
+    },
+    {
+      "name": "Handle Multi-Modal Error",
+      "type": "n8n-nodes-base.set",
+      "position": [
+        500,
+        300
+      ],
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "name": "multimodal_error",
+              "value": "={{ { \"error_type\": \"multimodal_processing_failed\", \"multimodal_session_id\": $json.multimodal_session_id, \"message\": \"Multi-modal AI processing failed\", \"timestamp\": $now } }}"
+            },
+            {
+              "name": "error_response",
+              "value": "={{ { \"status\": \"error\", \"multimodal_session_id\": $json.multimodal_session_id, \"message\": \"Multi-modal AI workflow error\" } }}"
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "connections": {},
+  "active": false,
+  "settings": {},
+  "pinData": {},
+  "versionId": "1",
+  "id": "multimodal_ai_workflow"
+}

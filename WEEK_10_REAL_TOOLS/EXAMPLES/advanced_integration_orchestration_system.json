@@ -1,0 +1,383 @@
+{
+  "name": "Advanced Integration Orchestration System",
+  "description": "Automated workflow for Real-World Tools phase learning objectives with intelligent processing and error handling.",
+  "tags": [
+    "tools",
+    "real-world",
+    "integration",
+    "apis"
+  ],
+  "version": "1.0.0",
+  "author": "Automator Pro Course",
+  "course_metadata": {
+    "week": "Week 10",
+    "phase": "Real-World Tools",
+    "difficulty": "Advanced",
+    "learning_objectives": [
+      "Advanced integrations",
+      "Custom APIs",
+      "Orchestration"
+    ],
+    "prerequisites": [
+      "AI integration skills",
+      "Real-world tool access",
+      "Integration experience"
+    ],
+    "estimated_setup_time": "20-30 minutes",
+    "use_cases": [
+      "Practice Real-World Tools concepts",
+      "Build real-world automation skills",
+      "Prepare for business applications",
+      "Demonstrate course learning objectives"
+    ],
+    "examples": [
+      "Use this workflow to practice Real-World Tools skills",
+      "Customize for your specific learning needs",
+      "Apply concepts to real business scenarios",
+      "Build upon for advanced implementations"
+    ],
+    "next_steps": [
+      "Complete Week 11 objectives",
+      "Practice with additional examples",
+      "Apply skills to real projects"
+    ],
+    "related_workflows": [
+      "Week 11 workflows",
+      "Previous week workflows",
+      "Course example workflows"
+    ]
+  },
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "course-Week 10-advanced_integration_orchestration_system",
+    "course_version": "1.0",
+    "last_updated": "2025-09-07T14:31:14.127927"
+  },
+  "nodes": [
+    {
+      "parameters": {
+        "path": "advanced-integration-orchestration",
+        "httpMethod": "POST"
+      },
+      "name": "Advanced Integration Orchestration",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 1,
+      "position": [
+        240,
+        300
+      ]
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "name": "orchestration_id",
+              "value": "={{ $now.format('YYYYMMDDHHmmss') }}"
+            },
+            {
+              "name": "orchestration_type",
+              "value": "advanced"
+            },
+            {
+              "name": "start_time",
+              "value": "={{ $now }}"
+            },
+            {
+              "name": "services",
+              "value": "={{ ['service_a', 'service_b', 'service_c', 'service_d', 'service_e'] }}"
+            }
+          ]
+        }
+      },
+      "name": "Initialize Orchestration System",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 1,
+      "position": [
+        460,
+        300
+      ]
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://api.service-a.com/process",
+        "bodyContentType": "json",
+        "jsonBody": "={{ { \"orchestration_id\": $json.orchestration_id, \"data\": $json, \"timestamp\": $now } }}"
+      },
+      "name": "Service A Integration",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 1,
+      "position": [
+        680,
+        300
+      ]
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://api.service-b.com/process",
+        "bodyContentType": "json",
+        "jsonBody": "={{ { \"orchestration_id\": $json.orchestration_id, \"service_a_result\": $('Service A Integration').item.json, \"timestamp\": $now } }}"
+      },
+      "name": "Service B Integration",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 1,
+      "position": [
+        900,
+        300
+      ]
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://api.service-c.com/process",
+        "bodyContentType": "json",
+        "jsonBody": "={{ { \"orchestration_id\": $json.orchestration_id, \"service_b_result\": $('Service B Integration').item.json, \"timestamp\": $now } }}"
+      },
+      "name": "Service C Integration",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 1,
+      "position": [
+        1120,
+        300
+      ]
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://api.service-d.com/process",
+        "bodyContentType": "json",
+        "jsonBody": "={{ { \"orchestration_id\": $json.orchestration_id, \"service_c_result\": $('Service C Integration').item.json, \"timestamp\": $now } }}"
+      },
+      "name": "Service D Integration",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 1,
+      "position": [
+        1340,
+        300
+      ]
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://api.service-e.com/process",
+        "bodyContentType": "json",
+        "jsonBody": "={{ { \"orchestration_id\": $json.orchestration_id, \"service_d_result\": $('Service D Integration').item.json, \"timestamp\": $now } }}"
+      },
+      "name": "Service E Integration",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 1,
+      "position": [
+        1560,
+        300
+      ]
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "name": "transformed_data",
+              "value": "={{ { \"orchestration_id\": $json.orchestration_id, \"service_a\": $('Service A Integration').item.json, \"service_b\": $('Service B Integration').item.json, \"service_c\": $('Service C Integration').item.json, \"service_d\": $('Service D Integration').item.json, \"service_e\": $('Service E Integration').item.json, \"transformation_timestamp\": $now } }}"
+            },
+            {
+              "name": "data_quality_score",
+              "value": "={{ Math.round(($('Service A Integration').item.json.quality_score + $('Service B Integration').item.json.quality_score + $('Service C Integration').item.json.quality_score + $('Service D Integration').item.json.quality_score + $('Service E Integration').item.json.quality_score) / 5) }}"
+            }
+          ]
+        }
+      },
+      "name": "Data Transformation Pipeline",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 1,
+      "position": [
+        1780,
+        300
+      ]
+    },
+    {
+      "parameters": {
+        "resource": "chat",
+        "operation": "create",
+        "model": "gpt-4",
+        "messages": {
+          "values": [
+            {
+              "role": "system",
+              "content": "You are an advanced integration specialist that analyzes multi-service data and generates insights."
+            },
+            {
+              "role": "user",
+              "content": "={{ 'Analyze this multi-service integration data:\\nOrchestration ID: ' + $json.orchestration_id + '\\nServices: ' + $json.services.join(', ') + '\\nData Quality Score: ' + $json.data_quality_score + '\\n\\nGenerate: integration insights, performance analysis, and optimization recommendations.' }}"
+            }
+          ]
+        }
+      },
+      "name": "AI Integration Analysis",
+      "type": "n8n-nodes-base.openAi",
+      "typeVersion": 1,
+      "position": [
+        2000,
+        300
+      ]
+    },
+    {
+      "parameters": {
+        "operation": "create",
+        "base": "your_base_id",
+        "table": "Advanced Integrations",
+        "fields": {
+          "Orchestration ID": "={{ $json.orchestration_id }}",
+          "Orchestration Type": "={{ $json.orchestration_type }}",
+          "Services": "={{ $json.services.join(', ') }}",
+          "Data Quality Score": "={{ $json.data_quality_score }}",
+          "AI Analysis": "={{ $json.choices[0].message.content }}",
+          "Status": "Completed",
+          "Created At": "={{ $json.start_time }}",
+          "Completed At": "={{ $now }}"
+        }
+      },
+      "name": "Store Integration Results",
+      "type": "n8n-nodes-base.airtable",
+      "typeVersion": 1,
+      "position": [
+        2220,
+        300
+      ]
+    },
+    {
+      "parameters": {
+        "operation": "postMessage",
+        "channel": "#integration-reports",
+        "text": "={{ '🔗 Advanced Integration Orchestration Completed\\nID: ' + $json.orchestration_id + '\\nServices: ' + $json.services.join(', ') + '\\nQuality Score: ' + $json.data_quality_score + '\\nProcessing Time: ' + $now.diff($json.start_time, 'milliseconds') + 'ms' }}"
+      },
+      "name": "Send Integration Report",
+      "type": "n8n-nodes-base.slack",
+      "typeVersion": 1,
+      "position": [
+        2440,
+        300
+      ]
+    }
+  ],
+  "connections": {
+    "Advanced Integration Orchestration": {
+      "main": [
+        [
+          {
+            "node": "Initialize Orchestration System",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Initialize Orchestration System": {
+      "main": [
+        [
+          {
+            "node": "Service A Integration",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Service A Integration": {
+      "main": [
+        [
+          {
+            "node": "Service B Integration",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Service B Integration": {
+      "main": [
+        [
+          {
+            "node": "Service C Integration",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Service C Integration": {
+      "main": [
+        [
+          {
+            "node": "Service D Integration",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Service D Integration": {
+      "main": [
+        [
+          {
+            "node": "Service E Integration",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Service E Integration": {
+      "main": [
+        [
+          {
+            "node": "Data Transformation Pipeline",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Data Transformation Pipeline": {
+      "main": [
+        [
+          {
+            "node": "AI Integration Analysis",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "AI Integration Analysis": {
+      "main": [
+        [
+          {
+            "node": "Store Integration Results",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Store Integration Results": {
+      "main": [
+        [
+          {
+            "node": "Send Integration Report",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "pinData": {},
+  "versionId": "1",
+  "id": "advanced_integration_orchestration_system"
+}

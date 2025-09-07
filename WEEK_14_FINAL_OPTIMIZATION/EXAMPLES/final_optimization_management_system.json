@@ -1,0 +1,214 @@
+{
+  "name": "Final Optimization Management System",
+  "description": "Manage final optimization with comprehensive performance analysis and improvement recommendations.",
+  "tags": [
+    "final",
+    "optimization",
+    "performance",
+    "efficiency"
+  ],
+  "version": "1.0.0",
+  "author": "Automator Pro Course",
+  "course_metadata": {
+    "week": "Week 14",
+    "phase": "Final Optimization",
+    "difficulty": "Advanced",
+    "learning_objectives": [
+      "Final optimization",
+      "Exit strategies",
+      "Legacy building"
+    ],
+    "prerequisites": [
+      "Complete course foundation",
+      "Business experience",
+      "Strategic thinking"
+    ],
+    "estimated_setup_time": "5-10 minutes",
+    "use_cases": [
+      "Practice Final Optimization concepts",
+      "Build real-world automation skills",
+      "Prepare for business applications",
+      "Demonstrate course learning objectives"
+    ],
+    "examples": [
+      "Use this workflow to practice Final Optimization skills",
+      "Customize for your specific learning needs",
+      "Apply concepts to real business scenarios",
+      "Build upon for advanced implementations"
+    ],
+    "next_steps": [
+      "Complete Week 15 objectives",
+      "Practice with additional examples",
+      "Apply skills to real projects"
+    ],
+    "related_workflows": [
+      "Week 15 workflows",
+      "Previous week workflows",
+      "Course example workflows"
+    ]
+  },
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "course-Week 14-final_optimization_management_system",
+    "course_version": "1.0",
+    "last_updated": "2025-09-07T14:31:14.861312"
+  },
+  "nodes": [
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "final-optimization",
+        "options": {}
+      },
+      "id": "webhook-trigger",
+      "name": "Final Optimization Trigger",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 1,
+      "position": [
+        240,
+        300
+      ],
+      "webhookId": "final-optimization-webhook"
+    },
+    {
+      "parameters": {
+        "values": {
+          "string": [
+            {
+              "name": "optimization_type",
+              "value": "={{ $json.optimization_type }}"
+            },
+            {
+              "name": "optimization_impact",
+              "value": "={{ $json.optimization_impact }}"
+            },
+            {
+              "name": "optimization_status",
+              "value": "={{ $json.optimization_status }}"
+            },
+            {
+              "name": "optimization_timestamp",
+              "value": "={{ new Date().toISOString() }}"
+            },
+            {
+              "name": "optimization_notes",
+              "value": "={{ $json.optimization_notes }}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "set-optimization-data",
+      "name": "Set Optimization Data",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.3,
+      "position": [
+        460,
+        300
+      ]
+    },
+    {
+      "parameters": {
+        "authentication": "predefinedCredentialType",
+        "nodeCredentialType": "notionApi",
+        "resource": "database",
+        "operation": "create",
+        "databaseId": "={{ $json.database_id }}",
+        "title": "Final Optimization Entry",
+        "propertiesUi": {
+          "propertyValues": [
+            {
+              "key": "Optimization Type",
+              "textValue": "={{ $json.optimization_type }}"
+            },
+            {
+              "key": "Optimization Impact",
+              "textValue": "={{ $json.optimization_impact }}"
+            },
+            {
+              "key": "Optimization Status",
+              "textValue": "={{ $json.optimization_status }}"
+            },
+            {
+              "key": "Optimization Date",
+              "dateValue": "={{ $json.optimization_timestamp }}"
+            },
+            {
+              "key": "Optimization Notes",
+              "textValue": "={{ $json.optimization_notes }}"
+            }
+          ]
+        }
+      },
+      "id": "create-optimization-entry",
+      "name": "Create Optimization Entry",
+      "type": "n8n-nodes-base.notion",
+      "typeVersion": 2,
+      "position": [
+        680,
+        300
+      ]
+    },
+    {
+      "parameters": {
+        "authentication": "predefinedCredentialType",
+        "nodeCredentialType": "slackApi",
+        "resource": "message",
+        "operation": "post",
+        "channel": "={{ $json.slack_channel }}",
+        "text": "⚡ Final Optimization Update\n\nType: {{ $json.optimization_type }}\nImpact: {{ $json.optimization_impact }}\nStatus: {{ $json.optimization_status }}\nOptimized: {{ $json.optimization_timestamp }}\nNotes: {{ $json.optimization_notes }}",
+        "otherOptions": {}
+      },
+      "id": "send-optimization-notification",
+      "name": "Send Optimization Notification",
+      "type": "n8n-nodes-base.slack",
+      "typeVersion": 2.1,
+      "position": [
+        900,
+        300
+      ]
+    }
+  ],
+  "connections": {
+    "webhook-trigger": {
+      "main": [
+        [
+          {
+            "node": "set-optimization-data",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "set-optimization-data": {
+      "main": [
+        [
+          {
+            "node": "create-optimization-entry",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "create-optimization-entry": {
+      "main": [
+        [
+          {
+            "node": "send-optimization-notification",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "pinData": {},
+  "versionId": "1",
+  "id": "final-optimization-management-system"
+}

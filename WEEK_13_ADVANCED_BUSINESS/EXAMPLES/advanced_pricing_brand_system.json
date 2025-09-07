@@ -1,0 +1,532 @@
+{
+  "name": "Advanced Pricing and Brand Management System",
+  "description": "Automated workflow for Advanced Business phase learning objectives with intelligent processing and error handling.",
+  "tags": [
+    "strategy",
+    "business",
+    "advanced",
+    "optimization"
+  ],
+  "version": "1.0.0",
+  "author": "Automator Pro Course",
+  "course_metadata": {
+    "week": "Week 13",
+    "phase": "Advanced Business",
+    "difficulty": "Advanced",
+    "learning_objectives": [
+      "Advanced strategies",
+      "Partnerships",
+      "Brand building"
+    ],
+    "prerequisites": [
+      "Complete course foundation",
+      "Business experience",
+      "Strategic thinking"
+    ],
+    "estimated_setup_time": "10-20 minutes",
+    "use_cases": [
+      "Practice Advanced Business concepts",
+      "Build real-world automation skills",
+      "Prepare for business applications",
+      "Demonstrate course learning objectives"
+    ],
+    "examples": [
+      "Use this workflow to practice Advanced Business skills",
+      "Customize for your specific learning needs",
+      "Apply concepts to real business scenarios",
+      "Build upon for advanced implementations"
+    ],
+    "next_steps": [
+      "Complete Week 14 objectives",
+      "Practice with additional examples",
+      "Apply skills to real projects"
+    ],
+    "related_workflows": [
+      "Week 14 workflows",
+      "Previous week workflows",
+      "Course example workflows"
+    ]
+  },
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "course-Week 13-advanced_pricing_brand_system",
+    "course_version": "1.0",
+    "last_updated": "2025-09-07T14:31:13.945495"
+  },
+  "nodes": [
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "pricing-brand-request",
+        "responseMode": "responseNode",
+        "options": {}
+      },
+      "id": "pricing-brand-trigger",
+      "name": "Pricing Brand Trigger",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 1,
+      "position": [
+        240,
+        300
+      ],
+      "webhookId": "pricing-brand-webhook"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict"
+          },
+          "conditions": [
+            {
+              "id": "pricing-type-condition",
+              "leftValue": "={{ $json.pricingType }}",
+              "rightValue": "value-based",
+              "operator": {
+                "type": "string",
+                "operation": "equals"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "id": "pricing-type-router",
+      "name": "Pricing Type Router",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2,
+      "position": [
+        460,
+        300
+      ]
+    },
+    {
+      "parameters": {
+        "values": {
+          "string": [
+            {
+              "name": "pricingModel",
+              "value": "Value-Based Pricing"
+            },
+            {
+              "name": "pricingDescription",
+              "value": "Pricing based on ROI and value delivered"
+            },
+            {
+              "name": "basicROI",
+              "value": "10% of ROI generated"
+            },
+            {
+              "name": "professionalROI",
+              "value": "15% of ROI generated"
+            },
+            {
+              "name": "enterpriseROI",
+              "value": "20% of ROI generated"
+            },
+            {
+              "name": "valueMetrics",
+              "value": "Time savings, Cost reduction, Revenue increase, Efficiency gains"
+            },
+            {
+              "name": "brandAlignment",
+              "value": "Premium value-based brand positioning"
+            },
+            {
+              "name": "targetMarket",
+              "value": "Businesses focused on ROI and value"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "value-based-pricing-data",
+      "name": "Value-Based Pricing Data",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.3,
+      "position": [
+        680,
+        200
+      ]
+    },
+    {
+      "parameters": {
+        "values": {
+          "string": [
+            {
+              "name": "pricingModel",
+              "value": "Tiered Pricing Model"
+            },
+            {
+              "name": "pricingDescription",
+              "value": "Feature-based pricing tiers"
+            },
+            {
+              "name": "starterTier",
+              "value": "$297/month - Up to 5 workflows, Basic integrations"
+            },
+            {
+              "name": "professionalTier",
+              "value": "$797/month - Up to 25 workflows, Advanced integrations"
+            },
+            {
+              "name": "enterpriseTier",
+              "value": "$1,997/month - Unlimited workflows, All integrations"
+            },
+            {
+              "name": "tierFeatures",
+              "value": "Workflow limits, Integration access, Support levels, SLA guarantees"
+            },
+            {
+              "name": "brandAlignment",
+              "value": "Scalable brand positioning for different business sizes"
+            },
+            {
+              "name": "targetMarket",
+              "value": "Businesses of all sizes with different needs"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "tiered-pricing-data",
+      "name": "Tiered Pricing Data",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.3,
+      "position": [
+        680,
+        400
+      ]
+    },
+    {
+      "parameters": {
+        "values": {
+          "string": [
+            {
+              "name": "pricingModel",
+              "value": "Dynamic Pricing Model"
+            },
+            {
+              "name": "pricingDescription",
+              "value": "Market and demand-based pricing"
+            },
+            {
+              "name": "marketPricing",
+              "value": "Adjust pricing based on market conditions"
+            },
+            {
+              "name": "demandPricing",
+              "value": "Premium pricing for high demand, discounts for low demand"
+            },
+            {
+              "name": "competitivePricing",
+              "value": "Competitive positioning and market-based pricing"
+            },
+            {
+              "name": "pricingFactors",
+              "value": "Market demand, Competitor pricing, Economic conditions, Seasonal trends"
+            },
+            {
+              "name": "brandAlignment",
+              "value": "Flexible brand positioning based on market conditions"
+            },
+            {
+              "name": "targetMarket",
+              "value": "Price-sensitive businesses and market-responsive clients"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "dynamic-pricing-data",
+      "name": "Dynamic Pricing Data",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.3,
+      "position": [
+        680,
+        600
+      ]
+    },
+    {
+      "parameters": {
+        "operation": "create",
+        "resource": "page",
+        "title": "={{ $json.pricingModel }} - Pricing Strategy",
+        "propertiesUi": {
+          "propertyValues": [
+            {
+              "key": "Pricing Type",
+              "textValue": "={{ $json.pricingType }}"
+            },
+            {
+              "key": "Description",
+              "textValue": "={{ $json.pricingDescription }}"
+            },
+            {
+              "key": "Basic Tier",
+              "textValue": "={{ $json.basicROI || $json.starterTier || $json.marketPricing }}"
+            },
+            {
+              "key": "Professional Tier",
+              "textValue": "={{ $json.professionalROI || $json.professionalTier || $json.demandPricing }}"
+            },
+            {
+              "key": "Enterprise Tier",
+              "textValue": "={{ $json.enterpriseROI || $json.enterpriseTier || $json.competitivePricing }}"
+            },
+            {
+              "key": "Value Metrics",
+              "textValue": "={{ $json.valueMetrics || $json.tierFeatures || $json.pricingFactors }}"
+            },
+            {
+              "key": "Brand Alignment",
+              "textValue": "={{ $json.brandAlignment }}"
+            },
+            {
+              "key": "Target Market",
+              "textValue": "={{ $json.targetMarket }}"
+            },
+            {
+              "key": "Status",
+              "textValue": "Active"
+            },
+            {
+              "key": "Created Date",
+              "textValue": "={{ new Date().toISOString() }}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "notion-pricing-strategy",
+      "name": "Notion Pricing Strategy",
+      "type": "n8n-nodes-base.notion",
+      "typeVersion": 2,
+      "position": [
+        900,
+        400
+      ]
+    },
+    {
+      "parameters": {
+        "authentication": "oAuth2",
+        "resource": "message",
+        "operation": "post",
+        "chatId": "={{ $json.businessSlackChannel }}",
+        "text": "💰 New Pricing Strategy!\n\n**{{ $json.pricingModel }}**\n\n{{ $json.pricingDescription }}\n\n**Pricing Tiers:**\n{{ $json.basicROI || $json.starterTier || $json.marketPricing }}\n{{ $json.professionalROI || $json.professionalTier || $json.demandPricing }}\n{{ $json.enterpriseROI || $json.enterpriseTier || $json.competitivePricing }}\n\n**Brand Alignment:**\n{{ $json.brandAlignment }}\n\n**Target Market:**\n{{ $json.targetMarket }}\n\nReady to optimize! 🚀",
+        "options": {}
+      },
+      "id": "slack-pricing-strategy",
+      "name": "Slack Pricing Strategy",
+      "type": "n8n-nodes-base.slack",
+      "typeVersion": 2.1,
+      "position": [
+        1120,
+        400
+      ]
+    },
+    {
+      "parameters": {
+        "authentication": "oAuth2",
+        "resource": "message",
+        "operation": "post",
+        "chatId": "={{ $json.businessTelegramChannel }}",
+        "text": "💰 New Pricing Strategy!\n\n**{{ $json.pricingModel }}**\n\n{{ $json.pricingDescription }}\n\n**Pricing Tiers:**\n{{ $json.basicROI || $json.starterTier || $json.marketPricing }}\n{{ $json.professionalROI || $json.professionalTier || $json.demandPricing }}\n{{ $json.enterpriseROI || $json.enterpriseTier || $json.competitivePricing }}\n\n**Brand Alignment:**\n{{ $json.brandAlignment }}\n\n**Target Market:**\n{{ $json.targetMarket }}\n\nReady to optimize! 🚀",
+        "options": {}
+      },
+      "id": "telegram-pricing-strategy",
+      "name": "Telegram Pricing Strategy",
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1.2,
+      "position": [
+        1120,
+        600
+      ]
+    },
+    {
+      "parameters": {
+        "operation": "create",
+        "resource": "page",
+        "title": "Brand Management Dashboard",
+        "propertiesUi": {
+          "propertyValues": [
+            {
+              "key": "Brand Awareness",
+              "textValue": "={{ $json.brandAwareness }}"
+            },
+            {
+              "key": "Brand Consistency",
+              "textValue": "={{ $json.brandConsistency }}"
+            },
+            {
+              "key": "Brand Positioning",
+              "textValue": "={{ $json.brandPositioning }}"
+            },
+            {
+              "key": "Brand Performance",
+              "textValue": "={{ $json.brandPerformance }}"
+            },
+            {
+              "key": "Last Updated",
+              "textValue": "={{ new Date().toISOString() }}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "notion-brand-dashboard",
+      "name": "Notion Brand Dashboard",
+      "type": "n8n-nodes-base.notion",
+      "typeVersion": 2,
+      "position": [
+        1340,
+        400
+      ]
+    },
+    {
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "={{ JSON.stringify({\n  success: true,\n  message: 'Pricing and brand strategy processed successfully',\n  pricingType: $json.pricingType,\n  pricingModel: $json.pricingModel,\n  status: 'Documented and Notified',\n  timestamp: new Date().toISOString()\n}) }}",
+        "options": {}
+      },
+      "id": "pricing-brand-response",
+      "name": "Pricing Brand Response",
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.1,
+      "position": [
+        1560,
+        400
+      ]
+    }
+  ],
+  "connections": {
+    "Pricing Brand Trigger": {
+      "main": [
+        [
+          {
+            "node": "Pricing Type Router",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Pricing Type Router": {
+      "main": [
+        [
+          {
+            "node": "Value-Based Pricing Data",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Tiered Pricing Data",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Dynamic Pricing Data",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Value-Based Pricing Data": {
+      "main": [
+        [
+          {
+            "node": "Notion Pricing Strategy",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Tiered Pricing Data": {
+      "main": [
+        [
+          {
+            "node": "Notion Pricing Strategy",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Dynamic Pricing Data": {
+      "main": [
+        [
+          {
+            "node": "Notion Pricing Strategy",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Notion Pricing Strategy": {
+      "main": [
+        [
+          {
+            "node": "Slack Pricing Strategy",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Telegram Pricing Strategy",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Slack Pricing Strategy": {
+      "main": [
+        [
+          {
+            "node": "Notion Brand Dashboard",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Telegram Pricing Strategy": {
+      "main": [
+        [
+          {
+            "node": "Notion Brand Dashboard",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Notion Brand Dashboard": {
+      "main": [
+        [
+          {
+            "node": "Pricing Brand Response",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "pinData": {},
+  "versionId": "1",
+  "id": "advanced_pricing_brand_system"
+}

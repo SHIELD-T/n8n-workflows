@@ -1,0 +1,214 @@
+{
+  "name": "Workflow Scaling Management System",
+  "description": "Manage workflow scaling with automated resource allocation and performance monitoring.",
+  "tags": [
+    "optimization",
+    "performance",
+    "workflows",
+    "automation"
+  ],
+  "version": "1.0.0",
+  "author": "Automator Pro Course",
+  "course_metadata": {
+    "week": "Week 05",
+    "phase": "Workflow Building",
+    "difficulty": "Intermediate",
+    "learning_objectives": [
+      "Production deployment",
+      "Monitoring",
+      "Maintenance"
+    ],
+    "prerequisites": [
+      "Completed previous weeks",
+      "n8n instance",
+      "Basic automation knowledge"
+    ],
+    "estimated_setup_time": "5-10 minutes",
+    "use_cases": [
+      "Practice Workflow Building concepts",
+      "Build real-world automation skills",
+      "Prepare for business applications",
+      "Demonstrate course learning objectives"
+    ],
+    "examples": [
+      "Use this workflow to practice Workflow Building skills",
+      "Customize for your specific learning needs",
+      "Apply concepts to real business scenarios",
+      "Build upon for advanced implementations"
+    ],
+    "next_steps": [
+      "Complete Week 6 objectives",
+      "Practice with additional examples",
+      "Apply skills to real projects"
+    ],
+    "related_workflows": [
+      "Week 6 workflows",
+      "Previous week workflows",
+      "Course example workflows"
+    ]
+  },
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "course-Week 05-workflow_scaling_management_system",
+    "course_version": "1.0",
+    "last_updated": "2025-09-07T14:31:14.264335"
+  },
+  "nodes": [
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "workflow-scaling",
+        "options": {}
+      },
+      "id": "webhook-trigger",
+      "name": "Workflow Scaling Trigger",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 1,
+      "position": [
+        240,
+        300
+      ],
+      "webhookId": "workflow-scaling-webhook"
+    },
+    {
+      "parameters": {
+        "values": {
+          "string": [
+            {
+              "name": "workflow_id",
+              "value": "={{ $json.workflow_id }}"
+            },
+            {
+              "name": "scaling_action",
+              "value": "={{ $json.scaling_action }}"
+            },
+            {
+              "name": "scaling_factor",
+              "value": "={{ $json.scaling_factor }}"
+            },
+            {
+              "name": "scaling_timestamp",
+              "value": "={{ new Date().toISOString() }}"
+            },
+            {
+              "name": "scaling_notes",
+              "value": "={{ $json.scaling_notes }}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "set-scaling-data",
+      "name": "Set Scaling Data",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.3,
+      "position": [
+        460,
+        300
+      ]
+    },
+    {
+      "parameters": {
+        "authentication": "predefinedCredentialType",
+        "nodeCredentialType": "notionApi",
+        "resource": "database",
+        "operation": "create",
+        "databaseId": "={{ $json.database_id }}",
+        "title": "Workflow Scaling Entry",
+        "propertiesUi": {
+          "propertyValues": [
+            {
+              "key": "Workflow ID",
+              "textValue": "={{ $json.workflow_id }}"
+            },
+            {
+              "key": "Scaling Action",
+              "textValue": "={{ $json.scaling_action }}"
+            },
+            {
+              "key": "Scaling Factor",
+              "textValue": "={{ $json.scaling_factor }}"
+            },
+            {
+              "key": "Scaling Date",
+              "dateValue": "={{ $json.scaling_timestamp }}"
+            },
+            {
+              "key": "Scaling Notes",
+              "textValue": "={{ $json.scaling_notes }}"
+            }
+          ]
+        }
+      },
+      "id": "create-scaling-entry",
+      "name": "Create Scaling Entry",
+      "type": "n8n-nodes-base.notion",
+      "typeVersion": 2,
+      "position": [
+        680,
+        300
+      ]
+    },
+    {
+      "parameters": {
+        "authentication": "predefinedCredentialType",
+        "nodeCredentialType": "slackApi",
+        "resource": "message",
+        "operation": "post",
+        "channel": "={{ $json.slack_channel }}",
+        "text": "📈 Workflow Scaling Update\n\nWorkflow: {{ $json.workflow_id }}\nAction: {{ $json.scaling_action }}\nFactor: {{ $json.scaling_factor }}\nScaled: {{ $json.scaling_timestamp }}\nNotes: {{ $json.scaling_notes }}",
+        "otherOptions": {}
+      },
+      "id": "send-scaling-notification",
+      "name": "Send Scaling Notification",
+      "type": "n8n-nodes-base.slack",
+      "typeVersion": 2.1,
+      "position": [
+        900,
+        300
+      ]
+    }
+  ],
+  "connections": {
+    "webhook-trigger": {
+      "main": [
+        [
+          {
+            "node": "set-scaling-data",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "set-scaling-data": {
+      "main": [
+        [
+          {
+            "node": "create-scaling-entry",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "create-scaling-entry": {
+      "main": [
+        [
+          {
+            "node": "send-scaling-notification",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "pinData": {},
+  "versionId": "1",
+  "id": "workflow-scaling-management-system"
+}

@@ -1,0 +1,261 @@
+{
+  "name": "Agent Learning System",
+  "description": "Automated workflow for AI Integration phase learning objectives with intelligent processing and error handling.",
+  "tags": [
+    "ai",
+    "machine-learning",
+    "agents",
+    "intelligence"
+  ],
+  "version": "1.0.0",
+  "author": "Automator Pro Course",
+  "course_metadata": {
+    "week": "Week 07",
+    "phase": "AI Integration",
+    "difficulty": "Intermediate",
+    "learning_objectives": [
+      "Advanced AI patterns",
+      "AI optimization",
+      "Intelligent systems"
+    ],
+    "prerequisites": [
+      "Workflow building skills",
+      "AI/ML interest",
+      "API knowledge"
+    ],
+    "estimated_setup_time": "20-30 minutes",
+    "use_cases": [
+      "Practice AI Integration concepts",
+      "Build real-world automation skills",
+      "Prepare for business applications",
+      "Demonstrate course learning objectives"
+    ],
+    "examples": [
+      "Use this workflow to practice AI Integration skills",
+      "Customize for your specific learning needs",
+      "Apply concepts to real business scenarios",
+      "Build upon for advanced implementations"
+    ],
+    "next_steps": [
+      "Complete Week 8 objectives",
+      "Practice with additional examples",
+      "Apply skills to real projects"
+    ],
+    "related_workflows": [
+      "Week 8 workflows",
+      "Previous week workflows",
+      "Course example workflows"
+    ]
+  },
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "course-Week 07-agent_learning_system",
+    "course_version": "1.0",
+    "last_updated": "2025-09-07T14:31:13.933159"
+  },
+  "nodes": [
+    {
+      "name": "Agent Learning System",
+      "type": "n8n-nodes-base.webhook",
+      "parameters": {
+        "path": "agent-learning-system",
+        "httpMethod": "POST"
+      }
+    },
+    {
+      "name": "Initialize Learning System",
+      "type": "n8n-nodes-base.set",
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "name": "learning_session_id",
+              "value": "={{ $now.format('YYYYMMDDHHmmss') }}"
+            },
+            {
+              "name": "learning_type",
+              "value": "adaptive"
+            },
+            {
+              "name": "start_time",
+              "value": "={{ $now }}"
+            },
+            {
+              "name": "learning_algorithms",
+              "value": "={{ ['reinforcement', 'supervised', 'unsupervised'] }}"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "name": "Process Learning Data",
+      "type": "n8n-nodes-base.set",
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "name": "training_data",
+              "value": "={{ $json.training_data || 'Sample training data for learning' }}"
+            },
+            {
+              "name": "performance_metrics",
+              "value": "={{ $json.metrics || { 'accuracy': 75, 'efficiency': 80, 'satisfaction': 4.0 } }}"
+            },
+            {
+              "name": "learning_objectives",
+              "value": "={{ $json.objectives || ['improve_accuracy', 'increase_efficiency', 'enhance_satisfaction'] }}"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "name": "Reinforcement Learning",
+      "type": "n8n-nodes-base.httpRequest",
+      "parameters": {
+        "method": "POST",
+        "url": "https://api.learning-service.com/reinforcement-learning",
+        "bodyContentType": "json",
+        "jsonBody": "={{ { \"learning_session_id\": $json.learning_session_id, \"training_data\": $json.training_data, \"performance_metrics\": $json.performance_metrics, \"learning_type\": \"reinforcement\", \"timestamp\": $now } }}"
+      }
+    },
+    {
+      "name": "Supervised Learning",
+      "type": "n8n-nodes-base.httpRequest",
+      "parameters": {
+        "method": "POST",
+        "url": "https://api.learning-service.com/supervised-learning",
+        "bodyContentType": "json",
+        "jsonBody": "={{ { \"learning_session_id\": $json.learning_session_id, \"training_data\": $json.training_data, \"performance_metrics\": $json.performance_metrics, \"learning_type\": \"supervised\", \"timestamp\": $now } }}"
+      }
+    },
+    {
+      "name": "Unsupervised Learning",
+      "type": "n8n-nodes-base.httpRequest",
+      "parameters": {
+        "method": "POST",
+        "url": "https://api.learning-service.com/unsupervised-learning",
+        "bodyContentType": "json",
+        "jsonBody": "={{ { \"learning_session_id\": $json.learning_session_id, \"training_data\": $json.training_data, \"performance_metrics\": $json.performance_metrics, \"learning_type\": \"unsupervised\", \"timestamp\": $now } }}"
+      }
+    },
+    {
+      "name": "Analyze Learning Results",
+      "type": "n8n-nodes-base.set",
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "name": "reinforcement_results",
+              "value": "={{ $('Reinforcement Learning').item.json.results }}"
+            },
+            {
+              "name": "supervised_results",
+              "value": "={{ $('Supervised Learning').item.json.results }}"
+            },
+            {
+              "name": "unsupervised_results",
+              "value": "={{ $('Unsupervised Learning').item.json.results }}"
+            },
+            {
+              "name": "learning_improvement",
+              "value": "={{ Math.floor(Math.random() * 20) + 10 }}"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "name": "Adaptive Behavior Update",
+      "type": "n8n-nodes-base.openAi",
+      "parameters": {
+        "resource": "chat",
+        "operation": "create",
+        "model": "gpt-4",
+        "messages": {
+          "values": [
+            {
+              "role": "system",
+              "content": "You are an AI learning system that analyzes learning results and generates adaptive behavior updates."
+            },
+            {
+              "role": "user",
+              "content": "={{ 'Learning Results:\\nReinforcement: ' + $json.reinforcement_results + '\\nSupervised: ' + $json.supervised_results + '\\nUnsupervised: ' + $json.unsupervised_results + '\\n\\nGenerate adaptive behavior updates and optimization recommendations.' }}"
+            }
+          ]
+        },
+        "options": {
+          "temperature": 0.3,
+          "maxTokens": 500
+        }
+      }
+    },
+    {
+      "name": "Generate Learning Report",
+      "type": "n8n-nodes-base.set",
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "name": "learning_report",
+              "value": "={{ { \"learning_session_id\": $json.learning_session_id, \"learning_type\": $json.learning_type, \"start_time\": $json.start_time, \"training_data\": $json.training_data, \"performance_metrics\": $json.performance_metrics, \"learning_objectives\": $json.learning_objectives, \"reinforcement_results\": $json.reinforcement_results, \"supervised_results\": $json.supervised_results, \"unsupervised_results\": $json.unsupervised_results, \"learning_improvement\": $json.learning_improvement, \"adaptive_updates\": $json.choices[0].message.content, \"processing_time\": $now.diff($json.start_time, 'milliseconds'), \"completed_at\": $now } }}"
+            },
+            {
+              "name": "success_message",
+              "value": "✅ AI agent learning processing completed successfully"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "name": "Send Learning Results",
+      "type": "n8n-nodes-base.httpRequest",
+      "parameters": {
+        "method": "POST",
+        "url": "https://api.learning-service.com/results",
+        "bodyContentType": "json",
+        "jsonBody": "={{ { \"results\": $json.learning_report, \"timestamp\": $now } }}"
+      }
+    },
+    {
+      "name": "Log Learning Activity",
+      "type": "n8n-nodes-base.httpRequest",
+      "parameters": {
+        "method": "POST",
+        "url": "https://api.learning-log.com/log",
+        "bodyContentType": "json",
+        "jsonBody": "={{ { \"type\": \"agent_learning\", \"data\": $json.learning_report, \"timestamp\": $now } }}"
+      }
+    },
+    {
+      "name": "Handle Learning Error",
+      "type": "n8n-nodes-base.set",
+      "position": [
+        500,
+        300
+      ],
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "name": "learning_error",
+              "value": "={{ { \"error_type\": \"learning_failed\", \"learning_session_id\": $json.learning_session_id, \"message\": \"AI agent learning failed\", \"timestamp\": $now } }}"
+            },
+            {
+              "name": "error_response",
+              "value": "={{ { \"status\": \"error\", \"learning_session_id\": $json.learning_session_id, \"message\": \"AI agent learning workflow error\" } }}"
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "connections": {},
+  "active": false,
+  "settings": {},
+  "pinData": {},
+  "versionId": "1",
+  "id": "agent_learning_system"
+}

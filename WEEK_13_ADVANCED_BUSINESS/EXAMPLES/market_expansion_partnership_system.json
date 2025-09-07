@@ -1,0 +1,548 @@
+{
+  "name": "Market Expansion and Partnership Management System",
+  "description": "Automated workflow for Advanced Business phase learning objectives with intelligent processing and error handling.",
+  "tags": [
+    "strategy",
+    "business",
+    "advanced",
+    "optimization"
+  ],
+  "version": "1.0.0",
+  "author": "Automator Pro Course",
+  "course_metadata": {
+    "week": "Week 13",
+    "phase": "Advanced Business",
+    "difficulty": "Advanced",
+    "learning_objectives": [
+      "Advanced strategies",
+      "Partnerships",
+      "Brand building"
+    ],
+    "prerequisites": [
+      "Complete course foundation",
+      "Business experience",
+      "Strategic thinking"
+    ],
+    "estimated_setup_time": "10-20 minutes",
+    "use_cases": [
+      "Practice Advanced Business concepts",
+      "Build real-world automation skills",
+      "Prepare for business applications",
+      "Demonstrate course learning objectives"
+    ],
+    "examples": [
+      "Use this workflow to practice Advanced Business skills",
+      "Customize for your specific learning needs",
+      "Apply concepts to real business scenarios",
+      "Build upon for advanced implementations"
+    ],
+    "next_steps": [
+      "Complete Week 14 objectives",
+      "Practice with additional examples",
+      "Apply skills to real projects"
+    ],
+    "related_workflows": [
+      "Week 14 workflows",
+      "Previous week workflows",
+      "Course example workflows"
+    ]
+  },
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "course-Week 13-market_expansion_partnership_system",
+    "course_version": "1.0",
+    "last_updated": "2025-09-07T14:31:13.950363"
+  },
+  "nodes": [
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "market-expansion-request",
+        "responseMode": "responseNode",
+        "options": {}
+      },
+      "id": "market-expansion-trigger",
+      "name": "Market Expansion Trigger",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 1,
+      "position": [
+        240,
+        300
+      ],
+      "webhookId": "market-expansion-webhook"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict"
+          },
+          "conditions": [
+            {
+              "id": "market-type-condition",
+              "leftValue": "={{ $json.marketType }}",
+              "rightValue": "healthcare",
+              "operator": {
+                "type": "string",
+                "operation": "equals"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "id": "market-type-router",
+      "name": "Market Type Router",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2,
+      "position": [
+        460,
+        300
+      ]
+    },
+    {
+      "parameters": {
+        "values": {
+          "string": [
+            {
+              "name": "marketName",
+              "value": "Healthcare Automation Market"
+            },
+            {
+              "name": "marketSize",
+              "value": "$2.5B globally"
+            },
+            {
+              "name": "growthRate",
+              "value": "15% annually"
+            },
+            {
+              "name": "entryStrategy",
+              "value": "Partnership with healthcare providers"
+            },
+            {
+              "name": "pricingModel",
+              "value": "Value-based pricing on ROI"
+            },
+            {
+              "name": "brandPositioning",
+              "value": "HIPAA-compliant automation expert"
+            },
+            {
+              "name": "partnershipApproach",
+              "value": "Joint ventures with healthcare IT firms"
+            },
+            {
+              "name": "timeline",
+              "value": "6-12 months"
+            },
+            {
+              "name": "investment",
+              "value": "$50K-100K"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "healthcare-market-data",
+      "name": "Healthcare Market Data",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.3,
+      "position": [
+        680,
+        200
+      ]
+    },
+    {
+      "parameters": {
+        "values": {
+          "string": [
+            {
+              "name": "marketName",
+              "value": "E-commerce Automation Market"
+            },
+            {
+              "name": "marketSize",
+              "value": "$1.8B globally"
+            },
+            {
+              "name": "growthRate",
+              "value": "20% annually"
+            },
+            {
+              "name": "entryStrategy",
+              "value": "Direct sales to e-commerce businesses"
+            },
+            {
+              "name": "pricingModel",
+              "value": "Tiered pricing based on transaction volume"
+            },
+            {
+              "name": "brandPositioning",
+              "value": "E-commerce automation specialist"
+            },
+            {
+              "name": "partnershipApproach",
+              "value": "Platform partnerships with Shopify, WooCommerce"
+            },
+            {
+              "name": "timeline",
+              "value": "3-6 months"
+            },
+            {
+              "name": "investment",
+              "value": "$25K-50K"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "ecommerce-market-data",
+      "name": "E-commerce Market Data",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.3,
+      "position": [
+        680,
+        400
+      ]
+    },
+    {
+      "parameters": {
+        "values": {
+          "string": [
+            {
+              "name": "marketName",
+              "value": "Real Estate Automation Market"
+            },
+            {
+              "name": "marketSize",
+              "value": "$800M globally"
+            },
+            {
+              "name": "growthRate",
+              "value": "12% annually"
+            },
+            {
+              "name": "entryStrategy",
+              "value": "Partner with real estate agencies"
+            },
+            {
+              "name": "pricingModel",
+              "value": "Commission-based pricing"
+            },
+            {
+              "name": "brandPositioning",
+              "value": "Real estate automation expert"
+            },
+            {
+              "name": "partnershipApproach",
+              "value": "Referral partnerships with real estate platforms"
+            },
+            {
+              "name": "timeline",
+              "value": "4-8 months"
+            },
+            {
+              "name": "investment",
+              "value": "$30K-75K"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "real-estate-market-data",
+      "name": "Real Estate Market Data",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.3,
+      "position": [
+        680,
+        600
+      ]
+    },
+    {
+      "parameters": {
+        "operation": "create",
+        "resource": "page",
+        "title": "={{ $json.marketName }} - Market Expansion Plan",
+        "propertiesUi": {
+          "propertyValues": [
+            {
+              "key": "Market Type",
+              "textValue": "={{ $json.marketType }}"
+            },
+            {
+              "key": "Market Size",
+              "textValue": "={{ $json.marketSize }}"
+            },
+            {
+              "key": "Growth Rate",
+              "textValue": "={{ $json.growthRate }}"
+            },
+            {
+              "key": "Entry Strategy",
+              "textValue": "={{ $json.entryStrategy }}"
+            },
+            {
+              "key": "Pricing Model",
+              "textValue": "={{ $json.pricingModel }}"
+            },
+            {
+              "key": "Brand Positioning",
+              "textValue": "={{ $json.brandPositioning }}"
+            },
+            {
+              "key": "Partnership Approach",
+              "textValue": "={{ $json.partnershipApproach }}"
+            },
+            {
+              "key": "Timeline",
+              "textValue": "={{ $json.timeline }}"
+            },
+            {
+              "key": "Investment",
+              "textValue": "={{ $json.investment }}"
+            },
+            {
+              "key": "Status",
+              "textValue": "Planning"
+            },
+            {
+              "key": "Created Date",
+              "textValue": "={{ new Date().toISOString() }}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "notion-market-expansion",
+      "name": "Notion Market Expansion",
+      "type": "n8n-nodes-base.notion",
+      "typeVersion": 2,
+      "position": [
+        900,
+        400
+      ]
+    },
+    {
+      "parameters": {
+        "authentication": "oAuth2",
+        "resource": "message",
+        "operation": "post",
+        "chatId": "={{ $json.businessSlackChannel }}",
+        "text": "🎯 New Market Expansion Plan!\n\n**{{ $json.marketName }}**\n\n**Market Details:**\nSize: {{ $json.marketSize }}\nGrowth: {{ $json.growthRate }}\n\n**Strategy:**\nEntry: {{ $json.entryStrategy }}\nPricing: {{ $json.pricingModel }}\nBrand: {{ $json.brandPositioning }}\n\n**Partnership:**\n{{ $json.partnershipApproach }}\n\n**Timeline:** {{ $json.timeline }}\n**Investment:** {{ $json.investment }}\n\nReady to expand! 🚀",
+        "options": {}
+      },
+      "id": "slack-market-expansion",
+      "name": "Slack Market Expansion",
+      "type": "n8n-nodes-base.slack",
+      "typeVersion": 2.1,
+      "position": [
+        1120,
+        400
+      ]
+    },
+    {
+      "parameters": {
+        "authentication": "oAuth2",
+        "resource": "message",
+        "operation": "post",
+        "chatId": "={{ $json.businessTelegramChannel }}",
+        "text": "🎯 New Market Expansion Plan!\n\n**{{ $json.marketName }}**\n\n**Market Details:**\nSize: {{ $json.marketSize }}\nGrowth: {{ $json.growthRate }}\n\n**Strategy:**\nEntry: {{ $json.entryStrategy }}\nPricing: {{ $json.pricingModel }}\nBrand: {{ $json.brandPositioning }}\n\n**Partnership:**\n{{ $json.partnershipApproach }}\n\n**Timeline:** {{ $json.timeline }}\n**Investment:** {{ $json.investment }}\n\nReady to expand! 🚀",
+        "options": {}
+      },
+      "id": "telegram-market-expansion",
+      "name": "Telegram Market Expansion",
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1.2,
+      "position": [
+        1120,
+        600
+      ]
+    },
+    {
+      "parameters": {
+        "operation": "create",
+        "resource": "page",
+        "title": "Partnership Development Dashboard",
+        "propertiesUi": {
+          "propertyValues": [
+            {
+              "key": "Active Partnerships",
+              "textValue": "={{ $json.activePartnerships }}"
+            },
+            {
+              "key": "Partnership Revenue",
+              "textValue": "={{ $json.partnershipRevenue }}"
+            },
+            {
+              "key": "Partnership Satisfaction",
+              "textValue": "={{ $json.partnershipSatisfaction }}"
+            },
+            {
+              "key": "New Partnership Opportunities",
+              "textValue": "={{ $json.newPartnershipOpportunities }}"
+            },
+            {
+              "key": "Last Updated",
+              "textValue": "={{ new Date().toISOString() }}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "notion-partnership-dashboard",
+      "name": "Notion Partnership Dashboard",
+      "type": "n8n-nodes-base.notion",
+      "typeVersion": 2,
+      "position": [
+        1340,
+        400
+      ]
+    },
+    {
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "={{ JSON.stringify({\n  success: true,\n  message: 'Market expansion plan processed successfully',\n  marketType: $json.marketType,\n  marketName: $json.marketName,\n  status: 'Documented and Notified',\n  timestamp: new Date().toISOString()\n}) }}",
+        "options": {}
+      },
+      "id": "market-expansion-response",
+      "name": "Market Expansion Response",
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.1,
+      "position": [
+        1560,
+        400
+      ]
+    }
+  ],
+  "connections": {
+    "Market Expansion Trigger": {
+      "main": [
+        [
+          {
+            "node": "Market Type Router",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Market Type Router": {
+      "main": [
+        [
+          {
+            "node": "Healthcare Market Data",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "E-commerce Market Data",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Real Estate Market Data",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Healthcare Market Data": {
+      "main": [
+        [
+          {
+            "node": "Notion Market Expansion",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "E-commerce Market Data": {
+      "main": [
+        [
+          {
+            "node": "Notion Market Expansion",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Real Estate Market Data": {
+      "main": [
+        [
+          {
+            "node": "Notion Market Expansion",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Notion Market Expansion": {
+      "main": [
+        [
+          {
+            "node": "Slack Market Expansion",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Telegram Market Expansion",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Slack Market Expansion": {
+      "main": [
+        [
+          {
+            "node": "Notion Partnership Dashboard",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Telegram Market Expansion": {
+      "main": [
+        [
+          {
+            "node": "Notion Partnership Dashboard",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Notion Partnership Dashboard": {
+      "main": [
+        [
+          {
+            "node": "Market Expansion Response",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "pinData": {},
+  "versionId": "1",
+  "id": "market_expansion_partnership_system"
+}

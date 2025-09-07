@@ -1,0 +1,300 @@
+{
+  "name": "Workflow Cloning System",
+  "description": "Automated workflow for Workflow Building phase learning objectives with intelligent processing and error handling.",
+  "tags": [
+    "optimization",
+    "performance",
+    "workflows",
+    "automation"
+  ],
+  "version": "1.0.0",
+  "author": "Automator Pro Course",
+  "course_metadata": {
+    "week": "Week 03",
+    "phase": "Workflow Building",
+    "difficulty": "Intermediate",
+    "learning_objectives": [
+      "Advanced nodes usage",
+      "Expression writing",
+      "Error handling"
+    ],
+    "prerequisites": [
+      "Completed previous weeks",
+      "n8n instance",
+      "Basic automation knowledge"
+    ],
+    "estimated_setup_time": "20-30 minutes",
+    "use_cases": [
+      "Practice Workflow Building concepts",
+      "Build real-world automation skills",
+      "Prepare for business applications",
+      "Demonstrate course learning objectives"
+    ],
+    "examples": [
+      "Use this workflow to practice Workflow Building skills",
+      "Customize for your specific learning needs",
+      "Apply concepts to real business scenarios",
+      "Build upon for advanced implementations"
+    ],
+    "next_steps": [
+      "Complete Week 4 objectives",
+      "Practice with additional examples",
+      "Apply skills to real projects"
+    ],
+    "related_workflows": [
+      "Week 4 workflows",
+      "Previous week workflows",
+      "Course example workflows"
+    ]
+  },
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "course-Week 03-workflow_cloning_system",
+    "course_version": "1.0",
+    "last_updated": "2025-09-07T14:31:13.959233"
+  },
+  "nodes": [
+    {
+      "name": "Workflow Cloning System",
+      "type": "n8n-nodes-base.webhook",
+      "parameters": {
+        "path": "workflow-cloning",
+        "httpMethod": "POST"
+      }
+    },
+    {
+      "name": "Initialize Cloning Process",
+      "type": "n8n-nodes-base.set",
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "name": "clone_id",
+              "value": "={{ $now.format('YYYYMMDDHHmmss') }}"
+            },
+            {
+              "name": "source_workflow",
+              "value": "={{ $json.source_workflow || 'template_workflow' }}"
+            },
+            {
+              "name": "target_workflow",
+              "value": "={{ $json.target_workflow || 'cloned_workflow_' + $now.format('YYYYMMDDHHmmss') }}"
+            },
+            {
+              "name": "clone_type",
+              "value": "full_clone"
+            },
+            {
+              "name": "start_time",
+              "value": "={{ $now }}"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "name": "Validate Source Workflow",
+      "type": "n8n-nodes-base.if",
+      "parameters": {
+        "conditions": {
+          "string": [
+            {
+              "value1": "={{ $json.source_workflow }}",
+              "operation": "isNotEmpty"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "name": "Fetch Source Workflow",
+      "type": "n8n-nodes-base.httpRequest",
+      "parameters": {
+        "method": "GET",
+        "url": "https://api.workflow-manager.com/workflows",
+        "qs": {
+          "name": "={{ $json.source_workflow }}"
+        },
+        "options": {
+          "response": {
+            "response": {
+              "responseFormat": "json"
+            }
+          }
+        }
+      }
+    },
+    {
+      "name": "Process Source Workflow",
+      "type": "n8n-nodes-base.set",
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "name": "source_data",
+              "value": "={{ $json }}"
+            },
+            {
+              "name": "source_nodes",
+              "value": "={{ $json.nodes.length }}"
+            },
+            {
+              "name": "source_connections",
+              "value": "={{ $json.connections.length }}"
+            },
+            {
+              "name": "source_version",
+              "value": "={{ $json.version || '1.0.0' }}"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "name": "Create Cloned Workflow",
+      "type": "n8n-nodes-base.set",
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "name": "cloned_workflow",
+              "value": "={{ { \"name\": $json.target_workflow, \"nodes\": $json.source_data.nodes.map(node => ({ ...node, \"id\": node.id + '_cloned_' + $json.clone_id })), \"connections\": $json.source_data.connections, \"version\": '1.0.0', \"cloned_from\": $json.source_workflow, \"clone_id\": $json.clone_id, \"created_at\": $now } }}"
+            },
+            {
+              "name": "clone_status",
+              "value": "created"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "name": "Modify Cloned Workflow",
+      "type": "n8n-nodes-base.set",
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "name": "modified_workflow",
+              "value": "={{ { \"name\": $json.target_workflow, \"nodes\": $json.cloned_workflow.nodes.map(node => ({ ...node, \"name\": node.name + ' (Cloned)', \"parameters\": { ...node.parameters, \"workflow_id\": $json.clone_id } })), \"connections\": $json.cloned_workflow.connections, \"version\": '1.0.0', \"cloned_from\": $json.source_workflow, \"clone_id\": $json.clone_id, \"modified_at\": $now } }}"
+            },
+            {
+              "name": "modification_status",
+              "value": "completed"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "name": "Validate Cloned Workflow",
+      "type": "n8n-nodes-base.if",
+      "parameters": {
+        "conditions": {
+          "array": [
+            {
+              "value1": "={{ $json.modified_workflow.nodes }}",
+              "operation": "isNotEmpty"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "name": "Save Cloned Workflow",
+      "type": "n8n-nodes-base.httpRequest",
+      "parameters": {
+        "method": "POST",
+        "url": "https://api.workflow-manager.com/workflows",
+        "bodyContentType": "json",
+        "jsonBody": "={{ { \"workflow\": $json.modified_workflow, \"clone_id\": $json.clone_id, \"timestamp\": $now } }}"
+      }
+    },
+    {
+      "name": "Create Clone Documentation",
+      "type": "n8n-nodes-base.set",
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "name": "clone_documentation",
+              "value": "={{ { \"clone_id\": $json.clone_id, \"source_workflow\": $json.source_workflow, \"target_workflow\": $json.target_workflow, \"clone_type\": $json.clone_type, \"source_nodes\": $json.source_nodes, \"source_connections\": $json.source_connections, \"source_version\": $json.source_version, \"clone_status\": $json.clone_status, \"modification_status\": $json.modification_status, \"created_at\": $json.start_time, \"documented_at\": $now } }}"
+            },
+            {
+              "name": "documentation_status",
+              "value": "completed"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "name": "Generate Clone Report",
+      "type": "n8n-nodes-base.set",
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "name": "clone_report",
+              "value": "={{ { \"clone_id\": $json.clone_id, \"source_workflow\": $json.source_workflow, \"target_workflow\": $json.target_workflow, \"clone_type\": $json.clone_type, \"source_nodes\": $json.source_nodes, \"source_connections\": $json.source_connections, \"clone_status\": $json.clone_status, \"modification_status\": $json.modification_status, \"clone_documentation\": $json.clone_documentation, \"documentation_status\": $json.documentation_status, \"completed_at\": $now } }}"
+            },
+            {
+              "name": "success_message",
+              "value": "✅ Workflow cloning completed successfully"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "name": "Handle Validation Error",
+      "type": "n8n-nodes-base.set",
+      "position": [
+        500,
+        300
+      ],
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "name": "validation_error",
+              "value": "={{ { \"error_type\": \"source_validation\", \"clone_id\": $json.clone_id, \"message\": \"Invalid source workflow\", \"timestamp\": $now } }}"
+            },
+            {
+              "name": "error_response",
+              "value": "={{ { \"status\": \"error\", \"clone_id\": $json.clone_id, \"message\": \"Workflow cloning validation failed\" } }}"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "name": "Handle Clone Validation Error",
+      "type": "n8n-nodes-base.set",
+      "position": [
+        500,
+        500
+      ],
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "name": "clone_validation_error",
+              "value": "={{ { \"error_type\": \"clone_validation\", \"clone_id\": $json.clone_id, \"message\": \"Cloned workflow validation failed\", \"timestamp\": $now } }}"
+            },
+            {
+              "name": "clone_error_response",
+              "value": "={{ { \"status\": \"error\", \"clone_id\": $json.clone_id, \"message\": \"Cloned workflow validation failed\" } }}"
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "connections": {},
+  "active": false,
+  "settings": {},
+  "pinData": {},
+  "versionId": "1",
+  "id": "workflow_cloning_system"
+}

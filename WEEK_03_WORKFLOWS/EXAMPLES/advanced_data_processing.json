@@ -1,0 +1,269 @@
+{
+  "name": "Advanced Data Processing",
+  "description": "Automated workflow for Workflow Building phase learning objectives with intelligent processing and error handling.",
+  "tags": [
+    "optimization",
+    "performance",
+    "workflows",
+    "automation"
+  ],
+  "version": "1.0.0",
+  "author": "Automator Pro Course",
+  "course_metadata": {
+    "week": "Week 03",
+    "phase": "Workflow Building",
+    "difficulty": "Intermediate",
+    "learning_objectives": [
+      "Advanced nodes usage",
+      "Expression writing",
+      "Error handling"
+    ],
+    "prerequisites": [
+      "Completed previous weeks",
+      "n8n instance",
+      "Basic automation knowledge"
+    ],
+    "estimated_setup_time": "10-20 minutes",
+    "use_cases": [
+      "Practice Workflow Building concepts",
+      "Build real-world automation skills",
+      "Prepare for business applications",
+      "Demonstrate course learning objectives"
+    ],
+    "examples": [
+      "Use this workflow to practice Workflow Building skills",
+      "Customize for your specific learning needs",
+      "Apply concepts to real business scenarios",
+      "Build upon for advanced implementations"
+    ],
+    "next_steps": [
+      "Complete Week 4 objectives",
+      "Practice with additional examples",
+      "Apply skills to real projects"
+    ],
+    "related_workflows": [
+      "Week 4 workflows",
+      "Previous week workflows",
+      "Course example workflows"
+    ]
+  },
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "course-Week 03-advanced_data_processing",
+    "course_version": "1.0",
+    "last_updated": "2025-09-07T14:31:13.962468"
+  },
+  "nodes": [
+    {
+      "id": "manual-trigger-3",
+      "name": "Manual Trigger",
+      "type": "n8n-nodes-base.manualTrigger",
+      "position": [
+        100,
+        100
+      ],
+      "parameters": {}
+    },
+    {
+      "id": "data-input-3",
+      "name": "Input Data",
+      "type": "n8n-nodes-base.set",
+      "position": [
+        300,
+        100
+      ],
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "name": "raw_data",
+              "value": "={{ $json.data || 'Sample data for processing' }}"
+            },
+            {
+              "name": "processing_type",
+              "value": "advanced"
+            },
+            {
+              "name": "start_time",
+              "value": "={{ $now }}"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "data-cleaning-3",
+      "name": "Data Cleaning",
+      "type": "n8n-nodes-base.set",
+      "position": [
+        500,
+        100
+      ],
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "name": "cleaned_data",
+              "value": "={{ $json.raw_data.trim().toLowerCase() }}"
+            },
+            {
+              "name": "cleaning_completed",
+              "value": "={{ $now }}"
+            },
+            {
+              "name": "cleaning_duration",
+              "value": "={{ $now.diff($json.start_time, 'milliseconds') }}"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "data-transformation-3",
+      "name": "Data Transformation",
+      "type": "n8n-nodes-base.set",
+      "position": [
+        700,
+        100
+      ],
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "name": "word_count",
+              "value": "={{ $json.cleaned_data.split(' ').length }}"
+            },
+            {
+              "name": "character_count",
+              "value": "={{ $json.cleaned_data.length }}"
+            },
+            {
+              "name": "transformation_completed",
+              "value": "={{ $now }}"
+            },
+            {
+              "name": "transformation_duration",
+              "value": "={{ $now.diff($json.cleaning_completed, 'milliseconds') }}"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "data-analysis-3",
+      "name": "Data Analysis",
+      "type": "n8n-nodes-base.set",
+      "position": [
+        900,
+        100
+      ],
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "name": "analysis_results",
+              "value": "={{ { \"word_count\": $json.word_count, \"character_count\": $json.character_count, \"average_word_length\": Math.round($json.character_count / $json.word_count * 100) / 100 } }}"
+            },
+            {
+              "name": "analysis_completed",
+              "value": "={{ $now }}"
+            },
+            {
+              "name": "total_duration",
+              "value": "={{ $now.diff($json.start_time, 'milliseconds') }}"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "result-formatting-3",
+      "name": "Format Results",
+      "type": "n8n-nodes-base.set",
+      "position": [
+        1100,
+        100
+      ],
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "name": "final_report",
+              "value": "📊 Data Processing Report\n\n*Original Data:* {{ $json.raw_data }}\n*Cleaned Data:* {{ $json.cleaned_data }}\n*Word Count:* {{ $json.analysis_results.word_count }}\n*Character Count:* {{ $json.analysis_results.character_count }}\n*Average Word Length:* {{ $json.analysis_results.average_word_length }}\n*Total Processing Time:* {{ $json.total_duration }}ms"
+            },
+            {
+              "name": "report_generated",
+              "value": "={{ $now }}"
+            },
+            {
+              "name": "status",
+              "value": "completed"
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "connections": {
+    "Manual Trigger": {
+      "main": [
+        [
+          {
+            "node": "Input Data",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Input Data": {
+      "main": [
+        [
+          {
+            "node": "Data Cleaning",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Data Cleaning": {
+      "main": [
+        [
+          {
+            "node": "Data Transformation",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Data Transformation": {
+      "main": [
+        [
+          {
+            "node": "Data Analysis",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Data Analysis": {
+      "main": [
+        [
+          {
+            "node": "Format Results",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {},
+  "pinData": {},
+  "versionId": "1",
+  "id": "advanced_data_processing"
+}

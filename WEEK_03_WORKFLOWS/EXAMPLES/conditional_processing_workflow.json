@@ -1,0 +1,374 @@
+{
+  "name": "Conditional Processing Workflow",
+  "description": "Automated workflow for Workflow Building phase learning objectives with intelligent processing and error handling.",
+  "tags": [
+    "optimization",
+    "performance",
+    "workflows",
+    "automation"
+  ],
+  "version": "1.0.0",
+  "author": "Automator Pro Course",
+  "course_metadata": {
+    "week": "Week 03",
+    "phase": "Workflow Building",
+    "difficulty": "Intermediate",
+    "learning_objectives": [
+      "Advanced nodes usage",
+      "Expression writing",
+      "Error handling"
+    ],
+    "prerequisites": [
+      "Completed previous weeks",
+      "n8n instance",
+      "Basic automation knowledge"
+    ],
+    "estimated_setup_time": "10-20 minutes",
+    "use_cases": [
+      "Practice Workflow Building concepts",
+      "Build real-world automation skills",
+      "Prepare for business applications",
+      "Demonstrate course learning objectives"
+    ],
+    "examples": [
+      "Use this workflow to practice Workflow Building skills",
+      "Customize for your specific learning needs",
+      "Apply concepts to real business scenarios",
+      "Build upon for advanced implementations"
+    ],
+    "next_steps": [
+      "Complete Week 4 objectives",
+      "Practice with additional examples",
+      "Apply skills to real projects"
+    ],
+    "related_workflows": [
+      "Week 4 workflows",
+      "Previous week workflows",
+      "Course example workflows"
+    ]
+  },
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "course-Week 03-conditional_processing_workflow",
+    "course_version": "1.0",
+    "last_updated": "2025-09-07T14:31:13.956057"
+  },
+  "nodes": [
+    {
+      "id": "webhook-trigger-4",
+      "name": "Multi-Source Webhook",
+      "type": "n8n-nodes-base.webhook",
+      "position": [
+        100,
+        100
+      ],
+      "parameters": {
+        "path": "multi-source",
+        "httpMethod": "POST"
+      }
+    },
+    {
+      "id": "source-detection-4",
+      "name": "Detect Source",
+      "type": "n8n-nodes-base.if",
+      "position": [
+        300,
+        100
+      ],
+      "parameters": {
+        "conditions": {
+          "string": [
+            {
+              "value1": "={{ $json.source }}",
+              "operation": "equal",
+              "value2": "form"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "form-processing-4",
+      "name": "Process Form Data",
+      "type": "n8n-nodes-base.set",
+      "position": [
+        500,
+        100
+      ],
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "name": "data_type",
+              "value": "form_submission"
+            },
+            {
+              "name": "processed_name",
+              "value": "={{ $json.name.trim() }}"
+            },
+            {
+              "name": "processed_email",
+              "value": "={{ $json.email.toLowerCase().trim() }}"
+            },
+            {
+              "name": "processed_message",
+              "value": "={{ $json.message || 'No message' }}"
+            },
+            {
+              "name": "processed_at",
+              "value": "={{ $now }}"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "api-processing-4",
+      "name": "Process API Data",
+      "type": "n8n-nodes-base.set",
+      "position": [
+        500,
+        300
+      ],
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "name": "data_type",
+              "value": "api_request"
+            },
+            {
+              "name": "processed_id",
+              "value": "={{ $json.id }}"
+            },
+            {
+              "name": "processed_title",
+              "value": "={{ $json.title }}"
+            },
+            {
+              "name": "processed_body",
+              "value": "={{ $json.body }}"
+            },
+            {
+              "name": "processed_at",
+              "value": "={{ $now }}"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "data-validation-4",
+      "name": "Validate Processed Data",
+      "type": "n8n-nodes-base.if",
+      "position": [
+        700,
+        100
+      ],
+      "parameters": {
+        "conditions": {
+          "string": [
+            {
+              "value1": "={{ $json.data_type }}",
+              "operation": "isNotEmpty"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "format-output-4",
+      "name": "Format Output",
+      "type": "n8n-nodes-base.set",
+      "position": [
+        900,
+        100
+      ],
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "name": "output_format",
+              "value": "={{ { \"type\": $json.data_type, \"data\": $json, \"processed_at\": $json.processed_at, \"status\": \"success\" } }}"
+            },
+            {
+              "name": "formatted_at",
+              "value": "={{ $now }}"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "send-notification-4",
+      "name": "Send Notification",
+      "type": "n8n-nodes-base.set",
+      "position": [
+        1100,
+        100
+      ],
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "name": "notification_message",
+              "value": "✅ Data processed successfully\n\n*Type:* {{ $json.output_format.type }}\n*Processed At:* {{ $json.output_format.processed_at }}\n*Status:* {{ $json.output_format.status }}"
+            },
+            {
+              "name": "notification_sent",
+              "value": "={{ $now }}"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "error-handling-4",
+      "name": "Handle Error",
+      "type": "n8n-nodes-base.set",
+      "position": [
+        700,
+        300
+      ],
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "name": "error_type",
+              "value": "validation_error"
+            },
+            {
+              "name": "error_message",
+              "value": "Invalid data received"
+            },
+            {
+              "name": "error_time",
+              "value": "={{ $now }}"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "error-notification-4",
+      "name": "Send Error Notification",
+      "type": "n8n-nodes-base.set",
+      "position": [
+        900,
+        300
+      ],
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "name": "error_notification",
+              "value": "🚨 Error in data processing\n\n*Error Type:* {{ $json.error_type }}\n*Error Message:* {{ $json.error_message }}\n*Time:* {{ $json.error_time }}"
+            },
+            {
+              "name": "error_sent",
+              "value": "={{ $now }}"
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "connections": {
+    "Multi-Source Webhook": {
+      "main": [
+        [
+          {
+            "node": "Detect Source",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Detect Source": {
+      "main": [
+        [
+          {
+            "node": "Process Form Data",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Process API Data",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Process Form Data": {
+      "main": [
+        [
+          {
+            "node": "Validate Processed Data",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Process API Data": {
+      "main": [
+        [
+          {
+            "node": "Validate Processed Data",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Validate Processed Data": {
+      "main": [
+        [
+          {
+            "node": "Format Output",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Handle Error",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Format Output": {
+      "main": [
+        [
+          {
+            "node": "Send Notification",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Handle Error": {
+      "main": [
+        [
+          {
+            "node": "Send Error Notification",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {},
+  "pinData": {},
+  "versionId": "1",
+  "id": "conditional_processing_workflow"
+}

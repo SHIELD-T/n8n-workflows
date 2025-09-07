@@ -1,0 +1,572 @@
+{
+  "name": "AaaS Service Management System",
+  "description": "Automated workflow for Scaling phase learning objectives with intelligent processing and error handling.",
+  "tags": [
+    "management",
+    "growth",
+    "operations",
+    "scaling"
+  ],
+  "version": "1.0.0",
+  "author": "Automator Pro Course",
+  "course_metadata": {
+    "week": "Week 12",
+    "phase": "Scaling",
+    "difficulty": "Advanced",
+    "learning_objectives": [
+      "Scaling strategies",
+      "Template creation",
+      "Team building"
+    ],
+    "prerequisites": [
+      "Technical skills",
+      "Business interest",
+      "Client interaction skills"
+    ],
+    "estimated_setup_time": "10-20 minutes",
+    "use_cases": [
+      "Practice Scaling concepts",
+      "Build real-world automation skills",
+      "Prepare for business applications",
+      "Demonstrate course learning objectives"
+    ],
+    "examples": [
+      "Use this workflow to practice Scaling skills",
+      "Customize for your specific learning needs",
+      "Apply concepts to real business scenarios",
+      "Build upon for advanced implementations"
+    ],
+    "next_steps": [
+      "Complete Week 13 objectives",
+      "Practice with additional examples",
+      "Apply skills to real projects"
+    ],
+    "related_workflows": [
+      "Week 13 workflows",
+      "Previous week workflows",
+      "Course example workflows"
+    ]
+  },
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "course-Week 12-aaas_service_management_system",
+    "course_version": "1.0",
+    "last_updated": "2025-09-07T14:31:15.079004"
+  },
+  "nodes": [
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "aaas-service-request",
+        "responseMode": "responseNode",
+        "options": {}
+      },
+      "id": "aaas-service-trigger",
+      "name": "AaaS Service Trigger",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 1,
+      "position": [
+        240,
+        300
+      ],
+      "webhookId": "aaas-service-webhook"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict"
+          },
+          "conditions": [
+            {
+              "id": "service-tier-condition",
+              "leftValue": "={{ $json.serviceTier }}",
+              "rightValue": "enterprise",
+              "operator": {
+                "type": "string",
+                "operation": "equals"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "id": "service-tier-router",
+      "name": "Service Tier Router",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2,
+      "position": [
+        460,
+        300
+      ]
+    },
+    {
+      "parameters": {
+        "values": {
+          "string": [
+            {
+              "name": "serviceName",
+              "value": "Enterprise Automation Service"
+            },
+            {
+              "name": "serviceDescription",
+              "value": "Full-scale automation for large organizations"
+            },
+            {
+              "name": "serviceFeatures",
+              "value": "Unlimited workflows, All integrations, 24/7 support, Real-time monitoring, Premium SLA, Dedicated account manager"
+            },
+            {
+              "name": "monthlyPrice",
+              "value": "1997"
+            },
+            {
+              "name": "annualPrice",
+              "value": "19970"
+            },
+            {
+              "name": "setupFee",
+              "value": "2997"
+            },
+            {
+              "name": "slaUptime",
+              "value": "99.9%"
+            },
+            {
+              "name": "responseTime",
+              "value": "1 hour"
+            },
+            {
+              "name": "resolutionTime",
+              "value": "4 hours"
+            },
+            {
+              "name": "targetMarket",
+              "value": "Large businesses (50+ employees)"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "enterprise-service-data",
+      "name": "Enterprise Service Data",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.3,
+      "position": [
+        680,
+        200
+      ]
+    },
+    {
+      "parameters": {
+        "values": {
+          "string": [
+            {
+              "name": "serviceName",
+              "value": "Professional Automation Service"
+            },
+            {
+              "name": "serviceDescription",
+              "value": "Comprehensive automation for growing businesses"
+            },
+            {
+              "name": "serviceFeatures",
+              "value": "Up to 25 workflows, Advanced integrations, Priority support, Weekly reports, Advanced SLA, Custom development"
+            },
+            {
+              "name": "monthlyPrice",
+              "value": "797"
+            },
+            {
+              "name": "annualPrice",
+              "value": "7970"
+            },
+            {
+              "name": "setupFee",
+              "value": "1297"
+            },
+            {
+              "name": "slaUptime",
+              "value": "99.5%"
+            },
+            {
+              "name": "responseTime",
+              "value": "4 hours"
+            },
+            {
+              "name": "resolutionTime",
+              "value": "24 hours"
+            },
+            {
+              "name": "targetMarket",
+              "value": "Medium businesses (10-50 employees)"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "professional-service-data",
+      "name": "Professional Service Data",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.3,
+      "position": [
+        680,
+        400
+      ]
+    },
+    {
+      "parameters": {
+        "values": {
+          "string": [
+            {
+              "name": "serviceName",
+              "value": "Basic Automation Service"
+            },
+            {
+              "name": "serviceDescription",
+              "value": "Essential automation for small businesses"
+            },
+            {
+              "name": "serviceFeatures",
+              "value": "Up to 5 workflows, Basic integrations, Email support, Monthly reports, Basic SLA"
+            },
+            {
+              "name": "monthlyPrice",
+              "value": "297"
+            },
+            {
+              "name": "annualPrice",
+              "value": "2970"
+            },
+            {
+              "name": "setupFee",
+              "value": "497"
+            },
+            {
+              "name": "slaUptime",
+              "value": "99%"
+            },
+            {
+              "name": "responseTime",
+              "value": "24 hours"
+            },
+            {
+              "name": "resolutionTime",
+              "value": "72 hours"
+            },
+            {
+              "name": "targetMarket",
+              "value": "Small businesses (1-10 employees)"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "basic-service-data",
+      "name": "Basic Service Data",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.3,
+      "position": [
+        680,
+        600
+      ]
+    },
+    {
+      "parameters": {
+        "operation": "create",
+        "resource": "page",
+        "title": "={{ $json.serviceName }} - Service Details",
+        "propertiesUi": {
+          "propertyValues": [
+            {
+              "key": "Service Tier",
+              "textValue": "={{ $json.serviceTier }}"
+            },
+            {
+              "key": "Description",
+              "textValue": "={{ $json.serviceDescription }}"
+            },
+            {
+              "key": "Features",
+              "textValue": "={{ $json.serviceFeatures }}"
+            },
+            {
+              "key": "Monthly Price",
+              "textValue": "=${{ $json.monthlyPrice }}"
+            },
+            {
+              "key": "Annual Price",
+              "textValue": "=${{ $json.annualPrice }}"
+            },
+            {
+              "key": "Setup Fee",
+              "textValue": "=${{ $json.setupFee }}"
+            },
+            {
+              "key": "SLA Uptime",
+              "textValue": "={{ $json.slaUptime }}"
+            },
+            {
+              "key": "Response Time",
+              "textValue": "={{ $json.responseTime }}"
+            },
+            {
+              "key": "Resolution Time",
+              "textValue": "={{ $json.resolutionTime }}"
+            },
+            {
+              "key": "Target Market",
+              "textValue": "={{ $json.targetMarket }}"
+            },
+            {
+              "key": "Status",
+              "textValue": "Active"
+            },
+            {
+              "key": "Last Updated",
+              "textValue": "={{ new Date().toISOString() }}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "notion-service-documentation",
+      "name": "Notion Service Documentation",
+      "type": "n8n-nodes-base.notion",
+      "typeVersion": 2,
+      "position": [
+        900,
+        400
+      ]
+    },
+    {
+      "parameters": {
+        "authentication": "oAuth2",
+        "resource": "message",
+        "operation": "post",
+        "chatId": "={{ $json.clientSlackChannel }}",
+        "text": "🎉 New AaaS Service Available!\n\n**{{ $json.serviceName }}**\n\n{{ $json.serviceDescription }}\n\n**Features:**\n{{ $json.serviceFeatures }}\n\n**Pricing:**\nMonthly: ${{ $json.monthlyPrice }}\nAnnual: ${{ $json.annualPrice }} (2 months free)\nSetup: ${{ $json.setupFee }}\n\n**SLA:**\nUptime: {{ $json.slaUptime }}\nResponse: {{ $json.responseTime }}\nResolution: {{ $json.resolutionTime }}\n\n**Target:** {{ $json.targetMarket }}\n\nReady to scale! 🚀",
+        "options": {}
+      },
+      "id": "slack-service-notification",
+      "name": "Slack Service Notification",
+      "type": "n8n-nodes-base.slack",
+      "typeVersion": 2.1,
+      "position": [
+        1120,
+        400
+      ]
+    },
+    {
+      "parameters": {
+        "authentication": "oAuth2",
+        "resource": "message",
+        "operation": "post",
+        "chatId": "={{ $json.clientTelegramChannel }}",
+        "text": "🎉 New AaaS Service Available!\n\n**{{ $json.serviceName }}**\n\n{{ $json.serviceDescription }}\n\n**Features:**\n{{ $json.serviceFeatures }}\n\n**Pricing:**\nMonthly: ${{ $json.monthlyPrice }}\nAnnual: ${{ $json.annualPrice }} (2 months free)\nSetup: ${{ $json.setupFee }}\n\n**SLA:**\nUptime: {{ $json.slaUptime }}\nResponse: {{ $json.responseTime }}\nResolution: {{ $json.resolutionTime }}\n\n**Target:** {{ $json.targetMarket }}\n\nReady to scale! 🚀",
+        "options": {}
+      },
+      "id": "telegram-service-notification",
+      "name": "Telegram Service Notification",
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1.2,
+      "position": [
+        1120,
+        600
+      ]
+    },
+    {
+      "parameters": {
+        "operation": "create",
+        "resource": "page",
+        "title": "AaaS Revenue Dashboard",
+        "propertiesUi": {
+          "propertyValues": [
+            {
+              "key": "Monthly Recurring Revenue",
+              "textValue": "={{ $json.monthlyRecurringRevenue }}"
+            },
+            {
+              "key": "Annual Recurring Revenue",
+              "textValue": "={{ $json.annualRecurringRevenue }}"
+            },
+            {
+              "key": "Active Subscriptions",
+              "textValue": "={{ $json.activeSubscriptions }}"
+            },
+            {
+              "key": "Churn Rate",
+              "textValue": "={{ $json.churnRate }}"
+            },
+            {
+              "key": "Customer Lifetime Value",
+              "textValue": "={{ $json.customerLifetimeValue }}"
+            },
+            {
+              "key": "Average Revenue Per User",
+              "textValue": "={{ $json.averageRevenuePerUser }}"
+            },
+            {
+              "key": "Last Updated",
+              "textValue": "={{ new Date().toISOString() }}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "notion-revenue-dashboard",
+      "name": "Notion Revenue Dashboard",
+      "type": "n8n-nodes-base.notion",
+      "typeVersion": 2,
+      "position": [
+        1340,
+        400
+      ]
+    },
+    {
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "={{ JSON.stringify({\n  success: true,\n  message: 'AaaS service processed successfully',\n  serviceTier: $json.serviceTier,\n  serviceName: $json.serviceName,\n  status: 'Documented and Notified',\n  timestamp: new Date().toISOString()\n}) }}",
+        "options": {}
+      },
+      "id": "aaas-service-response",
+      "name": "AaaS Service Response",
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.1,
+      "position": [
+        1560,
+        400
+      ]
+    }
+  ],
+  "connections": {
+    "AaaS Service Trigger": {
+      "main": [
+        [
+          {
+            "node": "Service Tier Router",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Service Tier Router": {
+      "main": [
+        [
+          {
+            "node": "Enterprise Service Data",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Professional Service Data",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Basic Service Data",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Enterprise Service Data": {
+      "main": [
+        [
+          {
+            "node": "Notion Service Documentation",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Professional Service Data": {
+      "main": [
+        [
+          {
+            "node": "Notion Service Documentation",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Basic Service Data": {
+      "main": [
+        [
+          {
+            "node": "Notion Service Documentation",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Notion Service Documentation": {
+      "main": [
+        [
+          {
+            "node": "Slack Service Notification",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Telegram Service Notification",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Slack Service Notification": {
+      "main": [
+        [
+          {
+            "node": "Notion Revenue Dashboard",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Telegram Service Notification": {
+      "main": [
+        [
+          {
+            "node": "Notion Revenue Dashboard",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Notion Revenue Dashboard": {
+      "main": [
+        [
+          {
+            "node": "AaaS Service Response",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "pinData": {},
+  "versionId": "1",
+  "id": "aaas_service_management_system"
+}

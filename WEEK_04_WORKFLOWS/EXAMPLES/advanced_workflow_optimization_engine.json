@@ -1,0 +1,337 @@
+{
+  "name": "Advanced Workflow Optimization Engine",
+  "description": "Optimize workflow performance with automated analysis, bottleneck detection, and improvement suggestions.",
+  "tags": [
+    "workflows",
+    "efficiency",
+    "optimization",
+    "performance",
+    "automation"
+  ],
+  "version": "1.0.0",
+  "author": "Automator Pro Course",
+  "course_metadata": {
+    "week": "Week 04",
+    "phase": "Workflow Building",
+    "difficulty": "Intermediate",
+    "learning_objectives": [
+      "Data processing",
+      "Workflow optimization",
+      "Documentation"
+    ],
+    "prerequisites": [
+      "Completed previous weeks",
+      "n8n instance",
+      "Basic automation knowledge"
+    ],
+    "estimated_setup_time": "10-20 minutes",
+    "use_cases": [
+      "Practice Workflow Building concepts",
+      "Build real-world automation skills",
+      "Prepare for business applications",
+      "Demonstrate course learning objectives"
+    ],
+    "examples": [
+      "Use this workflow to practice Workflow Building skills",
+      "Customize for your specific learning needs",
+      "Apply concepts to real business scenarios",
+      "Build upon for advanced implementations"
+    ],
+    "next_steps": [
+      "Complete Week 5 objectives",
+      "Practice with additional examples",
+      "Apply skills to real projects"
+    ],
+    "related_workflows": [
+      "Week 5 workflows",
+      "Previous week workflows",
+      "Course example workflows"
+    ]
+  },
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "course-Week 04-advanced_workflow_optimization_engine",
+    "course_version": "1.0",
+    "last_updated": "2025-09-07T14:31:15.316374"
+  },
+  "nodes": [
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "workflow-optimization",
+        "options": {}
+      },
+      "id": "webhook-trigger",
+      "name": "Workflow Optimization Trigger",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 1,
+      "position": [
+        240,
+        300
+      ],
+      "webhookId": "workflow-optimization-webhook"
+    },
+    {
+      "parameters": {
+        "values": {
+          "string": [
+            {
+              "name": "workflow_id",
+              "value": "={{ $json.workflow_id }}"
+            },
+            {
+              "name": "optimization_type",
+              "value": "={{ $json.optimization_type }}"
+            },
+            {
+              "name": "improvement_percentage",
+              "value": "={{ $json.improvement_percentage }}"
+            },
+            {
+              "name": "optimization_timestamp",
+              "value": "={{ new Date().toISOString() }}"
+            },
+            {
+              "name": "optimization_notes",
+              "value": "={{ $json.optimization_notes }}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "set-optimization-data",
+      "name": "Set Optimization Data",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.3,
+      "position": [
+        460,
+        300
+      ]
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict"
+          },
+          "conditions": [
+            {
+              "id": "optimization-impact-check",
+              "leftValue": "={{ $json.improvement_percentage }}",
+              "rightValue": "20",
+              "operator": {
+                "type": "number",
+                "operation": "gte"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "id": "optimization-impact-check",
+      "name": "Optimization Impact Check",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2,
+      "position": [
+        680,
+        300
+      ]
+    },
+    {
+      "parameters": {
+        "authentication": "predefinedCredentialType",
+        "nodeCredentialType": "notionApi",
+        "resource": "database",
+        "operation": "create",
+        "databaseId": "={{ $json.database_id }}",
+        "title": "High Impact Optimization",
+        "propertiesUi": {
+          "propertyValues": [
+            {
+              "key": "Workflow ID",
+              "textValue": "={{ $json.workflow_id }}"
+            },
+            {
+              "key": "Optimization Type",
+              "textValue": "={{ $json.optimization_type }}"
+            },
+            {
+              "key": "Improvement Percentage",
+              "textValue": "={{ $json.improvement_percentage }}"
+            },
+            {
+              "key": "Optimization Date",
+              "dateValue": "={{ $json.optimization_timestamp }}"
+            },
+            {
+              "key": "Optimization Notes",
+              "textValue": "={{ $json.optimization_notes }}"
+            }
+          ]
+        }
+      },
+      "id": "create-high-impact-optimization",
+      "name": "Create High Impact Optimization",
+      "type": "n8n-nodes-base.notion",
+      "typeVersion": 2,
+      "position": [
+        900,
+        200
+      ]
+    },
+    {
+      "parameters": {
+        "authentication": "predefinedCredentialType",
+        "nodeCredentialType": "notionApi",
+        "resource": "database",
+        "operation": "create",
+        "databaseId": "={{ $json.database_id }}",
+        "title": "Workflow Optimization Entry",
+        "propertiesUi": {
+          "propertyValues": [
+            {
+              "key": "Workflow ID",
+              "textValue": "={{ $json.workflow_id }}"
+            },
+            {
+              "key": "Optimization Type",
+              "textValue": "={{ $json.optimization_type }}"
+            },
+            {
+              "key": "Improvement Percentage",
+              "textValue": "={{ $json.improvement_percentage }}"
+            },
+            {
+              "key": "Optimization Date",
+              "dateValue": "={{ $json.optimization_timestamp }}"
+            },
+            {
+              "key": "Optimization Notes",
+              "textValue": "={{ $json.optimization_notes }}"
+            }
+          ]
+        }
+      },
+      "id": "create-optimization-entry",
+      "name": "Create Optimization Entry",
+      "type": "n8n-nodes-base.notion",
+      "typeVersion": 2,
+      "position": [
+        900,
+        400
+      ]
+    },
+    {
+      "parameters": {
+        "authentication": "predefinedCredentialType",
+        "nodeCredentialType": "slackApi",
+        "resource": "message",
+        "operation": "post",
+        "channel": "={{ $json.slack_channel }}",
+        "text": "⚡ High Impact Optimization!\n\nWorkflow: {{ $json.workflow_id }}\nType: {{ $json.optimization_type }}\nImprovement: {{ $json.improvement_percentage }}%\nOptimized: {{ $json.optimization_timestamp }}\nNotes: {{ $json.optimization_notes }}",
+        "otherOptions": {}
+      },
+      "id": "send-high-impact-alert",
+      "name": "Send High Impact Alert",
+      "type": "n8n-nodes-base.slack",
+      "typeVersion": 2.1,
+      "position": [
+        1120,
+        200
+      ]
+    },
+    {
+      "parameters": {
+        "authentication": "predefinedCredentialType",
+        "nodeCredentialType": "slackApi",
+        "resource": "message",
+        "operation": "post",
+        "channel": "={{ $json.slack_channel }}",
+        "text": "🔧 Workflow Optimization Update\n\nWorkflow: {{ $json.workflow_id }}\nType: {{ $json.optimization_type }}\nImprovement: {{ $json.improvement_percentage }}%\nOptimized: {{ $json.optimization_timestamp }}\nNotes: {{ $json.optimization_notes }}",
+        "otherOptions": {}
+      },
+      "id": "send-optimization-update",
+      "name": "Send Optimization Update",
+      "type": "n8n-nodes-base.slack",
+      "typeVersion": 2.1,
+      "position": [
+        1120,
+        400
+      ]
+    }
+  ],
+  "connections": {
+    "webhook-trigger": {
+      "main": [
+        [
+          {
+            "node": "set-optimization-data",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "set-optimization-data": {
+      "main": [
+        [
+          {
+            "node": "optimization-impact-check",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "optimization-impact-check": {
+      "main": [
+        [
+          {
+            "node": "create-high-impact-optimization",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "create-optimization-entry",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "create-high-impact-optimization": {
+      "main": [
+        [
+          {
+            "node": "send-high-impact-alert",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "create-optimization-entry": {
+      "main": [
+        [
+          {
+            "node": "send-optimization-update",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "pinData": {},
+  "versionId": "1",
+  "id": "advanced-workflow-optimization-engine"
+}

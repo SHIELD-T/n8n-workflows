@@ -1,0 +1,306 @@
+{
+  "name": "Error Handling Workflow",
+  "description": "Automated workflow for Foundation phase learning objectives with intelligent processing and error handling.",
+  "tags": [
+    "basics",
+    "progress-tracking",
+    "learning",
+    "foundation"
+  ],
+  "version": "1.0.0",
+  "author": "Automator Pro Course",
+  "course_metadata": {
+    "week": "Week 02",
+    "phase": "Foundation",
+    "difficulty": "Beginner",
+    "learning_objectives": [
+      "Master self-hosting",
+      "Understand webhooks",
+      "Work with APIs"
+    ],
+    "prerequisites": [
+      "Completed previous weeks",
+      "n8n instance",
+      "Basic automation knowledge"
+    ],
+    "estimated_setup_time": "10-20 minutes",
+    "use_cases": [
+      "Practice Foundation concepts",
+      "Build real-world automation skills",
+      "Prepare for business applications",
+      "Demonstrate course learning objectives"
+    ],
+    "examples": [
+      "Use this workflow to practice Foundation skills",
+      "Customize for your specific learning needs",
+      "Apply concepts to real business scenarios",
+      "Build upon for advanced implementations"
+    ],
+    "next_steps": [
+      "Complete Week 3 objectives",
+      "Practice with additional examples",
+      "Apply skills to real projects"
+    ],
+    "related_workflows": [
+      "Week 3 workflows",
+      "Previous week workflows",
+      "Course example workflows"
+    ]
+  },
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "course-Week 02-error_handling_workflow",
+    "course_version": "1.0",
+    "last_updated": "2025-09-07T14:31:15.364175"
+  },
+  "nodes": [
+    {
+      "id": "webhook-trigger-3",
+      "name": "API Error Webhook",
+      "type": "n8n-nodes-base.webhook",
+      "position": [
+        100,
+        100
+      ],
+      "parameters": {
+        "path": "api-error",
+        "httpMethod": "POST"
+      }
+    },
+    {
+      "id": "error-analysis-3",
+      "name": "Analyze Error",
+      "type": "n8n-nodes-base.set",
+      "position": [
+        300,
+        100
+      ],
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "name": "error_type",
+              "value": "={{ $json.error_type || 'UNKNOWN' }}"
+            },
+            {
+              "name": "error_message",
+              "value": "={{ $json.error_message || 'No error message provided' }}"
+            },
+            {
+              "name": "error_code",
+              "value": "={{ $json.error_code || 'N/A' }}"
+            },
+            {
+              "name": "error_time",
+              "value": "={{ $now }}"
+            },
+            {
+              "name": "severity",
+              "value": "={{ $json.severity || 'MEDIUM' }}"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "severity-check-3",
+      "name": "Check Severity",
+      "type": "n8n-nodes-base.if",
+      "position": [
+        500,
+        100
+      ],
+      "parameters": {
+        "conditions": {
+          "string": [
+            {
+              "value1": "={{ $json.severity }}",
+              "operation": "equal",
+              "value2": "HIGH"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "high-severity-3",
+      "name": "High Severity Alert",
+      "type": "n8n-nodes-base.set",
+      "position": [
+        700,
+        100
+      ],
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "name": "alert_type",
+              "value": "HIGH_SEVERITY"
+            },
+            {
+              "name": "alert_message",
+              "value": "🚨 HIGH SEVERITY ERROR ALERT\n\n*Error Type:* {{ $json.error_type }}\n*Error Code:* {{ $json.error_code }}\n*Error Message:* {{ $json.error_message }}\n*Time:* {{ $json.error_time }}"
+            },
+            {
+              "name": "alert_sent",
+              "value": "={{ $now }}"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "medium-severity-3",
+      "name": "Medium Severity Alert",
+      "type": "n8n-nodes-base.set",
+      "position": [
+        700,
+        300
+      ],
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "name": "alert_type",
+              "value": "MEDIUM_SEVERITY"
+            },
+            {
+              "name": "alert_message",
+              "value": "⚠️ MEDIUM SEVERITY ERROR\n\n*Error Type:* {{ $json.error_type }}\n*Error Code:* {{ $json.error_code }}\n*Error Message:* {{ $json.error_message }}\n*Time:* {{ $json.error_time }}"
+            },
+            {
+              "name": "alert_sent",
+              "value": "={{ $now }}"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "log-error-3",
+      "name": "Log Error",
+      "type": "n8n-nodes-base.set",
+      "position": [
+        900,
+        100
+      ],
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "name": "log_entry",
+              "value": "={{ { \"error_type\": $json.error_type, \"error_code\": $json.error_code, \"error_message\": $json.error_message, \"severity\": $json.severity, \"timestamp\": $json.error_time, \"alert_sent\": $json.alert_sent } }}"
+            },
+            {
+              "name": "logged_at",
+              "value": "={{ $now }}"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "send-alert-3",
+      "name": "Send Alert",
+      "type": "n8n-nodes-base.set",
+      "position": [
+        1100,
+        100
+      ],
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "name": "alert_delivered",
+              "value": "={{ $now }}"
+            },
+            {
+              "name": "alert_status",
+              "value": "delivered"
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "connections": {
+    "API Error Webhook": {
+      "main": [
+        [
+          {
+            "node": "Analyze Error",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Analyze Error": {
+      "main": [
+        [
+          {
+            "node": "Check Severity",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Check Severity": {
+      "main": [
+        [
+          {
+            "node": "High Severity Alert",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Medium Severity Alert",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "High Severity Alert": {
+      "main": [
+        [
+          {
+            "node": "Log Error",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Medium Severity Alert": {
+      "main": [
+        [
+          {
+            "node": "Log Error",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Log Error": {
+      "main": [
+        [
+          {
+            "node": "Send Alert",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {},
+  "pinData": {},
+  "versionId": "1",
+  "id": "error_handling_workflow"
+}

@@ -1,0 +1,376 @@
+{
+  "name": "Data Synchronization System",
+  "description": "Automated workflow for Real-World Tools phase learning objectives with intelligent processing and error handling.",
+  "tags": [
+    "tools",
+    "real-world",
+    "integration",
+    "apis"
+  ],
+  "version": "1.0.0",
+  "author": "Automator Pro Course",
+  "course_metadata": {
+    "week": "Week 10",
+    "phase": "Real-World Tools",
+    "difficulty": "Advanced",
+    "learning_objectives": [
+      "Advanced integrations",
+      "Custom APIs",
+      "Orchestration"
+    ],
+    "prerequisites": [
+      "AI integration skills",
+      "Real-world tool access",
+      "Integration experience"
+    ],
+    "estimated_setup_time": "10-20 minutes",
+    "use_cases": [
+      "Practice Real-World Tools concepts",
+      "Build real-world automation skills",
+      "Prepare for business applications",
+      "Demonstrate course learning objectives"
+    ],
+    "examples": [
+      "Use this workflow to practice Real-World Tools skills",
+      "Customize for your specific learning needs",
+      "Apply concepts to real business scenarios",
+      "Build upon for advanced implementations"
+    ],
+    "next_steps": [
+      "Complete Week 11 objectives",
+      "Practice with additional examples",
+      "Apply skills to real projects"
+    ],
+    "related_workflows": [
+      "Week 11 workflows",
+      "Previous week workflows",
+      "Course example workflows"
+    ]
+  },
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "course-Week 10-data_synchronization_system",
+    "course_version": "1.0",
+    "last_updated": "2025-09-07T14:31:14.057543"
+  },
+  "nodes": [
+    {
+      "parameters": {
+        "path": "data-synchronization",
+        "httpMethod": "POST"
+      },
+      "name": "Data Sync Trigger",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 1,
+      "position": [
+        240,
+        300
+      ]
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "name": "sync_id",
+              "value": "={{ $now.format('YYYYMMDDHHmmss') }}"
+            },
+            {
+              "name": "sync_type",
+              "value": "={{ $json.sync_type || 'bidirectional' }}"
+            },
+            {
+              "name": "source_system",
+              "value": "={{ $json.source_system }}"
+            },
+            {
+              "name": "target_systems",
+              "value": "={{ $json.target_systems || ['system_b', 'system_c'] }}"
+            },
+            {
+              "name": "sync_data",
+              "value": "={{ $json.sync_data }}"
+            }
+          ]
+        }
+      },
+      "name": "Initialize Sync Process",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 1,
+      "position": [
+        460,
+        300
+      ]
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://api.conflict-checker.com/check",
+        "bodyContentType": "json",
+        "jsonBody": "={{ { \"sync_id\": $json.sync_id, \"source_system\": $json.source_system, \"target_systems\": $json.target_systems, \"sync_data\": $json.sync_data, \"timestamp\": $now } }}"
+      },
+      "name": "Check Data Conflicts",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 1,
+      "position": [
+        680,
+        300
+      ]
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "name": "conflicts",
+              "value": "={{ $json.conflicts || [] }}"
+            },
+            {
+              "name": "resolved_data",
+              "value": "={{ $json.conflicts.length > 0 ? $json.conflict_resolution : $json.sync_data }}"
+            },
+            {
+              "name": "conflict_resolution_strategy",
+              "value": "={{ $json.conflicts.length > 0 ? 'resolved' : 'no_conflicts' }}"
+            }
+          ]
+        }
+      },
+      "name": "Resolve Data Conflicts",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 1,
+      "position": [
+        900,
+        300
+      ]
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://api.system-b.com/sync",
+        "bodyContentType": "json",
+        "jsonBody": "={{ { \"sync_id\": $json.sync_id, \"source_system\": $json.source_system, \"sync_data\": $json.resolved_data, \"timestamp\": $now } }}"
+      },
+      "name": "Sync to System B",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 1,
+      "position": [
+        1120,
+        300
+      ]
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://api.system-c.com/sync",
+        "bodyContentType": "json",
+        "jsonBody": "={{ { \"sync_id\": $json.sync_id, \"source_system\": $json.source_system, \"sync_data\": $json.resolved_data, \"timestamp\": $now } }}"
+      },
+      "name": "Sync to System C",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 1,
+      "position": [
+        1340,
+        300
+      ]
+    },
+    {
+      "parameters": {
+        "method": "GET",
+        "url": "https://api.sync-validator.com/validate",
+        "qs": {
+          "sync_id": "={{ $json.sync_id }}",
+          "target_systems": "={{ $json.target_systems.join(',') }}"
+        },
+        "options": {
+          "response": {
+            "response": {
+              "responseFormat": "json"
+            }
+          }
+        }
+      },
+      "name": "Validate Sync Results",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 1,
+      "position": [
+        1560,
+        300
+      ]
+    },
+    {
+      "parameters": {
+        "resource": "chat",
+        "operation": "create",
+        "model": "gpt-4",
+        "messages": {
+          "values": [
+            {
+              "role": "system",
+              "content": "You are a data synchronization specialist that analyzes sync results and generates insights."
+            },
+            {
+              "role": "user",
+              "content": "={{ 'Analyze this data sync process:\\nSync ID: ' + $json.sync_id + '\\nSource: ' + $json.source_system + '\\nTargets: ' + $json.target_systems.join(', ') + '\\nConflicts: ' + $json.conflicts.length + '\\nResolution: ' + $json.conflict_resolution_strategy + '\\nValidation: ' + $json.validation_status + '\\n\\nGenerate: sync insights, performance analysis, and optimization recommendations.' }}"
+            }
+          ]
+        }
+      },
+      "name": "AI Sync Analysis",
+      "type": "n8n-nodes-base.openAi",
+      "typeVersion": 1,
+      "position": [
+        1780,
+        300
+      ]
+    },
+    {
+      "parameters": {
+        "operation": "create",
+        "base": "your_base_id",
+        "table": "Data Sync Log",
+        "fields": {
+          "Sync ID": "={{ $json.sync_id }}",
+          "Sync Type": "={{ $json.sync_type }}",
+          "Source System": "={{ $json.source_system }}",
+          "Target Systems": "={{ $json.target_systems.join(', ') }}",
+          "Conflicts": "={{ $json.conflicts.length }}",
+          "Resolution Strategy": "={{ $json.conflict_resolution_strategy }}",
+          "Validation Status": "={{ $json.validation_status }}",
+          "AI Analysis": "={{ $json.choices[0].message.content }}",
+          "Status": "Completed",
+          "Timestamp": "={{ $now }}"
+        }
+      },
+      "name": "Store Sync Results",
+      "type": "n8n-nodes-base.airtable",
+      "typeVersion": 1,
+      "position": [
+        2000,
+        300
+      ]
+    },
+    {
+      "parameters": {
+        "operation": "postMessage",
+        "channel": "#data-sync-reports",
+        "text": "={{ '🔄 Data Sync Completed\\nSync ID: ' + $json.sync_id + '\\nSource: ' + $json.source_system + '\\nTargets: ' + $json.target_systems.join(', ') + '\\nConflicts: ' + $json.conflicts.length + '\\nStatus: ' + $json.validation_status }}"
+      },
+      "name": "Send Sync Report",
+      "type": "n8n-nodes-base.slack",
+      "typeVersion": 1,
+      "position": [
+        2220,
+        300
+      ]
+    }
+  ],
+  "connections": {
+    "Data Sync Trigger": {
+      "main": [
+        [
+          {
+            "node": "Initialize Sync Process",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Initialize Sync Process": {
+      "main": [
+        [
+          {
+            "node": "Check Data Conflicts",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Check Data Conflicts": {
+      "main": [
+        [
+          {
+            "node": "Resolve Data Conflicts",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Resolve Data Conflicts": {
+      "main": [
+        [
+          {
+            "node": "Sync to System B",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Sync to System B": {
+      "main": [
+        [
+          {
+            "node": "Sync to System C",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Sync to System C": {
+      "main": [
+        [
+          {
+            "node": "Validate Sync Results",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Validate Sync Results": {
+      "main": [
+        [
+          {
+            "node": "AI Sync Analysis",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "AI Sync Analysis": {
+      "main": [
+        [
+          {
+            "node": "Store Sync Results",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Store Sync Results": {
+      "main": [
+        [
+          {
+            "node": "Send Sync Report",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "pinData": {},
+  "versionId": "1",
+  "id": "data_synchronization_system"
+}

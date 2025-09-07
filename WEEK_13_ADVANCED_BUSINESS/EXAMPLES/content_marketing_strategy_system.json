@@ -1,0 +1,528 @@
+{
+  "name": "Content Marketing and Strategy Integration System",
+  "description": "Automated workflow for Advanced Business phase learning objectives with intelligent processing and error handling.",
+  "tags": [
+    "strategy",
+    "business",
+    "advanced",
+    "optimization"
+  ],
+  "version": "1.0.0",
+  "author": "Automator Pro Course",
+  "course_metadata": {
+    "week": "Week 13",
+    "phase": "Advanced Business",
+    "difficulty": "Advanced",
+    "learning_objectives": [
+      "Advanced strategies",
+      "Partnerships",
+      "Brand building"
+    ],
+    "prerequisites": [
+      "Complete course foundation",
+      "Business experience",
+      "Strategic thinking"
+    ],
+    "estimated_setup_time": "10-20 minutes",
+    "use_cases": [
+      "Practice Advanced Business concepts",
+      "Build real-world automation skills",
+      "Prepare for business applications",
+      "Demonstrate course learning objectives"
+    ],
+    "examples": [
+      "Use this workflow to practice Advanced Business skills",
+      "Customize for your specific learning needs",
+      "Apply concepts to real business scenarios",
+      "Build upon for advanced implementations"
+    ],
+    "next_steps": [
+      "Complete Week 14 objectives",
+      "Practice with additional examples",
+      "Apply skills to real projects"
+    ],
+    "related_workflows": [
+      "Week 14 workflows",
+      "Previous week workflows",
+      "Course example workflows"
+    ]
+  },
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "course-Week 13-content_marketing_strategy_system",
+    "course_version": "1.0",
+    "last_updated": "2025-09-07T14:31:13.941456"
+  },
+  "nodes": [
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "content-strategy-request",
+        "responseMode": "responseNode",
+        "options": {}
+      },
+      "id": "content-strategy-trigger",
+      "name": "Content Strategy Trigger",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 1,
+      "position": [
+        240,
+        300
+      ],
+      "webhookId": "content-strategy-webhook"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict"
+          },
+          "conditions": [
+            {
+              "id": "content-type-condition",
+              "leftValue": "={{ $json.contentType }}",
+              "rightValue": "educational",
+              "operator": {
+                "type": "string",
+                "operation": "equals"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "id": "content-type-router",
+      "name": "Content Type Router",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2,
+      "position": [
+        460,
+        300
+      ]
+    },
+    {
+      "parameters": {
+        "values": {
+          "string": [
+            {
+              "name": "contentTitle",
+              "value": "The Complete Guide to Business Process Automation"
+            },
+            {
+              "name": "contentType",
+              "value": "Educational Content"
+            },
+            {
+              "name": "contentDescription",
+              "value": "Comprehensive guide covering process identification, automation planning, implementation steps, and ROI calculation"
+            },
+            {
+              "name": "contentLength",
+              "value": "3000+ words"
+            },
+            {
+              "name": "targetKeywords",
+              "value": "business process automation, process automation guide"
+            },
+            {
+              "name": "contentTopics",
+              "value": "Process identification, Automation planning, Implementation steps, ROI calculation"
+            },
+            {
+              "name": "brandAlignment",
+              "value": "Educational brand positioning and thought leadership"
+            },
+            {
+              "name": "distributionChannels",
+              "value": "Website blog, Email newsletter, Social media, Guest posting"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "educational-content-data",
+      "name": "Educational Content Data",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.3,
+      "position": [
+        680,
+        200
+      ]
+    },
+    {
+      "parameters": {
+        "values": {
+          "string": [
+            {
+              "name": "contentTitle",
+              "value": "Client Success Story: How We Saved 20 Hours Per Week"
+            },
+            {
+              "name": "contentType",
+              "value": "Case Study"
+            },
+            {
+              "name": "contentDescription",
+              "value": "Detailed case study showing client challenge, solution implemented, and results achieved"
+            },
+            {
+              "name": "contentLength",
+              "value": "2000+ words"
+            },
+            {
+              "name": "targetKeywords",
+              "value": "automation success, ROI automation, business transformation"
+            },
+            {
+              "name": "contentTopics",
+              "value": "Client challenge, Solution implemented, Results achieved, ROI demonstration"
+            },
+            {
+              "name": "brandAlignment",
+              "value": "Success-focused brand positioning and credibility building"
+            },
+            {
+              "name": "distributionChannels",
+              "value": "Website, Social media, Email, Client presentations"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "case-study-content-data",
+      "name": "Case Study Content Data",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.3,
+      "position": [
+        680,
+        400
+      ]
+    },
+    {
+      "parameters": {
+        "values": {
+          "string": [
+            {
+              "name": "contentTitle",
+              "value": "The Future of Business Automation: Trends to Watch"
+            },
+            {
+              "name": "contentType",
+              "value": "Thought Leadership"
+            },
+            {
+              "name": "contentDescription",
+              "value": "Industry trend analysis covering AI integration, technology evolution, and market predictions"
+            },
+            {
+              "name": "contentLength",
+              "value": "2500+ words"
+            },
+            {
+              "name": "targetKeywords",
+              "value": "automation trends, future of automation"
+            },
+            {
+              "name": "contentTopics",
+              "value": "AI integration, Industry trends, Technology evolution, Market predictions"
+            },
+            {
+              "name": "brandAlignment",
+              "value": "Innovation-focused brand positioning and industry leadership"
+            },
+            {
+              "name": "distributionChannels",
+              "value": "Industry blogs, Podcasts, Conferences, Social media"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "thought-leadership-content-data",
+      "name": "Thought Leadership Content Data",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.3,
+      "position": [
+        680,
+        600
+      ]
+    },
+    {
+      "parameters": {
+        "operation": "create",
+        "resource": "page",
+        "title": "={{ $json.contentTitle }} - Content Strategy",
+        "propertiesUi": {
+          "propertyValues": [
+            {
+              "key": "Content Type",
+              "textValue": "={{ $json.contentType }}"
+            },
+            {
+              "key": "Description",
+              "textValue": "={{ $json.contentDescription }}"
+            },
+            {
+              "key": "Length",
+              "textValue": "={{ $json.contentLength }}"
+            },
+            {
+              "key": "Target Keywords",
+              "textValue": "={{ $json.targetKeywords }}"
+            },
+            {
+              "key": "Content Topics",
+              "textValue": "={{ $json.contentTopics }}"
+            },
+            {
+              "key": "Brand Alignment",
+              "textValue": "={{ $json.brandAlignment }}"
+            },
+            {
+              "key": "Distribution Channels",
+              "textValue": "={{ $json.distributionChannels }}"
+            },
+            {
+              "key": "Status",
+              "textValue": "Planned"
+            },
+            {
+              "key": "Created Date",
+              "textValue": "={{ new Date().toISOString() }}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "notion-content-strategy",
+      "name": "Notion Content Strategy",
+      "type": "n8n-nodes-base.notion",
+      "typeVersion": 2,
+      "position": [
+        900,
+        400
+      ]
+    },
+    {
+      "parameters": {
+        "authentication": "oAuth2",
+        "resource": "message",
+        "operation": "post",
+        "chatId": "={{ $json.contentSlackChannel }}",
+        "text": "📝 New Content Strategy!\n\n**{{ $json.contentTitle }}**\n\n**Type:** {{ $json.contentType }}\n**Length:** {{ $json.contentLength }}\n\n**Description:**\n{{ $json.contentDescription }}\n\n**Topics:**\n{{ $json.contentTopics }}\n\n**Keywords:** {{ $json.targetKeywords }}\n\n**Brand Alignment:**\n{{ $json.brandAlignment }}\n\n**Distribution:**\n{{ $json.distributionChannels }}\n\nReady to create! 🚀",
+        "options": {}
+      },
+      "id": "slack-content-strategy",
+      "name": "Slack Content Strategy",
+      "type": "n8n-nodes-base.slack",
+      "typeVersion": 2.1,
+      "position": [
+        1120,
+        400
+      ]
+    },
+    {
+      "parameters": {
+        "authentication": "oAuth2",
+        "resource": "message",
+        "operation": "post",
+        "chatId": "={{ $json.contentTelegramChannel }}",
+        "text": "📝 New Content Strategy!\n\n**{{ $json.contentTitle }}**\n\n**Type:** {{ $json.contentType }}\n**Length:** {{ $json.contentLength }}\n\n**Description:**\n{{ $json.contentDescription }}\n\n**Topics:**\n{{ $json.contentTopics }}\n\n**Keywords:** {{ $json.targetKeywords }}\n\n**Brand Alignment:**\n{{ $json.brandAlignment }}\n\n**Distribution:**\n{{ $json.distributionChannels }}\n\nReady to create! 🚀",
+        "options": {}
+      },
+      "id": "telegram-content-strategy",
+      "name": "Telegram Content Strategy",
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1.2,
+      "position": [
+        1120,
+        600
+      ]
+    },
+    {
+      "parameters": {
+        "operation": "create",
+        "resource": "page",
+        "title": "Content Performance Dashboard",
+        "propertiesUi": {
+          "propertyValues": [
+            {
+              "key": "Content Published",
+              "textValue": "={{ $json.contentPublished }}"
+            },
+            {
+              "key": "Content Engagement",
+              "textValue": "={{ $json.contentEngagement }}"
+            },
+            {
+              "key": "Lead Generation",
+              "textValue": "={{ $json.leadGeneration }}"
+            },
+            {
+              "key": "Brand Awareness",
+              "textValue": "={{ $json.brandAwareness }}"
+            },
+            {
+              "key": "Last Updated",
+              "textValue": "={{ new Date().toISOString() }}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "notion-content-dashboard",
+      "name": "Notion Content Dashboard",
+      "type": "n8n-nodes-base.notion",
+      "typeVersion": 2,
+      "position": [
+        1340,
+        400
+      ]
+    },
+    {
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "={{ JSON.stringify({\n  success: true,\n  message: 'Content strategy processed successfully',\n  contentType: $json.contentType,\n  contentTitle: $json.contentTitle,\n  status: 'Documented and Notified',\n  timestamp: new Date().toISOString()\n}) }}",
+        "options": {}
+      },
+      "id": "content-strategy-response",
+      "name": "Content Strategy Response",
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.1,
+      "position": [
+        1560,
+        400
+      ]
+    }
+  ],
+  "connections": {
+    "Content Strategy Trigger": {
+      "main": [
+        [
+          {
+            "node": "Content Type Router",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Content Type Router": {
+      "main": [
+        [
+          {
+            "node": "Educational Content Data",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Case Study Content Data",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Thought Leadership Content Data",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Educational Content Data": {
+      "main": [
+        [
+          {
+            "node": "Notion Content Strategy",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Case Study Content Data": {
+      "main": [
+        [
+          {
+            "node": "Notion Content Strategy",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Thought Leadership Content Data": {
+      "main": [
+        [
+          {
+            "node": "Notion Content Strategy",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Notion Content Strategy": {
+      "main": [
+        [
+          {
+            "node": "Slack Content Strategy",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Telegram Content Strategy",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Slack Content Strategy": {
+      "main": [
+        [
+          {
+            "node": "Notion Content Dashboard",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Telegram Content Strategy": {
+      "main": [
+        [
+          {
+            "node": "Notion Content Dashboard",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Notion Content Dashboard": {
+      "main": [
+        [
+          {
+            "node": "Content Strategy Response",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "pinData": {},
+  "versionId": "1",
+  "id": "content_marketing_strategy_system"
+}

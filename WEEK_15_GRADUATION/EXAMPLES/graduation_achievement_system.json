@@ -1,0 +1,298 @@
+{
+  "name": "Graduation Achievement System",
+  "description": "Automated workflow for Graduation phase learning objectives with intelligent processing and error handling.",
+  "tags": [
+    "celebration",
+    "completion",
+    "achievement",
+    "graduation"
+  ],
+  "version": "1.0.0",
+  "author": "Automator Pro Course",
+  "course_metadata": {
+    "week": "Week 15",
+    "phase": "Graduation",
+    "difficulty": "Advanced",
+    "learning_objectives": [
+      "Graduation preparation",
+      "Ongoing success",
+      "Celebration"
+    ],
+    "prerequisites": [
+      "Complete course foundation",
+      "Business experience",
+      "Strategic thinking"
+    ],
+    "estimated_setup_time": "10-20 minutes",
+    "use_cases": [
+      "Practice Graduation concepts",
+      "Build real-world automation skills",
+      "Prepare for business applications",
+      "Demonstrate course learning objectives"
+    ],
+    "examples": [
+      "Use this workflow to practice Graduation skills",
+      "Customize for your specific learning needs",
+      "Apply concepts to real business scenarios",
+      "Build upon for advanced implementations"
+    ],
+    "next_steps": [
+      "Launch your automation business",
+      "Continue learning and growing",
+      "Share your success with the community"
+    ],
+    "related_workflows": [
+      "All course workflows",
+      "Graduation projects",
+      "Business implementation workflows"
+    ]
+  },
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "course-Week 15-graduation_achievement_system",
+    "course_version": "1.0",
+    "last_updated": "2025-09-07T14:31:14.927879"
+  },
+  "nodes": [
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "graduation-achievement",
+        "options": {}
+      },
+      "id": "webhook-trigger",
+      "name": "Graduation Achievement Trigger",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 1,
+      "position": [
+        240,
+        300
+      ],
+      "webhookId": "graduation-achievement-webhook"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict"
+          },
+          "conditions": [
+            {
+              "id": "graduation-status-check",
+              "leftValue": "={{ $json.graduation_status }}",
+              "rightValue": "achieved",
+              "operator": {
+                "type": "string",
+                "operation": "equals"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "id": "graduation-status-check",
+      "name": "Graduation Status Check",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2,
+      "position": [
+        460,
+        300
+      ]
+    },
+    {
+      "parameters": {
+        "values": {
+          "string": [
+            {
+              "name": "achievement_status",
+              "value": "graduation_achieved"
+            },
+            {
+              "name": "achievement_timestamp",
+              "value": "={{ new Date().toISOString() }}"
+            },
+            {
+              "name": "achievement_message",
+              "value": "Graduation achieved successfully"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "set-achievement-status",
+      "name": "Set Achievement Status",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.3,
+      "position": [
+        680,
+        200
+      ]
+    },
+    {
+      "parameters": {
+        "authentication": "predefinedCredentialType",
+        "nodeCredentialType": "notionApi",
+        "resource": "database",
+        "operation": "getAll",
+        "databaseId": "={{ $json.database_id }}",
+        "options": {
+          "filter": {
+            "property": "Graduation Status",
+            "select": {
+              "equals": "Achieved"
+            }
+          }
+        }
+      },
+      "id": "update-graduation-database",
+      "name": "Update Graduation Database",
+      "type": "n8n-nodes-base.notion",
+      "typeVersion": 2,
+      "position": [
+        900,
+        200
+      ]
+    },
+    {
+      "parameters": {
+        "authentication": "predefinedCredentialType",
+        "nodeCredentialType": "slackApi",
+        "resource": "message",
+        "operation": "post",
+        "channel": "={{ $json.slack_channel }}",
+        "text": "🎓 Graduation Achieved!\n\nStudent: {{ $json.student_name }}\nStatus: {{ $json.achievement_status }}\nAchieved: {{ $json.achievement_timestamp }}\nMessage: {{ $json.achievement_message }}",
+        "otherOptions": {}
+      },
+      "id": "send-achievement-notification",
+      "name": "Send Achievement Notification",
+      "type": "n8n-nodes-base.slack",
+      "typeVersion": 2.1,
+      "position": [
+        1120,
+        200
+      ]
+    },
+    {
+      "parameters": {
+        "values": {
+          "string": [
+            {
+              "name": "error_status",
+              "value": "graduation_not_achieved"
+            },
+            {
+              "name": "error_timestamp",
+              "value": "={{ new Date().toISOString() }}"
+            },
+            {
+              "name": "error_message",
+              "value": "Graduation not yet achieved"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "set-error-status",
+      "name": "Set Error Status",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.3,
+      "position": [
+        680,
+        400
+      ]
+    },
+    {
+      "parameters": {
+        "authentication": "predefinedCredentialType",
+        "nodeCredentialType": "slackApi",
+        "resource": "message",
+        "operation": "post",
+        "channel": "={{ $json.slack_channel }}",
+        "text": "⚠️ Graduation Status Check\n\nStudent: {{ $json.student_name }}\nStatus: {{ $json.error_status }}\nChecked: {{ $json.error_timestamp }}\nMessage: {{ $json.error_message }}",
+        "otherOptions": {}
+      },
+      "id": "send-error-notification",
+      "name": "Send Error Notification",
+      "type": "n8n-nodes-base.slack",
+      "typeVersion": 2.1,
+      "position": [
+        900,
+        400
+      ]
+    }
+  ],
+  "connections": {
+    "webhook-trigger": {
+      "main": [
+        [
+          {
+            "node": "graduation-status-check",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "graduation-status-check": {
+      "main": [
+        [
+          {
+            "node": "set-achievement-status",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "set-error-status",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "set-achievement-status": {
+      "main": [
+        [
+          {
+            "node": "update-graduation-database",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "update-graduation-database": {
+      "main": [
+        [
+          {
+            "node": "send-achievement-notification",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "set-error-status": {
+      "main": [
+        [
+          {
+            "node": "send-error-notification",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "pinData": {},
+  "versionId": "1",
+  "id": "graduation-achievement-system"
+}

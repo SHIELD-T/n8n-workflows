@@ -1,0 +1,495 @@
+{
+  "name": "Workflow Template Management System",
+  "description": "Automated workflow for Scaling phase learning objectives with intelligent processing and error handling.",
+  "tags": [
+    "management",
+    "growth",
+    "operations",
+    "scaling"
+  ],
+  "version": "1.0.0",
+  "author": "Automator Pro Course",
+  "course_metadata": {
+    "week": "Week 12",
+    "phase": "Scaling",
+    "difficulty": "Advanced",
+    "learning_objectives": [
+      "Scaling strategies",
+      "Template creation",
+      "Team building"
+    ],
+    "prerequisites": [
+      "Technical skills",
+      "Business interest",
+      "Client interaction skills"
+    ],
+    "estimated_setup_time": "10-20 minutes",
+    "use_cases": [
+      "Practice Scaling concepts",
+      "Build real-world automation skills",
+      "Prepare for business applications",
+      "Demonstrate course learning objectives"
+    ],
+    "examples": [
+      "Use this workflow to practice Scaling skills",
+      "Customize for your specific learning needs",
+      "Apply concepts to real business scenarios",
+      "Build upon for advanced implementations"
+    ],
+    "next_steps": [
+      "Complete Week 13 objectives",
+      "Practice with additional examples",
+      "Apply skills to real projects"
+    ],
+    "related_workflows": [
+      "Week 13 workflows",
+      "Previous week workflows",
+      "Course example workflows"
+    ]
+  },
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "course-Week 12-workflow_template_management_system",
+    "course_version": "1.0",
+    "last_updated": "2025-09-07T14:31:15.270726"
+  },
+  "nodes": [
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "template-request",
+        "responseMode": "responseNode",
+        "options": {}
+      },
+      "id": "template-request-trigger",
+      "name": "Template Request Trigger",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 1,
+      "position": [
+        240,
+        300
+      ],
+      "webhookId": "template-request-webhook"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict"
+          },
+          "conditions": [
+            {
+              "id": "template-type-condition",
+              "leftValue": "={{ $json.templateType }}",
+              "rightValue": "lead-generation",
+              "operator": {
+                "type": "string",
+                "operation": "equals"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "id": "template-type-router",
+      "name": "Template Type Router",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2,
+      "position": [
+        460,
+        300
+      ]
+    },
+    {
+      "parameters": {
+        "values": {
+          "string": [
+            {
+              "name": "templateId",
+              "value": "lead-gen-template-v2.1"
+            },
+            {
+              "name": "templateName",
+              "value": "Lead Generation Automation Suite"
+            },
+            {
+              "name": "templateDescription",
+              "value": "Complete lead capture and nurturing system with CRM integration"
+            },
+            {
+              "name": "templateFeatures",
+              "value": "Form integration, CRM integration, Email automation, Notifications, Lead scoring"
+            },
+            {
+              "name": "templatePrice",
+              "value": "997"
+            },
+            {
+              "name": "setupTime",
+              "value": "1 week"
+            },
+            {
+              "name": "customizationOptions",
+              "value": "Form source, CRM system, Email service, Notification channel"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "lead-gen-template-data",
+      "name": "Lead Gen Template Data",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.3,
+      "position": [
+        680,
+        200
+      ]
+    },
+    {
+      "parameters": {
+        "values": {
+          "string": [
+            {
+              "name": "templateId",
+              "value": "customer-support-template-v1.8"
+            },
+            {
+              "name": "templateName",
+              "value": "Customer Support Automation Suite"
+            },
+            {
+              "name": "templateDescription",
+              "value": "Automated customer support and ticket management system"
+            },
+            {
+              "name": "templateFeatures",
+              "value": "Multi-channel support, AI classification, Automated responses, Escalation management"
+            },
+            {
+              "name": "templatePrice",
+              "value": "1497"
+            },
+            {
+              "name": "setupTime",
+              "value": "2 weeks"
+            },
+            {
+              "name": "customizationOptions",
+              "value": "Support channel, Ticket system, AI model, Escalation rules"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "customer-support-template-data",
+      "name": "Customer Support Template Data",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.3,
+      "position": [
+        680,
+        400
+      ]
+    },
+    {
+      "parameters": {
+        "values": {
+          "string": [
+            {
+              "name": "templateId",
+              "value": "content-management-template-v2.3"
+            },
+            {
+              "name": "templateName",
+              "value": "Content Management Automation Suite"
+            },
+            {
+              "name": "templateDescription",
+              "value": "Automated content creation and distribution system"
+            },
+            {
+              "name": "templateFeatures",
+              "value": "AI content generation, Multi-platform publishing, Social media automation, Analytics"
+            },
+            {
+              "name": "templatePrice",
+              "value": "1297"
+            },
+            {
+              "name": "setupTime",
+              "value": "1.5 weeks"
+            },
+            {
+              "name": "customizationOptions",
+              "value": "Content type, AI model, Publishing platforms, Social channels"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "content-management-template-data",
+      "name": "Content Management Template Data",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.3,
+      "position": [
+        680,
+        600
+      ]
+    },
+    {
+      "parameters": {
+        "operation": "create",
+        "resource": "page",
+        "title": "={{ $json.templateName }} - Template Details",
+        "propertiesUi": {
+          "propertyValues": [
+            {
+              "key": "Template ID",
+              "textValue": "={{ $json.templateId }}"
+            },
+            {
+              "key": "Description",
+              "textValue": "={{ $json.templateDescription }}"
+            },
+            {
+              "key": "Features",
+              "textValue": "={{ $json.templateFeatures }}"
+            },
+            {
+              "key": "Price",
+              "textValue": "=${{ $json.templatePrice }}"
+            },
+            {
+              "key": "Setup Time",
+              "textValue": "={{ $json.setupTime }}"
+            },
+            {
+              "key": "Customization Options",
+              "textValue": "={{ $json.customizationOptions }}"
+            },
+            {
+              "key": "Status",
+              "textValue": "Available"
+            },
+            {
+              "key": "Last Updated",
+              "textValue": "={{ new Date().toISOString() }}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "notion-template-documentation",
+      "name": "Notion Template Documentation",
+      "type": "n8n-nodes-base.notion",
+      "typeVersion": 2,
+      "position": [
+        900,
+        400
+      ]
+    },
+    {
+      "parameters": {
+        "authentication": "oAuth2",
+        "resource": "message",
+        "operation": "post",
+        "chatId": "={{ $json.clientSlackChannel }}",
+        "text": "🎉 New Template Available!\n\n**{{ $json.templateName }}**\n\n{{ $json.templateDescription }}\n\n**Features:**\n{{ $json.templateFeatures }}\n\n**Price:** ${{ $json.templatePrice }}\n**Setup Time:** {{ $json.setupTime }}\n\n**Customization Options:**\n{{ $json.customizationOptions }}\n\nReady to deploy! 🚀",
+        "options": {}
+      },
+      "id": "slack-template-notification",
+      "name": "Slack Template Notification",
+      "type": "n8n-nodes-base.slack",
+      "typeVersion": 2.1,
+      "position": [
+        1120,
+        400
+      ]
+    },
+    {
+      "parameters": {
+        "authentication": "oAuth2",
+        "resource": "message",
+        "operation": "post",
+        "chatId": "={{ $json.clientTelegramChannel }}",
+        "text": "🎉 New Template Available!\n\n**{{ $json.templateName }}**\n\n{{ $json.templateDescription }}\n\n**Features:**\n{{ $json.templateFeatures }}\n\n**Price:** ${{ $json.templatePrice }}\n**Setup Time:** {{ $json.setupTime }}\n\n**Customization Options:**\n{{ $json.customizationOptions }}\n\nReady to deploy! 🚀",
+        "options": {}
+      },
+      "id": "telegram-template-notification",
+      "name": "Telegram Template Notification",
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1.2,
+      "position": [
+        1120,
+        600
+      ]
+    },
+    {
+      "parameters": {
+        "authentication": "oAuth2",
+        "resource": "message",
+        "operation": "post",
+        "chatId": "={{ $json.clientDiscordChannel }}",
+        "text": "🎉 New Template Available!\n\n**{{ $json.templateName }}**\n\n{{ $json.templateDescription }}\n\n**Features:**\n{{ $json.templateFeatures }}\n\n**Price:** ${{ $json.templatePrice }}\n**Setup Time:** {{ $json.setupTime }}\n\n**Customization Options:**\n{{ $json.customizationOptions }}\n\nReady to deploy! 🚀",
+        "options": {}
+      },
+      "id": "discord-template-notification",
+      "name": "Discord Template Notification",
+      "type": "n8n-nodes-base.discord",
+      "typeVersion": 1.1,
+      "position": [
+        1120,
+        800
+      ]
+    },
+    {
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "={{ JSON.stringify({\n  success: true,\n  message: 'Template processed successfully',\n  templateId: $json.templateId,\n  templateName: $json.templateName,\n  status: 'Documented and Notified',\n  timestamp: new Date().toISOString()\n}) }}",
+        "options": {}
+      },
+      "id": "template-response",
+      "name": "Template Response",
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.1,
+      "position": [
+        1340,
+        400
+      ]
+    }
+  ],
+  "connections": {
+    "Template Request Trigger": {
+      "main": [
+        [
+          {
+            "node": "Template Type Router",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Template Type Router": {
+      "main": [
+        [
+          {
+            "node": "Lead Gen Template Data",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Customer Support Template Data",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Content Management Template Data",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Lead Gen Template Data": {
+      "main": [
+        [
+          {
+            "node": "Notion Template Documentation",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Customer Support Template Data": {
+      "main": [
+        [
+          {
+            "node": "Notion Template Documentation",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Content Management Template Data": {
+      "main": [
+        [
+          {
+            "node": "Notion Template Documentation",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Notion Template Documentation": {
+      "main": [
+        [
+          {
+            "node": "Slack Template Notification",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Telegram Template Notification",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Discord Template Notification",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Slack Template Notification": {
+      "main": [
+        [
+          {
+            "node": "Template Response",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Telegram Template Notification": {
+      "main": [
+        [
+          {
+            "node": "Template Response",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Discord Template Notification": {
+      "main": [
+        [
+          {
+            "node": "Template Response",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "pinData": {},
+  "versionId": "1",
+  "id": "workflow_template_management_system"
+}

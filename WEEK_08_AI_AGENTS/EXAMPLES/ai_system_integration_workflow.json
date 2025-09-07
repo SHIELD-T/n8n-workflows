@@ -1,0 +1,439 @@
+{
+  "name": "AI System Integration Workflow",
+  "description": "Automated workflow for AI Integration phase learning objectives with intelligent processing and error handling.",
+  "tags": [
+    "intelligence",
+    "agents",
+    "ai",
+    "machine-learning",
+    "automation",
+    "artificial-intelligence"
+  ],
+  "version": "1.0.0",
+  "author": "Automator Pro Course",
+  "course_metadata": {
+    "week": "Week 08",
+    "phase": "AI Integration",
+    "difficulty": "Intermediate",
+    "learning_objectives": [
+      "AI deployment",
+      "AI maintenance",
+      "AI scaling"
+    ],
+    "prerequisites": [
+      "Workflow building skills",
+      "AI/ML interest",
+      "API knowledge"
+    ],
+    "estimated_setup_time": "20-30 minutes",
+    "use_cases": [
+      "Practice AI Integration concepts",
+      "Build real-world automation skills",
+      "Prepare for business applications",
+      "Demonstrate course learning objectives"
+    ],
+    "examples": [
+      "Use this workflow to practice AI Integration skills",
+      "Customize for your specific learning needs",
+      "Apply concepts to real business scenarios",
+      "Build upon for advanced implementations"
+    ],
+    "next_steps": [
+      "Complete Week 9 objectives",
+      "Practice with additional examples",
+      "Apply skills to real projects"
+    ],
+    "related_workflows": [
+      "Week 9 workflows",
+      "Previous week workflows",
+      "Course example workflows"
+    ]
+  },
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "course-Week 08-ai_system_integration_workflow",
+    "course_version": "1.0",
+    "last_updated": "2025-09-07T14:31:13.971948"
+  },
+  "nodes": [
+    {
+      "parameters": {
+        "path": "ai-system-integration",
+        "httpMethod": "POST"
+      },
+      "name": "AI System Integration",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 1,
+      "position": [
+        240,
+        300
+      ]
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "name": "integration_id",
+              "value": "={{ $now.format('YYYYMMDDHHmmss') }}"
+            },
+            {
+              "name": "integration_type",
+              "value": "comprehensive"
+            },
+            {
+              "name": "start_time",
+              "value": "={{ $now }}"
+            },
+            {
+              "name": "integration_targets",
+              "value": "={{ ['ai_services', 'data_sources', 'apis', 'workflows'] }}"
+            }
+          ]
+        }
+      },
+      "name": "Initialize Integration System",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 1,
+      "position": [
+        460,
+        300
+      ]
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://api.ai-integration.com/integrate",
+        "bodyContentType": "json",
+        "jsonBody": "={{ { \"integration_id\": $json.integration_id, \"integration_type\": $json.integration_type, \"targets\": $json.integration_targets, \"timestamp\": $now } }}"
+      },
+      "name": "Integrate AI Services",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 1,
+      "position": [
+        680,
+        300
+      ]
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://api.data-integration.com/connect",
+        "bodyContentType": "json",
+        "jsonBody": "={{ { \"integration_id\": $json.integration_id, \"data_sources\": [\"database\", \"api\", \"file\", \"stream\"], \"timestamp\": $now } }}"
+      },
+      "name": "Connect Data Sources",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 1,
+      "position": [
+        900,
+        300
+      ]
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://api.api-integration.com/connect",
+        "bodyContentType": "json",
+        "jsonBody": "={{ { \"integration_id\": $json.integration_id, \"apis\": [\"rest\", \"graphql\", \"webhook\", \"streaming\"], \"timestamp\": $now } }}"
+      },
+      "name": "Integrate APIs",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 1,
+      "position": [
+        1120,
+        300
+      ]
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://api.workflow-integration.com/connect",
+        "bodyContentType": "json",
+        "jsonBody": "={{ { \"integration_id\": $json.integration_id, \"workflows\": [\"automation\", \"orchestration\", \"coordination\", \"synchronization\"], \"timestamp\": $now } }}"
+      },
+      "name": "Integrate Workflows",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 1,
+      "position": [
+        1340,
+        300
+      ]
+    },
+    {
+      "parameters": {
+        "method": "GET",
+        "url": "https://api.integration-monitor.com/status",
+        "qs": {
+          "integration_id": "={{ $json.integration_id }}",
+          "timeframe": "5m"
+        },
+        "options": {
+          "response": {
+            "response": {
+              "responseFormat": "json"
+            }
+          }
+        }
+      },
+      "name": "Monitor Integration Status",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 1,
+      "position": [
+        1560,
+        300
+      ]
+    },
+    {
+      "parameters": {
+        "resource": "chat",
+        "operation": "create",
+        "model": "gpt-4",
+        "messages": {
+          "values": [
+            {
+              "role": "system",
+              "content": "You are an AI system integration specialist that analyzes integration status and generates integration recommendations."
+            },
+            {
+              "role": "user",
+              "content": "={{ 'Integration Status:\\nAI Services: ' + $json.ai_services_status + '\\nData Sources: ' + $json.data_sources_status + '\\nAPIs: ' + $json.apis_status + '\\nWorkflows: ' + $json.workflows_status + '\\nOverall Status: ' + $json.overall_status + '\\n\\nGenerate integration recommendations and improvement strategies.' }}"
+            }
+          ]
+        },
+        "options": {
+          "temperature": 0.3,
+          "maxTokens": 600
+        }
+      },
+      "name": "AI Integration Analysis",
+      "type": "n8n-nodes-base.openAi",
+      "typeVersion": 1,
+      "position": [
+        1780,
+        300
+      ]
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://api.integration-optimizer.com/optimize",
+        "bodyContentType": "json",
+        "jsonBody": "={{ { \"integration_id\": $json.integration_id, \"optimization_type\": \"performance\", \"ai_recommendations\": $json.choices[0].message.content, \"timestamp\": $now } }}"
+      },
+      "name": "Optimize Integration",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 1,
+      "position": [
+        2000,
+        300
+      ]
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "name": "integration_report",
+              "value": "={{ { \"integration_id\": $json.integration_id, \"integration_type\": $json.integration_type, \"start_time\": $json.start_time, \"integration_targets\": $json.integration_targets, \"integration_status\": { \"ai_services_status\": $json.ai_services_status, \"data_sources_status\": $json.data_sources_status, \"apis_status\": $json.apis_status, \"workflows_status\": $json.workflows_status, \"overall_status\": $json.overall_status }, \"ai_integration_analysis\": $json.choices[0].message.content, \"integration_results\": $json, \"optimization_status\": $('Optimize Integration').item.json.status, \"processing_time\": $now.diff($json.start_time, 'milliseconds'), \"completed_at\": $now } }}"
+            },
+            {
+              "name": "success_message",
+              "value": "✅ AI system integration completed successfully"
+            }
+          ]
+        }
+      },
+      "name": "Generate Integration Report",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 1,
+      "position": [
+        2220,
+        300
+      ]
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://api.integration-service.com/results",
+        "bodyContentType": "json",
+        "jsonBody": "={{ { \"results\": $json.integration_report, \"timestamp\": $now } }}"
+      },
+      "name": "Send Integration Results",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 1,
+      "position": [
+        2440,
+        300
+      ]
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://api.integration-log.com/log",
+        "bodyContentType": "json",
+        "jsonBody": "={{ { \"type\": \"ai_system_integration\", \"data\": $json.integration_report, \"timestamp\": $now } }}"
+      },
+      "name": "Log Integration Activity",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 1,
+      "position": [
+        2660,
+        300
+      ]
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "name": "integration_error",
+              "value": "={{ { \"error_type\": \"integration_failed\", \"integration_id\": $json.integration_id, \"message\": \"AI system integration failed\", \"timestamp\": $now } }}"
+            },
+            {
+              "name": "error_response",
+              "value": "={{ { \"status\": \"error\", \"integration_id\": $json.integration_id, \"message\": \"AI system integration workflow error\" } }}"
+            }
+          ]
+        }
+      },
+      "name": "Handle Integration Error",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 1,
+      "position": [
+        500,
+        500
+      ]
+    }
+  ],
+  "connections": {
+    "AI System Integration": {
+      "main": [
+        [
+          {
+            "node": "Initialize Integration System",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Initialize Integration System": {
+      "main": [
+        [
+          {
+            "node": "Integrate AI Services",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Integrate AI Services": {
+      "main": [
+        [
+          {
+            "node": "Connect Data Sources",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Connect Data Sources": {
+      "main": [
+        [
+          {
+            "node": "Integrate APIs",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Integrate APIs": {
+      "main": [
+        [
+          {
+            "node": "Integrate Workflows",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Integrate Workflows": {
+      "main": [
+        [
+          {
+            "node": "Monitor Integration Status",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Monitor Integration Status": {
+      "main": [
+        [
+          {
+            "node": "AI Integration Analysis",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "AI Integration Analysis": {
+      "main": [
+        [
+          {
+            "node": "Optimize Integration",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Optimize Integration": {
+      "main": [
+        [
+          {
+            "node": "Generate Integration Report",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Generate Integration Report": {
+      "main": [
+        [
+          {
+            "node": "Send Integration Results",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Send Integration Results": {
+      "main": [
+        [
+          {
+            "node": "Log Integration Activity",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "pinData": {},
+  "versionId": "1",
+  "id": "ai_system_integration_workflow"
+}

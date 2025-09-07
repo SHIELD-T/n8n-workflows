@@ -1,0 +1,274 @@
+{
+  "name": "Form Processing Workflow",
+  "description": "Automated workflow for Foundation phase learning objectives with intelligent processing and error handling.",
+  "tags": [
+    "basics",
+    "progress-tracking",
+    "learning",
+    "foundation"
+  ],
+  "version": "1.0.0",
+  "author": "Automator Pro Course",
+  "course_metadata": {
+    "week": "Week 02",
+    "phase": "Foundation",
+    "difficulty": "Beginner",
+    "learning_objectives": [
+      "Master self-hosting",
+      "Understand webhooks",
+      "Work with APIs"
+    ],
+    "prerequisites": [
+      "Completed previous weeks",
+      "n8n instance",
+      "Basic automation knowledge"
+    ],
+    "estimated_setup_time": "10-20 minutes",
+    "use_cases": [
+      "Practice Foundation concepts",
+      "Build real-world automation skills",
+      "Prepare for business applications",
+      "Demonstrate course learning objectives"
+    ],
+    "examples": [
+      "Use this workflow to practice Foundation skills",
+      "Customize for your specific learning needs",
+      "Apply concepts to real business scenarios",
+      "Build upon for advanced implementations"
+    ],
+    "next_steps": [
+      "Complete Week 3 objectives",
+      "Practice with additional examples",
+      "Apply skills to real projects"
+    ],
+    "related_workflows": [
+      "Week 3 workflows",
+      "Previous week workflows",
+      "Course example workflows"
+    ]
+  },
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "course-Week 02-form_processing_workflow",
+    "course_version": "1.0",
+    "last_updated": "2025-09-07T14:31:15.362518"
+  },
+  "nodes": [
+    {
+      "id": "webhook-trigger-2",
+      "name": "Form Submission Webhook",
+      "type": "n8n-nodes-base.webhook",
+      "position": [
+        100,
+        100
+      ],
+      "parameters": {
+        "path": "form-submission",
+        "httpMethod": "POST"
+      }
+    },
+    {
+      "id": "data-validation-2",
+      "name": "Validate Form Data",
+      "type": "n8n-nodes-base.if",
+      "position": [
+        300,
+        100
+      ],
+      "parameters": {
+        "conditions": {
+          "string": [
+            {
+              "value1": "={{ $json.name }}",
+              "operation": "isNotEmpty"
+            },
+            {
+              "value1": "={{ $json.email }}",
+              "operation": "isNotEmpty"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "process-data-2",
+      "name": "Process Form Data",
+      "type": "n8n-nodes-base.set",
+      "position": [
+        500,
+        100
+      ],
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "name": "submission_id",
+              "value": "={{ $now.format('YYYYMMDDHHmmss') }}"
+            },
+            {
+              "name": "processed_name",
+              "value": "={{ $json.name.trim() }}"
+            },
+            {
+              "name": "processed_email",
+              "value": "={{ $json.email.toLowerCase().trim() }}"
+            },
+            {
+              "name": "processed_message",
+              "value": "={{ $json.message || 'No message provided' }}"
+            },
+            {
+              "name": "submitted_at",
+              "value": "={{ $now }}"
+            },
+            {
+              "name": "status",
+              "value": "processed"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "format-notification-2",
+      "name": "Format Notification",
+      "type": "n8n-nodes-base.set",
+      "position": [
+        700,
+        100
+      ],
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "name": "notification_title",
+              "value": "📝 New Form Submission"
+            },
+            {
+              "name": "notification_message",
+              "value": "*Name:* {{ $json.processed_name }}\n*Email:* {{ $json.processed_email }}\n*Message:* {{ $json.processed_message }}\n*Submitted:* {{ $json.submitted_at.format('YYYY-MM-DD HH:mm:ss') }}\n*ID:* {{ $json.submission_id }}"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "send-notification-2",
+      "name": "Send Notification",
+      "type": "n8n-nodes-base.set",
+      "position": [
+        900,
+        100
+      ],
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "name": "notification_sent",
+              "value": "={{ $now }}"
+            },
+            {
+              "name": "notification_status",
+              "value": "sent"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "success-response-2",
+      "name": "Return Success Response",
+      "type": "n8n-nodes-base.respondToWebhook",
+      "position": [
+        1100,
+        100
+      ],
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "={{ { \"status\": \"success\", \"submission_id\": $json.submission_id, \"processed_at\": $json.submitted_at } }}"
+      }
+    },
+    {
+      "id": "error-response-2",
+      "name": "Return Error Response",
+      "type": "n8n-nodes-base.respondToWebhook",
+      "position": [
+        500,
+        300
+      ],
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "={{ { \"status\": \"error\", \"message\": \"Invalid form data\", \"timestamp\": $now } }}"
+      }
+    }
+  ],
+  "connections": {
+    "Form Submission Webhook": {
+      "main": [
+        [
+          {
+            "node": "Validate Form Data",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Validate Form Data": {
+      "main": [
+        [
+          {
+            "node": "Process Form Data",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Return Error Response",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Process Form Data": {
+      "main": [
+        [
+          {
+            "node": "Format Notification",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Format Notification": {
+      "main": [
+        [
+          {
+            "node": "Send Notification",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Send Notification": {
+      "main": [
+        [
+          {
+            "node": "Return Success Response",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {},
+  "pinData": {},
+  "versionId": "1",
+  "id": "form_processing_workflow"
+}

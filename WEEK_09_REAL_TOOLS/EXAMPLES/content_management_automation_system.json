@@ -1,0 +1,377 @@
+{
+  "name": "Content Management Automation System",
+  "description": "Automated workflow for Real-World Tools phase learning objectives with intelligent processing and error handling.",
+  "tags": [
+    "tools",
+    "real-world",
+    "integration",
+    "apis"
+  ],
+  "version": "1.0.0",
+  "author": "Automator Pro Course",
+  "course_metadata": {
+    "week": "Week 09",
+    "phase": "Real-World Tools",
+    "difficulty": "Advanced",
+    "learning_objectives": [
+      "OAuth integration",
+      "Form builders",
+      "Email/calendar triggers"
+    ],
+    "prerequisites": [
+      "AI integration skills",
+      "Real-world tool access",
+      "Integration experience"
+    ],
+    "estimated_setup_time": "10-20 minutes",
+    "use_cases": [
+      "Practice Real-World Tools concepts",
+      "Build real-world automation skills",
+      "Prepare for business applications",
+      "Demonstrate course learning objectives"
+    ],
+    "examples": [
+      "Use this workflow to practice Real-World Tools skills",
+      "Customize for your specific learning needs",
+      "Apply concepts to real business scenarios",
+      "Build upon for advanced implementations"
+    ],
+    "next_steps": [
+      "Complete Week 10 objectives",
+      "Practice with additional examples",
+      "Apply skills to real projects"
+    ],
+    "related_workflows": [
+      "Week 10 workflows",
+      "Previous week workflows",
+      "Course example workflows"
+    ]
+  },
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "course-Week 09-content_management_automation_system",
+    "course_version": "1.0",
+    "last_updated": "2025-09-07T14:31:13.986508"
+  },
+  "nodes": [
+    {
+      "parameters": {
+        "path": "content-management",
+        "httpMethod": "POST"
+      },
+      "name": "Content Management Webhook",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 1,
+      "position": [
+        240,
+        300
+      ]
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "name": "content_id",
+              "value": "={{ $now.format('YYYYMMDDHHmmss') }}"
+            },
+            {
+              "name": "content_type",
+              "value": "={{ $json.content_type }}"
+            },
+            {
+              "name": "title",
+              "value": "={{ $json.title }}"
+            },
+            {
+              "name": "description",
+              "value": "={{ $json.description }}"
+            },
+            {
+              "name": "author",
+              "value": "={{ $json.author }}"
+            },
+            {
+              "name": "category",
+              "value": "={{ $json.category }}"
+            },
+            {
+              "name": "tags",
+              "value": "={{ $json.tags }}"
+            }
+          ]
+        }
+      },
+      "name": "Process Content Data",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 1,
+      "position": [
+        460,
+        300
+      ]
+    },
+    {
+      "parameters": {
+        "resource": "chat",
+        "operation": "create",
+        "model": "gpt-4",
+        "messages": {
+          "values": [
+            {
+              "role": "system",
+              "content": "You are a content management specialist that analyzes content and generates structured content for Notion."
+            },
+            {
+              "role": "user",
+              "content": "={{ 'Generate structured content for:\\nType: ' + $json.content_type + '\\nTitle: ' + $json.title + '\\nDescription: ' + $json.description + '\\nAuthor: ' + $json.author + '\\nCategory: ' + $json.category + '\\nTags: ' + $json.tags + '\\n\\nCreate: structured content, SEO optimization, and content recommendations.' }}"
+            }
+          ]
+        }
+      },
+      "name": "Generate Structured Content",
+      "type": "n8n-nodes-base.openAi",
+      "typeVersion": 1,
+      "position": [
+        680,
+        300
+      ]
+    },
+    {
+      "parameters": {
+        "operation": "create",
+        "base": "your_base_id",
+        "table": "Content Management",
+        "fields": {
+          "Content ID": "={{ $json.content_id }}",
+          "Content Type": "={{ $json.content_type }}",
+          "Title": "={{ $json.title }}",
+          "Description": "={{ $json.description }}",
+          "Author": "={{ $json.author }}",
+          "Category": "={{ $json.category }}",
+          "Tags": "={{ $json.tags }}",
+          "Status": "Draft",
+          "Generated Content": "={{ $json.choices[0].message.content }}",
+          "Created At": "={{ $now }}"
+        }
+      },
+      "name": "Store Content Data",
+      "type": "n8n-nodes-base.airtable",
+      "typeVersion": 1,
+      "position": [
+        900,
+        300
+      ]
+    },
+    {
+      "parameters": {
+        "operation": "createPage",
+        "parentId": "your_database_id",
+        "title": "={{ $json.title }}",
+        "content": "={{ $json.choices[0].message.content }}"
+      },
+      "name": "Create Notion Page",
+      "type": "n8n-nodes-base.notion",
+      "typeVersion": 1,
+      "position": [
+        1120,
+        300
+      ]
+    },
+    {
+      "parameters": {
+        "operation": "send",
+        "toEmail": "={{ $json.author }}",
+        "subject": "={{ 'Content Created: ' + $json.title }}",
+        "message": "={{ 'Hi ' + $json.author + ',\\n\\nYour content has been created and is ready for review.\\n\\nTitle: ' + $json.title + '\\nType: ' + $json.content_type + '\\nCategory: ' + $json.category + '\\n\\nContent ID: ' + $json.content_id + '\\n\\nPlease review and approve the content.\\n\\nBest regards,\\nContent Management System' }}"
+      },
+      "name": "Send Content Notification",
+      "type": "n8n-nodes-base.gmail",
+      "typeVersion": 1,
+      "position": [
+        1340,
+        300
+      ]
+    },
+    {
+      "parameters": {
+        "operation": "postMessage",
+        "channel": "#content-updates",
+        "text": "={{ '📝 New Content Created\\nTitle: ' + $json.title + '\\nType: ' + $json.content_type + '\\nAuthor: ' + $json.author + '\\nCategory: ' + $json.category + '\\nContent ID: ' + $json.content_id }}"
+      },
+      "name": "Notify Content Team",
+      "type": "n8n-nodes-base.slack",
+      "typeVersion": 1,
+      "position": [
+        1560,
+        300
+      ]
+    },
+    {
+      "parameters": {
+        "operation": "create",
+        "databaseId": "your_database_id",
+        "fields": {
+          "Title": "={{ 'Review content: ' + $json.title }}",
+          "Content ID": "={{ $json.content_id }}",
+          "Author": "={{ $json.author }}",
+          "Content Type": "={{ $json.content_type }}",
+          "Category": "={{ $json.category }}",
+          "Due Date": "={{ $now.plus({ hours: 48 }) }}",
+          "Status": "To Do",
+          "Assigned To": "Content Review Team"
+        }
+      },
+      "name": "Create Review Task",
+      "type": "n8n-nodes-base.notion",
+      "typeVersion": 1,
+      "position": [
+        1780,
+        300
+      ]
+    },
+    {
+      "parameters": {
+        "operation": "sendMessage",
+        "chatId": "your_chat_id",
+        "text": "={{ '📝 New Content: ' + $json.title + '\\nAuthor: ' + $json.author + '\\nType: ' + $json.content_type }}"
+      },
+      "name": "Send Telegram Alert",
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1,
+      "position": [
+        2000,
+        300
+      ]
+    },
+    {
+      "parameters": {
+        "operation": "update",
+        "base": "your_base_id",
+        "table": "Content Management",
+        "recordId": "={{ $json.content_id }}",
+        "fields": {
+          "Status": "Created",
+          "Notion Page": "Created",
+          "Review Task": "Created",
+          "Notifications": "Sent",
+          "Updated At": "={{ $now }}"
+        }
+      },
+      "name": "Update Content Status",
+      "type": "n8n-nodes-base.airtable",
+      "typeVersion": 1,
+      "position": [
+        2220,
+        300
+      ]
+    }
+  ],
+  "connections": {
+    "Content Management Webhook": {
+      "main": [
+        [
+          {
+            "node": "Process Content Data",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Process Content Data": {
+      "main": [
+        [
+          {
+            "node": "Generate Structured Content",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Generate Structured Content": {
+      "main": [
+        [
+          {
+            "node": "Store Content Data",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Store Content Data": {
+      "main": [
+        [
+          {
+            "node": "Create Notion Page",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Create Notion Page": {
+      "main": [
+        [
+          {
+            "node": "Send Content Notification",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Send Content Notification": {
+      "main": [
+        [
+          {
+            "node": "Notify Content Team",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Notify Content Team": {
+      "main": [
+        [
+          {
+            "node": "Create Review Task",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Create Review Task": {
+      "main": [
+        [
+          {
+            "node": "Send Telegram Alert",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Send Telegram Alert": {
+      "main": [
+        [
+          {
+            "node": "Update Content Status",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "pinData": {},
+  "versionId": "1",
+  "id": "content_management_automation_system"
+}

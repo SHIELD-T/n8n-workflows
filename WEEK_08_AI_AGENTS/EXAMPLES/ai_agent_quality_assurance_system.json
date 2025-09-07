@@ -1,0 +1,216 @@
+{
+  "name": "AI Agent Quality Assurance System",
+  "description": "Ensure AI agent quality with automated testing, validation, and quality metrics.",
+  "tags": [
+    "intelligence",
+    "agents",
+    "ai",
+    "machine-learning",
+    "automation",
+    "artificial-intelligence"
+  ],
+  "version": "1.0.0",
+  "author": "Automator Pro Course",
+  "course_metadata": {
+    "week": "Week 08",
+    "phase": "AI Integration",
+    "difficulty": "Intermediate",
+    "learning_objectives": [
+      "AI deployment",
+      "AI maintenance",
+      "AI scaling"
+    ],
+    "prerequisites": [
+      "Workflow building skills",
+      "AI/ML interest",
+      "API knowledge"
+    ],
+    "estimated_setup_time": "5-10 minutes",
+    "use_cases": [
+      "Practice AI Integration concepts",
+      "Build real-world automation skills",
+      "Prepare for business applications",
+      "Demonstrate course learning objectives"
+    ],
+    "examples": [
+      "Use this workflow to practice AI Integration skills",
+      "Customize for your specific learning needs",
+      "Apply concepts to real business scenarios",
+      "Build upon for advanced implementations"
+    ],
+    "next_steps": [
+      "Complete Week 9 objectives",
+      "Practice with additional examples",
+      "Apply skills to real projects"
+    ],
+    "related_workflows": [
+      "Week 9 workflows",
+      "Previous week workflows",
+      "Course example workflows"
+    ]
+  },
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "course-Week 08-ai_agent_quality_assurance_system",
+    "course_version": "1.0",
+    "last_updated": "2025-09-07T14:31:13.970011"
+  },
+  "nodes": [
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "ai-agent-quality",
+        "options": {}
+      },
+      "id": "webhook-trigger",
+      "name": "AI Agent Quality Trigger",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 1,
+      "position": [
+        240,
+        300
+      ],
+      "webhookId": "ai-agent-quality-webhook"
+    },
+    {
+      "parameters": {
+        "values": {
+          "string": [
+            {
+              "name": "agent_id",
+              "value": "={{ $json.agent_id }}"
+            },
+            {
+              "name": "quality_metric",
+              "value": "={{ $json.quality_metric }}"
+            },
+            {
+              "name": "quality_score",
+              "value": "={{ $json.quality_score }}"
+            },
+            {
+              "name": "quality_timestamp",
+              "value": "={{ new Date().toISOString() }}"
+            },
+            {
+              "name": "quality_notes",
+              "value": "={{ $json.quality_notes }}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "set-quality-data",
+      "name": "Set Quality Data",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.3,
+      "position": [
+        460,
+        300
+      ]
+    },
+    {
+      "parameters": {
+        "authentication": "predefinedCredentialType",
+        "nodeCredentialType": "notionApi",
+        "resource": "database",
+        "operation": "create",
+        "databaseId": "={{ $json.database_id }}",
+        "title": "AI Agent Quality Entry",
+        "propertiesUi": {
+          "propertyValues": [
+            {
+              "key": "Agent ID",
+              "textValue": "={{ $json.agent_id }}"
+            },
+            {
+              "key": "Quality Metric",
+              "textValue": "={{ $json.quality_metric }}"
+            },
+            {
+              "key": "Quality Score",
+              "textValue": "={{ $json.quality_score }}"
+            },
+            {
+              "key": "Quality Date",
+              "dateValue": "={{ $json.quality_timestamp }}"
+            },
+            {
+              "key": "Quality Notes",
+              "textValue": "={{ $json.quality_notes }}"
+            }
+          ]
+        }
+      },
+      "id": "create-quality-entry",
+      "name": "Create Quality Entry",
+      "type": "n8n-nodes-base.notion",
+      "typeVersion": 2,
+      "position": [
+        680,
+        300
+      ]
+    },
+    {
+      "parameters": {
+        "authentication": "predefinedCredentialType",
+        "nodeCredentialType": "slackApi",
+        "resource": "message",
+        "operation": "post",
+        "channel": "={{ $json.slack_channel }}",
+        "text": "✅ AI Agent Quality Update\n\nAgent: {{ $json.agent_id }}\nMetric: {{ $json.quality_metric }}\nScore: {{ $json.quality_score }}\nAssessed: {{ $json.quality_timestamp }}\nNotes: {{ $json.quality_notes }}",
+        "otherOptions": {}
+      },
+      "id": "send-quality-notification",
+      "name": "Send Quality Notification",
+      "type": "n8n-nodes-base.slack",
+      "typeVersion": 2.1,
+      "position": [
+        900,
+        300
+      ]
+    }
+  ],
+  "connections": {
+    "webhook-trigger": {
+      "main": [
+        [
+          {
+            "node": "set-quality-data",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "set-quality-data": {
+      "main": [
+        [
+          {
+            "node": "create-quality-entry",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "create-quality-entry": {
+      "main": [
+        [
+          {
+            "node": "send-quality-notification",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "pinData": {},
+  "versionId": "1",
+  "id": "ai-agent-quality-assurance-system"
+}

@@ -1,0 +1,358 @@
+{
+  "name": "Project Management Automation System",
+  "description": "Automated workflow for Client Acquisition phase learning objectives with intelligent processing and error handling.",
+  "tags": [
+    "marketing",
+    "business",
+    "acquisition",
+    "clients"
+  ],
+  "version": "1.0.0",
+  "author": "Automator Pro Course",
+  "course_metadata": {
+    "week": "Week 11",
+    "phase": "Client Acquisition",
+    "difficulty": "Advanced",
+    "learning_objectives": [
+      "Client acquisition",
+      "Service packaging",
+      "Portfolio building"
+    ],
+    "prerequisites": [
+      "Technical skills",
+      "Business interest",
+      "Client interaction skills"
+    ],
+    "estimated_setup_time": "10-20 minutes",
+    "use_cases": [
+      "Practice Client Acquisition concepts",
+      "Build real-world automation skills",
+      "Prepare for business applications",
+      "Demonstrate course learning objectives"
+    ],
+    "examples": [
+      "Use this workflow to practice Client Acquisition skills",
+      "Customize for your specific learning needs",
+      "Apply concepts to real business scenarios",
+      "Build upon for advanced implementations"
+    ],
+    "next_steps": [
+      "Complete Week 12 objectives",
+      "Practice with additional examples",
+      "Apply skills to real projects"
+    ],
+    "related_workflows": [
+      "Week 12 workflows",
+      "Previous week workflows",
+      "Course example workflows"
+    ]
+  },
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "course-Week 11-project_management_automation_system",
+    "course_version": "1.0",
+    "last_updated": "2025-09-07T14:31:14.495147"
+  },
+  "nodes": [
+    {
+      "parameters": {
+        "path": "project-management",
+        "httpMethod": "POST"
+      },
+      "name": "Project Management Trigger",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 1,
+      "position": [
+        240,
+        300
+      ]
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "name": "project_id",
+              "value": "={{ $now.format('YYYYMMDDHHmmss') }}"
+            },
+            {
+              "name": "project_name",
+              "value": "={{ $json.project_name }}"
+            },
+            {
+              "name": "client_name",
+              "value": "={{ $json.client_name }}"
+            },
+            {
+              "name": "project_type",
+              "value": "={{ $json.project_type }}"
+            },
+            {
+              "name": "project_scope",
+              "value": "={{ $json.project_scope }}"
+            },
+            {
+              "name": "budget",
+              "value": "={{ $json.budget }}"
+            },
+            {
+              "name": "timeline",
+              "value": "={{ $json.timeline }}"
+            },
+            {
+              "name": "team_members",
+              "value": "={{ $json.team_members }}"
+            }
+          ]
+        }
+      },
+      "name": "Process Project Data",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 1,
+      "position": [
+        460,
+        300
+      ]
+    },
+    {
+      "parameters": {
+        "resource": "chat",
+        "operation": "create",
+        "model": "gpt-4",
+        "messages": {
+          "values": [
+            {
+              "role": "system",
+              "content": "You are a project management specialist that analyzes projects and generates management strategies."
+            },
+            {
+              "role": "user",
+              "content": "={{ 'Analyze this project for management:\\nProject: ' + $json.project_name + '\\nClient: ' + $json.client_name + '\\nType: ' + $json.project_type + '\\nScope: ' + $json.project_scope + '\\nBudget: ' + $json.budget + '\\nTimeline: ' + $json.timeline + '\\nTeam: ' + $json.team_members + '\\n\\nGenerate: project management strategy, risk assessment, resource allocation, and success metrics.' }}"
+            }
+          ]
+        }
+      },
+      "name": "AI Project Analysis",
+      "type": "n8n-nodes-base.openAi",
+      "typeVersion": 1,
+      "position": [
+        680,
+        300
+      ]
+    },
+    {
+      "parameters": {
+        "operation": "create",
+        "base": "your_base_id",
+        "table": "Projects",
+        "fields": {
+          "Project ID": "={{ $json.project_id }}",
+          "Project Name": "={{ $json.project_name }}",
+          "Client Name": "={{ $json.client_name }}",
+          "Project Type": "={{ $json.project_type }}",
+          "Project Scope": "={{ $json.project_scope }}",
+          "Budget": "={{ $json.budget }}",
+          "Timeline": "={{ $json.timeline }}",
+          "Team Members": "={{ $json.team_members }}",
+          "AI Analysis": "={{ $json.choices[0].message.content }}",
+          "Status": "Active",
+          "Created At": "={{ $now }}"
+        }
+      },
+      "name": "Store Project Data",
+      "type": "n8n-nodes-base.airtable",
+      "typeVersion": 1,
+      "position": [
+        900,
+        300
+      ]
+    },
+    {
+      "parameters": {
+        "operation": "create",
+        "databaseId": "your_database_id",
+        "fields": {
+          "Title": "={{ 'Project: ' + $json.project_name }}",
+          "Project ID": "={{ $json.project_id }}",
+          "Client": "={{ $json.client_name }}",
+          "Type": "={{ $json.project_type }}",
+          "Budget": "={{ $json.budget }}",
+          "Timeline": "={{ $json.timeline }}",
+          "Team": "={{ $json.team_members }}",
+          "Priority": "High",
+          "Status": "Active",
+          "Created At": "={{ $now }}"
+        }
+      },
+      "name": "Create Project Task",
+      "type": "n8n-nodes-base.notion",
+      "typeVersion": 1,
+      "position": [
+        1120,
+        300
+      ]
+    },
+    {
+      "parameters": {
+        "operation": "send",
+        "toEmail": "={{ $json.client_name }}",
+        "subject": "={{ 'Project Started: ' + $json.project_name }}",
+        "message": "={{ 'Hi,\\n\\nWe\\'re excited to start working on your ' + $json.project_name + ' project!\\n\\nProject Details:\\n- Project ID: ' + $json.project_id + '\\n- Project Type: ' + $json.project_type + '\\n- Timeline: ' + $json.timeline + '\\n- Team: ' + $json.team_members + '\\n\\nWe\\'ll keep you updated on progress and will be in touch soon with the first milestone.\\n\\nBest regards,\\nProject Team' }}"
+      },
+      "name": "Send Project Start Email",
+      "type": "n8n-nodes-base.gmail",
+      "typeVersion": 1,
+      "position": [
+        1340,
+        300
+      ]
+    },
+    {
+      "parameters": {
+        "operation": "postMessage",
+        "channel": "#project-updates",
+        "text": "={{ '🚀 New Project Started\\nProject: ' + $json.project_name + '\\nClient: ' + $json.client_name + '\\nType: ' + $json.project_type + '\\nBudget: ' + $json.budget + '\\nTimeline: ' + $json.timeline + '\\nTeam: ' + $json.team_members + '\\nProject ID: ' + $json.project_id }}"
+      },
+      "name": "Notify Project Team",
+      "type": "n8n-nodes-base.slack",
+      "typeVersion": 1,
+      "position": [
+        1560,
+        300
+      ]
+    },
+    {
+      "parameters": {
+        "operation": "sendMessage",
+        "chatId": "your_chat_id",
+        "text": "={{ '🚀 New Project: ' + $json.project_name + '\\nClient: ' + $json.client_name + '\\nBudget: ' + $json.budget + '\\nTimeline: ' + $json.timeline }}"
+      },
+      "name": "Send Telegram Alert",
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1,
+      "position": [
+        1780,
+        300
+      ]
+    },
+    {
+      "parameters": {
+        "operation": "create",
+        "base": "your_base_id",
+        "table": "Project Milestones",
+        "fields": {
+          "Project ID": "={{ $json.project_id }}",
+          "Project Name": "={{ $json.project_name }}",
+          "Milestone": "Project Initiation",
+          "Status": "Completed",
+          "Completion Date": "={{ $now }}",
+          "Notes": "Project successfully initiated and team notified"
+        }
+      },
+      "name": "Log Project Milestone",
+      "type": "n8n-nodes-base.airtable",
+      "typeVersion": 1,
+      "position": [
+        2000,
+        300
+      ]
+    }
+  ],
+  "connections": {
+    "Project Management Trigger": {
+      "main": [
+        [
+          {
+            "node": "Process Project Data",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Process Project Data": {
+      "main": [
+        [
+          {
+            "node": "AI Project Analysis",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "AI Project Analysis": {
+      "main": [
+        [
+          {
+            "node": "Store Project Data",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Store Project Data": {
+      "main": [
+        [
+          {
+            "node": "Create Project Task",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Create Project Task": {
+      "main": [
+        [
+          {
+            "node": "Send Project Start Email",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Send Project Start Email": {
+      "main": [
+        [
+          {
+            "node": "Notify Project Team",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Notify Project Team": {
+      "main": [
+        [
+          {
+            "node": "Send Telegram Alert",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Send Telegram Alert": {
+      "main": [
+        [
+          {
+            "node": "Log Project Milestone",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "pinData": {},
+  "versionId": "1",
+  "id": "project_management_automation_system"
+}

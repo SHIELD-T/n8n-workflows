@@ -1,0 +1,216 @@
+{
+  "name": "AI Agent Learning System",
+  "description": "Enable AI agent learning with automated training, feedback loops, and continuous improvement.",
+  "tags": [
+    "intelligence",
+    "agents",
+    "ai",
+    "machine-learning",
+    "automation",
+    "artificial-intelligence"
+  ],
+  "version": "1.0.0",
+  "author": "Automator Pro Course",
+  "course_metadata": {
+    "week": "Week 07",
+    "phase": "AI Integration",
+    "difficulty": "Intermediate",
+    "learning_objectives": [
+      "Advanced AI patterns",
+      "AI optimization",
+      "Intelligent systems"
+    ],
+    "prerequisites": [
+      "Workflow building skills",
+      "AI/ML interest",
+      "API knowledge"
+    ],
+    "estimated_setup_time": "5-10 minutes",
+    "use_cases": [
+      "Practice AI Integration concepts",
+      "Build real-world automation skills",
+      "Prepare for business applications",
+      "Demonstrate course learning objectives"
+    ],
+    "examples": [
+      "Use this workflow to practice AI Integration skills",
+      "Customize for your specific learning needs",
+      "Apply concepts to real business scenarios",
+      "Build upon for advanced implementations"
+    ],
+    "next_steps": [
+      "Complete Week 8 objectives",
+      "Practice with additional examples",
+      "Apply skills to real projects"
+    ],
+    "related_workflows": [
+      "Week 8 workflows",
+      "Previous week workflows",
+      "Course example workflows"
+    ]
+  },
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "course-Week 07-ai_agent_learning_system",
+    "course_version": "1.0",
+    "last_updated": "2025-09-07T14:31:13.938283"
+  },
+  "nodes": [
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "ai-agent-learning",
+        "options": {}
+      },
+      "id": "webhook-trigger",
+      "name": "AI Agent Learning Trigger",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 1,
+      "position": [
+        240,
+        300
+      ],
+      "webhookId": "ai-agent-learning-webhook"
+    },
+    {
+      "parameters": {
+        "values": {
+          "string": [
+            {
+              "name": "agent_id",
+              "value": "={{ $json.agent_id }}"
+            },
+            {
+              "name": "learning_task",
+              "value": "={{ $json.learning_task }}"
+            },
+            {
+              "name": "learning_progress",
+              "value": "={{ $json.learning_progress }}"
+            },
+            {
+              "name": "learning_timestamp",
+              "value": "={{ new Date().toISOString() }}"
+            },
+            {
+              "name": "learning_notes",
+              "value": "={{ $json.learning_notes }}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "set-learning-data",
+      "name": "Set Learning Data",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.3,
+      "position": [
+        460,
+        300
+      ]
+    },
+    {
+      "parameters": {
+        "authentication": "predefinedCredentialType",
+        "nodeCredentialType": "notionApi",
+        "resource": "database",
+        "operation": "create",
+        "databaseId": "={{ $json.database_id }}",
+        "title": "AI Agent Learning Entry",
+        "propertiesUi": {
+          "propertyValues": [
+            {
+              "key": "Agent ID",
+              "textValue": "={{ $json.agent_id }}"
+            },
+            {
+              "key": "Learning Task",
+              "textValue": "={{ $json.learning_task }}"
+            },
+            {
+              "key": "Learning Progress",
+              "textValue": "={{ $json.learning_progress }}"
+            },
+            {
+              "key": "Learning Date",
+              "dateValue": "={{ $json.learning_timestamp }}"
+            },
+            {
+              "key": "Learning Notes",
+              "textValue": "={{ $json.learning_notes }}"
+            }
+          ]
+        }
+      },
+      "id": "create-learning-entry",
+      "name": "Create Learning Entry",
+      "type": "n8n-nodes-base.notion",
+      "typeVersion": 2,
+      "position": [
+        680,
+        300
+      ]
+    },
+    {
+      "parameters": {
+        "authentication": "predefinedCredentialType",
+        "nodeCredentialType": "slackApi",
+        "resource": "message",
+        "operation": "post",
+        "channel": "={{ $json.slack_channel }}",
+        "text": "🧠 AI Agent Learning Update\n\nAgent: {{ $json.agent_id }}\nTask: {{ $json.learning_task }}\nProgress: {{ $json.learning_progress }}\nLearned: {{ $json.learning_timestamp }}\nNotes: {{ $json.learning_notes }}",
+        "otherOptions": {}
+      },
+      "id": "send-learning-notification",
+      "name": "Send Learning Notification",
+      "type": "n8n-nodes-base.slack",
+      "typeVersion": 2.1,
+      "position": [
+        900,
+        300
+      ]
+    }
+  ],
+  "connections": {
+    "webhook-trigger": {
+      "main": [
+        [
+          {
+            "node": "set-learning-data",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "set-learning-data": {
+      "main": [
+        [
+          {
+            "node": "create-learning-entry",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "create-learning-entry": {
+      "main": [
+        [
+          {
+            "node": "send-learning-notification",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "pinData": {},
+  "versionId": "1",
+  "id": "ai-agent-learning-system"
+}

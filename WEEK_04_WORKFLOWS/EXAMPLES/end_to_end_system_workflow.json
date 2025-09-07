@@ -1,0 +1,228 @@
+{
+  "name": "End To End System Workflow",
+  "description": "Automated workflow for Workflow Building phase learning objectives with intelligent processing and error handling.",
+  "tags": [
+    "optimization",
+    "performance",
+    "workflows",
+    "automation"
+  ],
+  "version": "1.0.0",
+  "author": "Automator Pro Course",
+  "course_metadata": {
+    "week": "Week 04",
+    "phase": "Workflow Building",
+    "difficulty": "Intermediate",
+    "learning_objectives": [
+      "Data processing",
+      "Workflow optimization",
+      "Documentation"
+    ],
+    "prerequisites": [
+      "Completed previous weeks",
+      "n8n instance",
+      "Basic automation knowledge"
+    ],
+    "estimated_setup_time": "10-20 minutes",
+    "use_cases": [
+      "Practice Workflow Building concepts",
+      "Build real-world automation skills",
+      "Prepare for business applications",
+      "Demonstrate course learning objectives"
+    ],
+    "examples": [
+      "Use this workflow to practice Workflow Building skills",
+      "Customize for your specific learning needs",
+      "Apply concepts to real business scenarios",
+      "Build upon for advanced implementations"
+    ],
+    "next_steps": [
+      "Complete Week 5 objectives",
+      "Practice with additional examples",
+      "Apply skills to real projects"
+    ],
+    "related_workflows": [
+      "Week 5 workflows",
+      "Previous week workflows",
+      "Course example workflows"
+    ]
+  },
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "course-Week 04-end_to_end_system_workflow",
+    "course_version": "1.0",
+    "last_updated": "2025-09-07T14:31:15.301502"
+  },
+  "nodes": [
+    {
+      "name": "End-to-End System Trigger",
+      "type": "n8n-nodes-base.webhook",
+      "parameters": {
+        "path": "end-to-end-system",
+        "httpMethod": "POST"
+      }
+    },
+    {
+      "name": "Initialize End-to-End System",
+      "type": "n8n-nodes-base.set",
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "name": "system_id",
+              "value": "={{ $now.format('YYYYMMDDHHmmss') }}"
+            },
+            {
+              "name": "system_type",
+              "value": "end_to_end"
+            },
+            {
+              "name": "start_time",
+              "value": "={{ $now }}"
+            },
+            {
+              "name": "integration_points",
+              "value": "={{ ['input', 'processing', 'output', 'notification'] }}"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "name": "Input Data Collection",
+      "type": "n8n-nodes-base.set",
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "name": "input_data",
+              "value": "={{ $json.data || 'Sample input data' }}"
+            },
+            {
+              "name": "input_source",
+              "value": "webhook"
+            },
+            {
+              "name": "collection_time",
+              "value": "={{ $now }}"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "name": "Data Validation",
+      "type": "n8n-nodes-base.if",
+      "parameters": {
+        "conditions": {
+          "string": [
+            {
+              "value1": "={{ $json.input_data }}",
+              "operation": "isNotEmpty"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "name": "Data Processing",
+      "type": "n8n-nodes-base.set",
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "name": "processed_data",
+              "value": "={{ $json.input_data.trim().toUpperCase() }}"
+            },
+            {
+              "name": "processing_time",
+              "value": "={{ $now.diff($json.start_time, 'milliseconds') }}"
+            },
+            {
+              "name": "processing_status",
+              "value": "completed"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "name": "Output Generation",
+      "type": "n8n-nodes-base.set",
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "name": "output_data",
+              "value": "={{ { \"original\": $json.input_data, \"processed\": $json.processed_data, \"processing_time\": $json.processing_time, \"system_id\": $json.system_id } }}"
+            },
+            {
+              "name": "output_format",
+              "value": "json"
+            },
+            {
+              "name": "generation_time",
+              "value": "={{ $now }}"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "name": "Send Notification",
+      "type": "n8n-nodes-base.httpRequest",
+      "parameters": {
+        "method": "POST",
+        "url": "https://api.slack.com/api/chat.postMessage",
+        "bodyContentType": "json",
+        "jsonBody": "={{ { \"channel\": \"#system-notifications\", \"text\": \"✅ End-to-End System Processing Complete\", \"attachments\": [{ \"color\": \"good\", \"fields\": [{ \"title\": \"System ID\", \"value\": $json.system_id, \"short\": true }, { \"title\": \"Processing Time\", \"value\": $json.processing_time + \"ms\", \"short\": true }, { \"title\": \"Status\", \"value\": $json.processing_status, \"short\": true }] }] } }}"
+      }
+    },
+    {
+      "name": "Final System Report",
+      "type": "n8n-nodes-base.set",
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "name": "system_report",
+              "value": "={{ { \"system_id\": $json.system_id, \"system_type\": $json.system_type, \"start_time\": $json.start_time, \"input_data\": $json.input_data, \"processed_data\": $json.processed_data, \"output_data\": $json.output_data, \"processing_time\": $json.processing_time, \"processing_status\": $json.processing_status, \"integration_points\": $json.integration_points, \"completed_at\": $now } }}"
+            },
+            {
+              "name": "success_message",
+              "value": "✅ End-to-end system processing completed successfully"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "name": "Handle Validation Error",
+      "type": "n8n-nodes-base.set",
+      "position": [
+        500,
+        300
+      ],
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "name": "validation_error",
+              "value": "={{ { \"error_type\": \"input_validation\", \"system_id\": $json.system_id, \"message\": \"Invalid input data\", \"timestamp\": $now } }}"
+            },
+            {
+              "name": "error_response",
+              "value": "={{ { \"status\": \"error\", \"system_id\": $json.system_id, \"message\": \"End-to-end system validation failed\" } }}"
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "connections": {},
+  "active": false,
+  "settings": {},
+  "pinData": {},
+  "versionId": "1",
+  "id": "end_to_end_system_workflow"
+}

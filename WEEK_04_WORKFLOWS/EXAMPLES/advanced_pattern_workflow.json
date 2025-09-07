@@ -1,0 +1,267 @@
+{
+  "name": "Advanced Pattern Workflow",
+  "description": "Automated workflow for Workflow Building phase learning objectives with intelligent processing and error handling.",
+  "tags": [
+    "optimization",
+    "performance",
+    "workflows",
+    "automation"
+  ],
+  "version": "1.0.0",
+  "author": "Automator Pro Course",
+  "course_metadata": {
+    "week": "Week 04",
+    "phase": "Workflow Building",
+    "difficulty": "Intermediate",
+    "learning_objectives": [
+      "Data processing",
+      "Workflow optimization",
+      "Documentation"
+    ],
+    "prerequisites": [
+      "Completed previous weeks",
+      "n8n instance",
+      "Basic automation knowledge"
+    ],
+    "estimated_setup_time": "20-30 minutes",
+    "use_cases": [
+      "Practice Workflow Building concepts",
+      "Build real-world automation skills",
+      "Prepare for business applications",
+      "Demonstrate course learning objectives"
+    ],
+    "examples": [
+      "Use this workflow to practice Workflow Building skills",
+      "Customize for your specific learning needs",
+      "Apply concepts to real business scenarios",
+      "Build upon for advanced implementations"
+    ],
+    "next_steps": [
+      "Complete Week 5 objectives",
+      "Practice with additional examples",
+      "Apply skills to real projects"
+    ],
+    "related_workflows": [
+      "Week 5 workflows",
+      "Previous week workflows",
+      "Course example workflows"
+    ]
+  },
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "course-Week 04-advanced_pattern_workflow",
+    "course_version": "1.0",
+    "last_updated": "2025-09-07T14:31:15.328275"
+  },
+  "nodes": [
+    {
+      "name": "Advanced Pattern Trigger",
+      "type": "n8n-nodes-base.webhook",
+      "parameters": {
+        "path": "advanced-patterns",
+        "httpMethod": "POST"
+      }
+    },
+    {
+      "name": "Initialize Advanced Processing",
+      "type": "n8n-nodes-base.set",
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "name": "processing_id",
+              "value": "={{ $now.format('YYYYMMDDHHmmss') }}"
+            },
+            {
+              "name": "pattern_type",
+              "value": "parallel_processing"
+            },
+            {
+              "name": "start_time",
+              "value": "={{ $now }}"
+            },
+            {
+              "name": "data_sources",
+              "value": "={{ ['source1', 'source2', 'source3'] }}"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "name": "Parallel Branch 1",
+      "type": "n8n-nodes-base.httpRequest",
+      "parameters": {
+        "method": "GET",
+        "url": "https://jsonplaceholder.typicode.com/posts/1",
+        "options": {
+          "response": {
+            "response": {
+              "responseFormat": "json"
+            }
+          }
+        }
+      }
+    },
+    {
+      "name": "Parallel Branch 2",
+      "type": "n8n-nodes-base.httpRequest",
+      "parameters": {
+        "method": "GET",
+        "url": "https://jsonplaceholder.typicode.com/posts/2",
+        "options": {
+          "response": {
+            "response": {
+              "responseFormat": "json"
+            }
+          }
+        }
+      }
+    },
+    {
+      "name": "Parallel Branch 3",
+      "type": "n8n-nodes-base.httpRequest",
+      "parameters": {
+        "method": "GET",
+        "url": "https://jsonplaceholder.typicode.com/posts/3",
+        "options": {
+          "response": {
+            "response": {
+              "responseFormat": "json"
+            }
+          }
+        }
+      }
+    },
+    {
+      "name": "Process Branch 1",
+      "type": "n8n-nodes-base.set",
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "name": "branch_1_data",
+              "value": "={{ { \"id\": $json.id, \"title\": $json.title, \"body\": $json.body, \"source\": \"branch1\", \"processed_at\": $now } }}"
+            },
+            {
+              "name": "branch_1_status",
+              "value": "processed"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "name": "Process Branch 2",
+      "type": "n8n-nodes-base.set",
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "name": "branch_2_data",
+              "value": "={{ { \"id\": $json.id, \"title\": $json.title, \"body\": $json.body, \"source\": \"branch2\", \"processed_at\": $now } }}"
+            },
+            {
+              "name": "branch_2_status",
+              "value": "processed"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "name": "Process Branch 3",
+      "type": "n8n-nodes-base.set",
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "name": "branch_3_data",
+              "value": "={{ { \"id\": $json.id, \"title\": $json.title, \"body\": $json.body, \"source\": \"branch3\", \"processed_at\": $now } }}"
+            },
+            {
+              "name": "branch_3_status",
+              "value": "processed"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "name": "Aggregate Results",
+      "type": "n8n-nodes-base.set",
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "name": "aggregated_data",
+              "value": "={{ { \"branch1\": $('Process Branch 1').item.json.branch_1_data, \"branch2\": $('Process Branch 2').item.json.branch_2_data, \"branch3\": $('Process Branch 3').item.json.branch_3_data } }}"
+            },
+            {
+              "name": "total_branches",
+              "value": 3
+            },
+            {
+              "name": "aggregation_time",
+              "value": "={{ $now }}"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "name": "Loop Through Results",
+      "type": "n8n-nodes-base.splitInBatches",
+      "parameters": {
+        "batchSize": 1,
+        "options": {}
+      }
+    },
+    {
+      "name": "Process Each Result",
+      "type": "n8n-nodes-base.set",
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "name": "current_result",
+              "value": "={{ $json }}"
+            },
+            {
+              "name": "result_id",
+              "value": "={{ $json.id || 'unknown' }}"
+            },
+            {
+              "name": "processed_in_loop",
+              "value": "={{ $now }}"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "name": "Final Processing",
+      "type": "n8n-nodes-base.set",
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "name": "final_result",
+              "value": "={{ { \"processing_id\": $json.processing_id, \"pattern_type\": $json.pattern_type, \"total_branches\": $json.total_branches, \"aggregated_data\": $json.aggregated_data, \"current_result\": $json.current_result, \"completed_at\": $now } }}"
+            },
+            {
+              "name": "success_message",
+              "value": "✅ Advanced pattern processing completed"
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "connections": {},
+  "active": false,
+  "settings": {},
+  "pinData": {},
+  "versionId": "1",
+  "id": "advanced_pattern_workflow"
+}

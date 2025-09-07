@@ -1,0 +1,354 @@
+{
+  "name": "Customer Support Automation System",
+  "description": "Automated workflow for Real-World Tools phase learning objectives with intelligent processing and error handling.",
+  "tags": [
+    "tools",
+    "real-world",
+    "integration",
+    "apis"
+  ],
+  "version": "1.0.0",
+  "author": "Automator Pro Course",
+  "course_metadata": {
+    "week": "Week 09",
+    "phase": "Real-World Tools",
+    "difficulty": "Advanced",
+    "learning_objectives": [
+      "OAuth integration",
+      "Form builders",
+      "Email/calendar triggers"
+    ],
+    "prerequisites": [
+      "AI integration skills",
+      "Real-world tool access",
+      "Integration experience"
+    ],
+    "estimated_setup_time": "10-20 minutes",
+    "use_cases": [
+      "Practice Real-World Tools concepts",
+      "Build real-world automation skills",
+      "Prepare for business applications",
+      "Demonstrate course learning objectives"
+    ],
+    "examples": [
+      "Use this workflow to practice Real-World Tools skills",
+      "Customize for your specific learning needs",
+      "Apply concepts to real business scenarios",
+      "Build upon for advanced implementations"
+    ],
+    "next_steps": [
+      "Complete Week 10 objectives",
+      "Practice with additional examples",
+      "Apply skills to real projects"
+    ],
+    "related_workflows": [
+      "Week 10 workflows",
+      "Previous week workflows",
+      "Course example workflows"
+    ]
+  },
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "course-Week 09-customer_support_automation_system",
+    "course_version": "1.0",
+    "last_updated": "2025-09-07T14:31:13.979562"
+  },
+  "nodes": [
+    {
+      "parameters": {
+        "path": "customer-support",
+        "httpMethod": "POST"
+      },
+      "name": "Support Ticket Webhook",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 1,
+      "position": [
+        240,
+        300
+      ]
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "name": "ticket_id",
+              "value": "={{ $now.format('YYYYMMDDHHmmss') }}"
+            },
+            {
+              "name": "customer_name",
+              "value": "={{ $json.customer_name }}"
+            },
+            {
+              "name": "customer_email",
+              "value": "={{ $json.customer_email }}"
+            },
+            {
+              "name": "subject",
+              "value": "={{ $json.subject }}"
+            },
+            {
+              "name": "description",
+              "value": "={{ $json.description }}"
+            },
+            {
+              "name": "priority",
+              "value": "={{ $json.priority || 'medium' }}"
+            },
+            {
+              "name": "category",
+              "value": "={{ $json.category || 'general' }}"
+            }
+          ]
+        }
+      },
+      "name": "Process Support Ticket",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 1,
+      "position": [
+        460,
+        300
+      ]
+    },
+    {
+      "parameters": {
+        "resource": "chat",
+        "operation": "create",
+        "model": "gpt-4",
+        "messages": {
+          "values": [
+            {
+              "role": "system",
+              "content": "You are a customer support specialist that analyzes support tickets and generates appropriate responses."
+            },
+            {
+              "role": "user",
+              "content": "={{ 'Analyze this support ticket:\\nCustomer: ' + $json.customer_name + '\\nSubject: ' + $json.subject + '\\nDescription: ' + $json.description + '\\nPriority: ' + $json.priority + '\\nCategory: ' + $json.category + '\\n\\nGenerate: ticket classification, suggested response, and escalation level.' }}"
+            }
+          ]
+        }
+      },
+      "name": "Analyze Support Ticket",
+      "type": "n8n-nodes-base.openAi",
+      "typeVersion": 1,
+      "position": [
+        680,
+        300
+      ]
+    },
+    {
+      "parameters": {
+        "operation": "create",
+        "base": "your_base_id",
+        "table": "Support Tickets",
+        "fields": {
+          "Ticket ID": "={{ $json.ticket_id }}",
+          "Customer Name": "={{ $json.customer_name }}",
+          "Customer Email": "={{ $json.customer_email }}",
+          "Subject": "={{ $json.subject }}",
+          "Description": "={{ $json.description }}",
+          "Priority": "={{ $json.priority }}",
+          "Category": "={{ $json.category }}",
+          "Status": "Open",
+          "Classification": "={{ $json.choices[0].message.content.split('Classification: ')[1]?.split('\\n')[0] }}",
+          "Escalation Level": "={{ $json.choices[0].message.content.split('Escalation Level: ')[1]?.split('\\n')[0] }}",
+          "Created At": "={{ $now }}"
+        }
+      },
+      "name": "Store Support Ticket",
+      "type": "n8n-nodes-base.airtable",
+      "typeVersion": 1,
+      "position": [
+        900,
+        300
+      ]
+    },
+    {
+      "parameters": {
+        "operation": "send",
+        "toEmail": "={{ $json.customer_email }}",
+        "subject": "={{ 'Support Ticket #' + $json.ticket_id + ' - ' + $json.subject }}",
+        "message": "={{ 'Hi ' + $json.customer_name + ',\\n\\nThank you for contacting our support team. We\\'ve received your ticket and will get back to you soon.\\n\\nTicket ID: ' + $json.ticket_id + '\\nSubject: ' + $json.subject + '\\nPriority: ' + $json.priority + '\\n\\nWe\\'ll update you on the progress.\\n\\nBest regards,\\nSupport Team' }}"
+      },
+      "name": "Send Ticket Confirmation",
+      "type": "n8n-nodes-base.gmail",
+      "typeVersion": 1,
+      "position": [
+        1120,
+        300
+      ]
+    },
+    {
+      "parameters": {
+        "operation": "postMessage",
+        "channel": "#support-tickets",
+        "text": "={{ '🎫 New Support Ticket\\nID: ' + $json.ticket_id + '\\nCustomer: ' + $json.customer_name + '\\nSubject: ' + $json.subject + '\\nPriority: ' + $json.priority + '\\nCategory: ' + $json.category + '\\nClassification: ' + $json.choices[0].message.content.split('Classification: ')[1]?.split('\\n')[0] }}"
+      },
+      "name": "Notify Support Team",
+      "type": "n8n-nodes-base.slack",
+      "typeVersion": 1,
+      "position": [
+        1340,
+        300
+      ]
+    },
+    {
+      "parameters": {
+        "operation": "create",
+        "databaseId": "your_database_id",
+        "fields": {
+          "Title": "={{ 'Resolve ticket #' + $json.ticket_id + ' - ' + $json.subject }}",
+          "Ticket ID": "={{ $json.ticket_id }}",
+          "Customer": "={{ $json.customer_name }}",
+          "Priority": "={{ $json.priority }}",
+          "Category": "={{ $json.category }}",
+          "Due Date": "={{ $json.priority === 'high' ? $now.plus({ hours: 4 }) : $now.plus({ hours: 24 }) }}",
+          "Status": "To Do",
+          "Assigned To": "Support Team"
+        }
+      },
+      "name": "Create Support Task",
+      "type": "n8n-nodes-base.notion",
+      "typeVersion": 1,
+      "position": [
+        1560,
+        300
+      ]
+    },
+    {
+      "parameters": {
+        "operation": "sendMessage",
+        "chatId": "your_chat_id",
+        "text": "={{ '🎫 New Support Ticket: ' + $json.ticket_id + '\\nCustomer: ' + $json.customer_name + '\\nPriority: ' + $json.priority }}"
+      },
+      "name": "Send Telegram Alert",
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1,
+      "position": [
+        1780,
+        300
+      ]
+    },
+    {
+      "parameters": {
+        "operation": "create",
+        "base": "your_base_id",
+        "table": "Customer Interactions",
+        "fields": {
+          "Customer Name": "={{ $json.customer_name }}",
+          "Customer Email": "={{ $json.customer_email }}",
+          "Interaction Type": "Support Ticket",
+          "Ticket ID": "={{ $json.ticket_id }}",
+          "Subject": "={{ $json.subject }}",
+          "Priority": "={{ $json.priority }}",
+          "Status": "Open",
+          "Created At": "={{ $now }}"
+        }
+      },
+      "name": "Log Customer Interaction",
+      "type": "n8n-nodes-base.airtable",
+      "typeVersion": 1,
+      "position": [
+        2000,
+        300
+      ]
+    }
+  ],
+  "connections": {
+    "Support Ticket Webhook": {
+      "main": [
+        [
+          {
+            "node": "Process Support Ticket",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Process Support Ticket": {
+      "main": [
+        [
+          {
+            "node": "Analyze Support Ticket",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Analyze Support Ticket": {
+      "main": [
+        [
+          {
+            "node": "Store Support Ticket",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Store Support Ticket": {
+      "main": [
+        [
+          {
+            "node": "Send Ticket Confirmation",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Send Ticket Confirmation": {
+      "main": [
+        [
+          {
+            "node": "Notify Support Team",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Notify Support Team": {
+      "main": [
+        [
+          {
+            "node": "Create Support Task",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Create Support Task": {
+      "main": [
+        [
+          {
+            "node": "Send Telegram Alert",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Send Telegram Alert": {
+      "main": [
+        [
+          {
+            "node": "Log Customer Interaction",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "pinData": {},
+  "versionId": "1",
+  "id": "customer_support_automation_system"
+}

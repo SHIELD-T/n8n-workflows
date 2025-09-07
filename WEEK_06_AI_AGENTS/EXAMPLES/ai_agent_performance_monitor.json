@@ -1,0 +1,219 @@
+{
+  "name": "AI Agent Performance Monitor",
+  "description": "Monitor AI agent performance with metrics tracking, quality assessment, and optimization insights.",
+  "tags": [
+    "intelligence",
+    "analytics",
+    "agents",
+    "monitoring",
+    "tracking",
+    "ai",
+    "machine-learning",
+    "automation",
+    "artificial-intelligence"
+  ],
+  "version": "1.0.0",
+  "author": "Automator Pro Course",
+  "course_metadata": {
+    "week": "Week 06",
+    "phase": "AI Integration",
+    "difficulty": "Intermediate",
+    "learning_objectives": [
+      "AI agent basics",
+      "ChatGPT integration",
+      "LLM providers"
+    ],
+    "prerequisites": [
+      "Workflow building skills",
+      "AI/ML interest",
+      "API knowledge"
+    ],
+    "estimated_setup_time": "5-10 minutes",
+    "use_cases": [
+      "Practice AI Integration concepts",
+      "Build real-world automation skills",
+      "Prepare for business applications",
+      "Demonstrate course learning objectives"
+    ],
+    "examples": [
+      "Use this workflow to practice AI Integration skills",
+      "Customize for your specific learning needs",
+      "Apply concepts to real business scenarios",
+      "Build upon for advanced implementations"
+    ],
+    "next_steps": [
+      "Complete Week 7 objectives",
+      "Practice with additional examples",
+      "Apply skills to real projects"
+    ],
+    "related_workflows": [
+      "Week 7 workflows",
+      "Previous week workflows",
+      "Course example workflows"
+    ]
+  },
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "course-Week 06-ai_agent_performance_monitor",
+    "course_version": "1.0",
+    "last_updated": "2025-09-07T14:31:14.648989"
+  },
+  "nodes": [
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "ai-agent-performance",
+        "options": {}
+      },
+      "id": "webhook-trigger",
+      "name": "AI Agent Performance Trigger",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 1,
+      "position": [
+        240,
+        300
+      ],
+      "webhookId": "ai-agent-performance-webhook"
+    },
+    {
+      "parameters": {
+        "values": {
+          "string": [
+            {
+              "name": "agent_id",
+              "value": "={{ $json.agent_id }}"
+            },
+            {
+              "name": "performance_metric",
+              "value": "={{ $json.performance_metric }}"
+            },
+            {
+              "name": "performance_value",
+              "value": "={{ $json.performance_value }}"
+            },
+            {
+              "name": "monitoring_timestamp",
+              "value": "={{ new Date().toISOString() }}"
+            },
+            {
+              "name": "performance_notes",
+              "value": "={{ $json.performance_notes }}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "set-performance-data",
+      "name": "Set Performance Data",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.3,
+      "position": [
+        460,
+        300
+      ]
+    },
+    {
+      "parameters": {
+        "authentication": "predefinedCredentialType",
+        "nodeCredentialType": "notionApi",
+        "resource": "database",
+        "operation": "create",
+        "databaseId": "={{ $json.database_id }}",
+        "title": "AI Agent Performance Entry",
+        "propertiesUi": {
+          "propertyValues": [
+            {
+              "key": "Agent ID",
+              "textValue": "={{ $json.agent_id }}"
+            },
+            {
+              "key": "Performance Metric",
+              "textValue": "={{ $json.performance_metric }}"
+            },
+            {
+              "key": "Performance Value",
+              "textValue": "={{ $json.performance_value }}"
+            },
+            {
+              "key": "Monitoring Date",
+              "dateValue": "={{ $json.monitoring_timestamp }}"
+            },
+            {
+              "key": "Performance Notes",
+              "textValue": "={{ $json.performance_notes }}"
+            }
+          ]
+        }
+      },
+      "id": "create-performance-entry",
+      "name": "Create Performance Entry",
+      "type": "n8n-nodes-base.notion",
+      "typeVersion": 2,
+      "position": [
+        680,
+        300
+      ]
+    },
+    {
+      "parameters": {
+        "authentication": "predefinedCredentialType",
+        "nodeCredentialType": "slackApi",
+        "resource": "message",
+        "operation": "post",
+        "channel": "={{ $json.slack_channel }}",
+        "text": "🤖 AI Agent Performance Update\n\nAgent: {{ $json.agent_id }}\nMetric: {{ $json.performance_metric }}\nValue: {{ $json.performance_value }}\nMonitored: {{ $json.monitoring_timestamp }}\nNotes: {{ $json.performance_notes }}",
+        "otherOptions": {}
+      },
+      "id": "send-performance-notification",
+      "name": "Send Performance Notification",
+      "type": "n8n-nodes-base.slack",
+      "typeVersion": 2.1,
+      "position": [
+        900,
+        300
+      ]
+    }
+  ],
+  "connections": {
+    "webhook-trigger": {
+      "main": [
+        [
+          {
+            "node": "set-performance-data",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "set-performance-data": {
+      "main": [
+        [
+          {
+            "node": "create-performance-entry",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "create-performance-entry": {
+      "main": [
+        [
+          {
+            "node": "send-performance-notification",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "pinData": {},
+  "versionId": "1",
+  "id": "ai-agent-performance-monitor"
+}

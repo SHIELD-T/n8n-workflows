@@ -1,0 +1,214 @@
+{
+  "name": "Graduation Achievement Celebration System",
+  "description": "Celebrate graduation achievements with automated milestone tracking and celebration workflows.",
+  "tags": [
+    "celebration",
+    "completion",
+    "achievement",
+    "graduation"
+  ],
+  "version": "1.0.0",
+  "author": "Automator Pro Course",
+  "course_metadata": {
+    "week": "Week 15",
+    "phase": "Graduation",
+    "difficulty": "Advanced",
+    "learning_objectives": [
+      "Graduation preparation",
+      "Ongoing success",
+      "Celebration"
+    ],
+    "prerequisites": [
+      "Complete course foundation",
+      "Business experience",
+      "Strategic thinking"
+    ],
+    "estimated_setup_time": "5-10 minutes",
+    "use_cases": [
+      "Practice Graduation concepts",
+      "Build real-world automation skills",
+      "Prepare for business applications",
+      "Demonstrate course learning objectives"
+    ],
+    "examples": [
+      "Use this workflow to practice Graduation skills",
+      "Customize for your specific learning needs",
+      "Apply concepts to real business scenarios",
+      "Build upon for advanced implementations"
+    ],
+    "next_steps": [
+      "Launch your automation business",
+      "Continue learning and growing",
+      "Share your success with the community"
+    ],
+    "related_workflows": [
+      "All course workflows",
+      "Graduation projects",
+      "Business implementation workflows"
+    ]
+  },
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "course-Week 15-graduation_achievement_celebration_system",
+    "course_version": "1.0",
+    "last_updated": "2025-09-07T14:31:14.938061"
+  },
+  "nodes": [
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "graduation-celebration",
+        "options": {}
+      },
+      "id": "webhook-trigger",
+      "name": "Graduation Celebration Trigger",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 1,
+      "position": [
+        240,
+        300
+      ],
+      "webhookId": "graduation-celebration-webhook"
+    },
+    {
+      "parameters": {
+        "values": {
+          "string": [
+            {
+              "name": "student_id",
+              "value": "={{ $json.student_id }}"
+            },
+            {
+              "name": "achievement_type",
+              "value": "={{ $json.achievement_type }}"
+            },
+            {
+              "name": "achievement_level",
+              "value": "={{ $json.achievement_level }}"
+            },
+            {
+              "name": "celebration_timestamp",
+              "value": "={{ new Date().toISOString() }}"
+            },
+            {
+              "name": "celebration_notes",
+              "value": "={{ $json.celebration_notes }}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "set-celebration-data",
+      "name": "Set Celebration Data",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.3,
+      "position": [
+        460,
+        300
+      ]
+    },
+    {
+      "parameters": {
+        "authentication": "predefinedCredentialType",
+        "nodeCredentialType": "notionApi",
+        "resource": "database",
+        "operation": "create",
+        "databaseId": "={{ $json.database_id }}",
+        "title": "Graduation Achievement Celebration",
+        "propertiesUi": {
+          "propertyValues": [
+            {
+              "key": "Student ID",
+              "textValue": "={{ $json.student_id }}"
+            },
+            {
+              "key": "Achievement Type",
+              "textValue": "={{ $json.achievement_type }}"
+            },
+            {
+              "key": "Achievement Level",
+              "textValue": "={{ $json.achievement_level }}"
+            },
+            {
+              "key": "Celebration Date",
+              "dateValue": "={{ $json.celebration_timestamp }}"
+            },
+            {
+              "key": "Celebration Notes",
+              "textValue": "={{ $json.celebration_notes }}"
+            }
+          ]
+        }
+      },
+      "id": "create-celebration-entry",
+      "name": "Create Celebration Entry",
+      "type": "n8n-nodes-base.notion",
+      "typeVersion": 2,
+      "position": [
+        680,
+        300
+      ]
+    },
+    {
+      "parameters": {
+        "authentication": "predefinedCredentialType",
+        "nodeCredentialType": "slackApi",
+        "resource": "message",
+        "operation": "post",
+        "channel": "={{ $json.slack_channel }}",
+        "text": "🎓 Graduation Achievement Celebration!\n\nStudent: {{ $json.student_id }}\nAchievement: {{ $json.achievement_type }}\nLevel: {{ $json.achievement_level }}\nCelebrated: {{ $json.celebration_timestamp }}\nNotes: {{ $json.celebration_notes }}",
+        "otherOptions": {}
+      },
+      "id": "send-celebration-notification",
+      "name": "Send Celebration Notification",
+      "type": "n8n-nodes-base.slack",
+      "typeVersion": 2.1,
+      "position": [
+        900,
+        300
+      ]
+    }
+  ],
+  "connections": {
+    "webhook-trigger": {
+      "main": [
+        [
+          {
+            "node": "set-celebration-data",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "set-celebration-data": {
+      "main": [
+        [
+          {
+            "node": "create-celebration-entry",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "create-celebration-entry": {
+      "main": [
+        [
+          {
+            "node": "send-celebration-notification",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "pinData": {},
+  "versionId": "1",
+  "id": "graduation-achievement-celebration-system"
+}

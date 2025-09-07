@@ -1,0 +1,136 @@
+{
+  "name": "Example Workflow 1",
+  "description": "Automated workflow for Foundation phase learning objectives with intelligent processing and error handling.",
+  "tags": [
+    "basics",
+    "progress-tracking",
+    "learning",
+    "foundation"
+  ],
+  "version": "1.0.0",
+  "author": "Automator Pro Course",
+  "course_metadata": {
+    "week": "Week 01",
+    "phase": "Foundation",
+    "difficulty": "Beginner",
+    "learning_objectives": [
+      "Understand automation basics",
+      "Learn n8n interface",
+      "Build first workflows"
+    ],
+    "prerequisites": [
+      "Basic computer skills",
+      "Internet access",
+      "Willingness to learn"
+    ],
+    "estimated_setup_time": "5-10 minutes",
+    "use_cases": [
+      "Practice Foundation concepts",
+      "Build real-world automation skills",
+      "Prepare for business applications",
+      "Demonstrate course learning objectives"
+    ],
+    "examples": [
+      "Use this workflow to practice Foundation skills",
+      "Customize for your specific learning needs",
+      "Apply concepts to real business scenarios",
+      "Build upon for advanced implementations"
+    ],
+    "next_steps": [
+      "Complete Week 2 objectives",
+      "Practice with additional examples",
+      "Apply skills to real projects"
+    ],
+    "related_workflows": [
+      "Week 2 workflows",
+      "Previous week workflows",
+      "Course example workflows"
+    ]
+  },
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "course-Week 01-example_workflow_1",
+    "course_version": "1.0",
+    "last_updated": "2025-09-07T14:31:15.340196"
+  },
+  "nodes": [
+    {
+      "id": "manual-trigger-1",
+      "name": "Manual Trigger",
+      "type": "n8n-nodes-base.manualTrigger",
+      "position": [
+        100,
+        100
+      ],
+      "parameters": {}
+    },
+    {
+      "id": "set-node-1",
+      "name": "Set Message",
+      "type": "n8n-nodes-base.set",
+      "position": [
+        300,
+        100
+      ],
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "name": "message",
+              "value": "Hello from n8n! This is my first workflow."
+            },
+            {
+              "name": "timestamp",
+              "value": "={{ $now }}"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "http-request-1",
+      "name": "Send to API",
+      "type": "n8n-nodes-base.httpRequest",
+      "position": [
+        500,
+        100
+      ],
+      "parameters": {
+        "method": "POST",
+        "url": "https://httpbin.org/post",
+        "sendBody": true,
+        "bodyContentType": "json",
+        "jsonBody": "{\n  \"message\": \"{{ $json.message }}\",\n  \"timestamp\": \"{{ $json.timestamp }}\",\n  \"workflow\": \"First n8n Workflow\"\n}"
+      }
+    }
+  ],
+  "connections": {
+    "Manual Trigger": {
+      "main": [
+        [
+          {
+            "node": "Set Message",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Set Message": {
+      "main": [
+        [
+          {
+            "node": "Send to API",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {},
+  "pinData": {},
+  "versionId": "1",
+  "id": "example_workflow_1"
+}

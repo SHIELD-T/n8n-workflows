@@ -1,0 +1,305 @@
+{
+  "name": "Production Deployment Workflow",
+  "description": "Automated workflow for Workflow Building phase learning objectives with intelligent processing and error handling.",
+  "tags": [
+    "optimization",
+    "performance",
+    "workflows",
+    "automation"
+  ],
+  "version": "1.0.0",
+  "author": "Automator Pro Course",
+  "course_metadata": {
+    "week": "Week 05",
+    "phase": "Workflow Building",
+    "difficulty": "Intermediate",
+    "learning_objectives": [
+      "Production deployment",
+      "Monitoring",
+      "Maintenance"
+    ],
+    "prerequisites": [
+      "Completed previous weeks",
+      "n8n instance",
+      "Basic automation knowledge"
+    ],
+    "estimated_setup_time": "20-30 minutes",
+    "use_cases": [
+      "Practice Workflow Building concepts",
+      "Build real-world automation skills",
+      "Prepare for business applications",
+      "Demonstrate course learning objectives"
+    ],
+    "examples": [
+      "Use this workflow to practice Workflow Building skills",
+      "Customize for your specific learning needs",
+      "Apply concepts to real business scenarios",
+      "Build upon for advanced implementations"
+    ],
+    "next_steps": [
+      "Complete Week 6 objectives",
+      "Practice with additional examples",
+      "Apply skills to real projects"
+    ],
+    "related_workflows": [
+      "Week 6 workflows",
+      "Previous week workflows",
+      "Course example workflows"
+    ]
+  },
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "course-Week 05-production_deployment_workflow",
+    "course_version": "1.0",
+    "last_updated": "2025-09-07T14:31:14.336084"
+  },
+  "nodes": [
+    {
+      "name": "Production Deployment Trigger",
+      "type": "n8n-nodes-base.webhook",
+      "parameters": {
+        "path": "production-deployment",
+        "httpMethod": "POST"
+      }
+    },
+    {
+      "name": "Initialize Deployment",
+      "type": "n8n-nodes-base.set",
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "name": "deployment_id",
+              "value": "={{ $now.format('YYYYMMDDHHmmss') }}"
+            },
+            {
+              "name": "deployment_type",
+              "value": "blue_green"
+            },
+            {
+              "name": "workflow_version",
+              "value": "={{ $json.version || 'latest' }}"
+            },
+            {
+              "name": "start_time",
+              "value": "={{ $now }}"
+            },
+            {
+              "name": "environments",
+              "value": "={{ ['blue', 'green'] }}"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "name": "Validate Deployment Request",
+      "type": "n8n-nodes-base.if",
+      "parameters": {
+        "conditions": {
+          "string": [
+            {
+              "value1": "={{ $json.workflow_version }}",
+              "operation": "isNotEmpty"
+            },
+            {
+              "value1": "={{ $json.deployment_type }}",
+              "operation": "equal",
+              "value2": "blue_green"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "name": "Backup Current Production",
+      "type": "n8n-nodes-base.httpRequest",
+      "parameters": {
+        "method": "POST",
+        "url": "https://api.backup-service.com/backup",
+        "bodyContentType": "json",
+        "jsonBody": "={{ { \"environment\": \"production\", \"deployment_id\": $json.deployment_id, \"backup_type\": \"pre_deployment\", \"timestamp\": $now } }}"
+      }
+    },
+    {
+      "name": "Deploy to Green Environment",
+      "type": "n8n-nodes-base.httpRequest",
+      "parameters": {
+        "method": "POST",
+        "url": "https://api.deployment-service.com/deploy",
+        "bodyContentType": "json",
+        "jsonBody": "={{ { \"environment\": \"green\", \"workflow_version\": $json.workflow_version, \"deployment_id\": $json.deployment_id, \"deployment_type\": $json.deployment_type } }}"
+      }
+    },
+    {
+      "name": "Health Check Green Environment",
+      "type": "n8n-nodes-base.httpRequest",
+      "parameters": {
+        "method": "GET",
+        "url": "https://api.health-check.com/check",
+        "qs": {
+          "environment": "green",
+          "deployment_id": "={{ $json.deployment_id }}"
+        },
+        "options": {
+          "response": {
+            "response": {
+              "responseFormat": "json"
+            }
+          }
+        }
+      }
+    },
+    {
+      "name": "Validate Health Check",
+      "type": "n8n-nodes-base.if",
+      "parameters": {
+        "conditions": {
+          "string": [
+            {
+              "value1": "={{ $json.status }}",
+              "operation": "equal",
+              "value2": "healthy"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "name": "Switch Traffic to Green",
+      "type": "n8n-nodes-base.httpRequest",
+      "parameters": {
+        "method": "POST",
+        "url": "https://api.load-balancer.com/switch",
+        "bodyContentType": "json",
+        "jsonBody": "={{ { \"from_environment\": \"blue\", \"to_environment\": \"green\", \"deployment_id\": $json.deployment_id, \"switch_time\": $now } }}"
+      }
+    },
+    {
+      "name": "Monitor Post-Deployment",
+      "type": "n8n-nodes-base.httpRequest",
+      "parameters": {
+        "method": "GET",
+        "url": "https://api.monitoring-service.com/metrics",
+        "qs": {
+          "environment": "green",
+          "deployment_id": "={{ $json.deployment_id }}",
+          "duration": "5m"
+        },
+        "options": {
+          "response": {
+            "response": {
+              "responseFormat": "json"
+            }
+          }
+        }
+      }
+    },
+    {
+      "name": "Deployment Success",
+      "type": "n8n-nodes-base.set",
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "name": "deployment_status",
+              "value": "success"
+            },
+            {
+              "name": "completion_time",
+              "value": "={{ $now }}"
+            },
+            {
+              "name": "deployment_duration",
+              "value": "={{ $now.diff($json.start_time, 'milliseconds') }}"
+            },
+            {
+              "name": "success_report",
+              "value": "={{ { \"deployment_id\": $json.deployment_id, \"status\": \"success\", \"workflow_version\": $json.workflow_version, \"deployment_type\": $json.deployment_type, \"duration\": $json.deployment_duration, \"completed_at\": $json.completion_time } }}"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "name": "Send Success Notification",
+      "type": "n8n-nodes-base.httpRequest",
+      "parameters": {
+        "method": "POST",
+        "url": "https://api.slack.com/api/chat.postMessage",
+        "bodyContentType": "json",
+        "jsonBody": "={{ { \"channel\": \"#deployments\", \"text\": \"✅ Production Deployment Successful\", \"attachments\": [{ \"color\": \"good\", \"fields\": [{ \"title\": \"Deployment ID\", \"value\": $json.deployment_id, \"short\": true }, { \"title\": \"Version\", \"value\": $json.workflow_version, \"short\": true }, { \"title\": \"Type\", \"value\": $json.deployment_type, \"short\": true }, { \"title\": \"Duration\", \"value\": $json.deployment_duration + \"ms\", \"short\": true }] }] } }}"
+      }
+    },
+    {
+      "name": "Handle Health Check Failure",
+      "type": "n8n-nodes-base.set",
+      "position": [
+        500,
+        300
+      ],
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "name": "health_check_error",
+              "value": "={{ { \"error_type\": \"health_check_failed\", \"deployment_id\": $json.deployment_id, \"environment\": \"green\", \"timestamp\": $now } }}"
+            },
+            {
+              "name": "rollback_triggered",
+              "value": true
+            }
+          ]
+        }
+      }
+    },
+    {
+      "name": "Execute Rollback",
+      "type": "n8n-nodes-base.httpRequest",
+      "parameters": {
+        "method": "POST",
+        "url": "https://api.rollback-service.com/rollback",
+        "bodyContentType": "json",
+        "jsonBody": "={{ { \"deployment_id\": $json.deployment_id, \"from_environment\": \"green\", \"to_environment\": \"blue\", \"rollback_reason\": \"health_check_failed\", \"timestamp\": $now } }}"
+      }
+    },
+    {
+      "name": "Send Rollback Notification",
+      "type": "n8n-nodes-base.httpRequest",
+      "parameters": {
+        "method": "POST",
+        "url": "https://api.slack.com/api/chat.postMessage",
+        "bodyContentType": "json",
+        "jsonBody": "={{ { \"channel\": \"#deployments\", \"text\": \"🔄 Production Rollback Executed\", \"attachments\": [{ \"color\": \"warning\", \"fields\": [{ \"title\": \"Deployment ID\", \"value\": $json.deployment_id, \"short\": true }, { \"title\": \"Rollback Reason\", \"value\": \"Health check failed\", \"short\": true }, { \"title\": \"Rollback Time\", \"value\": $now, \"short\": true }] }] } }}"
+      }
+    },
+    {
+      "name": "Handle Validation Error",
+      "type": "n8n-nodes-base.set",
+      "position": [
+        500,
+        500
+      ],
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "name": "validation_error",
+              "value": "={{ { \"error_type\": \"deployment_validation\", \"deployment_id\": $json.deployment_id, \"message\": \"Invalid deployment request\", \"timestamp\": $now } }}"
+            },
+            {
+              "name": "error_response",
+              "value": "={{ { \"status\": \"error\", \"deployment_id\": $json.deployment_id, \"message\": \"Deployment validation failed\" } }}"
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "connections": {},
+  "active": false,
+  "settings": {},
+  "pinData": {},
+  "versionId": "1",
+  "id": "production_deployment_workflow"
+}

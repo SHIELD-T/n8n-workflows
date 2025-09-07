@@ -1,0 +1,298 @@
+{
+  "name": "Portfolio Finalization System",
+  "description": "Automated workflow for Graduation phase learning objectives with intelligent processing and error handling.",
+  "tags": [
+    "celebration",
+    "completion",
+    "achievement",
+    "graduation"
+  ],
+  "version": "1.0.0",
+  "author": "Automator Pro Course",
+  "course_metadata": {
+    "week": "Week 15",
+    "phase": "Graduation",
+    "difficulty": "Advanced",
+    "learning_objectives": [
+      "Graduation preparation",
+      "Ongoing success",
+      "Celebration"
+    ],
+    "prerequisites": [
+      "Complete course foundation",
+      "Business experience",
+      "Strategic thinking"
+    ],
+    "estimated_setup_time": "10-20 minutes",
+    "use_cases": [
+      "Practice Graduation concepts",
+      "Build real-world automation skills",
+      "Prepare for business applications",
+      "Demonstrate course learning objectives"
+    ],
+    "examples": [
+      "Use this workflow to practice Graduation skills",
+      "Customize for your specific learning needs",
+      "Apply concepts to real business scenarios",
+      "Build upon for advanced implementations"
+    ],
+    "next_steps": [
+      "Launch your automation business",
+      "Continue learning and growing",
+      "Share your success with the community"
+    ],
+    "related_workflows": [
+      "All course workflows",
+      "Graduation projects",
+      "Business implementation workflows"
+    ]
+  },
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "course-Week 15-portfolio_finalization_system",
+    "course_version": "1.0",
+    "last_updated": "2025-09-07T14:31:14.863092"
+  },
+  "nodes": [
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "portfolio-finalization",
+        "options": {}
+      },
+      "id": "webhook-trigger",
+      "name": "Portfolio Finalization Trigger",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 1,
+      "position": [
+        240,
+        300
+      ],
+      "webhookId": "portfolio-finalization-webhook"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict"
+          },
+          "conditions": [
+            {
+              "id": "portfolio-status-check",
+              "leftValue": "={{ $json.portfolio_status }}",
+              "rightValue": "finalized",
+              "operator": {
+                "type": "string",
+                "operation": "equals"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "id": "portfolio-status-check",
+      "name": "Portfolio Status Check",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2,
+      "position": [
+        460,
+        300
+      ]
+    },
+    {
+      "parameters": {
+        "values": {
+          "string": [
+            {
+              "name": "finalization_status",
+              "value": "portfolio_finalized"
+            },
+            {
+              "name": "finalization_timestamp",
+              "value": "={{ new Date().toISOString() }}"
+            },
+            {
+              "name": "finalization_message",
+              "value": "Portfolio finalized successfully"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "set-finalization-status",
+      "name": "Set Finalization Status",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.3,
+      "position": [
+        680,
+        200
+      ]
+    },
+    {
+      "parameters": {
+        "authentication": "predefinedCredentialType",
+        "nodeCredentialType": "notionApi",
+        "resource": "database",
+        "operation": "getAll",
+        "databaseId": "={{ $json.database_id }}",
+        "options": {
+          "filter": {
+            "property": "Portfolio Status",
+            "select": {
+              "equals": "Finalized"
+            }
+          }
+        }
+      },
+      "id": "update-portfolio-database",
+      "name": "Update Portfolio Database",
+      "type": "n8n-nodes-base.notion",
+      "typeVersion": 2,
+      "position": [
+        900,
+        200
+      ]
+    },
+    {
+      "parameters": {
+        "authentication": "predefinedCredentialType",
+        "nodeCredentialType": "slackApi",
+        "resource": "message",
+        "operation": "post",
+        "channel": "={{ $json.slack_channel }}",
+        "text": "🎨 Portfolio Finalized!\n\nPortfolio: {{ $json.portfolio_name }}\nStatus: {{ $json.finalization_status }}\nFinalized: {{ $json.finalization_timestamp }}\nMessage: {{ $json.finalization_message }}",
+        "otherOptions": {}
+      },
+      "id": "send-finalization-notification",
+      "name": "Send Finalization Notification",
+      "type": "n8n-nodes-base.slack",
+      "typeVersion": 2.1,
+      "position": [
+        1120,
+        200
+      ]
+    },
+    {
+      "parameters": {
+        "values": {
+          "string": [
+            {
+              "name": "error_status",
+              "value": "portfolio_not_finalized"
+            },
+            {
+              "name": "error_timestamp",
+              "value": "={{ new Date().toISOString() }}"
+            },
+            {
+              "name": "error_message",
+              "value": "Portfolio not yet finalized"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "set-error-status",
+      "name": "Set Error Status",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.3,
+      "position": [
+        680,
+        400
+      ]
+    },
+    {
+      "parameters": {
+        "authentication": "predefinedCredentialType",
+        "nodeCredentialType": "slackApi",
+        "resource": "message",
+        "operation": "post",
+        "channel": "={{ $json.slack_channel }}",
+        "text": "⚠️ Portfolio Status Check\n\nPortfolio: {{ $json.portfolio_name }}\nStatus: {{ $json.error_status }}\nChecked: {{ $json.error_timestamp }}\nMessage: {{ $json.error_message }}",
+        "otherOptions": {}
+      },
+      "id": "send-error-notification",
+      "name": "Send Error Notification",
+      "type": "n8n-nodes-base.slack",
+      "typeVersion": 2.1,
+      "position": [
+        900,
+        400
+      ]
+    }
+  ],
+  "connections": {
+    "webhook-trigger": {
+      "main": [
+        [
+          {
+            "node": "portfolio-status-check",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "portfolio-status-check": {
+      "main": [
+        [
+          {
+            "node": "set-finalization-status",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "set-error-status",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "set-finalization-status": {
+      "main": [
+        [
+          {
+            "node": "update-portfolio-database",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "update-portfolio-database": {
+      "main": [
+        [
+          {
+            "node": "send-finalization-notification",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "set-error-status": {
+      "main": [
+        [
+          {
+            "node": "send-error-notification",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "pinData": {},
+  "versionId": "1",
+  "id": "portfolio-finalization-system"
+}

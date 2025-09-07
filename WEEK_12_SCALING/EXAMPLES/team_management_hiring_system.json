@@ -1,0 +1,457 @@
+{
+  "name": "Team Management and Hiring System",
+  "description": "Automated workflow for Scaling phase learning objectives with intelligent processing and error handling.",
+  "tags": [
+    "management",
+    "growth",
+    "operations",
+    "scaling"
+  ],
+  "version": "1.0.0",
+  "author": "Automator Pro Course",
+  "course_metadata": {
+    "week": "Week 12",
+    "phase": "Scaling",
+    "difficulty": "Advanced",
+    "learning_objectives": [
+      "Scaling strategies",
+      "Template creation",
+      "Team building"
+    ],
+    "prerequisites": [
+      "Technical skills",
+      "Business interest",
+      "Client interaction skills"
+    ],
+    "estimated_setup_time": "10-20 minutes",
+    "use_cases": [
+      "Practice Scaling concepts",
+      "Build real-world automation skills",
+      "Prepare for business applications",
+      "Demonstrate course learning objectives"
+    ],
+    "examples": [
+      "Use this workflow to practice Scaling skills",
+      "Customize for your specific learning needs",
+      "Apply concepts to real business scenarios",
+      "Build upon for advanced implementations"
+    ],
+    "next_steps": [
+      "Complete Week 13 objectives",
+      "Practice with additional examples",
+      "Apply skills to real projects"
+    ],
+    "related_workflows": [
+      "Week 13 workflows",
+      "Previous week workflows",
+      "Course example workflows"
+    ]
+  },
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "course-Week 12-team_management_hiring_system",
+    "course_version": "1.0",
+    "last_updated": "2025-09-07T14:31:15.151809"
+  },
+  "nodes": [
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "hiring-request",
+        "responseMode": "responseNode",
+        "options": {}
+      },
+      "id": "hiring-request-trigger",
+      "name": "Hiring Request Trigger",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 1,
+      "position": [
+        240,
+        300
+      ],
+      "webhookId": "hiring-request-webhook"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict"
+          },
+          "conditions": [
+            {
+              "id": "position-type-condition",
+              "leftValue": "={{ $json.positionType }}",
+              "rightValue": "freelancer",
+              "operator": {
+                "type": "string",
+                "operation": "equals"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "id": "position-type-router",
+      "name": "Position Type Router",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2,
+      "position": [
+        460,
+        300
+      ]
+    },
+    {
+      "parameters": {
+        "values": {
+          "string": [
+            {
+              "name": "jobPostingTemplate",
+              "value": "n8n Workflow Developer Position"
+            },
+            {
+              "name": "jobDescription",
+              "value": "We're looking for an experienced n8n developer to help build automation workflows for our clients."
+            },
+            {
+              "name": "requirements",
+              "value": "2+ years n8n experience, API integration skills, JavaScript knowledge, Problem-solving ability"
+            },
+            {
+              "name": "responsibilities",
+              "value": "Build custom n8n workflows, Integrate third-party APIs, Debug and optimize workflows, Document technical solutions"
+            },
+            {
+              "name": "compensation",
+              "value": "$25-50/hour based on experience"
+            },
+            {
+              "name": "timeline",
+              "value": "Project-based contracts"
+            },
+            {
+              "name": "applicationProcess",
+              "value": "Submit portfolio, Technical assessment, Interview, Reference check"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "freelancer-job-posting",
+      "name": "Freelancer Job Posting",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.3,
+      "position": [
+        680,
+        200
+      ]
+    },
+    {
+      "parameters": {
+        "values": {
+          "string": [
+            {
+              "name": "jobPostingTemplate",
+              "value": "Senior Automation Engineer Position"
+            },
+            {
+              "name": "jobDescription",
+              "value": "Lead automation projects and mentor junior developers"
+            },
+            {
+              "name": "requirements",
+              "value": "5+ years automation experience, Leadership experience, Client management skills, Technical architecture knowledge"
+            },
+            {
+              "name": "responsibilities",
+              "value": "Lead automation projects, Mentor junior developers, Manage client relationships, Design technical architecture"
+            },
+            {
+              "name": "compensation",
+              "value": "Competitive salary + benefits"
+            },
+            {
+              "name": "benefits",
+              "value": "Health insurance, Remote work flexibility, Professional development"
+            },
+            {
+              "name": "applicationProcess",
+              "value": "Submit resume, Technical interview, Leadership assessment, Team interview"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "full-time-job-posting",
+      "name": "Full-time Job Posting",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.3,
+      "position": [
+        680,
+        400
+      ]
+    },
+    {
+      "parameters": {
+        "operation": "create",
+        "resource": "page",
+        "title": "={{ $json.jobPostingTemplate }} - Job Posting",
+        "propertiesUi": {
+          "propertyValues": [
+            {
+              "key": "Position Type",
+              "textValue": "={{ $json.positionType }}"
+            },
+            {
+              "key": "Description",
+              "textValue": "={{ $json.jobDescription }}"
+            },
+            {
+              "key": "Requirements",
+              "textValue": "={{ $json.requirements }}"
+            },
+            {
+              "key": "Responsibilities",
+              "textValue": "={{ $json.responsibilities }}"
+            },
+            {
+              "key": "Compensation",
+              "textValue": "={{ $json.compensation }}"
+            },
+            {
+              "key": "Benefits",
+              "textValue": "={{ $json.benefits || 'N/A' }}"
+            },
+            {
+              "key": "Timeline",
+              "textValue": "={{ $json.timeline || 'Full-time' }}"
+            },
+            {
+              "key": "Application Process",
+              "textValue": "={{ $json.applicationProcess }}"
+            },
+            {
+              "key": "Status",
+              "textValue": "Open"
+            },
+            {
+              "key": "Posted Date",
+              "textValue": "={{ new Date().toISOString() }}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "notion-job-posting",
+      "name": "Notion Job Posting",
+      "type": "n8n-nodes-base.notion",
+      "typeVersion": 2,
+      "position": [
+        900,
+        300
+      ]
+    },
+    {
+      "parameters": {
+        "authentication": "oAuth2",
+        "resource": "message",
+        "operation": "post",
+        "chatId": "={{ $json.hiringSlackChannel }}",
+        "text": "🎯 New Job Posting!\n\n**{{ $json.jobPostingTemplate }}**\n\n{{ $json.jobDescription }}\n\n**Requirements:**\n{{ $json.requirements }}\n\n**Responsibilities:**\n{{ $json.responsibilities }}\n\n**Compensation:** {{ $json.compensation }}\n\n**Application Process:**\n{{ $json.applicationProcess }}\n\nReady to hire! 🚀",
+        "options": {}
+      },
+      "id": "slack-hiring-notification",
+      "name": "Slack Hiring Notification",
+      "type": "n8n-nodes-base.slack",
+      "typeVersion": 2.1,
+      "position": [
+        1120,
+        300
+      ]
+    },
+    {
+      "parameters": {
+        "authentication": "oAuth2",
+        "resource": "message",
+        "operation": "post",
+        "chatId": "={{ $json.hiringTelegramChannel }}",
+        "text": "🎯 New Job Posting!\n\n**{{ $json.jobPostingTemplate }}**\n\n{{ $json.jobDescription }}\n\n**Requirements:**\n{{ $json.requirements }}\n\n**Responsibilities:**\n{{ $json.responsibilities }}\n\n**Compensation:** {{ $json.compensation }}\n\n**Application Process:**\n{{ $json.applicationProcess }}\n\nReady to hire! 🚀",
+        "options": {}
+      },
+      "id": "telegram-hiring-notification",
+      "name": "Telegram Hiring Notification",
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1.2,
+      "position": [
+        1120,
+        500
+      ]
+    },
+    {
+      "parameters": {
+        "operation": "create",
+        "resource": "page",
+        "title": "Team Management Dashboard",
+        "propertiesUi": {
+          "propertyValues": [
+            {
+              "key": "Team Size",
+              "textValue": "={{ $json.currentTeamSize }}"
+            },
+            {
+              "key": "Open Positions",
+              "textValue": "={{ $json.openPositions }}"
+            },
+            {
+              "key": "Hiring Pipeline",
+              "textValue": "={{ $json.hiringPipeline }}"
+            },
+            {
+              "key": "Team Performance",
+              "textValue": "={{ $json.teamPerformance }}"
+            },
+            {
+              "key": "Last Updated",
+              "textValue": "={{ new Date().toISOString() }}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "notion-team-dashboard",
+      "name": "Notion Team Dashboard",
+      "type": "n8n-nodes-base.notion",
+      "typeVersion": 2,
+      "position": [
+        1340,
+        300
+      ]
+    },
+    {
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "={{ JSON.stringify({\n  success: true,\n  message: 'Hiring request processed successfully',\n  positionType: $json.positionType,\n  jobPosting: $json.jobPostingTemplate,\n  status: 'Posted and Notified',\n  timestamp: new Date().toISOString()\n}) }}",
+        "options": {}
+      },
+      "id": "hiring-response",
+      "name": "Hiring Response",
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.1,
+      "position": [
+        1560,
+        300
+      ]
+    }
+  ],
+  "connections": {
+    "Hiring Request Trigger": {
+      "main": [
+        [
+          {
+            "node": "Position Type Router",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Position Type Router": {
+      "main": [
+        [
+          {
+            "node": "Freelancer Job Posting",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Full-time Job Posting",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Freelancer Job Posting": {
+      "main": [
+        [
+          {
+            "node": "Notion Job Posting",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Full-time Job Posting": {
+      "main": [
+        [
+          {
+            "node": "Notion Job Posting",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Notion Job Posting": {
+      "main": [
+        [
+          {
+            "node": "Slack Hiring Notification",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Telegram Hiring Notification",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Slack Hiring Notification": {
+      "main": [
+        [
+          {
+            "node": "Notion Team Dashboard",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Telegram Hiring Notification": {
+      "main": [
+        [
+          {
+            "node": "Notion Team Dashboard",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Notion Team Dashboard": {
+      "main": [
+        [
+          {
+            "node": "Hiring Response",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "pinData": {},
+  "versionId": "1",
+  "id": "team_management_hiring_system"
+}

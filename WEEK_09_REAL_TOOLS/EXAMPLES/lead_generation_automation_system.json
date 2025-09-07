@@ -1,0 +1,318 @@
+{
+  "name": "Lead Generation Automation System",
+  "description": "Automated workflow for Real-World Tools phase learning objectives with intelligent processing and error handling.",
+  "tags": [
+    "tools",
+    "real-world",
+    "integration",
+    "apis"
+  ],
+  "version": "1.0.0",
+  "author": "Automator Pro Course",
+  "course_metadata": {
+    "week": "Week 09",
+    "phase": "Real-World Tools",
+    "difficulty": "Advanced",
+    "learning_objectives": [
+      "OAuth integration",
+      "Form builders",
+      "Email/calendar triggers"
+    ],
+    "prerequisites": [
+      "AI integration skills",
+      "Real-world tool access",
+      "Integration experience"
+    ],
+    "estimated_setup_time": "10-20 minutes",
+    "use_cases": [
+      "Practice Real-World Tools concepts",
+      "Build real-world automation skills",
+      "Prepare for business applications",
+      "Demonstrate course learning objectives"
+    ],
+    "examples": [
+      "Use this workflow to practice Real-World Tools skills",
+      "Customize for your specific learning needs",
+      "Apply concepts to real business scenarios",
+      "Build upon for advanced implementations"
+    ],
+    "next_steps": [
+      "Complete Week 10 objectives",
+      "Practice with additional examples",
+      "Apply skills to real projects"
+    ],
+    "related_workflows": [
+      "Week 10 workflows",
+      "Previous week workflows",
+      "Course example workflows"
+    ]
+  },
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "course-Week 09-lead_generation_automation_system",
+    "course_version": "1.0",
+    "last_updated": "2025-09-07T14:31:13.982106"
+  },
+  "nodes": [
+    {
+      "parameters": {
+        "path": "lead-generation",
+        "httpMethod": "POST"
+      },
+      "name": "Lead Generation Webhook",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 1,
+      "position": [
+        240,
+        300
+      ]
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "name": "lead_id",
+              "value": "={{ $now.format('YYYYMMDDHHmmss') }}"
+            },
+            {
+              "name": "name",
+              "value": "={{ $json.name }}"
+            },
+            {
+              "name": "email",
+              "value": "={{ $json.email }}"
+            },
+            {
+              "name": "company",
+              "value": "={{ $json.company }}"
+            },
+            {
+              "name": "phone",
+              "value": "={{ $json.phone }}"
+            },
+            {
+              "name": "message",
+              "value": "={{ $json.message }}"
+            },
+            {
+              "name": "source",
+              "value": "={{ $json.source || 'website' }}"
+            }
+          ]
+        }
+      },
+      "name": "Process Lead Data",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 1,
+      "position": [
+        460,
+        300
+      ]
+    },
+    {
+      "parameters": {
+        "resource": "chat",
+        "operation": "create",
+        "model": "gpt-4",
+        "messages": {
+          "values": [
+            {
+              "role": "system",
+              "content": "You are a lead enrichment specialist that analyzes lead data and generates insights."
+            },
+            {
+              "role": "user",
+              "content": "={{ 'Enrich this lead data:\\nName: ' + $json.name + '\\nCompany: ' + $json.company + '\\nMessage: ' + $json.message + '\\n\\nGenerate: lead score, industry, company size, and recommended actions.' }}"
+            }
+          ]
+        }
+      },
+      "name": "Enrich Lead Data",
+      "type": "n8n-nodes-base.openAi",
+      "typeVersion": 1,
+      "position": [
+        680,
+        300
+      ]
+    },
+    {
+      "parameters": {
+        "operation": "create",
+        "base": "your_base_id",
+        "table": "Leads",
+        "fields": {
+          "Lead ID": "={{ $json.lead_id }}",
+          "Name": "={{ $json.name }}",
+          "Email": "={{ $json.email }}",
+          "Company": "={{ $json.company }}",
+          "Phone": "={{ $json.phone }}",
+          "Message": "={{ $json.message }}",
+          "Source": "={{ $json.source }}",
+          "Lead Score": "={{ $json.choices[0].message.content.split('Lead Score: ')[1]?.split('\\n')[0] }}",
+          "Industry": "={{ $json.choices[0].message.content.split('Industry: ')[1]?.split('\\n')[0] }}",
+          "Company Size": "={{ $json.choices[0].message.content.split('Company Size: ')[1]?.split('\\n')[0] }}",
+          "Status": "New",
+          "Created At": "={{ $now }}"
+        }
+      },
+      "name": "Store Lead in CRM",
+      "type": "n8n-nodes-base.airtable",
+      "typeVersion": 1,
+      "position": [
+        900,
+        300
+      ]
+    },
+    {
+      "parameters": {
+        "operation": "send",
+        "toEmail": "={{ $json.email }}",
+        "subject": "={{ 'Welcome ' + $json.name + '! Thank you for your interest' }}",
+        "message": "={{ 'Hi ' + $json.name + ',\\n\\nThank you for reaching out! We\\'ve received your message and will get back to you within 24 hours.\\n\\nYour message: ' + $json.message + '\\n\\nBest regards,\\nThe Team' }}"
+      },
+      "name": "Send Welcome Email",
+      "type": "n8n-nodes-base.gmail",
+      "typeVersion": 1,
+      "position": [
+        1120,
+        300
+      ]
+    },
+    {
+      "parameters": {
+        "operation": "postMessage",
+        "channel": "#sales-leads",
+        "text": "={{ '🎯 New Lead Generated\\nName: ' + $json.name + '\\nCompany: ' + $json.company + '\\nEmail: ' + $json.email + '\\nLead Score: ' + $json.choices[0].message.content.split('Lead Score: ')[1]?.split('\\n')[0] + '\\nSource: ' + $json.source }}"
+      },
+      "name": "Notify Sales Team",
+      "type": "n8n-nodes-base.slack",
+      "typeVersion": 1,
+      "position": [
+        1340,
+        300
+      ]
+    },
+    {
+      "parameters": {
+        "operation": "create",
+        "databaseId": "your_database_id",
+        "fields": {
+          "Title": "={{ 'Follow up with ' + $json.name + ' (' + $json.company + ')' }}",
+          "Lead ID": "={{ $json.lead_id }}",
+          "Priority": "={{ $json.choices[0].message.content.split('Lead Score: ')[1]?.split('\\n')[0] > 7 ? 'High' : 'Medium' }}",
+          "Due Date": "={{ $now.plus({ hours: 24 }) }}",
+          "Status": "To Do",
+          "Assigned To": "Sales Team"
+        }
+      },
+      "name": "Create Follow-up Task",
+      "type": "n8n-nodes-base.notion",
+      "typeVersion": 1,
+      "position": [
+        1560,
+        300
+      ]
+    },
+    {
+      "parameters": {
+        "operation": "sendMessage",
+        "chatId": "your_chat_id",
+        "text": "={{ '📈 New Lead: ' + $json.name + ' from ' + $json.company + '\\nScore: ' + $json.choices[0].message.content.split('Lead Score: ')[1]?.split('\\n')[0] }}"
+      },
+      "name": "Send Telegram Notification",
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1,
+      "position": [
+        1780,
+        300
+      ]
+    }
+  ],
+  "connections": {
+    "Lead Generation Webhook": {
+      "main": [
+        [
+          {
+            "node": "Process Lead Data",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Process Lead Data": {
+      "main": [
+        [
+          {
+            "node": "Enrich Lead Data",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Enrich Lead Data": {
+      "main": [
+        [
+          {
+            "node": "Store Lead in CRM",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Store Lead in CRM": {
+      "main": [
+        [
+          {
+            "node": "Send Welcome Email",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Send Welcome Email": {
+      "main": [
+        [
+          {
+            "node": "Notify Sales Team",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Notify Sales Team": {
+      "main": [
+        [
+          {
+            "node": "Create Follow-up Task",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Create Follow-up Task": {
+      "main": [
+        [
+          {
+            "node": "Send Telegram Notification",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "pinData": {},
+  "versionId": "1",
+  "id": "lead_generation_automation_system"
+}

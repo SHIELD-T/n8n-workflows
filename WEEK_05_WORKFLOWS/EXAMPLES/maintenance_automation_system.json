@@ -1,0 +1,312 @@
+{
+  "name": "Maintenance Automation System",
+  "description": "Automated workflow for Workflow Building phase learning objectives with intelligent processing and error handling.",
+  "tags": [
+    "workflows",
+    "artificial-intelligence",
+    "machine-learning",
+    "optimization",
+    "performance",
+    "automation"
+  ],
+  "version": "1.0.0",
+  "author": "Automator Pro Course",
+  "course_metadata": {
+    "week": "Week 05",
+    "phase": "Workflow Building",
+    "difficulty": "Intermediate",
+    "learning_objectives": [
+      "Production deployment",
+      "Monitoring",
+      "Maintenance"
+    ],
+    "prerequisites": [
+      "Completed previous weeks",
+      "n8n instance",
+      "Basic automation knowledge"
+    ],
+    "estimated_setup_time": "20-30 minutes",
+    "use_cases": [
+      "Practice Workflow Building concepts",
+      "Build real-world automation skills",
+      "Prepare for business applications",
+      "Demonstrate course learning objectives"
+    ],
+    "examples": [
+      "Use this workflow to practice Workflow Building skills",
+      "Customize for your specific learning needs",
+      "Apply concepts to real business scenarios",
+      "Build upon for advanced implementations"
+    ],
+    "next_steps": [
+      "Complete Week 6 objectives",
+      "Practice with additional examples",
+      "Apply skills to real projects"
+    ],
+    "related_workflows": [
+      "Week 6 workflows",
+      "Previous week workflows",
+      "Course example workflows"
+    ]
+  },
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "course-Week 05-maintenance_automation_system",
+    "course_version": "1.0",
+    "last_updated": "2025-09-07T14:31:14.416511"
+  },
+  "nodes": [
+    {
+      "name": "Maintenance Automation System",
+      "type": "n8n-nodes-base.webhook",
+      "parameters": {
+        "path": "maintenance-automation",
+        "httpMethod": "POST"
+      }
+    },
+    {
+      "name": "Schedule Maintenance",
+      "type": "n8n-nodes-base.scheduleTrigger",
+      "parameters": {
+        "rule": {
+          "interval": [
+            {
+              "field": "hours",
+              "hoursInterval": 6
+            }
+          ]
+        }
+      }
+    },
+    {
+      "name": "Initialize Maintenance",
+      "type": "n8n-nodes-base.set",
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "name": "maintenance_id",
+              "value": "={{ $now.format('YYYYMMDDHHmmss') }}"
+            },
+            {
+              "name": "maintenance_type",
+              "value": "automated"
+            },
+            {
+              "name": "start_time",
+              "value": "={{ $now }}"
+            },
+            {
+              "name": "maintenance_tasks",
+              "value": "={{ ['log_cleanup', 'cache_clear', 'database_optimization', 'workflow_health_check', 'performance_monitoring'] }}"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "name": "Execute Log Cleanup",
+      "type": "n8n-nodes-base.httpRequest",
+      "parameters": {
+        "method": "POST",
+        "url": "https://api.maintenance-service.com/log-cleanup",
+        "bodyContentType": "json",
+        "jsonBody": "={{ { \"maintenance_id\": $json.maintenance_id, \"task\": \"log_cleanup\", \"retention_days\": 30, \"timestamp\": $now } }}"
+      }
+    },
+    {
+      "name": "Execute Cache Clear",
+      "type": "n8n-nodes-base.httpRequest",
+      "parameters": {
+        "method": "POST",
+        "url": "https://api.maintenance-service.com/cache-clear",
+        "bodyContentType": "json",
+        "jsonBody": "={{ { \"maintenance_id\": $json.maintenance_id, \"task\": \"cache_clear\", \"cache_types\": [\"workflow_cache\", \"data_cache\", \"session_cache\"], \"timestamp\": $now } }}"
+      }
+    },
+    {
+      "name": "Execute Database Optimization",
+      "type": "n8n-nodes-base.httpRequest",
+      "parameters": {
+        "method": "POST",
+        "url": "https://api.maintenance-service.com/database-optimization",
+        "bodyContentType": "json",
+        "jsonBody": "={{ { \"maintenance_id\": $json.maintenance_id, \"task\": \"database_optimization\", \"optimization_types\": [\"index_rebuild\", \"statistics_update\", \"fragmentation_check\"], \"timestamp\": $now } }}"
+      }
+    },
+    {
+      "name": "Execute Workflow Health Check",
+      "type": "n8n-nodes-base.httpRequest",
+      "parameters": {
+        "method": "POST",
+        "url": "https://api.maintenance-service.com/workflow-health-check",
+        "bodyContentType": "json",
+        "jsonBody": "={{ { \"maintenance_id\": $json.maintenance_id, \"task\": \"workflow_health_check\", \"check_types\": [\"execution_status\", \"error_rates\", \"performance_metrics\"], \"timestamp\": $now } }}"
+      }
+    },
+    {
+      "name": "Execute Performance Monitoring",
+      "type": "n8n-nodes-base.httpRequest",
+      "parameters": {
+        "method": "POST",
+        "url": "https://api.maintenance-service.com/performance-monitoring",
+        "bodyContentType": "json",
+        "jsonBody": "={{ { \"maintenance_id\": $json.maintenance_id, \"task\": \"performance_monitoring\", \"monitoring_types\": [\"cpu_usage\", \"memory_usage\", \"disk_usage\", \"network_latency\"], \"timestamp\": $now } }}"
+      }
+    },
+    {
+      "name": "Collect Maintenance Results",
+      "type": "n8n-nodes-base.set",
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "name": "log_cleanup_result",
+              "value": "={{ $('Execute Log Cleanup').item.json.status }}"
+            },
+            {
+              "name": "cache_clear_result",
+              "value": "={{ $('Execute Cache Clear').item.json.status }}"
+            },
+            {
+              "name": "database_optimization_result",
+              "value": "={{ $('Execute Database Optimization').item.json.status }}"
+            },
+            {
+              "name": "workflow_health_result",
+              "value": "={{ $('Execute Workflow Health Check').item.json.status }}"
+            },
+            {
+              "name": "performance_monitoring_result",
+              "value": "={{ $('Execute Performance Monitoring').item.json.status }}"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "name": "Analyze Maintenance Results",
+      "type": "n8n-nodes-base.set",
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "name": "successful_tasks",
+              "value": "={{ [$json.log_cleanup_result, $json.cache_clear_result, $json.database_optimization_result, $json.workflow_health_result, $json.performance_monitoring_result].filter(result => result === 'success').length }}"
+            },
+            {
+              "name": "total_tasks",
+              "value": 5
+            },
+            {
+              "name": "maintenance_success_rate",
+              "value": "={{ Math.round(($json.successful_tasks / $json.total_tasks) * 100) }}"
+            },
+            {
+              "name": "maintenance_status",
+              "value": "={{ $json.maintenance_success_rate >= 80 ? 'success' : 'partial_success' }}"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "name": "Generate Maintenance Report",
+      "type": "n8n-nodes-base.set",
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "name": "maintenance_report",
+              "value": "={{ { \"maintenance_id\": $json.maintenance_id, \"maintenance_type\": $json.maintenance_type, \"start_time\": $json.start_time, \"maintenance_tasks\": $json.maintenance_tasks, \"log_cleanup_result\": $json.log_cleanup_result, \"cache_clear_result\": $json.cache_clear_result, \"database_optimization_result\": $json.database_optimization_result, \"workflow_health_result\": $json.workflow_health_result, \"performance_monitoring_result\": $json.performance_monitoring_result, \"successful_tasks\": $json.successful_tasks, \"total_tasks\": $json.total_tasks, \"maintenance_success_rate\": $json.maintenance_success_rate, \"maintenance_status\": $json.maintenance_status, \"completed_at\": $now } }}"
+            },
+            {
+              "name": "report_generated",
+              "value": "={{ $now }}"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "name": "Update Maintenance Dashboard",
+      "type": "n8n-nodes-base.httpRequest",
+      "parameters": {
+        "method": "POST",
+        "url": "https://api.maintenance-dashboard.com/update",
+        "bodyContentType": "json",
+        "jsonBody": "={{ { \"dashboard\": \"maintenance-overview\", \"data\": $json.maintenance_report, \"timestamp\": $now } }}"
+      }
+    },
+    {
+      "name": "Send Maintenance Notification",
+      "type": "n8n-nodes-base.httpRequest",
+      "parameters": {
+        "method": "POST",
+        "url": "https://api.slack.com/api/chat.postMessage",
+        "bodyContentType": "json",
+        "jsonBody": "={{ { \"channel\": \"#maintenance-alerts\", \"text\": \"🔧 Automated Maintenance Complete\", \"attachments\": [{ \"color\": $json.maintenance_status === 'success' ? \"good\" : \"warning\", \"fields\": [{ \"title\": \"Maintenance ID\", \"value\": $json.maintenance_id, \"short\": true }, { \"title\": \"Type\", \"value\": $json.maintenance_type, \"short\": true }, { \"title\": \"Success Rate\", \"value\": $json.maintenance_success_rate + \"%\", \"short\": true }, { \"title\": \"Status\", \"value\": $json.maintenance_status, \"short\": true }, { \"title\": \"Successful Tasks\", \"value\": $json.successful_tasks + \"/\" + $json.total_tasks, \"short\": true }, { \"title\": \"Log Cleanup\", \"value\": $json.log_cleanup_result, \"short\": true }, { \"title\": \"Cache Clear\", \"value\": $json.cache_clear_result, \"short\": true }, { \"title\": \"Database Optimization\", \"value\": $json.database_optimization_result, \"short\": true }] }] } }}"
+      }
+    },
+    {
+      "name": "Log Maintenance Data",
+      "type": "n8n-nodes-base.httpRequest",
+      "parameters": {
+        "method": "POST",
+        "url": "https://api.maintenance-log.com/log",
+        "bodyContentType": "json",
+        "jsonBody": "={{ { \"type\": \"maintenance_automation\", \"data\": $json.maintenance_report, \"timestamp\": $now } }}"
+      }
+    },
+    {
+      "name": "Schedule Next Maintenance",
+      "type": "n8n-nodes-base.set",
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "name": "next_maintenance",
+              "value": "={{ $now.add(6, 'hours') }}"
+            },
+            {
+              "name": "maintenance_cycle",
+              "value": "continuous"
+            },
+            {
+              "name": "scheduled_at",
+              "value": "={{ $now }}"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "name": "Handle Maintenance Error",
+      "type": "n8n-nodes-base.set",
+      "position": [
+        500,
+        300
+      ],
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "name": "maintenance_error",
+              "value": "={{ { \"error_type\": \"maintenance_failed\", \"maintenance_id\": $json.maintenance_id, \"message\": \"Automated maintenance failed\", \"timestamp\": $now } }}"
+            },
+            {
+              "name": "error_response",
+              "value": "={{ { \"status\": \"error\", \"maintenance_id\": $json.maintenance_id, \"message\": \"Maintenance automation error\" } }}"
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "connections": {},
+  "active": false,
+  "settings": {},
+  "pinData": {},
+  "versionId": "1",
+  "id": "maintenance_automation_system"
+}

@@ -1,0 +1,283 @@
+{
+  "name": "Foundation Learning Progress Tracker",
+  "description": "Track learning progress throughout the foundation phase with automated progress monitoring and milestone celebrations.",
+  "tags": [
+    "basics",
+    "progress-tracking",
+    "learning",
+    "foundation"
+  ],
+  "version": "1.0.0",
+  "author": "Automator Pro Course",
+  "course_metadata": {
+    "week": "Week 01",
+    "phase": "Foundation",
+    "difficulty": "Beginner",
+    "learning_objectives": [
+      "Understand automation basics",
+      "Learn n8n interface",
+      "Build first workflows"
+    ],
+    "prerequisites": [
+      "Basic computer skills",
+      "Internet access",
+      "Willingness to learn"
+    ],
+    "estimated_setup_time": "10-20 minutes",
+    "use_cases": [
+      "Practice Foundation concepts",
+      "Build real-world automation skills",
+      "Prepare for business applications",
+      "Demonstrate course learning objectives"
+    ],
+    "examples": [
+      "Use this workflow to practice Foundation skills",
+      "Customize for your specific learning needs",
+      "Apply concepts to real business scenarios",
+      "Build upon for advanced implementations"
+    ],
+    "next_steps": [
+      "Complete Week 2 objectives",
+      "Practice with additional examples",
+      "Apply skills to real projects"
+    ],
+    "related_workflows": [
+      "Week 2 workflows",
+      "Previous week workflows",
+      "Course example workflows"
+    ]
+  },
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "course-Week 01-foundation_learning_progress_tracker",
+    "course_version": "1.0",
+    "last_updated": "2025-09-07T14:31:15.336749"
+  },
+  "nodes": [
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "learning-progress",
+        "options": {}
+      },
+      "id": "webhook-trigger",
+      "name": "Learning Progress Trigger",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 1,
+      "position": [
+        240,
+        300
+      ],
+      "webhookId": "learning-progress-webhook"
+    },
+    {
+      "parameters": {
+        "values": {
+          "string": [
+            {
+              "name": "student_id",
+              "value": "={{ $json.student_id }}"
+            },
+            {
+              "name": "lesson_completed",
+              "value": "={{ $json.lesson_name }}"
+            },
+            {
+              "name": "completion_timestamp",
+              "value": "={{ new Date().toISOString() }}"
+            },
+            {
+              "name": "progress_percentage",
+              "value": "={{ $json.progress_percentage }}"
+            },
+            {
+              "name": "learning_notes",
+              "value": "={{ $json.learning_notes }}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "set-progress-data",
+      "name": "Set Progress Data",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.3,
+      "position": [
+        460,
+        300
+      ]
+    },
+    {
+      "parameters": {
+        "authentication": "predefinedCredentialType",
+        "nodeCredentialType": "notionApi",
+        "resource": "database",
+        "operation": "create",
+        "databaseId": "={{ $json.database_id }}",
+        "title": "Learning Progress Entry",
+        "propertiesUi": {
+          "propertyValues": [
+            {
+              "key": "Student ID",
+              "textValue": "={{ $json.student_id }}"
+            },
+            {
+              "key": "Lesson Completed",
+              "textValue": "={{ $json.lesson_completed }}"
+            },
+            {
+              "key": "Completion Date",
+              "dateValue": "={{ $json.completion_timestamp }}"
+            },
+            {
+              "key": "Progress Percentage",
+              "numberValue": "={{ $json.progress_percentage }}"
+            },
+            {
+              "key": "Learning Notes",
+              "textValue": "={{ $json.learning_notes }}"
+            }
+          ]
+        }
+      },
+      "id": "create-progress-entry",
+      "name": "Create Progress Entry",
+      "type": "n8n-nodes-base.notion",
+      "typeVersion": 2,
+      "position": [
+        680,
+        300
+      ]
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict"
+          },
+          "conditions": [
+            {
+              "id": "progress-milestone-check",
+              "leftValue": "={{ $json.progress_percentage }}",
+              "rightValue": "100",
+              "operator": {
+                "type": "number",
+                "operation": "equals"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "id": "progress-milestone-check",
+      "name": "Progress Milestone Check",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2,
+      "position": [
+        900,
+        300
+      ]
+    },
+    {
+      "parameters": {
+        "authentication": "predefinedCredentialType",
+        "nodeCredentialType": "slackApi",
+        "resource": "message",
+        "operation": "post",
+        "channel": "={{ $json.slack_channel }}",
+        "text": "🎉 Foundation Week Complete!\n\nStudent: {{ $json.student_id }}\nLesson: {{ $json.lesson_completed }}\nProgress: {{ $json.progress_percentage }}%\nCompleted: {{ $json.completion_timestamp }}\nNotes: {{ $json.learning_notes }}",
+        "otherOptions": {}
+      },
+      "id": "send-completion-celebration",
+      "name": "Send Completion Celebration",
+      "type": "n8n-nodes-base.slack",
+      "typeVersion": 2.1,
+      "position": [
+        1120,
+        200
+      ]
+    },
+    {
+      "parameters": {
+        "authentication": "predefinedCredentialType",
+        "nodeCredentialType": "slackApi",
+        "resource": "message",
+        "operation": "post",
+        "channel": "={{ $json.slack_channel }}",
+        "text": "📚 Learning Progress Update\n\nStudent: {{ $json.student_id }}\nLesson: {{ $json.lesson_completed }}\nProgress: {{ $json.progress_percentage }}%\nUpdated: {{ $json.completion_timestamp }}\nNotes: {{ $json.learning_notes }}",
+        "otherOptions": {}
+      },
+      "id": "send-progress-update",
+      "name": "Send Progress Update",
+      "type": "n8n-nodes-base.slack",
+      "typeVersion": 2.1,
+      "position": [
+        1120,
+        400
+      ]
+    }
+  ],
+  "connections": {
+    "webhook-trigger": {
+      "main": [
+        [
+          {
+            "node": "set-progress-data",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "set-progress-data": {
+      "main": [
+        [
+          {
+            "node": "create-progress-entry",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "create-progress-entry": {
+      "main": [
+        [
+          {
+            "node": "progress-milestone-check",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "progress-milestone-check": {
+      "main": [
+        [
+          {
+            "node": "send-completion-celebration",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "send-progress-update",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "pinData": {},
+  "versionId": "1",
+  "id": "foundation-learning-progress-tracker"
+}

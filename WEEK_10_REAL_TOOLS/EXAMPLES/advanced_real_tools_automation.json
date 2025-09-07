@@ -1,0 +1,214 @@
+{
+  "name": "Advanced Real Tools Automation",
+  "description": "Automate complex real-world tool workflows with advanced integration patterns.",
+  "tags": [
+    "tools",
+    "real-world",
+    "integration",
+    "apis"
+  ],
+  "version": "1.0.0",
+  "author": "Automator Pro Course",
+  "course_metadata": {
+    "week": "Week 10",
+    "phase": "Real-World Tools",
+    "difficulty": "Advanced",
+    "learning_objectives": [
+      "Advanced integrations",
+      "Custom APIs",
+      "Orchestration"
+    ],
+    "prerequisites": [
+      "AI integration skills",
+      "Real-world tool access",
+      "Integration experience"
+    ],
+    "estimated_setup_time": "5-10 minutes",
+    "use_cases": [
+      "Practice Real-World Tools concepts",
+      "Build real-world automation skills",
+      "Prepare for business applications",
+      "Demonstrate course learning objectives"
+    ],
+    "examples": [
+      "Use this workflow to practice Real-World Tools skills",
+      "Customize for your specific learning needs",
+      "Apply concepts to real business scenarios",
+      "Build upon for advanced implementations"
+    ],
+    "next_steps": [
+      "Complete Week 11 objectives",
+      "Practice with additional examples",
+      "Apply skills to real projects"
+    ],
+    "related_workflows": [
+      "Week 11 workflows",
+      "Previous week workflows",
+      "Course example workflows"
+    ]
+  },
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "course-Week 10-advanced_real_tools_automation",
+    "course_version": "1.0",
+    "last_updated": "2025-09-07T14:31:14.060987"
+  },
+  "nodes": [
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "advanced-real-tools",
+        "options": {}
+      },
+      "id": "webhook-trigger",
+      "name": "Advanced Real Tools Trigger",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 1,
+      "position": [
+        240,
+        300
+      ],
+      "webhookId": "advanced-real-tools-webhook"
+    },
+    {
+      "parameters": {
+        "values": {
+          "string": [
+            {
+              "name": "automation_type",
+              "value": "={{ $json.automation_type }}"
+            },
+            {
+              "name": "tool_count",
+              "value": "={{ $json.tool_count }}"
+            },
+            {
+              "name": "automation_complexity",
+              "value": "={{ $json.automation_complexity }}"
+            },
+            {
+              "name": "automation_timestamp",
+              "value": "={{ new Date().toISOString() }}"
+            },
+            {
+              "name": "automation_notes",
+              "value": "={{ $json.automation_notes }}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "set-automation-data",
+      "name": "Set Automation Data",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.3,
+      "position": [
+        460,
+        300
+      ]
+    },
+    {
+      "parameters": {
+        "authentication": "predefinedCredentialType",
+        "nodeCredentialType": "notionApi",
+        "resource": "database",
+        "operation": "create",
+        "databaseId": "={{ $json.database_id }}",
+        "title": "Advanced Real Tools Automation Entry",
+        "propertiesUi": {
+          "propertyValues": [
+            {
+              "key": "Automation Type",
+              "textValue": "={{ $json.automation_type }}"
+            },
+            {
+              "key": "Tool Count",
+              "textValue": "={{ $json.tool_count }}"
+            },
+            {
+              "key": "Automation Complexity",
+              "textValue": "={{ $json.automation_complexity }}"
+            },
+            {
+              "key": "Automation Date",
+              "dateValue": "={{ $json.automation_timestamp }}"
+            },
+            {
+              "key": "Automation Notes",
+              "textValue": "={{ $json.automation_notes }}"
+            }
+          ]
+        }
+      },
+      "id": "create-automation-entry",
+      "name": "Create Automation Entry",
+      "type": "n8n-nodes-base.notion",
+      "typeVersion": 2,
+      "position": [
+        680,
+        300
+      ]
+    },
+    {
+      "parameters": {
+        "authentication": "predefinedCredentialType",
+        "nodeCredentialType": "slackApi",
+        "resource": "message",
+        "operation": "post",
+        "channel": "={{ $json.slack_channel }}",
+        "text": "🚀 Advanced Real Tools Automation\n\nType: {{ $json.automation_type }}\nTools: {{ $json.tool_count }}\nComplexity: {{ $json.automation_complexity }}\nAutomated: {{ $json.automation_timestamp }}\nNotes: {{ $json.automation_notes }}",
+        "otherOptions": {}
+      },
+      "id": "send-automation-notification",
+      "name": "Send Automation Notification",
+      "type": "n8n-nodes-base.slack",
+      "typeVersion": 2.1,
+      "position": [
+        900,
+        300
+      ]
+    }
+  ],
+  "connections": {
+    "webhook-trigger": {
+      "main": [
+        [
+          {
+            "node": "set-automation-data",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "set-automation-data": {
+      "main": [
+        [
+          {
+            "node": "create-automation-entry",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "create-automation-entry": {
+      "main": [
+        [
+          {
+            "node": "send-automation-notification",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "pinData": {},
+  "versionId": "1",
+  "id": "advanced-real-tools-automation"
+}

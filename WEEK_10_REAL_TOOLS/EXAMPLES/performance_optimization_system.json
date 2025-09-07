@@ -1,0 +1,468 @@
+{
+  "name": "Performance Optimization System",
+  "description": "Automated workflow for Real-World Tools phase learning objectives with intelligent processing and error handling.",
+  "tags": [
+    "real-world",
+    "integration",
+    "efficiency",
+    "apis",
+    "optimization",
+    "performance",
+    "tools"
+  ],
+  "version": "1.0.0",
+  "author": "Automator Pro Course",
+  "course_metadata": {
+    "week": "Week 10",
+    "phase": "Real-World Tools",
+    "difficulty": "Advanced",
+    "learning_objectives": [
+      "Advanced integrations",
+      "Custom APIs",
+      "Orchestration"
+    ],
+    "prerequisites": [
+      "AI integration skills",
+      "Real-world tool access",
+      "Integration experience"
+    ],
+    "estimated_setup_time": "20-30 minutes",
+    "use_cases": [
+      "Practice Real-World Tools concepts",
+      "Build real-world automation skills",
+      "Prepare for business applications",
+      "Demonstrate course learning objectives"
+    ],
+    "examples": [
+      "Use this workflow to practice Real-World Tools skills",
+      "Customize for your specific learning needs",
+      "Apply concepts to real business scenarios",
+      "Build upon for advanced implementations"
+    ],
+    "next_steps": [
+      "Complete Week 11 objectives",
+      "Practice with additional examples",
+      "Apply skills to real projects"
+    ],
+    "related_workflows": [
+      "Week 11 workflows",
+      "Previous week workflows",
+      "Course example workflows"
+    ]
+  },
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "course-Week 10-performance_optimization_system",
+    "course_version": "1.0",
+    "last_updated": "2025-09-07T14:31:14.195435"
+  },
+  "nodes": [
+    {
+      "parameters": {
+        "path": "performance-optimization",
+        "httpMethod": "POST"
+      },
+      "name": "Performance Optimization Trigger",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 1,
+      "position": [
+        240,
+        300
+      ]
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "name": "optimization_id",
+              "value": "={{ $now.format('YYYYMMDDHHmmss') }}"
+            },
+            {
+              "name": "optimization_type",
+              "value": "={{ $json.optimization_type || 'comprehensive' }}"
+            },
+            {
+              "name": "target_integrations",
+              "value": "={{ $json.target_integrations || ['integration_a', 'integration_b', 'integration_c', 'integration_d', 'integration_e'] }}"
+            },
+            {
+              "name": "optimization_goals",
+              "value": "={{ $json.optimization_goals || ['speed', 'efficiency', 'resource_usage', 'cost'] }}"
+            },
+            {
+              "name": "start_time",
+              "value": "={{ $now }}"
+            }
+          ]
+        }
+      },
+      "name": "Initialize Optimization",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 1,
+      "position": [
+        460,
+        300
+      ]
+    },
+    {
+      "parameters": {
+        "method": "GET",
+        "url": "https://api.performance-analyzer.com/analyze",
+        "qs": {
+          "integration": "integration_a",
+          "timeframe": "1h",
+          "metrics": "response_time,throughput,error_rate,resource_usage"
+        },
+        "options": {
+          "response": {
+            "response": {
+              "responseFormat": "json"
+            }
+          }
+        }
+      },
+      "name": "Analyze Integration A Performance",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 1,
+      "position": [
+        680,
+        300
+      ]
+    },
+    {
+      "parameters": {
+        "method": "GET",
+        "url": "https://api.performance-analyzer.com/analyze",
+        "qs": {
+          "integration": "integration_b",
+          "timeframe": "1h",
+          "metrics": "response_time,throughput,error_rate,resource_usage"
+        },
+        "options": {
+          "response": {
+            "response": {
+              "responseFormat": "json"
+            }
+          }
+        }
+      },
+      "name": "Analyze Integration B Performance",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 1,
+      "position": [
+        900,
+        300
+      ]
+    },
+    {
+      "parameters": {
+        "method": "GET",
+        "url": "https://api.performance-analyzer.com/analyze",
+        "qs": {
+          "integration": "integration_c",
+          "timeframe": "1h",
+          "metrics": "response_time,throughput,error_rate,resource_usage"
+        },
+        "options": {
+          "response": {
+            "response": {
+              "responseFormat": "json"
+            }
+          }
+        }
+      },
+      "name": "Analyze Integration C Performance",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 1,
+      "position": [
+        1120,
+        300
+      ]
+    },
+    {
+      "parameters": {
+        "method": "GET",
+        "url": "https://api.performance-analyzer.com/analyze",
+        "qs": {
+          "integration": "integration_d",
+          "timeframe": "1h",
+          "metrics": "response_time,throughput,error_rate,resource_usage"
+        },
+        "options": {
+          "response": {
+            "response": {
+              "responseFormat": "json"
+            }
+          }
+        }
+      },
+      "name": "Analyze Integration D Performance",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 1,
+      "position": [
+        1340,
+        300
+      ]
+    },
+    {
+      "parameters": {
+        "method": "GET",
+        "url": "https://api.performance-analyzer.com/analyze",
+        "qs": {
+          "integration": "integration_e",
+          "timeframe": "1h",
+          "metrics": "response_time,throughput,error_rate,resource_usage"
+        },
+        "options": {
+          "response": {
+            "response": {
+              "responseFormat": "json"
+            }
+          }
+        }
+      },
+      "name": "Analyze Integration E Performance",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 1,
+      "position": [
+        1560,
+        300
+      ]
+    },
+    {
+      "parameters": {
+        "resource": "chat",
+        "operation": "create",
+        "model": "gpt-4",
+        "messages": {
+          "values": [
+            {
+              "role": "system",
+              "content": "You are a performance optimization specialist that analyzes integration performance and generates optimization recommendations."
+            },
+            {
+              "role": "user",
+              "content": "={{ 'Analyze performance for these integrations:\\nIntegration A: Response Time ' + $('Analyze Integration A Performance').item.json.avg_response_time + 'ms, Throughput ' + $('Analyze Integration A Performance').item.json.throughput + ' req/s\\nIntegration B: Response Time ' + $('Analyze Integration B Performance').item.json.avg_response_time + 'ms, Throughput ' + $('Analyze Integration B Performance').item.json.throughput + ' req/s\\nIntegration C: Response Time ' + $('Analyze Integration C Performance').item.json.avg_response_time + 'ms, Throughput ' + $('Analyze Integration C Performance').item.json.throughput + ' req/s\\nIntegration D: Response Time ' + $('Analyze Integration D Performance').item.json.avg_response_time + 'ms, Throughput ' + $('Analyze Integration D Performance').item.json.throughput + ' req/s\\nIntegration E: Response Time ' + $('Analyze Integration E Performance').item.json.avg_response_time + 'ms, Throughput ' + $('Analyze Integration E Performance').item.json.throughput + ' req/s\\n\\nGenerate: optimization recommendations, performance improvements, and optimization strategies.' }}"
+            }
+          ]
+        }
+      },
+      "name": "AI Performance Analysis",
+      "type": "n8n-nodes-base.openAi",
+      "typeVersion": 1,
+      "position": [
+        1780,
+        300
+      ]
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://api.optimization-engine.com/apply",
+        "bodyContentType": "json",
+        "jsonBody": "={{ { \"optimization_id\": $json.optimization_id, \"target_integrations\": $json.target_integrations, \"optimization_goals\": $json.optimization_goals, \"ai_recommendations\": $json.choices[0].message.content, \"timestamp\": $now } }}"
+      },
+      "name": "Apply Optimizations",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 1,
+      "position": [
+        2000,
+        300
+      ]
+    },
+    {
+      "parameters": {
+        "method": "GET",
+        "url": "https://api.optimization-monitor.com/results",
+        "qs": {
+          "optimization_id": "={{ $json.optimization_id }}",
+          "timeframe": "10m"
+        },
+        "options": {
+          "response": {
+            "response": {
+              "responseFormat": "json"
+            }
+          }
+        }
+      },
+      "name": "Monitor Optimization Results",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 1,
+      "position": [
+        2220,
+        300
+      ]
+    },
+    {
+      "parameters": {
+        "operation": "create",
+        "base": "your_base_id",
+        "table": "Performance Optimization",
+        "fields": {
+          "Optimization ID": "={{ $json.optimization_id }}",
+          "Optimization Type": "={{ $json.optimization_type }}",
+          "Target Integrations": "={{ $json.target_integrations.join(', ') }}",
+          "Optimization Goals": "={{ $json.optimization_goals.join(', ') }}",
+          "AI Recommendations": "={{ $json.choices[0].message.content }}",
+          "Optimization Results": "={{ JSON.stringify($json) }}",
+          "Status": "Completed",
+          "Start Time": "={{ $json.start_time }}",
+          "Completed At": "={{ $now }}"
+        }
+      },
+      "name": "Store Optimization Results",
+      "type": "n8n-nodes-base.airtable",
+      "typeVersion": 1,
+      "position": [
+        2440,
+        300
+      ]
+    },
+    {
+      "parameters": {
+        "operation": "postMessage",
+        "channel": "#optimization-reports",
+        "text": "={{ '⚡ Performance Optimization Completed\\nID: ' + $json.optimization_id + '\\nIntegrations: ' + $json.target_integrations.join(', ') + '\\nGoals: ' + $json.optimization_goals.join(', ') + '\\nProcessing Time: ' + $now.diff($json.start_time, 'milliseconds') + 'ms' }}"
+      },
+      "name": "Send Optimization Report",
+      "type": "n8n-nodes-base.slack",
+      "typeVersion": 1,
+      "position": [
+        2660,
+        300
+      ]
+    }
+  ],
+  "connections": {
+    "Performance Optimization Trigger": {
+      "main": [
+        [
+          {
+            "node": "Initialize Optimization",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Initialize Optimization": {
+      "main": [
+        [
+          {
+            "node": "Analyze Integration A Performance",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Analyze Integration A Performance": {
+      "main": [
+        [
+          {
+            "node": "Analyze Integration B Performance",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Analyze Integration B Performance": {
+      "main": [
+        [
+          {
+            "node": "Analyze Integration C Performance",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Analyze Integration C Performance": {
+      "main": [
+        [
+          {
+            "node": "Analyze Integration D Performance",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Analyze Integration D Performance": {
+      "main": [
+        [
+          {
+            "node": "Analyze Integration E Performance",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Analyze Integration E Performance": {
+      "main": [
+        [
+          {
+            "node": "AI Performance Analysis",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "AI Performance Analysis": {
+      "main": [
+        [
+          {
+            "node": "Apply Optimizations",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Apply Optimizations": {
+      "main": [
+        [
+          {
+            "node": "Monitor Optimization Results",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Monitor Optimization Results": {
+      "main": [
+        [
+          {
+            "node": "Store Optimization Results",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Store Optimization Results": {
+      "main": [
+        [
+          {
+            "node": "Send Optimization Report",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "pinData": {},
+  "versionId": "1",
+  "id": "performance_optimization_system"
+}

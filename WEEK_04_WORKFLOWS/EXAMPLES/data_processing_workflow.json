@@ -1,0 +1,226 @@
+{
+  "name": "Data Processing Workflow",
+  "description": "Automated workflow for Workflow Building phase learning objectives with intelligent processing and error handling.",
+  "tags": [
+    "optimization",
+    "performance",
+    "workflows",
+    "automation"
+  ],
+  "version": "1.0.0",
+  "author": "Automator Pro Course",
+  "course_metadata": {
+    "week": "Week 04",
+    "phase": "Workflow Building",
+    "difficulty": "Intermediate",
+    "learning_objectives": [
+      "Data processing",
+      "Workflow optimization",
+      "Documentation"
+    ],
+    "prerequisites": [
+      "Completed previous weeks",
+      "n8n instance",
+      "Basic automation knowledge"
+    ],
+    "estimated_setup_time": "10-20 minutes",
+    "use_cases": [
+      "Practice Workflow Building concepts",
+      "Build real-world automation skills",
+      "Prepare for business applications",
+      "Demonstrate course learning objectives"
+    ],
+    "examples": [
+      "Use this workflow to practice Workflow Building skills",
+      "Customize for your specific learning needs",
+      "Apply concepts to real business scenarios",
+      "Build upon for advanced implementations"
+    ],
+    "next_steps": [
+      "Complete Week 5 objectives",
+      "Practice with additional examples",
+      "Apply skills to real projects"
+    ],
+    "related_workflows": [
+      "Week 5 workflows",
+      "Previous week workflows",
+      "Course example workflows"
+    ]
+  },
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "course-Week 04-data_processing_workflow",
+    "course_version": "1.0",
+    "last_updated": "2025-09-07T14:31:15.280026"
+  },
+  "nodes": [
+    {
+      "name": "Data Processing Trigger",
+      "type": "n8n-nodes-base.webhook",
+      "parameters": {
+        "path": "data-processing",
+        "httpMethod": "POST"
+      }
+    },
+    {
+      "name": "Initialize Data Processing",
+      "type": "n8n-nodes-base.set",
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "name": "processing_id",
+              "value": "={{ $now.format('YYYYMMDDHHmmss') }}"
+            },
+            {
+              "name": "data_type",
+              "value": "json_to_csv"
+            },
+            {
+              "name": "start_time",
+              "value": "={{ $now }}"
+            },
+            {
+              "name": "sample_data",
+              "value": "={{ [{\"id\": 1, \"name\": \"John Doe\", \"email\": \"john@example.com\", \"age\": 30}, {\"id\": 2, \"name\": \"Jane Smith\", \"email\": \"jane@example.com\", \"age\": 25}, {\"id\": 3, \"name\": \"Bob Johnson\", \"email\": \"bob@example.com\", \"age\": 35}] }}"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "name": "Validate Input Data",
+      "type": "n8n-nodes-base.if",
+      "parameters": {
+        "conditions": {
+          "array": [
+            {
+              "value1": "={{ $json.sample_data }}",
+              "operation": "isNotEmpty"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "name": "Clean and Validate Data",
+      "type": "n8n-nodes-base.set",
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "name": "cleaned_data",
+              "value": "={{ $json.sample_data.filter(item => item.name && item.email && item.age) }}"
+            },
+            {
+              "name": "validation_status",
+              "value": "passed"
+            },
+            {
+              "name": "cleaned_count",
+              "value": "={{ $json.sample_data.filter(item => item.name && item.email && item.age).length }}"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "name": "Transform to CSV Format",
+      "type": "n8n-nodes-base.set",
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "name": "csv_headers",
+              "value": "id,name,email,age"
+            },
+            {
+              "name": "csv_rows",
+              "value": "={{ $json.cleaned_data.map(item => `${item.id},${item.name},${item.email},${item.age}`).join('\\n') }}"
+            },
+            {
+              "name": "csv_content",
+              "value": "={{ $json.csv_headers + '\\n' + $json.csv_rows }}"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "name": "Process Individual Records",
+      "type": "n8n-nodes-base.splitInBatches",
+      "parameters": {
+        "batchSize": 1,
+        "options": {}
+      }
+    },
+    {
+      "name": "Enhance Record Data",
+      "type": "n8n-nodes-base.set",
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "name": "enhanced_record",
+              "value": "={{ { \"id\": $json.id, \"name\": $json.name.trim().toUpperCase(), \"email\": $json.email.toLowerCase().trim(), \"age\": $json.age, \"age_group\": $json.age > 30 ? \"adult\" : \"young_adult\", \"processed_at\": $now } }}"
+            },
+            {
+              "name": "record_status",
+              "value": "enhanced"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "name": "Generate Final CSV",
+      "type": "n8n-nodes-base.set",
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "name": "final_csv",
+              "value": "id,name,email,age,age_group,processed_at\\n{{ $json.enhanced_record.id }},{{ $json.enhanced_record.name }},{{ $json.enhanced_record.email }},{{ $json.enhanced_record.age }},{{ $json.enhanced_record.age_group }},{{ $json.enhanced_record.processed_at }}"
+            },
+            {
+              "name": "csv_filename",
+              "value": "processed_data_{{ $now.format('YYYYMMDDHHmmss') }}.csv"
+            },
+            {
+              "name": "generation_time",
+              "value": "={{ $now }}"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "name": "Handle Validation Error",
+      "type": "n8n-nodes-base.set",
+      "position": [
+        500,
+        300
+      ],
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "name": "validation_error",
+              "value": "={{ { \"error_type\": \"data_validation\", \"message\": \"Invalid input data provided\", \"timestamp\": $now } }}"
+            },
+            {
+              "name": "error_status",
+              "value": "failed"
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "connections": {},
+  "active": false,
+  "settings": {},
+  "pinData": {},
+  "versionId": "1",
+  "id": "data_processing_workflow"
+}

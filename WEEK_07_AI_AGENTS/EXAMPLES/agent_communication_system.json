@@ -1,0 +1,255 @@
+{
+  "name": "Agent Communication System",
+  "description": "Automated workflow for AI Integration phase learning objectives with intelligent processing and error handling.",
+  "tags": [
+    "ai",
+    "machine-learning",
+    "agents",
+    "intelligence"
+  ],
+  "version": "1.0.0",
+  "author": "Automator Pro Course",
+  "course_metadata": {
+    "week": "Week 07",
+    "phase": "AI Integration",
+    "difficulty": "Intermediate",
+    "learning_objectives": [
+      "Advanced AI patterns",
+      "AI optimization",
+      "Intelligent systems"
+    ],
+    "prerequisites": [
+      "Workflow building skills",
+      "AI/ML interest",
+      "API knowledge"
+    ],
+    "estimated_setup_time": "20-30 minutes",
+    "use_cases": [
+      "Practice AI Integration concepts",
+      "Build real-world automation skills",
+      "Prepare for business applications",
+      "Demonstrate course learning objectives"
+    ],
+    "examples": [
+      "Use this workflow to practice AI Integration skills",
+      "Customize for your specific learning needs",
+      "Apply concepts to real business scenarios",
+      "Build upon for advanced implementations"
+    ],
+    "next_steps": [
+      "Complete Week 8 objectives",
+      "Practice with additional examples",
+      "Apply skills to real projects"
+    ],
+    "related_workflows": [
+      "Week 8 workflows",
+      "Previous week workflows",
+      "Course example workflows"
+    ]
+  },
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "course-Week 07-agent_communication_system",
+    "course_version": "1.0",
+    "last_updated": "2025-09-07T14:31:13.924174"
+  },
+  "nodes": [
+    {
+      "name": "Agent Communication System",
+      "type": "n8n-nodes-base.webhook",
+      "parameters": {
+        "path": "agent-communication-system",
+        "httpMethod": "POST"
+      }
+    },
+    {
+      "name": "Initialize Communication System",
+      "type": "n8n-nodes-base.set",
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "name": "communication_session_id",
+              "value": "={{ $now.format('YYYYMMDDHHmmss') }}"
+            },
+            {
+              "name": "communication_protocol",
+              "value": "agent_messaging_v1"
+            },
+            {
+              "name": "start_time",
+              "value": "={{ $now }}"
+            },
+            {
+              "name": "participating_agents",
+              "value": "={{ ['agent_1', 'agent_2', 'agent_3', 'agent_4'] }}"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "name": "Process Communication Message",
+      "type": "n8n-nodes-base.set",
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "name": "sender_agent",
+              "value": "={{ $json.sender || 'agent_1' }}"
+            },
+            {
+              "name": "receiver_agent",
+              "value": "={{ $json.receiver || 'agent_2' }}"
+            },
+            {
+              "name": "message_type",
+              "value": "={{ $json.message_type || 'request' }}"
+            },
+            {
+              "name": "message_content",
+              "value": "={{ $json.content || 'Please process this data and provide analysis.' }}"
+            },
+            {
+              "name": "message_priority",
+              "value": "={{ $json.priority || 'normal' }}"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "name": "Validate Communication Protocol",
+      "type": "n8n-nodes-base.if",
+      "parameters": {
+        "conditions": {
+          "string": [
+            {
+              "value1": "={{ $json.sender_agent }}",
+              "operation": "isNotEmpty"
+            },
+            {
+              "value1": "={{ $json.receiver_agent }}",
+              "operation": "isNotEmpty"
+            },
+            {
+              "value1": "={{ $json.message_content }}",
+              "operation": "isNotEmpty"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "name": "Route Message",
+      "type": "n8n-nodes-base.if",
+      "parameters": {
+        "conditions": {
+          "string": [
+            {
+              "value1": "={{ $json.message_type }}",
+              "operation": "equal",
+              "value2": "request"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "name": "Process Request Message",
+      "type": "n8n-nodes-base.httpRequest",
+      "parameters": {
+        "method": "POST",
+        "url": "https://api.agent-communication.com/process-request",
+        "bodyContentType": "json",
+        "jsonBody": "={{ { \"communication_session_id\": $json.communication_session_id, \"sender_agent\": $json.sender_agent, \"receiver_agent\": $json.receiver_agent, \"message_type\": $json.message_type, \"message_content\": $json.message_content, \"message_priority\": $json.message_priority, \"timestamp\": $now } }}"
+      }
+    },
+    {
+      "name": "Process Response Message",
+      "type": "n8n-nodes-base.httpRequest",
+      "parameters": {
+        "method": "POST",
+        "url": "https://api.agent-communication.com/process-response",
+        "bodyContentType": "json",
+        "jsonBody": "={{ { \"communication_session_id\": $json.communication_session_id, \"sender_agent\": $json.sender_agent, \"receiver_agent\": $json.receiver_agent, \"message_type\": $json.message_type, \"message_content\": $json.message_content, \"message_priority\": $json.message_priority, \"timestamp\": $now } }}"
+      }
+    },
+    {
+      "name": "Process Broadcast Message",
+      "type": "n8n-nodes-base.httpRequest",
+      "parameters": {
+        "method": "POST",
+        "url": "https://api.agent-communication.com/process-broadcast",
+        "bodyContentType": "json",
+        "jsonBody": "={{ { \"communication_session_id\": $json.communication_session_id, \"sender_agent\": $json.sender_agent, \"receiver_agent\": \"all\", \"message_type\": $json.message_type, \"message_content\": $json.message_content, \"message_priority\": $json.message_priority, \"timestamp\": $now } }}"
+      }
+    },
+    {
+      "name": "Generate Communication Report",
+      "type": "n8n-nodes-base.set",
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "name": "communication_report",
+              "value": "={{ { \"communication_session_id\": $json.communication_session_id, \"communication_protocol\": $json.communication_protocol, \"start_time\": $json.start_time, \"sender_agent\": $json.sender_agent, \"receiver_agent\": $json.receiver_agent, \"message_type\": $json.message_type, \"message_content\": $json.message_content, \"message_priority\": $json.message_priority, \"participating_agents\": $json.participating_agents, \"processing_time\": $now.diff($json.start_time, 'milliseconds'), \"completed_at\": $now } }}"
+            },
+            {
+              "name": "success_message",
+              "value": "✅ Agent communication processing completed successfully"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "name": "Send Communication Results",
+      "type": "n8n-nodes-base.httpRequest",
+      "parameters": {
+        "method": "POST",
+        "url": "https://api.communication-service.com/results",
+        "bodyContentType": "json",
+        "jsonBody": "={{ { \"results\": $json.communication_report, \"timestamp\": $now } }}"
+      }
+    },
+    {
+      "name": "Log Communication Activity",
+      "type": "n8n-nodes-base.httpRequest",
+      "parameters": {
+        "method": "POST",
+        "url": "https://api.communication-log.com/log",
+        "bodyContentType": "json",
+        "jsonBody": "={{ { \"type\": \"agent_communication\", \"data\": $json.communication_report, \"timestamp\": $now } }}"
+      }
+    },
+    {
+      "name": "Handle Communication Error",
+      "type": "n8n-nodes-base.set",
+      "position": [
+        500,
+        300
+      ],
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "name": "communication_error",
+              "value": "={{ { \"error_type\": \"communication_failed\", \"communication_session_id\": $json.communication_session_id, \"message\": \"Agent communication failed\", \"timestamp\": $now } }}"
+            },
+            {
+              "name": "error_response",
+              "value": "={{ { \"status\": \"error\", \"communication_session_id\": $json.communication_session_id, \"message\": \"Agent communication workflow error\" } }}"
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "connections": {},
+  "active": false,
+  "settings": {},
+  "pinData": {},
+  "versionId": "1",
+  "id": "agent_communication_system"
+}

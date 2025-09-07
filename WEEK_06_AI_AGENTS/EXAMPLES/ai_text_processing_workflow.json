@@ -1,0 +1,229 @@
+{
+  "name": "Ai Text Processing Workflow",
+  "description": "Automated workflow for AI Integration phase learning objectives with intelligent processing and error handling.",
+  "tags": [
+    "intelligence",
+    "agents",
+    "ai",
+    "machine-learning",
+    "automation",
+    "artificial-intelligence"
+  ],
+  "version": "1.0.0",
+  "author": "Automator Pro Course",
+  "course_metadata": {
+    "week": "Week 06",
+    "phase": "AI Integration",
+    "difficulty": "Intermediate",
+    "learning_objectives": [
+      "AI agent basics",
+      "ChatGPT integration",
+      "LLM providers"
+    ],
+    "prerequisites": [
+      "Workflow building skills",
+      "AI/ML interest",
+      "API knowledge"
+    ],
+    "estimated_setup_time": "10-20 minutes",
+    "use_cases": [
+      "Practice AI Integration concepts",
+      "Build real-world automation skills",
+      "Prepare for business applications",
+      "Demonstrate course learning objectives"
+    ],
+    "examples": [
+      "Use this workflow to practice AI Integration skills",
+      "Customize for your specific learning needs",
+      "Apply concepts to real business scenarios",
+      "Build upon for advanced implementations"
+    ],
+    "next_steps": [
+      "Complete Week 7 objectives",
+      "Practice with additional examples",
+      "Apply skills to real projects"
+    ],
+    "related_workflows": [
+      "Week 7 workflows",
+      "Previous week workflows",
+      "Course example workflows"
+    ]
+  },
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "course-Week 06-ai_text_processing_workflow",
+    "course_version": "1.0",
+    "last_updated": "2025-09-07T14:31:14.569998"
+  },
+  "nodes": [
+    {
+      "name": "AI Text Processing Workflow",
+      "type": "n8n-nodes-base.webhook",
+      "parameters": {
+        "path": "ai-text-processing",
+        "httpMethod": "POST"
+      }
+    },
+    {
+      "name": "Initialize Text Processing",
+      "type": "n8n-nodes-base.set",
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "name": "processing_id",
+              "value": "={{ $now.format('YYYYMMDDHHmmss') }}"
+            },
+            {
+              "name": "ai_model",
+              "value": "gpt-3.5-turbo"
+            },
+            {
+              "name": "start_time",
+              "value": "={{ $now }}"
+            },
+            {
+              "name": "processing_type",
+              "value": "text_analysis"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "name": "Process Input Text",
+      "type": "n8n-nodes-base.set",
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "name": "input_text",
+              "value": "={{ $json.text || 'This is a sample text for AI processing and analysis.' }}"
+            },
+            {
+              "name": "text_length",
+              "value": "={{ ($json.text || 'This is a sample text for AI processing and analysis.').length }}"
+            },
+            {
+              "name": "analysis_type",
+              "value": "={{ $json.analysis_type || 'comprehensive' }}"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "name": "AI Text Analysis",
+      "type": "n8n-nodes-base.openAi",
+      "parameters": {
+        "resource": "chat",
+        "operation": "create",
+        "model": "={{ $json.ai_model }}",
+        "messages": {
+          "values": [
+            {
+              "role": "system",
+              "content": "You are an AI text analyst that provides comprehensive analysis including sentiment, key topics, summary, and insights."
+            },
+            {
+              "role": "user",
+              "content": "={{ 'Analyze this text: ' + $json.input_text + '\\n\\nProvide:\\n1. Sentiment analysis\\n2. Key topics\\n3. Summary\\n4. Insights\\n5. Recommendations' }}"
+            }
+          ]
+        },
+        "options": {
+          "temperature": 0.3,
+          "maxTokens": 800
+        }
+      }
+    },
+    {
+      "name": "Process Analysis Results",
+      "type": "n8n-nodes-base.set",
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "name": "analysis_results",
+              "value": "={{ $json.choices[0].message.content }}"
+            },
+            {
+              "name": "processing_time",
+              "value": "={{ $now.diff($json.start_time, 'milliseconds') }}"
+            },
+            {
+              "name": "analysis_quality",
+              "value": "={{ Math.floor(Math.random() * 20) + 80 }}"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "name": "Generate Text Report",
+      "type": "n8n-nodes-base.set",
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "name": "text_report",
+              "value": "={{ { \"processing_id\": $json.processing_id, \"processing_type\": $json.processing_type, \"input_text\": $json.input_text, \"text_length\": $json.text_length, \"analysis_type\": $json.analysis_type, \"analysis_results\": $json.analysis_results, \"processing_time\": $json.processing_time, \"analysis_quality\": $json.analysis_quality, \"completed_at\": $now } }}"
+            },
+            {
+              "name": "success_message",
+              "value": "✅ AI text processing completed successfully"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "name": "Send Text Analysis Results",
+      "type": "n8n-nodes-base.httpRequest",
+      "parameters": {
+        "method": "POST",
+        "url": "https://api.text-analysis.com/results",
+        "bodyContentType": "json",
+        "jsonBody": "={{ { \"results\": $json.text_report, \"timestamp\": $now } }}"
+      }
+    },
+    {
+      "name": "Log Text Processing",
+      "type": "n8n-nodes-base.httpRequest",
+      "parameters": {
+        "method": "POST",
+        "url": "https://api.text-log.com/log",
+        "bodyContentType": "json",
+        "jsonBody": "={{ { \"type\": \"text_processing\", \"data\": $json.text_report, \"timestamp\": $now } }}"
+      }
+    },
+    {
+      "name": "Handle Text Processing Error",
+      "type": "n8n-nodes-base.set",
+      "position": [
+        500,
+        300
+      ],
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "name": "text_error",
+              "value": "={{ { \"error_type\": \"text_processing_failed\", \"processing_id\": $json.processing_id, \"message\": \"AI text processing failed\", \"timestamp\": $now } }}"
+            },
+            {
+              "name": "error_response",
+              "value": "={{ { \"status\": \"error\", \"processing_id\": $json.processing_id, \"message\": \"Text processing workflow error\" } }}"
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "connections": {},
+  "active": false,
+  "settings": {},
+  "pinData": {},
+  "versionId": "1",
+  "id": "ai_text_processing_workflow"
+}

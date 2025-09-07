@@ -1,0 +1,326 @@
+{
+  "name": "Workflow Optimization System",
+  "description": "Automated workflow for Workflow Building phase learning objectives with intelligent processing and error handling.",
+  "tags": [
+    "workflows",
+    "efficiency",
+    "optimization",
+    "performance",
+    "automation"
+  ],
+  "version": "1.0.0",
+  "author": "Automator Pro Course",
+  "course_metadata": {
+    "week": "Week 05",
+    "phase": "Workflow Building",
+    "difficulty": "Intermediate",
+    "learning_objectives": [
+      "Production deployment",
+      "Monitoring",
+      "Maintenance"
+    ],
+    "prerequisites": [
+      "Completed previous weeks",
+      "n8n instance",
+      "Basic automation knowledge"
+    ],
+    "estimated_setup_time": "20-30 minutes",
+    "use_cases": [
+      "Practice Workflow Building concepts",
+      "Build real-world automation skills",
+      "Prepare for business applications",
+      "Demonstrate course learning objectives"
+    ],
+    "examples": [
+      "Use this workflow to practice Workflow Building skills",
+      "Customize for your specific learning needs",
+      "Apply concepts to real business scenarios",
+      "Build upon for advanced implementations"
+    ],
+    "next_steps": [
+      "Complete Week 6 objectives",
+      "Practice with additional examples",
+      "Apply skills to real projects"
+    ],
+    "related_workflows": [
+      "Week 6 workflows",
+      "Previous week workflows",
+      "Course example workflows"
+    ]
+  },
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "course-Week 05-workflow_optimization_system",
+    "course_version": "1.0",
+    "last_updated": "2025-09-07T14:31:14.339654"
+  },
+  "nodes": [
+    {
+      "name": "Workflow Optimization System",
+      "type": "n8n-nodes-base.webhook",
+      "parameters": {
+        "path": "workflow-optimization",
+        "httpMethod": "POST"
+      }
+    },
+    {
+      "name": "Initialize Optimization",
+      "type": "n8n-nodes-base.set",
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "name": "optimization_id",
+              "value": "={{ $now.format('YYYYMMDDHHmmss') }}"
+            },
+            {
+              "name": "workflow_name",
+              "value": "={{ $json.workflow_name || 'sample_workflow' }}"
+            },
+            {
+              "name": "optimization_type",
+              "value": "performance"
+            },
+            {
+              "name": "start_time",
+              "value": "={{ $now }}"
+            },
+            {
+              "name": "optimization_targets",
+              "value": "={{ ['execution_time', 'memory_usage', 'cpu_usage', 'error_rate'] }}"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "name": "Analyze Workflow Performance",
+      "type": "n8n-nodes-base.httpRequest",
+      "parameters": {
+        "method": "GET",
+        "url": "https://api.performance-analyzer.com/analyze",
+        "qs": {
+          "workflow_name": "={{ $json.workflow_name }}",
+          "timeframe": "24h"
+        },
+        "options": {
+          "response": {
+            "response": {
+              "responseFormat": "json"
+            }
+          }
+        }
+      }
+    },
+    {
+      "name": "Process Performance Metrics",
+      "type": "n8n-nodes-base.set",
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "name": "avg_execution_time",
+              "value": "={{ $json.avg_execution_time_ms }}"
+            },
+            {
+              "name": "memory_usage",
+              "value": "={{ $json.memory_usage_mb }}"
+            },
+            {
+              "name": "cpu_usage",
+              "value": "={{ $json.cpu_usage_percentage }}"
+            },
+            {
+              "name": "error_rate",
+              "value": "={{ $json.error_rate_percentage }}"
+            },
+            {
+              "name": "optimization_score",
+              "value": "={{ Math.round((100 - $json.avg_execution_time_ms / 100) * 0.3 + (100 - $json.memory_usage_mb) * 0.25 + (100 - $json.cpu_usage_percentage) * 0.25 + (100 - $json.error_rate_percentage) * 0.2) }}"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "name": "Check Optimization Need",
+      "type": "n8n-nodes-base.if",
+      "parameters": {
+        "conditions": {
+          "number": [
+            {
+              "value1": "={{ $json.optimization_score }}",
+              "operation": "smaller",
+              "value2": 70
+            }
+          ]
+        }
+      }
+    },
+    {
+      "name": "Optimize Execution Time",
+      "type": "n8n-nodes-base.httpRequest",
+      "parameters": {
+        "method": "POST",
+        "url": "https://api.optimization-engine.com/optimize-execution",
+        "bodyContentType": "json",
+        "jsonBody": "={{ { \"optimization_id\": $json.optimization_id, \"workflow_name\": $json.workflow_name, \"avg_execution_time\": $json.avg_execution_time, \"optimization_type\": \"execution_time\", \"timestamp\": $now } }}"
+      }
+    },
+    {
+      "name": "Optimize Memory Usage",
+      "type": "n8n-nodes-base.httpRequest",
+      "parameters": {
+        "method": "POST",
+        "url": "https://api.optimization-engine.com/optimize-memory",
+        "bodyContentType": "json",
+        "jsonBody": "={{ { \"optimization_id\": $json.optimization_id, \"workflow_name\": $json.workflow_name, \"memory_usage\": $json.memory_usage, \"optimization_type\": \"memory_usage\", \"timestamp\": $now } }}"
+      }
+    },
+    {
+      "name": "Optimize CPU Usage",
+      "type": "n8n-nodes-base.httpRequest",
+      "parameters": {
+        "method": "POST",
+        "url": "https://api.optimization-engine.com/optimize-cpu",
+        "bodyContentType": "json",
+        "jsonBody": "={{ { \"optimization_id\": $json.optimization_id, \"workflow_name\": $json.workflow_name, \"cpu_usage\": $json.cpu_usage, \"optimization_type\": \"cpu_usage\", \"timestamp\": $now } }}"
+      }
+    },
+    {
+      "name": "Optimize Error Rate",
+      "type": "n8n-nodes-base.httpRequest",
+      "parameters": {
+        "method": "POST",
+        "url": "https://api.optimization-engine.com/optimize-errors",
+        "bodyContentType": "json",
+        "jsonBody": "={{ { \"optimization_id\": $json.optimization_id, \"workflow_name\": $json.workflow_name, \"error_rate\": $json.error_rate, \"optimization_type\": \"error_rate\", \"timestamp\": $now } }}"
+      }
+    },
+    {
+      "name": "Monitor Optimization Results",
+      "type": "n8n-nodes-base.httpRequest",
+      "parameters": {
+        "method": "GET",
+        "url": "https://api.optimization-monitor.com/results",
+        "qs": {
+          "optimization_id": "={{ $json.optimization_id }}",
+          "timeframe": "10m"
+        },
+        "options": {
+          "response": {
+            "response": {
+              "responseFormat": "json"
+            }
+          }
+        }
+      }
+    },
+    {
+      "name": "Analyze Optimization Results",
+      "type": "n8n-nodes-base.set",
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "name": "execution_improvement",
+              "value": "={{ $json.execution_time_improvement_percentage }}"
+            },
+            {
+              "name": "memory_improvement",
+              "value": "={{ $json.memory_usage_improvement_percentage }}"
+            },
+            {
+              "name": "cpu_improvement",
+              "value": "={{ $json.cpu_usage_improvement_percentage }}"
+            },
+            {
+              "name": "error_improvement",
+              "value": "={{ $json.error_rate_improvement_percentage }}"
+            },
+            {
+              "name": "overall_improvement",
+              "value": "={{ Math.round(($json.execution_time_improvement_percentage + $json.memory_usage_improvement_percentage + $json.cpu_usage_improvement_percentage + $json.error_rate_improvement_percentage) / 4) }}"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "name": "Generate Optimization Report",
+      "type": "n8n-nodes-base.set",
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "name": "optimization_report",
+              "value": "={{ { \"optimization_id\": $json.optimization_id, \"workflow_name\": $json.workflow_name, \"optimization_type\": $json.optimization_type, \"start_time\": $json.start_time, \"initial_score\": $json.optimization_score, \"execution_improvement\": $json.execution_improvement, \"memory_improvement\": $json.memory_improvement, \"cpu_improvement\": $json.cpu_improvement, \"error_improvement\": $json.error_improvement, \"overall_improvement\": $json.overall_improvement, \"optimization_targets\": $json.optimization_targets, \"completed_at\": $now } }}"
+            },
+            {
+              "name": "optimization_status",
+              "value": "completed"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "name": "Update Optimization Dashboard",
+      "type": "n8n-nodes-base.httpRequest",
+      "parameters": {
+        "method": "POST",
+        "url": "https://api.optimization-dashboard.com/update",
+        "bodyContentType": "json",
+        "jsonBody": "={{ { \"dashboard\": \"workflow-optimization\", \"data\": $json.optimization_report, \"timestamp\": $now } }}"
+      }
+    },
+    {
+      "name": "Send Optimization Notification",
+      "type": "n8n-nodes-base.httpRequest",
+      "parameters": {
+        "method": "POST",
+        "url": "https://api.slack.com/api/chat.postMessage",
+        "bodyContentType": "json",
+        "jsonBody": "={{ { \"channel\": \"#optimization-alerts\", \"text\": \"⚡ Workflow Optimization Complete\", \"attachments\": [{ \"color\": \"good\", \"fields\": [{ \"title\": \"Optimization ID\", \"value\": $json.optimization_id, \"short\": true }, { \"title\": \"Workflow\", \"value\": $json.workflow_name, \"short\": true }, { \"title\": \"Overall Improvement\", \"value\": $json.overall_improvement + \"%\", \"short\": true }, { \"title\": \"Execution\", \"value\": $json.execution_improvement + \"%\", \"short\": true }, { \"title\": \"Memory\", \"value\": $json.memory_improvement + \"%\", \"short\": true }, { \"title\": \"CPU\", \"value\": $json.cpu_improvement + \"%\", \"short\": true }, { \"title\": \"Errors\", \"value\": $json.error_improvement + \"%\", \"short\": true }] }] } }}"
+      }
+    },
+    {
+      "name": "Log Optimization Data",
+      "type": "n8n-nodes-base.httpRequest",
+      "parameters": {
+        "method": "POST",
+        "url": "https://api.optimization-log.com/log",
+        "bodyContentType": "json",
+        "jsonBody": "={{ { \"type\": \"workflow_optimization\", \"data\": $json.optimization_report, \"timestamp\": $now } }}"
+      }
+    },
+    {
+      "name": "Handle Optimization Error",
+      "type": "n8n-nodes-base.set",
+      "position": [
+        500,
+        300
+      ],
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "name": "optimization_error",
+              "value": "={{ { \"error_type\": \"optimization_failed\", \"optimization_id\": $json.optimization_id, \"message\": \"Workflow optimization failed\", \"timestamp\": $now } }}"
+            },
+            {
+              "name": "error_response",
+              "value": "={{ { \"status\": \"error\", \"optimization_id\": $json.optimization_id, \"message\": \"Workflow optimization error\" } }}"
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "connections": {},
+  "active": false,
+  "settings": {},
+  "pinData": {},
+  "versionId": "1",
+  "id": "workflow_optimization_system"
+}

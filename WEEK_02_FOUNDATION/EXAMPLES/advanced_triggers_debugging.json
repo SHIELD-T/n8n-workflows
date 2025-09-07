@@ -1,0 +1,252 @@
+{
+  "name": "Advanced Triggers Debugging",
+  "description": "Automated workflow for Foundation phase learning objectives with intelligent processing and error handling.",
+  "tags": [
+    "basics",
+    "progress-tracking",
+    "learning",
+    "foundation"
+  ],
+  "version": "1.0.0",
+  "author": "Automator Pro Course",
+  "course_metadata": {
+    "week": "Week 02",
+    "phase": "Foundation",
+    "difficulty": "Beginner",
+    "learning_objectives": [
+      "Master self-hosting",
+      "Understand webhooks",
+      "Work with APIs"
+    ],
+    "prerequisites": [
+      "Completed previous weeks",
+      "n8n instance",
+      "Basic automation knowledge"
+    ],
+    "estimated_setup_time": "20-30 minutes",
+    "use_cases": [
+      "Practice Foundation concepts",
+      "Build real-world automation skills",
+      "Prepare for business applications",
+      "Demonstrate course learning objectives"
+    ],
+    "examples": [
+      "Use this workflow to practice Foundation skills",
+      "Customize for your specific learning needs",
+      "Apply concepts to real business scenarios",
+      "Build upon for advanced implementations"
+    ],
+    "next_steps": [
+      "Complete Week 3 objectives",
+      "Practice with additional examples",
+      "Apply skills to real projects"
+    ],
+    "related_workflows": [
+      "Week 3 workflows",
+      "Previous week workflows",
+      "Course example workflows"
+    ]
+  },
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "course-Week 02-advanced_triggers_debugging",
+    "course_version": "1.0",
+    "last_updated": "2025-09-07T14:31:15.351602"
+  },
+  "nodes": [
+    {
+      "name": "Advanced Trigger System",
+      "type": "n8n-nodes-base.webhook",
+      "parameters": {
+        "path": "advanced-triggers",
+        "httpMethod": "POST"
+      }
+    },
+    {
+      "name": "Schedule Advanced Trigger",
+      "type": "n8n-nodes-base.scheduleTrigger",
+      "parameters": {
+        "rule": {
+          "interval": [
+            {
+              "field": "hours",
+              "hoursInterval": 2
+            }
+          ]
+        }
+      }
+    },
+    {
+      "name": "Manual Advanced Trigger",
+      "type": "n8n-nodes-base.manualTrigger",
+      "parameters": {}
+    },
+    {
+      "name": "Initialize Advanced Processing",
+      "type": "n8n-nodes-base.set",
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "name": "trigger_id",
+              "value": "={{ $now.format('YYYYMMDDHHmmss') }}"
+            },
+            {
+              "name": "trigger_type",
+              "value": "advanced_multi_trigger"
+            },
+            {
+              "name": "start_time",
+              "value": "={{ $now }}"
+            },
+            {
+              "name": "processing_mode",
+              "value": "advanced"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "name": "Advanced Data Validation",
+      "type": "n8n-nodes-base.if",
+      "parameters": {
+        "conditions": {
+          "string": [
+            {
+              "value1": "={{ $json.data || 'default_data' }}",
+              "operation": "isNotEmpty"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "name": "Advanced Data Processing",
+      "type": "n8n-nodes-base.set",
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "name": "processed_data",
+              "value": "={{ $json.data || 'default_data' }}"
+            },
+            {
+              "name": "data_length",
+              "value": "={{ ($json.data || 'default_data').length }}"
+            },
+            {
+              "name": "processing_time",
+              "value": "={{ $now.diff($json.start_time, 'milliseconds') }}"
+            },
+            {
+              "name": "processing_status",
+              "value": "advanced_processed"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "name": "Advanced Error Handling",
+      "type": "n8n-nodes-base.if",
+      "parameters": {
+        "conditions": {
+          "number": [
+            {
+              "value1": "={{ $json.processing_time }}",
+              "operation": "larger",
+              "value2": 5000
+            }
+          ]
+        }
+      }
+    },
+    {
+      "name": "Handle Processing Delay",
+      "type": "n8n-nodes-base.set",
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "name": "delay_warning",
+              "value": "Processing took longer than expected: {{ $json.processing_time }}ms"
+            },
+            {
+              "name": "warning_time",
+              "value": "={{ $now }}"
+            },
+            {
+              "name": "warning_status",
+              "value": "performance_warning"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "name": "Advanced Debugging",
+      "type": "n8n-nodes-base.set",
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "name": "debug_info",
+              "value": "={{ { \"trigger_id\": $json.trigger_id, \"trigger_type\": $json.trigger_type, \"processing_time\": $json.processing_time, \"data_length\": $json.data_length, \"processing_status\": $json.processing_status, \"debug_timestamp\": $now } }}"
+            },
+            {
+              "name": "debug_level",
+              "value": "advanced"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "name": "Advanced Result Processing",
+      "type": "n8n-nodes-base.set",
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "name": "final_result",
+              "value": "={{ { \"trigger_id\": $json.trigger_id, \"processed_data\": $json.processed_data, \"processing_time\": $json.processing_time, \"processing_status\": $json.processing_status, \"debug_info\": $json.debug_info, \"completed_at\": $now } }}"
+            },
+            {
+              "name": "success_message",
+              "value": "✅ Advanced trigger processing completed successfully"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "name": "Handle Validation Error",
+      "type": "n8n-nodes-base.set",
+      "position": [
+        500,
+        300
+      ],
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "name": "validation_error",
+              "value": "={{ { \"error_type\": \"validation_failed\", \"trigger_id\": $json.trigger_id, \"message\": \"Data validation failed\", \"timestamp\": $now } }}"
+            },
+            {
+              "name": "error_response",
+              "value": "={{ { \"status\": \"error\", \"trigger_id\": $json.trigger_id, \"message\": \"Advanced trigger validation failed\" } }}"
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "connections": {},
+  "active": false,
+  "settings": {},
+  "pinData": {},
+  "versionId": "1",
+  "id": "advanced_triggers_debugging"
+}

@@ -1,0 +1,336 @@
+{
+  "name": "Advanced Foundation Skills Assessment",
+  "description": "Assess and validate foundation skills with automated skill evaluation and progress tracking.",
+  "tags": [
+    "basics",
+    "progress-tracking",
+    "learning",
+    "foundation"
+  ],
+  "version": "1.0.0",
+  "author": "Automator Pro Course",
+  "course_metadata": {
+    "week": "Week 02",
+    "phase": "Foundation",
+    "difficulty": "Beginner",
+    "learning_objectives": [
+      "Master self-hosting",
+      "Understand webhooks",
+      "Work with APIs"
+    ],
+    "prerequisites": [
+      "Completed previous weeks",
+      "n8n instance",
+      "Basic automation knowledge"
+    ],
+    "estimated_setup_time": "10-20 minutes",
+    "use_cases": [
+      "Practice Foundation concepts",
+      "Build real-world automation skills",
+      "Prepare for business applications",
+      "Demonstrate course learning objectives"
+    ],
+    "examples": [
+      "Use this workflow to practice Foundation skills",
+      "Customize for your specific learning needs",
+      "Apply concepts to real business scenarios",
+      "Build upon for advanced implementations"
+    ],
+    "next_steps": [
+      "Complete Week 3 objectives",
+      "Practice with additional examples",
+      "Apply skills to real projects"
+    ],
+    "related_workflows": [
+      "Week 3 workflows",
+      "Previous week workflows",
+      "Course example workflows"
+    ]
+  },
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "course-Week 02-advanced_foundation_skills_assessment",
+    "course_version": "1.0",
+    "last_updated": "2025-09-07T14:31:15.355495"
+  },
+  "nodes": [
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "skills-assessment",
+        "options": {}
+      },
+      "id": "webhook-trigger",
+      "name": "Skills Assessment Trigger",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 1,
+      "position": [
+        240,
+        300
+      ],
+      "webhookId": "skills-assessment-webhook"
+    },
+    {
+      "parameters": {
+        "values": {
+          "string": [
+            {
+              "name": "student_id",
+              "value": "={{ $json.student_id }}"
+            },
+            {
+              "name": "skill_category",
+              "value": "={{ $json.skill_category }}"
+            },
+            {
+              "name": "skill_level",
+              "value": "={{ $json.skill_level }}"
+            },
+            {
+              "name": "assessment_timestamp",
+              "value": "={{ new Date().toISOString() }}"
+            },
+            {
+              "name": "assessment_notes",
+              "value": "={{ $json.assessment_notes }}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "set-assessment-data",
+      "name": "Set Assessment Data",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.3,
+      "position": [
+        460,
+        300
+      ]
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict"
+          },
+          "conditions": [
+            {
+              "id": "skill-level-check",
+              "leftValue": "={{ $json.skill_level }}",
+              "rightValue": "Advanced",
+              "operator": {
+                "type": "string",
+                "operation": "equals"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "id": "skill-level-check",
+      "name": "Skill Level Check",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2,
+      "position": [
+        680,
+        300
+      ]
+    },
+    {
+      "parameters": {
+        "authentication": "predefinedCredentialType",
+        "nodeCredentialType": "notionApi",
+        "resource": "database",
+        "operation": "create",
+        "databaseId": "={{ $json.database_id }}",
+        "title": "Advanced Skills Assessment",
+        "propertiesUi": {
+          "propertyValues": [
+            {
+              "key": "Student ID",
+              "textValue": "={{ $json.student_id }}"
+            },
+            {
+              "key": "Skill Category",
+              "textValue": "={{ $json.skill_category }}"
+            },
+            {
+              "key": "Skill Level",
+              "textValue": "={{ $json.skill_level }}"
+            },
+            {
+              "key": "Assessment Date",
+              "dateValue": "={{ $json.assessment_timestamp }}"
+            },
+            {
+              "key": "Assessment Notes",
+              "textValue": "={{ $json.assessment_notes }}"
+            }
+          ]
+        }
+      },
+      "id": "create-advanced-assessment",
+      "name": "Create Advanced Assessment",
+      "type": "n8n-nodes-base.notion",
+      "typeVersion": 2,
+      "position": [
+        900,
+        200
+      ]
+    },
+    {
+      "parameters": {
+        "authentication": "predefinedCredentialType",
+        "nodeCredentialType": "notionApi",
+        "resource": "database",
+        "operation": "create",
+        "databaseId": "={{ $json.database_id }}",
+        "title": "Skills Assessment Entry",
+        "propertiesUi": {
+          "propertyValues": [
+            {
+              "key": "Student ID",
+              "textValue": "={{ $json.student_id }}"
+            },
+            {
+              "key": "Skill Category",
+              "textValue": "={{ $json.skill_category }}"
+            },
+            {
+              "key": "Skill Level",
+              "textValue": "={{ $json.skill_level }}"
+            },
+            {
+              "key": "Assessment Date",
+              "dateValue": "={{ $json.assessment_timestamp }}"
+            },
+            {
+              "key": "Assessment Notes",
+              "textValue": "={{ $json.assessment_notes }}"
+            }
+          ]
+        }
+      },
+      "id": "create-assessment-entry",
+      "name": "Create Assessment Entry",
+      "type": "n8n-nodes-base.notion",
+      "typeVersion": 2,
+      "position": [
+        900,
+        400
+      ]
+    },
+    {
+      "parameters": {
+        "authentication": "predefinedCredentialType",
+        "nodeCredentialType": "slackApi",
+        "resource": "message",
+        "operation": "post",
+        "channel": "={{ $json.slack_channel }}",
+        "text": "🏆 Advanced Skills Achieved!\n\nStudent: {{ $json.student_id }}\nSkill: {{ $json.skill_category }}\nLevel: {{ $json.skill_level }}\nAssessed: {{ $json.assessment_timestamp }}\nNotes: {{ $json.assessment_notes }}",
+        "otherOptions": {}
+      },
+      "id": "send-advanced-celebration",
+      "name": "Send Advanced Celebration",
+      "type": "n8n-nodes-base.slack",
+      "typeVersion": 2.1,
+      "position": [
+        1120,
+        200
+      ]
+    },
+    {
+      "parameters": {
+        "authentication": "predefinedCredentialType",
+        "nodeCredentialType": "slackApi",
+        "resource": "message",
+        "operation": "post",
+        "channel": "={{ $json.slack_channel }}",
+        "text": "📊 Skills Assessment Update\n\nStudent: {{ $json.student_id }}\nSkill: {{ $json.skill_category }}\nLevel: {{ $json.skill_level }}\nAssessed: {{ $json.assessment_timestamp }}\nNotes: {{ $json.assessment_notes }}",
+        "otherOptions": {}
+      },
+      "id": "send-assessment-update",
+      "name": "Send Assessment Update",
+      "type": "n8n-nodes-base.slack",
+      "typeVersion": 2.1,
+      "position": [
+        1120,
+        400
+      ]
+    }
+  ],
+  "connections": {
+    "webhook-trigger": {
+      "main": [
+        [
+          {
+            "node": "set-assessment-data",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "set-assessment-data": {
+      "main": [
+        [
+          {
+            "node": "skill-level-check",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "skill-level-check": {
+      "main": [
+        [
+          {
+            "node": "create-advanced-assessment",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "create-assessment-entry",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "create-advanced-assessment": {
+      "main": [
+        [
+          {
+            "node": "send-advanced-celebration",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "create-assessment-entry": {
+      "main": [
+        [
+          {
+            "node": "send-assessment-update",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "pinData": {},
+  "versionId": "1",
+  "id": "advanced-foundation-skills-assessment"
+}
