@@ -58,4 +58,8 @@ course_workflow_index.json
 # n8n specific
 credentials.json
 config.json
+
+# Exclude investor and Udemy files
 UDEMY_COURSE_CREATION_GUIDE.md
+INVESTOR_PITCH_DECK_*.md
+INVESTOR_LMS_WALKTHROUGH.md

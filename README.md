@@ -121,7 +121,8 @@ Each day includes:
 ### **Core Technologies:**
 - **n8n** - Workflow automation platform
 - **Docker** - Containerization and deployment
-- **VPS Hosting** - Hetzner, DigitalOcean, AWS
+- **Render Hosting** - Free cloud hosting platform
+- **PostgreSQL** - Database for workflow storage
 - **Webhooks** - Real-time data triggers
 - **APIs** - REST, GraphQL, OAuth 2.0
 
@@ -180,7 +181,8 @@ By the end of this course, you will be able to:
 - Access to a computer with internet
 
 ### **2. Setup Requirements:**
-- VPS account (Hetzner, DigitalOcean, or AWS)
+- Render account (free hosting platform)
+- PostgreSQL database (free with Render)
 - Domain name (optional but recommended)
 - GitHub account for version control
 - Notion account for documentation

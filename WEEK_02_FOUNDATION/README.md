@@ -31,26 +31,26 @@ Create a webhook that receives data and logs it to console.
 
 ---
 
-### **DAY 9: TUESDAY - Self-Hosting Setup**
+### **DAY 9: TUESDAY - Advanced Self-Hosting Setup**
 **Time:** 2-3 hours
 
 #### **Morning (1 hour):**
-- Watch: "Self-Hosting n8n with Docker"
-- Prepare: VPS account (DigitalOcean/Hetzner)
-- Set up: Domain name and DNS
+- Watch: "Advanced Render Deployment"
+- Learn: Production optimization techniques
+- Prepare: Advanced environment configuration
 
 #### **Afternoon (1 hour):**
-- Install: Docker on your VPS
-- Deploy: n8n instance
-- Configure: SSL certificate
+- Configure: Advanced Render settings
+- Set up: Monitoring and health checks
+- Deploy: Production-ready n8n instance
 
 #### **Evening (30 minutes):**
-- Test: Your n8n instance
-- Share: Your n8n URL in community
-- Document: Setup process
+- Test: Advanced features and monitoring
+- Share: Your optimized setup in community
+- Document: Production configuration
 
 #### **📝 DAILY TASK:**
-Successfully deploy n8n on your VPS and access it via domain.
+Deploy optimized production n8n on Render with monitoring and backups.
 
 ---
 

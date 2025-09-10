@@ -58,10 +58,10 @@
    - Email account for course access
 
 2. **💳 Budget Planning:**
-   - n8n hosting: $10-20/month
+   - n8n hosting: FREE (Render)
    - OpenAI API: $20-50/month
    - Domain name: $10-15/year
-   - VPS hosting: $5-10/month
+   - Cronjob service: FREE
 
 3. **📅 Time Management:**
    - Block 2-3 hours daily for learning
@@ -92,7 +92,7 @@
 #### **What You'll Learn:**
 - What is Automation? Why It Matters in 2025+
 - Intro to n8n: Core Concepts (Nodes, Triggers, Execution)
-- Self-Hosting n8n (Docker on VPS)
+- Self-Hosting n8n (Docker on Render)
 - Exploring the n8n UI (Workflows, History, Logs)
 - Your First Automation (Telegram message on Google Form submission)
 - Webhooks & APIs 101 for Beginners
@@ -103,7 +103,7 @@
 - **Total:** 13-17 hours/week
 
 #### **🎯 Phase 1 Project:**
-Set up your n8n server + complete your first webhook-based automation
+Set up your n8n instance on Render + complete your first webhook-based automation
 
 ---
 
@@ -272,10 +272,10 @@ Productize a workflow & create onboarding flow for a VA/assistant
 - **Agency Tier:** $1,997 (Everything + White-label Rights + Advanced Training)
 
 ### **Additional Costs:**
-- **n8n hosting:** $10-20/month
+- **n8n hosting:** FREE (Render)
 - **OpenAI API:** $20-50/month
 - **Domain name:** $10-15/year
-- **VPS hosting:** $5-10/month
+- **Cronjob service:** FREE
 
 ### **Total Investment:** $500-2,000 + $50-100/month
 

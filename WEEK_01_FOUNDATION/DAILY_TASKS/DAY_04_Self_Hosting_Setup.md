@@ -1,10 +1,10 @@
 # 📅 DAY 4: THURSDAY - Self-Hosting Setup
 
 ## 🎯 TODAY'S OBJECTIVES
-- Learn about self-hosting n8n with Docker
-- Set up VPS account and domain
-- Deploy n8n instance
-- Configure SSL and security
+- Learn about self-hosting n8n on Render
+- Set up Render account and deploy n8n
+- Configure free hosting with cronjob keep-alive
+- Set up custom domain and SSL
 
 ## ⏰ TIME ALLOCATION
 **Total Time:** 2-3 hours
@@ -16,116 +16,246 @@
 
 ## 🌅 MORNING SESSION (1 hour)
 
-### **📹 Video Lesson: "Self-Hosting n8n with Docker"**
+### **📹 Video Lesson: "Self-Hosting n8n on Render"**
 **Duration:** 45 minutes
 
 #### **What You'll Learn:**
-- Docker basics and containerization
-- n8n Docker setup
-- VPS selection and configuration
-- Domain and SSL setup
+- Render platform basics
+- n8n deployment on Render
+- Free hosting limitations and solutions
+- Cronjob keep-alive setup
+- Custom domain configuration
 
 #### **Key Concepts:**
-- **Docker:** Containerization platform
-- **VPS:** Virtual Private Server
-- **SSL:** Secure Socket Layer
-- **Domain:** Your n8n URL
+- **Render:** Free cloud hosting platform
+- **Web Service:** Containerized applications
+- **Cronjob:** Automated keep-alive requests
+- **Custom Domain:** Your n8n URL
+- **SSL:** Automatic HTTPS certificates
 
 #### **Take Notes On:**
-- Docker installation steps
-- n8n Docker configuration
-- VPS requirements
-- SSL certificate setup
+- Render account setup
+- n8n deployment process
+- Free tier limitations
+- Keep-alive strategies
+- Domain configuration
 
 ---
 
 ### **📖 Reading Assignment**
 **Duration:** 15 minutes
 
-#### **Read: "Docker Basics for Beginners"**
-- What is Docker
-- Container vs Virtual Machine
-- Docker commands
-- Docker Compose
+#### **Read: "Render Platform Guide"**
+- What is Render
+- Free tier limitations
+- Web service deployment
+- Custom domain setup
+- Keep-alive strategies
 
 #### **Key Takeaways:**
-- Docker makes deployment easier
-- Containers are lightweight
-- Docker Compose manages multiple containers
-- n8n runs well in Docker
+- Render offers free hosting
+- Free tier sleeps after 15 minutes of inactivity
+- Cronjobs can keep services awake
+- Automatic SSL certificates
+- Easy custom domain setup
 
 ---
 
 ## 🌞 AFTERNOON SESSION (1 hour)
 
-### **🛠️ Hands-on Practice: "Setting Up VPS and Domain"**
+### **🛠️ Hands-on Practice: "Setting Up Render Account"**
 **Duration:** 30 minutes
 
-#### **Task: Prepare Your Infrastructure**
+#### **Task: Prepare Your Render Account**
 
 **Step-by-Step Instructions:**
 
-1. **Choose VPS Provider**
-   - DigitalOcean, Hetzner, or AWS
-   - Select Ubuntu 20.04+ server
-   - Minimum 2GB RAM, 1 CPU
-   - Create account and server
+1. **Create Render Account**
+   - Go to render.com
+   - Sign up with GitHub/Google
+   - Verify email address
+   - Complete profile setup
 
-2. **Set Up Domain**
+2. **Prepare GitHub Repository**
+   - Create new GitHub repo
+   - Add n8n Dockerfile
+   - Add render.yaml configuration
+   - Push to GitHub
+
+3. **Set Up Domain (Optional)**
    - Purchase domain name
-   - Point DNS to VPS IP
+   - Point DNS to Render
    - Wait for DNS propagation
-
-3. **Connect to Server**
-   - Use SSH to connect
-   - Update system packages
-   - Install Docker
 
 ---
 
-### **🐳 Install Docker and n8n**
+### **🚀 Deploy n8n on Render**
 **Duration:** 30 minutes
 
-#### **Task: Deploy n8n with Docker**
+#### **Task: Deploy n8n with Render**
 
-**Commands to Run:**
-```bash
-# Update system
-sudo apt update && sudo apt upgrade -y
+**Files to Create:**
 
-# Install Docker
-curl -fsSL https://get.docker.com -o get-docker.sh
-sudo sh get-docker.sh
+1. **Dockerfile:**
+```dockerfile
+FROM n8nio/n8n
 
-# Add user to docker group
-sudo usermod -aG docker $USER
+# Set environment variables
+ENV N8N_BASIC_AUTH_ACTIVE=true
+ENV N8N_BASIC_AUTH_USER=admin
+ENV N8N_BASIC_AUTH_PASSWORD=your_secure_password
+ENV WEBHOOK_URL=https://your-app-name.onrender.com
+ENV N8N_PORT=10000
 
-# Create n8n directory
-mkdir ~/n8n && cd ~/n8n
-
-# Create docker-compose.yml
-cat > docker-compose.yml << EOF
-version: '3.8'
-services:
-  n8n:
-    image: n8nio/n8n
-    restart: always
-    ports:
-      - "5678:5678"
-    environment:
-      - N8N_BASIC_AUTH_ACTIVE=true
-      - N8N_BASIC_AUTH_USER=admin
-      - N8N_BASIC_AUTH_PASSWORD=your_password
-      - WEBHOOK_URL=https://your-domain.com
-    volumes:
-      - n8n_data:/home/node/.n8n
-volumes:
-  n8n_data:
-EOF
+# Expose port
+EXPOSE 10000
 
 # Start n8n
-docker-compose up -d
+CMD ["n8n"]
 ```
+
+2. **render.yaml:**
+```yaml
+services:
+  - type: web
+    name: n8n-automation
+    env: docker
+    dockerfilePath: ./Dockerfile
+    plan: free
+    envVars:
+      - key: N8N_BASIC_AUTH_ACTIVE
+        value: true
+      - key: N8N_BASIC_AUTH_USER
+        value: admin
+      - key: N8N_BASIC_AUTH_PASSWORD
+        value: your_secure_password
+      - key: WEBHOOK_URL
+        value: https://your-app-name.onrender.com
+```
+
+3. **Deploy Steps:**
+   - Push files to GitHub
+   - Connect GitHub repo to Render
+   - Deploy web service
+   - Wait for deployment to complete
+
+---
+
+### **⏰ Set Up Cronjob Keep-Alive**
+**Duration:** 15 minutes
+
+#### **Task: Keep Your n8n Server Awake**
+
+**The Problem:**
+- Render free tier sleeps after 15 minutes of inactivity
+- Your n8n instance will go to sleep
+- Webhooks won't work when sleeping
+
+**The Solution:**
+Set up a cronjob to ping your server every 10 minutes.
+
+**Step-by-Step Instructions:**
+
+1. **Create Keep-Alive Script:**
+```bash
+# Create a simple HTML file for ping
+echo "<!DOCTYPE html>
+<html>
+<head><title>n8n Keep-Alive</title></head>
+<body><h1>n8n Server is Alive!</h1></body>
+</html>" > keep-alive.html
+```
+
+2. **Set Up Cronjob Service:**
+   - Use a free cronjob service like:
+     - **cron-job.org** (free)
+     - **EasyCron** (free tier)
+     - **SetCronJob** (free tier)
+
+3. **Configure Cronjob:**
+   - **URL:** `https://your-app-name.onrender.com/`
+   - **Schedule:** Every 10 minutes
+   - **Method:** GET
+   - **Timeout:** 30 seconds
+
+4. **Alternative: Use UptimeRobot:**
+   - Sign up at uptimerobot.com
+   - Add your n8n URL
+   - Set monitoring interval to 5 minutes
+   - Free tier allows 50 monitors
+
+**Pro Tip:** You can also create a simple n8n workflow that runs every 10 minutes to keep itself awake!
+
+---
+
+### **🗄️ Set Up Database Storage**
+**Duration:** 15 minutes
+
+#### **Task: Create Persistent Database for Workflows**
+
+**The Problem:**
+- Render free tier doesn't persist data between deployments
+- Workflows and data are lost when container restarts
+- Need reliable storage for production use
+
+**The Solution:**
+Set up Render PostgreSQL database with automated backups.
+
+**Step-by-Step Instructions:**
+
+1. **Create Render Database:**
+   - Go to Render Dashboard
+   - Click "New +" → "PostgreSQL"
+   - Choose "Free" plan
+   - Set database name (e.g., "n8n-workflows")
+   - Note down connection details
+
+2. **Configure n8n Database Connection:**
+```yaml
+# Update render.yaml
+services:
+  - type: web
+    name: n8n-automation
+    env: docker
+    dockerfilePath: ./Dockerfile
+    plan: free
+    envVars:
+      - key: N8N_BASIC_AUTH_ACTIVE
+        value: true
+      - key: N8N_BASIC_AUTH_USER
+        value: admin
+      - key: N8N_BASIC_AUTH_PASSWORD
+        value: your_secure_password
+      - key: WEBHOOK_URL
+        value: https://your-app-name.onrender.com
+      - key: DB_TYPE
+        value: postgresdb
+      - key: DB_POSTGRESDB_HOST
+        value: your-db-host.onrender.com
+      - key: DB_POSTGRESDB_PORT
+        value: "5432"
+      - key: DB_POSTGRESDB_DATABASE
+        value: your-db-name
+      - key: DB_POSTGRESDB_USER
+        value: your-db-user
+      - key: DB_POSTGRESDB_PASSWORD
+        value: your-db-password
+```
+
+3. **Set Up Database Backup Cronjob:**
+   - Use cron-job.org or similar service
+   - **URL:** `https://your-db-host.onrender.com/backup`
+   - **Schedule:** Daily at 2 AM
+   - **Method:** POST
+   - **Headers:** Include authentication
+
+4. **Alternative: Use External Database:**
+   - **Supabase** (free tier)
+   - **PlanetScale** (free tier)
+   - **Railway** (free tier)
+   - **Neon** (free tier)
+
+**Pro Tip:** Render's free PostgreSQL database includes automated backups, so you don't need to set up manual backups!
 
 ---
 
@@ -150,10 +280,22 @@ Day 4 Complete! 🎉
 [Screenshot of n8n interface]
 
 **My Setup:**
-- VPS Provider: [Your provider]
-- Domain: [Your domain]
-- Docker: ✅ Installed
+- Hosting: Render (Free Tier)
+- URL: https://your-app-name.onrender.com
+- Database: ✅ PostgreSQL (Free Tier)
+- Cronjob: ✅ Set up (every 10 minutes)
+- SSL: ✅ Automatic
 - n8n: ✅ Running
+
+**Keep-Alive Solution:**
+- Service: [cron-job.org/UptimeRobot/etc.]
+- Schedule: Every 10 minutes
+- Status: ✅ Active
+
+**Database Storage:**
+- Type: Render PostgreSQL
+- Backup: ✅ Automated
+- Status: ✅ Connected
 
 **Challenges:**
 - [Any issues you faced]
@@ -184,57 +326,70 @@ Ready for Day 5! 🚀
 
 ## 📝 DAILY TASK
 
-### **🎯 Main Task: Deploy n8n on VPS**
+### **🎯 Main Task: Deploy n8n on Render**
 
-**Successfully deploy n8n on your VPS and access it via domain.**
+**Successfully deploy n8n on Render with cronjob keep-alive.**
 
 #### **Step-by-Step Checklist:**
 
-1. **VPS Setup**
-   - [ ] Create VPS account
-   - [ ] Launch Ubuntu server
-   - [ ] Connect via SSH
-   - [ ] Update system packages
+1. **Render Account Setup**
+   - [ ] Create Render account
+   - [ ] Connect GitHub account
+   - [ ] Verify email address
 
-2. **Docker Installation**
-   - [ ] Install Docker
-   - [ ] Add user to docker group
-   - [ ] Test Docker installation
+2. **GitHub Repository Setup**
+   - [ ] Create new GitHub repository
+   - [ ] Add Dockerfile
+   - [ ] Add render.yaml
+   - [ ] Push to GitHub
 
-3. **Domain Setup**
+3. **Render Deployment**
+   - [ ] Connect GitHub repo to Render
+   - [ ] Deploy web service
+   - [ ] Wait for deployment
+   - [ ] Test n8n access
+
+4. **Database Storage Setup**
+   - [ ] Create Render PostgreSQL database
+   - [ ] Configure database connection
+   - [ ] Update render.yaml with DB settings
+   - [ ] Test database connection
+
+5. **Cronjob Keep-Alive Setup**
+   - [ ] Sign up for cronjob service
+   - [ ] Configure ping URL
+   - [ ] Set schedule (every 10 minutes)
+   - [ ] Test keep-alive
+
+6. **Custom Domain (Optional)**
    - [ ] Purchase domain name
-   - [ ] Point DNS to VPS IP
-   - [ ] Wait for DNS propagation
-
-4. **n8n Deployment**
-   - [ ] Create n8n directory
-   - [ ] Create docker-compose.yml
-   - [ ] Start n8n container
-   - [ ] Access n8n via domain
-
-5. **SSL Setup (Optional)**
-   - [ ] Install Certbot
-   - [ ] Generate SSL certificate
-   - [ ] Configure HTTPS
+   - [ ] Point DNS to Render
+   - [ ] Configure custom domain
+   - [ ] Test HTTPS access
 
 #### **Expected Result:**
-- n8n running on your domain
+- n8n running on Render
+- PostgreSQL database connected
 - Accessible via HTTPS
+- Cronjob keeping it awake
 - Basic authentication enabled
+- Persistent workflow storage
 - Ready for workflow creation
 
 ---
 
 ## ✅ DAILY CHECKLIST
 
-- [ ] Watch "Self-Hosting n8n with Docker" video
-- [ ] Read Docker basics documentation
-- [ ] Set up VPS account
-- [ ] Purchase domain name
-- [ ] Install Docker on VPS
-- [ ] Deploy n8n with Docker
-- [ ] Configure SSL certificate
+- [ ] Watch "Self-Hosting n8n on Render" video
+- [ ] Read Render platform documentation
+- [ ] Create Render account
+- [ ] Set up GitHub repository
+- [ ] Deploy n8n on Render
+- [ ] Set up PostgreSQL database
+- [ ] Configure database connection
+- [ ] Set up cronjob keep-alive
 - [ ] Test n8n access
+- [ ] Configure custom domain (optional)
 - [ ] Share progress in community
 - [ ] Review tomorrow's materials
 - [ ] Complete daily task
@@ -244,21 +399,28 @@ Ready for Day 5! 🚀
 ## 🎯 SUCCESS METRICS
 
 **By the end of today, you should:**
-- Have n8n running on your VPS
-- Access n8n via your domain
-- Understand Docker basics
-- Know VPS management
-- Have SSL certificate (optional)
+- Have n8n running on Render
+- PostgreSQL database connected
+- Access n8n via your Render URL
+- Understand Render platform basics
+- Have cronjob keep-alive set up
+- Know free hosting limitations
+- Have automatic SSL certificate
+- Have persistent workflow storage
 
 ---
 
 ## 💡 PRO TIPS
 
-1. **Start Small:** Use a basic VPS first
-2. **Secure Access:** Use SSH keys, not passwords
-3. **Backup Data:** Set up regular backups
-4. **Monitor Resources:** Watch CPU and memory usage
-5. **Update Regularly:** Keep system and Docker updated
+1. **Free Tier Limits:** Render sleeps after 15 minutes of inactivity
+2. **Keep-Alive Essential:** Set up cronjob to ping every 10 minutes
+3. **Database Storage:** Use Render PostgreSQL for persistent data
+4. **Multiple Services:** Use UptimeRobot as backup keep-alive
+5. **Custom Domain:** Easy to set up with automatic SSL
+6. **Monitor Usage:** Watch Render dashboard for resource usage
+7. **Backup Workflows:** Export workflows regularly
+8. **Environment Variables:** Use Render's env vars for secrets
+9. **Database Backups:** Render includes automated backups
 
 ---
 
@@ -268,4 +430,4 @@ Ready for Day 5! 🚀
 
 ---
 
-*Remember: Self-hosting gives you full control! Master this setup! 🚀*
+*Remember: Free hosting with cronjob keep-alive is perfect for beginners! Master this setup! 🚀*

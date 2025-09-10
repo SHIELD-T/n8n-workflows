@@ -126,7 +126,7 @@
       "type": "n8n-nodes-base.httpRequest",
       "parameters": {
         "method": "POST",
-        "url": "https://api.deployment-service.com/deploy",
+        "url": "https://api.render.com/v1/services/YOUR_SERVICE_ID/deploys",
         "bodyContentType": "json",
         "jsonBody": "={{ { \"environment\": \"green\", \"workflow_version\": $json.workflow_version, \"deployment_id\": $json.deployment_id, \"deployment_type\": $json.deployment_type } }}"
       }
@@ -136,7 +136,7 @@
       "type": "n8n-nodes-base.httpRequest",
       "parameters": {
         "method": "GET",
-        "url": "https://api.health-check.com/check",
+        "url": "https://your-green-service.onrender.com/healthz",
         "qs": {
           "environment": "green",
           "deployment_id": "={{ $json.deployment_id }}"
@@ -170,7 +170,7 @@
       "type": "n8n-nodes-base.httpRequest",
       "parameters": {
         "method": "POST",
-        "url": "https://api.load-balancer.com/switch",
+        "url": "https://api.render.com/v1/services/YOUR_SERVICE_ID/switch",
         "bodyContentType": "json",
         "jsonBody": "={{ { \"from_environment\": \"blue\", \"to_environment\": \"green\", \"deployment_id\": $json.deployment_id, \"switch_time\": $now } }}"
       }
@@ -258,7 +258,7 @@
       "type": "n8n-nodes-base.httpRequest",
       "parameters": {
         "method": "POST",
-        "url": "https://api.rollback-service.com/rollback",
+        "url": "https://api.render.com/v1/services/YOUR_SERVICE_ID/rollback",
         "bodyContentType": "json",
         "jsonBody": "={{ { \"deployment_id\": $json.deployment_id, \"from_environment\": \"green\", \"to_environment\": \"blue\", \"rollback_reason\": \"health_check_failed\", \"timestamp\": $now } }}"
       }

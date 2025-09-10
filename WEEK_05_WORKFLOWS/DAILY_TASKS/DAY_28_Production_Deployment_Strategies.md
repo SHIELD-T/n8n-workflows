@@ -1,10 +1,10 @@
-# 📅 DAY 28: MONDAY - Production Deployment Strategies
+# 📅 DAY 28: MONDAY - Production Workflow Deployment Strategies
 
 ## 🎯 TODAY'S OBJECTIVES
-- Master production deployment strategies
-- Learn environment management
-- Practice deployment procedures
-- Build deployment automation
+- Master production workflow deployment strategies
+- Learn workflow versioning and management
+- Practice workflow deployment procedures
+- Build workflow deployment automation
 
 ## ⏰ TIME ALLOCATION
 **Total Time:** 2-3 hours
@@ -16,99 +16,99 @@
 
 ## 🌅 MORNING SESSION (1 hour)
 
-### **📹 Video Lesson: "Production Deployment Mastery"**
+### **📹 Video Lesson: "Production Workflow Deployment Mastery"**
 **Duration:** 45 minutes
 
 #### **What You'll Learn:**
-- Production deployment strategies
-- Environment management
-- Deployment automation
-- Rollback procedures
+- Production workflow deployment strategies
+- Workflow versioning and management
+- Workflow deployment automation
+- Workflow rollback procedures
 
 #### **Key Concepts:**
-- **Deployment Strategies:** Blue-green, canary, rolling
-- **Environment Management:** Dev, staging, production
-- **Deployment Automation:** Automated deployment pipelines
-- **Rollback Procedures:** Safe rollback strategies
+- **Workflow Deployment Strategies:** Blue-green, canary, rolling
+- **Workflow Versioning:** Version control, tagging, branching
+- **Deployment Automation:** Automated workflow deployment pipelines
+- **Rollback Procedures:** Safe workflow rollback strategies
 
 #### **Take Notes On:**
-- 5 deployment strategies
-- Environment management practices
-- Automation techniques
-- Rollback procedures
+- 5 workflow deployment strategies
+- Workflow versioning practices
+- Workflow automation techniques
+- Workflow rollback procedures
 
 ---
 
 ### **📖 Reading Assignment**
 **Duration:** 15 minutes
 
-#### **Read: "Production Deployment Guide"**
-- Deployment strategies
-- Environment management
-- Automation procedures
+#### **Read: "Production Workflow Deployment Guide"**
+- Workflow deployment strategies
+- Workflow versioning management
+- Workflow automation procedures
 - Best practices
 
 #### **Key Takeaways:**
-- Proper deployment ensures reliability
-- Environment management prevents issues
+- Proper workflow deployment ensures reliability
+- Workflow versioning prevents issues
 - Automation reduces human error
-- Rollback procedures provide safety
+- Workflow rollback procedures provide safety
 
 ---
 
 ## 🌞 AFTERNOON SESSION (1 hour)
 
-### **🛠️ Hands-on Practice: "Deployment Implementation"**
+### **🛠️ Hands-on Practice: "Workflow Deployment Implementation"**
 **Duration:** 30 minutes
 
-#### **Task: Implement Deployment Strategies**
+#### **Task: Implement Workflow Deployment Strategies**
 
 **Step-by-Step Instructions:**
 
-1. **Environment Setup**
-   - Create development environment
-   - Set up staging environment
-   - Configure production environment
-   - Test environment configurations
+1. **Workflow Versioning Setup**
+   - Create workflow versioning system
+   - Set up workflow tagging
+   - Configure workflow branching
+   - Test versioning system
 
-2. **Deployment Pipeline**
-   - Create automated deployment workflow
-   - Implement testing procedures
-   - Add validation steps
-   - Test deployment process
+2. **Workflow Deployment Pipeline**
+   - Create automated workflow deployment
+   - Implement workflow testing procedures
+   - Add workflow validation steps
+   - Test workflow deployment process
 
-3. **Rollback Procedures**
-   - Create rollback workflows
-   - Test rollback procedures
-   - Document rollback steps
-   - Validate rollback functionality
+3. **Workflow Rollback Procedures**
+   - Create workflow rollback automation
+   - Test workflow rollback procedures
+   - Document workflow rollback steps
+   - Validate workflow rollback functionality
 
 ---
 
-### **🔍 Advanced Deployment**
+### **🔍 Advanced Workflow Deployment**
 **Duration:** 30 minutes
 
-#### **Task: Build Advanced Deployment Systems**
+#### **Task: Build Advanced Workflow Deployment Systems**
 
 **Create These Systems:**
 
-1. **Blue-Green Deployment**
-   - Implement blue-green strategy
-   - Create environment switching
-   - Add health checks
-   - Test deployment process
+1. **Blue-Green Workflow Deployment**
+   - Implement blue-green strategy for workflows
+   - Create workflow version switching
+   - Add workflow health checks
+   - Test workflow deployment process
 
-2. **Canary Deployment**
-   - Implement canary strategy
-   - Create gradual rollout
-   - Add monitoring
-   - Test canary deployment
+2. **Canary Workflow Deployment**
+   - Implement canary strategy for workflows
+   - Create gradual workflow rollout
+   - Add workflow monitoring
+   - Test canary workflow deployment
 
-3. **Automated Rollback**
-   - Create automated rollback triggers
-   - Implement rollback conditions
-   - Add rollback notifications
-   - Test rollback automation
+3. **Automated Workflow Rollback**
+   - Create automated workflow rollback triggers
+   - Implement workflow rollback conditions
+   - Add workflow rollback notifications
+   - Test workflow rollback automation
 
 ---
 
@@ -117,11 +117,11 @@
 ### **📸 Share Your Deployment Setup**
 **Duration:** 20 minutes
 
-#### **Community Post: "My Production Deployment System"**
+#### **Community Post: "My Production Workflow Deployment System"**
 
 **Share:**
-- Screenshots of your deployment setup
-- Deployment strategies implemented
+- Screenshots of your workflow deployment setup
+- Workflow deployment strategies implemented
 - Any challenges faced
 - Questions for the community
 
@@ -129,14 +129,14 @@
 ```
 Day 28 Complete! 🎉
 
-**Deployment System:**
-[Screenshots of deployment setup]
+**Workflow Deployment System:**
+[Screenshots of workflow deployment setup]
 
 **What I Implemented:**
-- Environment management
-- Deployment automation
-- Rollback procedures
-- Blue-green deployment
+- Workflow versioning system
+- Automated workflow deployment
+- Workflow rollback procedures
+- Blue-green workflow deployment
 
 **Challenges:**
 - [Any issues you faced]
@@ -167,9 +167,9 @@ Ready for Day 29! 🚀
 
 ## 📝 DAILY TASK
 
-### **🎯 Main Task: Build Production Deployment System**
+### **🎯 Main Task: Build Production Workflow Deployment System**
 
-**Create a comprehensive deployment system with automation and rollback.**
+**Create a comprehensive workflow deployment system with automation and rollback.**
 
 #### **Production Deployment Workflow:**
 ```json
@@ -247,7 +247,7 @@ Ready for Day 29! 🚀
       "type": "n8n-nodes-base.httpRequest",
       "parameters": {
         "method": "POST",
-        "url": "https://api.deployment-service.com/deploy",
+        "url": "https://api.render.com/v1/services/YOUR_SERVICE_ID/deploys",
         "bodyContentType": "json",
         "jsonBody": "={{ { \"environment\": \"green\", \"workflow_version\": $json.workflow_version, \"deployment_id\": $json.deployment_id, \"deployment_type\": $json.deployment_type } }}"
       }
@@ -257,7 +257,7 @@ Ready for Day 29! 🚀
       "type": "n8n-nodes-base.httpRequest",
       "parameters": {
         "method": "GET",
-        "url": "https://api.health-check.com/check",
+        "url": "https://your-green-service.onrender.com/healthz",
         "qs": {
           "environment": "green",
           "deployment_id": "={{ $json.deployment_id }}"
