@@ -12,7 +12,7 @@
 **Time:** 2-3 hours
 
 #### **Morning (1 hour):**
-- Watch: "Managing Workflow Projects"
+- Watch: [N8N FULL COURSE 5 HOURS (Build & Automate Anything)](https://www.youtube.com/watch?v=7WsbtZwOx_U) - Managing workflow projects section
 - Learn: Project organization and management
 - Practice: Workflow project structure
 
@@ -35,7 +35,7 @@ Organize all your workflows into a structured project system.
 **Time:** 2-3 hours
 
 #### **Morning (1 hour):**
-- Watch: "Deploying Workflows to Production"
+- Watch: [What I Wish I Had Known Before Building 100+ n8n Workflows](https://www.youtube.com/watch?v=VB0ANci--Dc) - Deploying workflows to production section
 - Learn: Deployment strategies and best practices
 - Practice: Production deployment
 
@@ -58,7 +58,7 @@ Deploy 3 workflows to production environment.
 **Time:** 2-3 hours
 
 #### **Morning (1 hour):**
-- Watch: "Monitoring Workflow Performance"
+- Watch: [N8N FULL COURSE 5 HOURS (Build & Automate Anything)](https://www.youtube.com/watch?v=7WsbtZwOx_U) - Monitoring workflow performance section
 - Learn: Monitoring strategies and tools
 - Practice: Performance monitoring
 
@@ -81,7 +81,7 @@ Set up comprehensive monitoring for your workflows.
 **Time:** 2-3 hours
 
 #### **Morning (1 hour):**
-- Watch: "Building Production-Ready Workflows"
+- Watch: [What I Wish I Had Known Before Building 100+ n8n Workflows](https://www.youtube.com/watch?v=VB0ANci--Dc) - Building production-ready workflows section
 - Learn: Production requirements and standards
 - Practice: Production workflow design
 
@@ -104,7 +104,7 @@ Build 2 production-ready workflows with all standards.
 **Time:** 2-3 hours
 
 #### **Morning (1 hour):**
-- Watch: "Securing Your Workflows"
+- Watch: [N8N FULL COURSE 5 HOURS (Build & Automate Anything)](https://www.youtube.com/watch?v=7WsbtZwOx_U) - Securing your workflows section
 - Learn: Security best practices
 - Practice: Security implementation
 
@@ -127,7 +127,7 @@ Implement comprehensive security for your workflows.
 **Time:** 3-4 hours
 
 #### **Morning (1.5 hours):**
-- Watch: "Maintaining Your Workflows"
+- Watch: [n8n Beginner Course (1/9) - Introduction to Automation](https://www.youtube.com/watch?v=4BVTkqbn_tY) - Maintaining your workflows section
 - Learn: Maintenance strategies and schedules
 - Practice: Maintenance techniques
 
@@ -193,12 +193,11 @@ Complete the production workflow project and share your success.
 ## 📚 RESOURCES
 
 ### **Video Lessons:**
-- Managing Workflow Projects
-- Deploying Workflows to Production
-- Monitoring Workflow Performance
-- Building Production-Ready Workflows
-- Securing Your Workflows
-- Maintaining Your Workflows
+- [N8N FULL COURSE 5 HOURS (Build & Automate Anything)](https://www.youtube.com/watch?v=7WsbtZwOx_U) - Complete workflow building course
+- [What I Wish I Had Known Before Building 100+ n8n Workflows](https://www.youtube.com/watch?v=VB0ANci--Dc) - Pro tips and advanced techniques
+- [n8n Beginner Course (1/9) - Introduction to Automation](https://www.youtube.com/watch?v=4BVTkqbn_tY) - Modular beginner series
+- [100 Days 100 Automation n8n Shorts](https://www.youtube.com/playlist?list=PLrKRLcYxcinnnZghd0RBg1L3HGBZ76nkX) - Daily workflow ideas
+- [n8n Official Channel](https://www.youtube.com/c/n8n-io) - Official tutorials and updates
 
 ### **Reading Materials:**
 - n8n Documentation: Production
@@ -206,11 +205,92 @@ Complete the production workflow project and share your success.
 - Monitoring Strategies
 - Security Guidelines
 
+### **Comprehensive Research Resources:**
+
+#### **Production Deployment:**
+- n8n Production Guide: https://docs.n8n.io/hosting/installation/
+- Docker Production Deployment: https://docs.n8n.io/hosting/installation/docker/
+- Kubernetes Deployment: Container orchestration
+- Blue-Green Deployment: Zero-downtime deployments
+- Canary Deployment: Gradual rollouts
+- Rolling Deployment: Continuous updates
+- Deployment Automation: CI/CD pipelines
+
+#### **Workflow Project Management:**
+- Project Organization: Workflow structure
+- Version Control: Git workflows
+- Project Documentation: Technical documentation
+- Project Planning: Agile methodologies
+- Resource Management: Team coordination
+- Timeline Management: Project scheduling
+- Quality Assurance: Testing procedures
+
+#### **Production Monitoring:**
+- n8n Monitoring: https://docs.n8n.io/hosting/monitoring/
+- Application Performance Monitoring: APM tools
+- Infrastructure Monitoring: System metrics
+- Log Management: Centralized logging
+- Alert Systems: Notification systems
+- Health Checks: Service monitoring
+- Performance Metrics: KPI tracking
+- Uptime Monitoring: Service availability
+
+#### **Security Best Practices:**
+- n8n Security: https://docs.n8n.io/hosting/security/
+- Authentication: User management
+- Authorization: Access control
+- Data Encryption: Data protection
+- Network Security: Firewall configuration
+- API Security: Rate limiting, validation
+- Secrets Management: Credential storage
+- Security Auditing: Compliance checks
+
+#### **Workflow Maintenance:**
+- Maintenance Procedures: Regular upkeep
+- Update Management: Version updates
+- Backup Strategies: Data protection
+- Disaster Recovery: Business continuity
+- Performance Tuning: Optimization
+- Capacity Planning: Resource scaling
+- Troubleshooting: Issue resolution
+- Documentation Updates: Knowledge management
+
+#### **Production Optimization:**
+- Performance Optimization: Speed improvements
+- Resource Optimization: Cost reduction
+- Scalability Planning: Growth preparation
+- Load Balancing: Traffic distribution
+- Caching Strategies: Performance improvement
+- Database Optimization: Query performance
+- Network Optimization: Bandwidth efficiency
+
+#### **Deployment Strategies:**
+- Infrastructure as Code: Terraform, CloudFormation
+- Container Orchestration: Kubernetes, Docker Swarm
+- Service Mesh: Istio, Linkerd
+- API Gateway: Traffic management
+- Load Balancing: HAProxy, NGINX
+- CDN Integration: Content delivery
+- Edge Computing: Distributed processing
+
+#### **Monitoring & Observability:**
+- Metrics Collection: Prometheus, Grafana
+- Log Aggregation: ELK Stack, Splunk
+- Distributed Tracing: Jaeger, Zipkin
+- Error Tracking: Sentry, Rollbar
+- Uptime Monitoring: Pingdom, UptimeRobot
+- Performance Testing: Load testing tools
+- Business Metrics: KPI dashboards
+
 ### **Tools Needed:**
 - Production n8n instance
 - Monitoring tools
 - Security tools
 - Deployment tools
+- Version control system
+- CI/CD pipeline
+- Infrastructure management tools
+- Backup and recovery tools
 
 ---
 

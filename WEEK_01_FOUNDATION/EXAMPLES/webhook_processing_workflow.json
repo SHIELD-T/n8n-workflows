@@ -1,6 +1,6 @@
 {
   "name": "Webhook Processing Workflow",
-  "description": "Automated workflow for Foundation phase learning objectives with intelligent processing and error handling.",
+  "description": "Advanced webhook processing workflow with data validation, error handling, and response formatting. Demonstrates Week 1 webhook mastery concepts.",
   "tags": [
     "basics",
     "progress-tracking",

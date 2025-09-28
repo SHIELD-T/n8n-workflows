@@ -18,6 +18,7 @@
 
 ### **📹 Video Lesson: "Understanding n8n Triggers"**
 **Duration:** 45 minutes
+**Watch:** [n8n Quick Start Tutorial: Build Your First Workflow](https://www.youtube.com/watch?v=4cQWJViybAQ) - Understanding n8n triggers
 
 #### **What You'll Learn:**
 - Different types of triggers

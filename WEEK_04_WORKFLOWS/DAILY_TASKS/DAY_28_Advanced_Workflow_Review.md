@@ -18,6 +18,7 @@
 
 ### **📚 Advanced Workflow Concepts Review**
 **Duration:** 45 minutes
+**Watch:** [N8N FULL COURSE 5 HOURS (Build & Automate Anything)](https://www.youtube.com/watch?v=7WsbtZwOx_U) - Advanced workflow review section
 
 #### **Review What You've Learned:**
 

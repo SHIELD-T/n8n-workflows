@@ -1,6 +1,6 @@
 {
   "name": "Example Workflow 1",
-  "description": "Automated workflow for Foundation phase learning objectives with intelligent processing and error handling.",
+  "description": "Simple text processing workflow demonstrating basic n8n concepts: manual trigger, data manipulation, and HTTP requests. Perfect for Week 1 foundation learning.",
   "tags": [
     "basics",
     "progress-tracking",

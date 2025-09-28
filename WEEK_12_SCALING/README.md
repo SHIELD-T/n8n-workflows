@@ -12,7 +12,7 @@
 **Time:** 2-3 hours
 
 #### **Morning (1 hour):**
-- Watch: "Building Workflow Templates"
+- Watch: [N8N FULL COURSE 5 HOURS (Build & Automate Anything)](https://www.youtube.com/watch?v=7WsbtZwOx_U) - Building workflow templates section
 - Learn: Template design and customization
 - Practice: Template creation
 
@@ -35,7 +35,7 @@ Create 5 reusable workflow templates with documentation.
 **Time:** 2-3 hours
 
 #### **Morning (1 hour):**
-- Watch: "Hiring for Your Automation Business"
+- Watch: [What I Wish I Had Known Before Building 100+ n8n Workflows](https://www.youtube.com/watch?v=VB0ANci--Dc) - Hiring for your automation business section
 - Learn: Freelancer management, team building
 - Practice: Hiring strategies
 
@@ -58,7 +58,7 @@ Create hiring processes and team management systems.
 **Time:** 2-3 hours
 
 #### **Morning (1 hour):**
-- Watch: "Automating Client Management"
+- Watch: [How I 100% Automated Long Form Content with n8n](https://www.youtube.com/watch?v=lF2bvXoV-Zg) - Automating client management section
 - Learn: Support bots, reporting systems
 - Practice: Client automation
 
@@ -81,7 +81,7 @@ Build automation systems for client management and support.
 **Time:** 2-3 hours
 
 #### **Morning (1 hour):**
-- Watch: "Creating Productized Services"
+- Watch: [n8n Beginner Course (1/9) - Introduction to Automation](https://www.youtube.com/watch?v=4BVTkqbn_tY) - Creating productized services section
 - Learn: Pre-built automations, SaaS models
 - Practice: Productization techniques
 
@@ -104,7 +104,7 @@ Create 3 productized services with pricing and delivery systems.
 **Time:** 2-3 hours
 
 #### **Morning (1 hour):**
-- Watch: "Building Automation-as-a-Service"
+- Watch: [N8N FULL COURSE 5 HOURS (Build & Automate Anything)](https://www.youtube.com/watch?v=7WsbtZwOx_U) - Building automation-as-a-service section
 - Learn: Monthly recurring revenue, SLAs
 - Practice: AaaS model creation
 
@@ -127,7 +127,7 @@ Create an Automation-as-a-Service offering with recurring revenue.
 **Time:** 3-4 hours
 
 #### **Morning (1.5 hours):**
-- Watch: "Staying Current with Automation"
+- Watch: [What I Wish I Had Known Before Building 100+ n8n Workflows](https://www.youtube.com/watch?v=VB0ANci--Dc) - Staying current with automation section
 - Learn: New AI models, technology trends
 - Practice: Continuous learning
 
@@ -194,12 +194,12 @@ Complete the scaling project and share your success.
 ## 📚 RESOURCES
 
 ### **Video Lessons:**
-- Building Workflow Templates
-- Hiring for Your Automation Business
-- Automating Client Management
-- Creating Productized Services
-- Building Automation-as-a-Service
-- Staying Current with Automation
+- [N8N FULL COURSE 5 HOURS (Build & Automate Anything)](https://www.youtube.com/watch?v=7WsbtZwOx_U) - Complete workflow building course
+- [What I Wish I Had Known Before Building 100+ n8n Workflows](https://www.youtube.com/watch?v=VB0ANci--Dc) - Pro tips and advanced techniques
+- [How I 100% Automated Long Form Content with n8n](https://www.youtube.com/watch?v=lF2bvXoV-Zg) - Real-world automation example
+- [n8n Beginner Course (1/9) - Introduction to Automation](https://www.youtube.com/watch?v=4BVTkqbn_tY) - Modular beginner series
+- [100 Days 100 Automation n8n Shorts](https://www.youtube.com/playlist?list=PLrKRLcYxcinnnZghd0RBg1L3HGBZ76nkX) - Daily automation ideas
+- [n8n Official Channel](https://www.youtube.com/c/n8n-io) - Official tutorials and updates
 
 ### **Reading Materials:**
 - Scaling Strategies Guide
@@ -207,12 +207,127 @@ Complete the scaling project and share your success.
 - Productization Techniques
 - AaaS Model Guide
 
+### **Comprehensive Research Resources:**
+
+#### **Workflow Templates & Productization:**
+- Template Design: Reusable workflow patterns
+- Template Management: Version control and updates
+- Template Documentation: User guides and instructions
+- Template Testing: Quality assurance
+- Template Distribution: Sales and delivery
+- Template Support: Customer service
+- Template Analytics: Usage tracking
+- Template Optimization: Performance improvement
+
+#### **Team Building & Hiring:**
+- Hiring Strategies: Recruitment best practices
+- Job Descriptions: Role definition
+- Interview Process: Candidate evaluation
+- Onboarding: New employee setup
+- Training Programs: Skill development
+- Performance Management: Employee evaluation
+- Team Communication: Collaboration tools
+- Remote Work: Distributed team management
+
+#### **Client Management Automation:**
+- CRM Automation: Customer relationship management
+- Support Automation: Help desk systems
+- Billing Automation: Invoice and payment processing
+- Reporting Automation: Client dashboards
+- Communication Automation: Email and messaging
+- Project Management: Task and timeline automation
+- Quality Assurance: Automated testing
+- Feedback Collection: Survey automation
+
+#### **Productized Services:**
+- Service Productization: Standardized offerings
+- Pricing Models: Subscription and one-time
+- Delivery Systems: Automated fulfillment
+- Quality Control: Standardized processes
+- Customer Support: Self-service options
+- Documentation: User guides and tutorials
+- Training: Customer education
+- Analytics: Usage and performance tracking
+
+#### **Automation-as-a-Service (AaaS):**
+- AaaS Models: Subscription and usage-based
+- Service Level Agreements: Quality standards
+- Monitoring: Service health tracking
+- Scaling: Resource management
+- Billing: Usage-based pricing
+- Support: Customer service
+- Security: Data protection
+- Compliance: Regulatory requirements
+
+#### **Technology Stack Management:**
+- Technology Monitoring: Trend tracking
+- Update Management: Version control
+- Security Updates: Vulnerability patches
+- Performance Monitoring: System health
+- Cost Optimization: Resource efficiency
+- Vendor Management: Supplier relationships
+- Technology Evaluation: New tool assessment
+- Migration Planning: Technology transitions
+
+#### **Business Scaling Strategies:**
+- Growth Planning: Strategic expansion
+- Market Expansion: New market entry
+- Service Expansion: Additional offerings
+- Geographic Expansion: Location growth
+- Partnership Development: Strategic alliances
+- Acquisition: Business growth
+- Franchising: Business model replication
+- Licensing: Intellectual property monetization
+
+#### **Operations & Process Optimization:**
+- Process Automation: Workflow optimization
+- Quality Management: Standardized processes
+- Performance Metrics: KPI tracking
+- Continuous Improvement: Process enhancement
+- Risk Management: Business protection
+- Compliance: Regulatory adherence
+- Documentation: Process documentation
+- Training: Employee development
+
+#### **Financial Management:**
+- Budget Planning: Financial forecasting
+- Cost Management: Expense optimization
+- Revenue Optimization: Income maximization
+- Cash Flow Management: Liquidity planning
+- Investment Planning: Growth capital
+- Financial Reporting: Performance tracking
+- Tax Planning: Compliance optimization
+- Financial Analysis: Business insights
+
+#### **Marketing & Sales Scaling:**
+- Marketing Automation: Campaign management
+- Sales Process: Lead generation and conversion
+- Customer Acquisition: Growth strategies
+- Customer Retention: Loyalty programs
+- Brand Building: Market positioning
+- Content Marketing: Thought leadership
+- Digital Marketing: Online presence
+- Partnership Marketing: Collaborative growth
+
+#### **Legal & Compliance:**
+- Business Structure: Legal entity optimization
+- Contract Management: Agreement standardization
+- Intellectual Property: Protection strategies
+- Compliance: Regulatory requirements
+- Risk Management: Legal protection
+- Insurance: Business protection
+- Employment Law: HR compliance
+- Data Protection: Privacy compliance
+
 ### **Tools Needed:**
 - Template management tools
 - Hiring platforms
 - Client management tools
 - Product delivery systems
 - Technology monitoring tools
+- Financial management tools
+- Marketing automation tools
+- Legal compliance tools
 
 ---
 

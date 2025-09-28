@@ -12,7 +12,7 @@
 **Time:** 2-3 hours
 
 #### **Morning (1 hour):**
-- Watch: "Advanced Trigger Concepts"
+- Watch: [n8n FULL COURSE 6 HOURS (Build & Sell AI Automations)](https://www.youtube.com/watch?v=2GZ2SNXWK-c) - Advanced trigger concepts section
 - Learn: Webhook vs Schedule vs Manual triggers
 - Practice: Setting up each trigger type
 
@@ -35,7 +35,7 @@ Create a webhook that receives data and logs it to console.
 **Time:** 2-3 hours
 
 #### **Morning (1 hour):**
-- Watch: "Advanced Render Deployment"
+- Watch: [Master n8n in 2 Hours: Complete Beginner's Guide for 2025](https://www.youtube.com/watch?v=AURnISajubk) - Advanced deployment section
 - Learn: Production optimization techniques
 - Prepare: Advanced environment configuration
 
@@ -58,7 +58,7 @@ Deploy optimized production n8n on Render with monitoring and backups.
 **Time:** 2-3 hours
 
 #### **Morning (1 hour):**
-- Watch: "n8n UI Deep Dive"
+- Watch: [Master n8n in 2 Hours: Complete Beginner's Guide for 2025](https://www.youtube.com/watch?v=AURnISajubk) - n8n UI deep dive section
 - Explore: Workflows, History, Logs sections
 - Practice: Workflow management
 
@@ -81,7 +81,7 @@ Create 3 different workflows and execute them successfully.
 **Time:** 2-3 hours
 
 #### **Morning (1 hour):**
-- Watch: "Building Your First Automation"
+- Watch: [n8n Quick Start Tutorial: Build Your First Workflow](https://www.youtube.com/watch?v=4cQWJViybAQ) - Building your first automation
 - Plan: Your first automation project
 - Design: Workflow architecture
 
@@ -104,7 +104,7 @@ Complete a working automation that processes form data and sends notifications.
 **Time:** 2-3 hours
 
 #### **Morning (1 hour):**
-- Watch: "Webhooks & APIs for Beginners"
+- Watch: [n8n FULL COURSE 6 HOURS (Build & Sell AI Automations)](https://www.youtube.com/watch?v=2GZ2SNXWK-c) - Webhooks & APIs for beginners section
 - Learn: HTTP methods and status codes
 - Practice: Reading API documentation
 
@@ -127,7 +127,7 @@ Make successful API calls to 3 different services using n8n.
 **Time:** 3-4 hours
 
 #### **Morning (1.5 hours):**
-- Watch: "Error Handling in n8n"
+- Watch: [What I Wish I Had Known Before Building 100+ n8n Workflows](https://www.youtube.com/watch?v=VB0ANci--Dc) - Error handling and debugging section
 - Learn: Common error types and solutions
 - Practice: Debugging techniques
 
@@ -192,12 +192,11 @@ Complete the foundation phase project and share your success.
 ## 📚 RESOURCES
 
 ### **Video Lessons:**
-- Advanced Trigger Concepts
-- Self-Hosting n8n with Docker
-- n8n UI Deep Dive
-- Building Your First Automation
-- Webhooks & APIs for Beginners
-- Error Handling in n8n
+- [n8n FULL COURSE 6 HOURS (Build & Sell AI Automations)](https://www.youtube.com/watch?v=2GZ2SNXWK-c) - Complete foundation course
+- [Master n8n in 2 Hours: Complete Beginner's Guide for 2025](https://www.youtube.com/watch?v=AURnISajubk) - Interface and UI walkthrough
+- [n8n Quick Start Tutorial: Build Your First Workflow](https://www.youtube.com/watch?v=4cQWJViybAQ) - First automation and triggers
+- [What I Wish I Had Known Before Building 100+ n8n Workflows](https://www.youtube.com/watch?v=VB0ANci--Dc) - Pro tips and error handling
+- [100 Days 100 Automation n8n Shorts](https://www.youtube.com/playlist?list=PLrKRLcYxcinnnZghd0RBg1L3HGBZ76nkX) - Daily automation ideas
 
 ### **Reading Materials:**
 - n8n Documentation: Triggers
@@ -205,12 +204,61 @@ Complete the foundation phase project and share your success.
 - API Documentation Best Practices
 - Error Handling Strategies
 
+### **Comprehensive Research Resources:**
+
+#### **Advanced n8n Concepts:**
+- n8n Advanced Triggers Guide: https://docs.n8n.io/integrations/builtin/trigger-nodes/
+- n8n Expression Syntax: https://docs.n8n.io/code-examples/expressions/
+- n8n Error Handling: https://docs.n8n.io/workflows/error-handling/
+- n8n Workflow Optimization: https://docs.n8n.io/workflows/workflow-optimization/
+- n8n Best Practices: https://docs.n8n.io/workflows/best-practices/
+- n8n Community Examples: https://n8n.io/workflows/
+
+#### **Production Deployment:**
+- Render Production Guide: https://render.com/docs/production
+- Docker Production Best Practices: https://docs.docker.com/develop/dev-best-practices/
+- SSL Certificate Setup: Let's Encrypt guide
+- Domain Configuration: DNS management
+- Environment Variables: Secure configuration
+- Health Checks: Application monitoring
+- Backup Strategies: Data protection
+
+#### **Error Handling & Debugging:**
+- n8n Debugging Guide: https://docs.n8n.io/workflows/debugging/
+- Common n8n Errors: Troubleshooting guide
+- Log Analysis: Understanding execution logs
+- Error Recovery: Retry mechanisms
+- Testing Strategies: Workflow validation
+- Performance Monitoring: Resource usage
+- Alert Systems: Error notifications
+
+#### **API Integration:**
+- REST API Design: Best practices
+- API Authentication: OAuth, API keys, JWT
+- Rate Limiting: API usage optimization
+- API Testing: Postman collections
+- API Documentation: OpenAPI/Swagger
+- Webhook Security: Validation and verification
+- API Versioning: Backward compatibility
+
+#### **Database Management:**
+- PostgreSQL Performance: Query optimization
+- Database Indexing: Performance improvement
+- Connection Pooling: Resource management
+- Backup Strategies: Automated backups
+- Data Migration: Schema updates
+- Database Security: Access control
+- Monitoring: Database health checks
+
 ### **Tools Needed:**
-- VPS account (DigitalOcean/Hetzner)
-- Domain name
+- Render account (free hosting platform)
+- PostgreSQL database (free with Render)
+- Domain name (optional but recommended)
 - Postman (for API testing)
 - Telegram account
 - Google account
+- GitHub account (for version control)
+- Monitoring tools (UptimeRobot, Pingdom)
 
 ---
 

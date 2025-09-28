@@ -18,6 +18,7 @@
 
 ### **📹 Video Lesson: "Self-Hosting n8n on Render"**
 **Duration:** 45 minutes
+**Watch:** [n8n FULL COURSE 6 HOURS (Build & Sell AI Automations)](https://www.youtube.com/watch?v=2GZ2SNXWK-c) - Self-hosting n8n with Docker section
 
 #### **What You'll Learn:**
 - Render platform basics

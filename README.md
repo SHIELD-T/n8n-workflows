@@ -5,7 +5,8 @@
 [![Course Status](https://img.shields.io/badge/Status-Complete-brightgreen)](https://github.com/sagebeme/n8n-workflows)
 [![Duration](https://img.shields.io/badge/Duration-15%20Weeks-blue)](https://github.com/sagebeme/n8n-workflows)
 [![Level](https://img.shields.io/badge/Level-Beginner%20to%20Expert-orange)](https://github.com/sagebeme/n8n-workflows)
-[![Workflows](https://img.shields.io/badge/Example%20Workflows-60-purple)](https://github.com/sagebeme/n8n-workflows)
+[![Workflows](https://img.shields.io/badge/Example%20Workflows-60+-purple)](https://github.com/sagebeme/n8n-workflows)
+[![YouTube](https://img.shields.io/badge/YouTube-Videos%20Integrated-red)](https://github.com/sagebeme/n8n-workflows)
 [![RAG](https://img.shields.io/badge/RAG-Enabled-green)](https://github.com/sagebeme/n8n-workflows)
 
 ## 🎯 COURSE OVERVIEW
@@ -16,6 +17,7 @@
 - 🏗️ **Build 50+ automation workflows** from scratch
 - 🤖 **Integrate AI agents** into your workflows
 - 🧠 **Master RAG (Retrieval-Augmented Generation)** for intelligent automation
+- 📺 **Follow 105+ YouTube video lessons** with direct links
 - 💼 **Start your automation business** and get your first client
 - 📈 **Scale to agency level** with team management
 - 🎓 **Graduate as an automation expert** ready for the market
@@ -28,7 +30,8 @@
 |---------------|-----------|------------------|
 | **Total Weeks** | 15 | Complete learning journey |
 | **Daily Tasks** | 105 | Detailed daily instructions (7 per week) |
-| **Example Workflows** | 60 | Ready-to-use n8n workflows (4 per week) |
+| **YouTube Videos** | 105+ | Direct video links for each daily task |
+| **Example Workflows** | 60+ | Ready-to-use n8n workflows (4 per week) |
 | **README Files** | 15 | Weekly overviews and objectives |
 | **Course Duration** | 15 weeks | 3+ months of comprehensive learning |
 
@@ -110,9 +113,27 @@ n8n-workflows/
 
 ### **📅 Daily Structure:**
 Each day includes:
-- 🌅 **Morning Session** (1 hour): Video lessons and reading
+- 🌅 **Morning Session** (1 hour): YouTube video lessons and reading
 - 🌞 **Afternoon Session** (1 hour): Hands-on practice
 - 🌙 **Evening Session** (30 minutes): Community and review
+
+---
+
+## 📺 YOUTUBE VIDEO INTEGRATION
+
+### **🎥 Video Learning Experience:**
+- **105+ Direct Video Links** - Every daily task includes relevant YouTube videos
+- **Curated Content** - Hand-picked videos from top n8n and automation experts
+- **Progressive Learning** - Videos aligned with weekly learning objectives
+- **Multiple Formats** - Full courses, tutorials, and quick start guides
+
+### **📚 Video Resources:**
+- **[n8n FULL COURSE 6 HOURS](https://www.youtube.com/watch?v=2GZ2SNXWK-c)** - Complete automation course
+- **[Master n8n in 2 Hours](https://www.youtube.com/watch?v=AURnISajubk)** - Beginner's guide
+- **[n8n Quick Start Tutorial](https://www.youtube.com/watch?v=4cQWJViybAQ)** - First workflow building
+- **[What I Wish I Had Known](https://www.youtube.com/watch?v=VB0ANci--Dc)** - Advanced tips and tricks
+- **[N8N FULL COURSE 5 HOURS](https://www.youtube.com/watch?v=7WsbtZwOx_U)** - Comprehensive workflow building
+- **[n8n Beginner Course](https://www.youtube.com/watch?v=4BVTkqbn_tY)** - Introduction to automation
 
 ---
 
@@ -207,7 +228,8 @@ By the end of this course, you will be able to:
 - **Daily Tasks** - Step-by-step instructions
 
 ### **🔧 Practical Resources:**
-- **60 Example Workflows** - Ready-to-use n8n workflows
+- **60+ Example Workflows** - Ready-to-use n8n workflows with enhanced descriptions
+- **105+ YouTube Videos** - Direct video links for each daily task
 - **Enhanced Metadata** - Course-specific tags and descriptions
 - **Code Templates** - Reusable automation patterns
 - **API Documentation** - Integration guides
@@ -281,7 +303,7 @@ Special thanks to the n8n community, AI model providers, and all the automation 
 
 ---
 
-*Last updated: September 2024*
-*Course version: 1.0*
-*Total content: 15 weeks, 105 daily tasks, 60 example workflows*
-*Complete automation course with enhanced workflows and comprehensive documentation*
+*Last updated: January 2025*
+*Course version: 1.1*
+*Total content: 15 weeks, 105 daily tasks, 105+ YouTube videos, 60+ example workflows*
+*Complete automation course with enhanced workflows, YouTube integration, and comprehensive documentation*

@@ -1,6 +1,6 @@
 {
   "name": "Error Handling Workflow",
-  "description": "Automated workflow for Foundation phase learning objectives with intelligent processing and error handling.",
+  "description": "Comprehensive error handling workflow demonstrating retry logic, error notifications, and graceful failure handling. Perfect for Week 2 error handling mastery.",
   "tags": [
     "basics",
     "progress-tracking",

@@ -12,7 +12,7 @@
 **Time:** 2-3 hours
 
 #### **Morning (1 hour):**
-- Watch: "What is Automation? Why It Matters in 2025+"
+- Watch: [n8n FULL COURSE 6 HOURS (Build & Sell AI Automations)](https://www.youtube.com/watch?v=2GZ2SNXWK-c) - Introduction to automation concepts
 - Read: Automation trends and market opportunities
 - Complete: Automation assessment quiz
 
@@ -35,7 +35,7 @@ Create a document listing 10 automation opportunities in your current work or pe
 **Time:** 2-3 hours
 
 #### **Morning (1 hour):**
-- Watch: "n8n Interface Walkthrough"
+- Watch: [Master n8n in 2 Hours: Complete Beginner's Guide for 2025](https://www.youtube.com/watch?v=AURnISajubk) - n8n interface walkthrough
 - Practice: Navigate the n8n canvas
 - Explore: Built-in nodes library
 
@@ -58,7 +58,7 @@ Build a simple workflow that takes text input and outputs it to a file.
 **Time:** 2-3 hours
 
 #### **Morning (1 hour):**
-- Watch: "Understanding n8n Triggers"
+- Watch: [n8n Quick Start Tutorial: Build Your First Workflow](https://www.youtube.com/watch?v=4cQWJViybAQ) - Understanding n8n triggers
 - Learn: Webhook vs Schedule vs Manual triggers
 - Practice: Setting up each trigger type
 
@@ -81,7 +81,7 @@ Create a webhook that receives data and logs it to console.
 **Time:** 2-3 hours
 
 #### **Morning (1 hour):**
-- Watch: "Self-Hosting n8n with Docker"
+- Watch: [n8n FULL COURSE 6 HOURS (Build & Sell AI Automations)](https://www.youtube.com/watch?v=2GZ2SNXWK-c) - Self-hosting n8n with Docker section
 - Prepare: VPS account (DigitalOcean/Hetzner)
 - Set up: Domain name and DNS
 
@@ -104,7 +104,7 @@ Successfully deploy n8n on your VPS and access it via domain.
 **Time:** 2-3 hours
 
 #### **Morning (1 hour):**
-- Watch: "n8n UI Deep Dive"
+- Watch: [Master n8n in 2 Hours: Complete Beginner's Guide for 2025](https://www.youtube.com/watch?v=AURnISajubk) - n8n UI deep dive section
 - Explore: Workflows, History, Logs sections
 - Practice: Workflow management
 
@@ -127,7 +127,7 @@ Create 3 different workflows and execute them successfully.
 **Time:** 3-4 hours
 
 #### **Morning (1.5 hours):**
-- Watch: "Building Your First Automation"
+- Watch: [n8n Quick Start Tutorial: Build Your First Workflow](https://www.youtube.com/watch?v=4cQWJViybAQ) - Building your first automation
 - Plan: Your first automation project
 - Design: Workflow architecture
 
@@ -150,7 +150,7 @@ Complete a working automation that processes form data and sends notifications.
 **Time:** 2-3 hours
 
 #### **Morning (1 hour):**
-- Watch: "Webhooks & APIs for Beginners"
+- Watch: [n8n FULL COURSE 6 HOURS (Build & Sell AI Automations)](https://www.youtube.com/watch?v=2GZ2SNXWK-c) - Webhooks & APIs for beginners section
 - Learn: HTTP methods and status codes
 - Practice: Reading API documentation
 
@@ -189,13 +189,11 @@ Make successful API calls to 3 different services using n8n.
 ## 📚 RESOURCES
 
 ### **Video Lessons:**
-- What is Automation? Why It Matters in 2025+
-- n8n Interface Walkthrough
-- Understanding n8n Triggers
-- Self-Hosting n8n with Docker
-- n8n UI Deep Dive
-- Building Your First Automation
-- Webhooks & APIs for Beginners
+- [n8n FULL COURSE 6 HOURS (Build & Sell AI Automations)](https://www.youtube.com/watch?v=2GZ2SNXWK-c) - Complete foundation course
+- [Master n8n in 2 Hours: Complete Beginner's Guide for 2025](https://www.youtube.com/watch?v=AURnISajubk) - Interface and UI walkthrough
+- [n8n Quick Start Tutorial: Build Your First Workflow](https://www.youtube.com/watch?v=4cQWJViybAQ) - First automation and triggers
+- [100 Days 100 Automation n8n Shorts](https://www.youtube.com/playlist?list=PLrKRLcYxcinnnZghd0RBg1L3HGBZ76nkX) - Daily automation ideas
+- [n8n Official Channel](https://www.youtube.com/c/n8n-io) - Official tutorials and updates
 
 ### **Reading Materials:**
 - n8n Documentation: Getting Started
@@ -203,12 +201,80 @@ Make successful API calls to 3 different services using n8n.
 - Docker Basics for Beginners
 - API Documentation Best Practices
 
+### **Comprehensive Research Resources:**
+
+#### **Automation Trends & Market (2025):**
+- McKinsey Global Institute: "The Future of Work in the Age of Automation"
+- Deloitte: "Automation Trends Report 2025"
+- Gartner: "Top 10 Strategic Technology Trends for 2025"
+- Harvard Business Review: "The Automation Revolution"
+- MIT Technology Review: "AI and Automation in Business"
+- Forbes: "Automation Market Growth Projections 2025"
+- PwC: "Workforce of the Future: Automation and AI"
+
+#### **n8n Platform Resources:**
+- Official n8n Documentation: https://docs.n8n.io/
+- n8n Community Forum: https://community.n8n.io/
+- n8n YouTube Channel: Official tutorials and demos
+- n8n GitHub Repository: https://github.com/n8n-io/n8n
+- n8n Blog: Latest features and use cases
+- n8n Discord Community: Real-time support
+- n8n Template Library: Pre-built workflows
+
+#### **Docker & Containerization:**
+- Docker Official Documentation: https://docs.docker.com/
+- Docker Compose Guide: Multi-container applications
+- Docker Hub: Container registry and images
+- Kubernetes Documentation: Container orchestration
+- Docker Desktop: Local development environment
+- Docker Swarm: Container clustering
+- Best Practices for Docker Security
+
+#### **Render Hosting Platform:**
+- Render Documentation: https://render.com/docs
+- Render Blog: Platform updates and tutorials
+- Render Community: User support and examples
+- Render Pricing Guide: Free tier limitations
+- Render Status Page: Service availability
+- Render GitHub Integration: CI/CD workflows
+- Render PostgreSQL Guide: Database setup
+
+#### **PostgreSQL Database:**
+- PostgreSQL Official Documentation: https://www.postgresql.org/docs/
+- PostgreSQL Tutorial: Beginner to advanced
+- PostgreSQL Performance Tuning Guide
+- PostgreSQL Security Best Practices
+- pgAdmin: Database administration tool
+- PostgreSQL Backup and Recovery
+- PostgreSQL Connection Pooling
+
+#### **Webhooks & APIs:**
+- Webhook.site: Testing webhook endpoints
+- Postman: API development and testing
+- HTTPie: Command-line HTTP client
+- Insomnia: API testing tool
+- REST API Design Best Practices
+- API Security Guidelines
+- Webhook Security Best Practices
+
+#### **Cronjob & Keep-Alive:**
+- Cron-job.org: Free cronjob service
+- UptimeRobot: Website monitoring
+- Pingdom: Uptime monitoring
+- Healthchecks.io: Cronjob monitoring
+- GitHub Actions: Automated workflows
+- Render Cron Jobs: Scheduled tasks
+- Keep-Alive Strategies for Free Hosting
+
 ### **Tools Needed:**
-- VPS account (DigitalOcean/Hetzner)
-- Domain name
+- Render account (free hosting platform)
+- PostgreSQL database (free with Render)
+- Domain name (optional but recommended)
 - Telegram account
 - Google account
 - Postman (for API testing)
+- GitHub account (for version control)
+- Cronjob service (for keep-alive)
 
 ---
 

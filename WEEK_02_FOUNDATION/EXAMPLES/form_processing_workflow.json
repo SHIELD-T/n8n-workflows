@@ -1,6 +1,6 @@
 {
   "name": "Form Processing Workflow",
-  "description": "Automated workflow for Foundation phase learning objectives with intelligent processing and error handling.",
+  "description": "Form processing workflow that handles form submissions, validates data, and sends automated responses. Demonstrates Week 2 form handling and data processing skills.",
   "tags": [
     "basics",
     "progress-tracking",

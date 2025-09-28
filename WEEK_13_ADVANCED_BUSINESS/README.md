@@ -12,7 +12,7 @@
 **Time:** 2-3 hours
 
 #### **Morning (1 hour):**
-- Watch: "Expanding Your Automation Market"
+- Watch: [n8n FULL COURSE 6 HOURS (Build & Sell AI Automations)](https://www.youtube.com/watch?v=2GZ2SNXWK-c) - Expanding your automation market section
 - Learn: New markets, verticals, geographies
 - Practice: Market analysis
 
@@ -35,7 +35,7 @@ Research 3 new markets and create entry strategies.
 **Time:** 2-3 hours
 
 #### **Morning (1 hour):**
-- Watch: "Building Strategic Partnerships"
+- Watch: [N8N FULL COURSE 5 HOURS (Build & Automate Anything)](https://www.youtube.com/watch?v=7WsbtZwOx_U) - Building strategic partnerships section
 - Learn: Partnership types, negotiation
 - Practice: Partnership strategies
 
@@ -58,7 +58,7 @@ Identify 5 potential partners and create partnership proposals.
 **Time:** 2-3 hours
 
 #### **Morning (1 hour):**
-- Watch: "Advanced Pricing for Automation Services"
+- Watch: [What I Wish I Had Known Before Building 100+ n8n Workflows](https://www.youtube.com/watch?v=VB0ANci--Dc) - Advanced pricing for automation services section
 - Learn: Value-based pricing, tiered models
 - Practice: Pricing strategies
 
@@ -81,7 +81,7 @@ Create advanced pricing models for different service tiers.
 **Time:** 2-3 hours
 
 #### **Morning (1 hour):**
-- Watch: "Building Your Automation Brand"
+- Watch: [How I 100% Automated Long Form Content with n8n](https://www.youtube.com/watch?v=lF2bvXoV-Zg) - Building your automation brand section
 - Learn: Brand strategy, positioning
 - Practice: Brand development
 
@@ -104,7 +104,7 @@ Create comprehensive brand strategy and positioning.
 **Time:** 2-3 hours
 
 #### **Morning (1 hour):**
-- Watch: "Content Marketing for Automation"
+- Watch: [n8n Beginner Course (1/9) - Introduction to Automation](https://www.youtube.com/watch?v=4BVTkqbn_tY) - Content marketing for automation section
 - Learn: Content strategy, distribution
 - Practice: Content creation
 
@@ -127,7 +127,7 @@ Create content marketing strategy and produce 5 pieces of content.
 **Time:** 3-4 hours
 
 #### **Morning (1.5 hours):**
-- Watch: "Advanced Business Strategies Review"
+- Watch: [N8N FULL COURSE 5 HOURS (Build & Automate Anything)](https://www.youtube.com/watch?v=7WsbtZwOx_U) - Advanced business strategies review section
 - Learn: Business strategy integration
 - Practice: Strategic planning
 
@@ -194,12 +194,12 @@ Complete the advanced business project and share your success.
 ## 📚 RESOURCES
 
 ### **Video Lessons:**
-- Expanding Your Automation Market
-- Building Strategic Partnerships
-- Advanced Pricing for Automation Services
-- Building Your Automation Brand
-- Content Marketing for Automation
-- Advanced Business Strategies Review
+- [n8n FULL COURSE 6 HOURS (Build & Sell AI Automations)](https://www.youtube.com/watch?v=2GZ2SNXWK-c) - Complete foundation course with business focus
+- [N8N FULL COURSE 5 HOURS (Build & Automate Anything)](https://www.youtube.com/watch?v=7WsbtZwOx_U) - Complete workflow building course
+- [What I Wish I Had Known Before Building 100+ n8n Workflows](https://www.youtube.com/watch?v=VB0ANci--Dc) - Pro tips and advanced techniques
+- [How I 100% Automated Long Form Content with n8n](https://www.youtube.com/watch?v=lF2bvXoV-Zg) - Real-world automation example
+- [n8n Beginner Course (1/9) - Introduction to Automation](https://www.youtube.com/watch?v=4BVTkqbn_tY) - Modular beginner series
+- [100 Days 100 Automation n8n Shorts](https://www.youtube.com/playlist?list=PLrKRLcYxcinnnZghd0RBg1L3HGBZ76nkX) - Daily automation ideas
 
 ### **Reading Materials:**
 - Business Strategy Guide
@@ -207,12 +207,127 @@ Complete the advanced business project and share your success.
 - Partnership Development
 - Brand Building Techniques
 
+### **Comprehensive Research Resources:**
+
+#### **Market Expansion Strategies:**
+- Market Analysis: Industry trends and opportunities
+- Geographic Expansion: New market entry
+- Vertical Expansion: Industry specialization
+- Horizontal Expansion: Service diversification
+- Market Research: Customer needs analysis
+- Competitive Analysis: Market positioning
+- Market Entry Strategies: Go-to-market plans
+- Market Validation: Proof of concept
+
+#### **Strategic Partnerships:**
+- Partnership Types: Strategic alliances
+- Partnership Development: Relationship building
+- Partnership Negotiation: Terms and conditions
+- Partnership Management: Relationship maintenance
+- Partnership Metrics: Performance tracking
+- Partnership Exit: Relationship termination
+- Partnership Legal: Contract management
+- Partnership Marketing: Collaborative promotion
+
+#### **Advanced Pricing Strategies:**
+- Value-Based Pricing: Customer value assessment
+- Tiered Pricing: Service level differentiation
+- Dynamic Pricing: Market-based pricing
+- Subscription Pricing: Recurring revenue models
+- Usage-Based Pricing: Consumption-based billing
+- Freemium Models: Free and premium tiers
+- Bundling: Service package pricing
+- Price Optimization: Revenue maximization
+
+#### **Brand Building & Positioning:**
+- Brand Strategy: Identity development
+- Brand Positioning: Market differentiation
+- Brand Messaging: Communication strategy
+- Brand Guidelines: Consistency standards
+- Brand Assets: Visual identity
+- Brand Monitoring: Reputation management
+- Brand Extension: Product line expansion
+- Brand Valuation: Asset assessment
+
+#### **Content Marketing & Thought Leadership:**
+- Content Strategy: Content planning
+- Content Creation: Content development
+- Content Distribution: Channel management
+- Content SEO: Search optimization
+- Content Analytics: Performance tracking
+- Thought Leadership: Industry expertise
+- Content Marketing: Lead generation
+- Content ROI: Return on investment
+
+#### **Advanced Business Strategies:**
+- Business Model Innovation: Strategy development
+- Competitive Advantage: Market differentiation
+- Strategic Planning: Long-term planning
+- Business Transformation: Change management
+- Innovation Management: New product development
+- Risk Management: Business protection
+- Crisis Management: Emergency response
+- Business Continuity: Disaster recovery
+
+#### **Financial Strategy & Management:**
+- Financial Planning: Budget and forecasting
+- Investment Strategy: Capital allocation
+- Revenue Optimization: Income maximization
+- Cost Management: Expense optimization
+- Financial Analysis: Performance evaluation
+- Cash Flow Management: Liquidity planning
+- Financial Reporting: Stakeholder communication
+- Financial Risk: Market and credit risk
+
+#### **Operations & Process Excellence:**
+- Process Optimization: Efficiency improvement
+- Quality Management: Standardized processes
+- Performance Management: KPI tracking
+- Continuous Improvement: Process enhancement
+- Operations Strategy: Operational planning
+- Supply Chain Management: Vendor relationships
+- Technology Integration: System optimization
+- Change Management: Organizational change
+
+#### **Legal & Regulatory Compliance:**
+- Business Law: Legal compliance
+- Contract Management: Agreement standardization
+- Intellectual Property: Protection strategies
+- Regulatory Compliance: Industry requirements
+- Risk Management: Legal protection
+- Insurance: Business protection
+- Employment Law: HR compliance
+- Data Protection: Privacy compliance
+
+#### **Technology & Innovation:**
+- Technology Strategy: Technology planning
+- Innovation Management: New technology adoption
+- Digital Transformation: Technology integration
+- Technology Investment: Capital allocation
+- Technology Risk: Security and compliance
+- Technology Partnerships: Vendor relationships
+- Technology Trends: Industry monitoring
+- Technology ROI: Return on investment
+
+#### **International Business:**
+- Global Expansion: International markets
+- Cross-Cultural Management: Cultural adaptation
+- International Law: Global compliance
+- Currency Management: Foreign exchange
+- International Partnerships: Global alliances
+- Export/Import: International trade
+- Global Marketing: International promotion
+- International Finance: Global banking
+
 ### **Tools Needed:**
 - Market research tools
 - Partnership platforms
 - Pricing tools
 - Brand development tools
 - Content creation tools
+- Financial management tools
+- Legal compliance tools
+- Technology management tools
 
 ---
 

@@ -12,7 +12,7 @@
 **Time:** 2-3 hours
 
 #### **Morning (1 hour):**
-- Watch: "Advanced Workflow Patterns"
+- Watch: [N8N FULL COURSE 5 HOURS (Build & Automate Anything)](https://www.youtube.com/watch?v=7WsbtZwOx_U) - Advanced workflow patterns section
 - Learn: Parallel processing, loops, and conditions
 - Practice: Complex workflow design
 
@@ -35,7 +35,7 @@ Build a workflow using parallel processing and conditional logic.
 **Time:** 2-3 hours
 
 #### **Morning (1 hour):**
-- Watch: "Data Processing in n8n"
+- Watch: [What I Wish I Had Known Before Building 100+ n8n Workflows](https://www.youtube.com/watch?v=VB0ANci--Dc) - Data processing section
 - Learn: Data transformation techniques
 - Practice: Data manipulation
 
@@ -58,7 +58,7 @@ Create a workflow that processes JSON data and transforms it to CSV.
 **Time:** 2-3 hours
 
 #### **Morning (1 hour):**
-- Watch: "Building End-to-End Systems"
+- Watch: [N8N FULL COURSE 5 HOURS (Build & Automate Anything)](https://www.youtube.com/watch?v=7WsbtZwOx_U) - Building end-to-end systems section
 - Learn: System integration patterns
 - Practice: Complete automation design
 
@@ -81,7 +81,7 @@ Build a complete automation system with 5+ steps.
 **Time:** 2-3 hours
 
 #### **Morning (1 hour):**
-- Watch: "Workflow Performance Optimization"
+- Watch: [What I Wish I Had Known Before Building 100+ n8n Workflows](https://www.youtube.com/watch?v=VB0ANci--Dc) - Workflow performance optimization section
 - Learn: Optimization techniques
 - Practice: Performance tuning
 
@@ -104,7 +104,7 @@ Optimize 3 existing workflows for better performance.
 **Time:** 2-3 hours
 
 #### **Morning (1 hour):**
-- Watch: "Testing and Debugging Workflows"
+- Watch: [N8N FULL COURSE 5 HOURS (Build & Automate Anything)](https://www.youtube.com/watch?v=7WsbtZwOx_U) - Testing and debugging workflows section
 - Learn: Testing strategies and debugging techniques
 - Practice: Debugging workflows
 
@@ -127,7 +127,7 @@ Create a testing strategy for your workflows and debug any issues.
 **Time:** 3-4 hours
 
 #### **Morning (1.5 hours):**
-- Watch: "Documenting Your Workflows"
+- Watch: [n8n Beginner Course (1/9) - Introduction to Automation](https://www.youtube.com/watch?v=4BVTkqbn_tY) - Documenting your workflows section
 - Learn: Documentation best practices
 - Practice: Workflow documentation
 
@@ -193,12 +193,11 @@ Complete the advanced workflow project and share your success.
 ## 📚 RESOURCES
 
 ### **Video Lessons:**
-- Advanced Workflow Patterns
-- Data Processing in n8n
-- Building End-to-End Systems
-- Workflow Performance Optimization
-- Testing and Debugging Workflows
-- Documenting Your Workflows
+- [N8N FULL COURSE 5 HOURS (Build & Automate Anything)](https://www.youtube.com/watch?v=7WsbtZwOx_U) - Complete workflow building course
+- [What I Wish I Had Known Before Building 100+ n8n Workflows](https://www.youtube.com/watch?v=VB0ANci--Dc) - Pro tips and advanced techniques
+- [n8n Beginner Course (1/9) - Introduction to Automation](https://www.youtube.com/watch?v=4BVTkqbn_tY) - Modular beginner series
+- [100 Days 100 Automation n8n Shorts](https://www.youtube.com/playlist?list=PLrKRLcYxcinnnZghd0RBg1L3HGBZ76nkX) - Daily workflow ideas
+- [n8n Official Channel](https://www.youtube.com/c/n8n-io) - Official tutorials and updates
 
 ### **Reading Materials:**
 - n8n Documentation: Advanced Concepts
@@ -206,11 +205,83 @@ Complete the advanced workflow project and share your success.
 - System Integration Patterns
 - Performance Optimization Guide
 
+### **Comprehensive Research Resources:**
+
+#### **Advanced Workflow Patterns:**
+- n8n Advanced Patterns: https://docs.n8n.io/workflows/workflow-patterns/
+- Parallel Processing: https://docs.n8n.io/workflows/workflow-patterns/parallel/
+- Conditional Logic: https://docs.n8n.io/workflows/workflow-patterns/conditional/
+- Looping Patterns: https://docs.n8n.io/workflows/workflow-patterns/looping/
+- Error Handling Patterns: https://docs.n8n.io/workflows/workflow-patterns/error-handling/
+- Data Transformation: https://docs.n8n.io/workflows/workflow-patterns/data-transformation/
+- Workflow Orchestration: Complex workflow coordination
+
+#### **Data Processing & Transformation:**
+- n8n Data Processing: https://docs.n8n.io/workflows/data-processing/
+- JSON Data Manipulation: https://docs.n8n.io/code-examples/expressions/json/
+- CSV Processing: Data import/export
+- XML Processing: Structured data handling
+- Database Operations: CRUD operations
+- Data Validation: Input validation
+- Data Cleaning: Data quality improvement
+- Data Aggregation: Summary statistics
+
+#### **End-to-End System Design:**
+- System Architecture Patterns: Microservices, monoliths
+- Integration Patterns: API integration, webhooks
+- Data Flow Design: Information architecture
+- System Monitoring: Health checks, metrics
+- Scalability Patterns: Horizontal/vertical scaling
+- Security Patterns: Authentication, authorization
+- Performance Patterns: Caching, optimization
+
+#### **Performance Optimization:**
+- n8n Performance Guide: https://docs.n8n.io/workflows/workflow-optimization/
+- Memory Optimization: Efficient resource usage
+- Execution Time Optimization: Faster workflows
+- Database Optimization: Query performance
+- API Optimization: Rate limiting, caching
+- Network Optimization: Connection pooling
+- Resource Management: CPU, memory, storage
+
+#### **Testing & Debugging:**
+- n8n Testing Guide: https://docs.n8n.io/workflows/testing/
+- Unit Testing: Individual node testing
+- Integration Testing: End-to-end testing
+- Performance Testing: Load testing
+- Debugging Techniques: Step-by-step debugging
+- Log Analysis: Understanding execution logs
+- Error Simulation: Testing error handling
+- Test Data Management: Sample data creation
+
+#### **Documentation & Best Practices:**
+- n8n Documentation Guide: https://docs.n8n.io/workflows/documentation/
+- Workflow Documentation: Best practices
+- API Documentation: OpenAPI/Swagger
+- User Guides: End-user documentation
+- Technical Documentation: Developer guides
+- Troubleshooting Guides: Common issues
+- Best Practices: Industry standards
+- Code Comments: Inline documentation
+
+#### **System Integration:**
+- API Integration Patterns: REST, GraphQL, SOAP
+- Webhook Integration: Real-time data
+- Database Integration: SQL, NoSQL
+- File System Integration: Local, cloud storage
+- Message Queue Integration: RabbitMQ, Kafka
+- Event-Driven Architecture: Event sourcing
+- Service Mesh: Microservices communication
+
 ### **Tools Needed:**
 - n8n instance
 - Data processing tools
 - Testing frameworks
 - Documentation tools
+- Performance monitoring tools
+- Database management tools
+- API testing tools
+- Version control system
 
 ---
 

@@ -18,6 +18,7 @@
 
 ### **📚 Foundation Concepts Review**
 **Duration:** 30 minutes
+**Watch:** [n8n FULL COURSE 6 HOURS (Build & Sell AI Automations)](https://www.youtube.com/watch?v=2GZ2SNXWK-c) - Foundation review section
 
 #### **Review What You've Learned:**
 

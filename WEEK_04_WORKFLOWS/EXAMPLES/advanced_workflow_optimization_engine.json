@@ -1,6 +1,6 @@
 {
   "name": "Advanced Workflow Optimization Engine",
-  "description": "Optimize workflow performance with automated analysis, bottleneck detection, and improvement suggestions.",
+  "description": "Workflow optimization engine that analyzes performance, suggests improvements, and implements optimization strategies. Ideal for Week 4 workflow optimization mastery.",
   "tags": [
     "workflows",
     "efficiency",

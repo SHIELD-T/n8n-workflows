@@ -18,6 +18,7 @@
 
 ### **📚 Workflow Building Concepts Review**
 **Duration:** 30 minutes
+**Watch:** [N8N FULL COURSE 5 HOURS (Build & Automate Anything)](https://www.youtube.com/watch?v=7WsbtZwOx_U) - Workflow building review
 
 #### **Review What You've Learned:**
 

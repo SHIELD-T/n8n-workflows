@@ -18,6 +18,7 @@
 
 ### **📹 Video Lesson: "Working with Pre-built Workflows"**
 **Duration:** 45 minutes
+**Watch:** [n8n Beginner Course (1/9) - Introduction to Automation](https://www.youtube.com/watch?v=4BVTkqbn_tY) - Working with pre-built workflows
 
 #### **What You'll Learn:**
 - Cloning workflow techniques

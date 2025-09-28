@@ -1,6 +1,6 @@
 {
   "name": "Conditional Processing Workflow",
-  "description": "Automated workflow for Workflow Building phase learning objectives with intelligent processing and error handling.",
+  "description": "Conditional processing workflow demonstrating IF nodes, switch logic, and dynamic routing based on data conditions. Ideal for Week 3 conditional logic mastery.",
   "tags": [
     "optimization",
     "performance",

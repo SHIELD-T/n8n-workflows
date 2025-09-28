@@ -18,6 +18,7 @@
 
 ### **📹 Video Lesson: "Workflow Version Control"**
 **Duration:** 45 minutes
+**Watch:** [N8N FULL COURSE 5 HOURS (Build & Automate Anything)](https://www.youtube.com/watch?v=7WsbtZwOx_U) - Workflow version control
 
 #### **What You'll Learn:**
 - Version control concepts

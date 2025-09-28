@@ -12,7 +12,7 @@
 **Time:** 2-3 hours
 
 #### **Morning (1 hour):**
-- Watch: "Understanding Triggers vs. Actions"
+- Watch: [N8N FULL COURSE 5 HOURS (Build & Automate Anything)](https://www.youtube.com/watch?v=7WsbtZwOx_U) - Understanding triggers vs. actions
 - Learn: Different trigger types and their uses
 - Practice: Setting up various triggers
 
@@ -35,7 +35,7 @@ Create 3 workflows, each using a different trigger type.
 **Time:** 2-3 hours
 
 #### **Morning (1 hour):**
-- Watch: "Mastering Built-in Nodes"
+- Watch: [What I Wish I Had Known Before Building 100+ n8n Workflows](https://www.youtube.com/watch?v=VB0ANci--Dc) - Mastering built-in nodes
 - Learn: HTTP, IF, SET, SplitInBatches nodes
 - Practice: Node configurations
 
@@ -58,7 +58,7 @@ Build a workflow using HTTP, IF, SET, and SplitInBatches nodes.
 **Time:** 2-3 hours
 
 #### **Morning (1 hour):**
-- Watch: "n8n Expression Syntax"
+- Watch: [N8N FULL COURSE 5 HOURS (Build & Automate Anything)](https://www.youtube.com/watch?v=7WsbtZwOx_U) - n8n expression syntax
 - Learn: Variables, expressions, and parameters
 - Practice: Expression writing
 
@@ -81,7 +81,7 @@ Create a workflow with 5 different expressions.
 **Time:** 2-3 hours
 
 #### **Morning (1 hour):**
-- Watch: "Error Handling Strategies"
+- Watch: [What I Wish I Had Known Before Building 100+ n8n Workflows](https://www.youtube.com/watch?v=VB0ANci--Dc) - Error handling strategies
 - Learn: Retry logic and error handling
 - Practice: Error handling techniques
 
@@ -104,7 +104,7 @@ Build a workflow with comprehensive error handling.
 **Time:** 2-3 hours
 
 #### **Morning (1 hour):**
-- Watch: "Workflow Version Control"
+- Watch: [N8N FULL COURSE 5 HOURS (Build & Automate Anything)](https://www.youtube.com/watch?v=7WsbtZwOx_U) - Workflow version control
 - Learn: Export/import workflows
 - Practice: Backup strategies
 
@@ -127,7 +127,7 @@ Export all your workflows and create a backup system.
 **Time:** 3-4 hours
 
 #### **Morning (1.5 hours):**
-- Watch: "Working with Pre-built Workflows"
+- Watch: [n8n Beginner Course (1/9) - Introduction to Automation](https://www.youtube.com/watch?v=4BVTkqbn_tY) - Working with pre-built workflows
 - Learn: Cloning and modification techniques
 - Practice: Workflow customization
 
@@ -192,12 +192,11 @@ Complete the workflow building project and share your success.
 ## 📚 RESOURCES
 
 ### **Video Lessons:**
-- Understanding Triggers vs. Actions
-- Mastering Built-in Nodes
-- n8n Expression Syntax
-- Error Handling Strategies
-- Workflow Version Control
-- Working with Pre-built Workflows
+- [N8N FULL COURSE 5 HOURS (Build & Automate Anything)](https://www.youtube.com/watch?v=7WsbtZwOx_U) - Complete workflow building course
+- [What I Wish I Had Known Before Building 100+ n8n Workflows](https://www.youtube.com/watch?v=VB0ANci--Dc) - Pro tips and advanced techniques
+- [n8n Beginner Course (1/9) - Introduction to Automation](https://www.youtube.com/watch?v=4BVTkqbn_tY) - Modular beginner series
+- [100 Days 100 Automation n8n Shorts](https://www.youtube.com/playlist?list=PLrKRLcYxcinnnZghd0RBg1L3HGBZ76nkX) - Daily workflow ideas
+- [n8n Official Channel](https://www.youtube.com/c/n8n-io) - Official tutorials and updates
 
 ### **Reading Materials:**
 - n8n Documentation: Nodes
@@ -205,11 +204,69 @@ Complete the workflow building project and share your success.
 - Error Handling Best Practices
 - Workflow Version Control
 
+### **Comprehensive Research Resources:**
+
+#### **n8n Built-in Nodes:**
+- n8n Node Reference: https://docs.n8n.io/integrations/builtin/
+- HTTP Request Node: https://docs.n8n.io/integrations/builtin/core-nodes/n8n-nodes-base.httprequest/
+- IF Node: https://docs.n8n.io/integrations/builtin/core-nodes/n8n-nodes-base.if/
+- SET Node: https://docs.n8n.io/integrations/builtin/core-nodes/n8n-nodes-base.set/
+- SplitInBatches Node: https://docs.n8n.io/integrations/builtin/core-nodes/n8n-nodes-base.splitinbatches/
+- Code Node: https://docs.n8n.io/integrations/builtin/core-nodes/n8n-nodes-base.code/
+- Function Node: https://docs.n8n.io/integrations/builtin/core-nodes/n8n-nodes-base.function/
+
+#### **Expression Syntax & Variables:**
+- n8n Expression Syntax: https://docs.n8n.io/code-examples/expressions/
+- JavaScript in n8n: https://docs.n8n.io/code-examples/expressions/javascript/
+- Date and Time Functions: https://docs.n8n.io/code-examples/expressions/date-time/
+- String Functions: https://docs.n8n.io/code-examples/expressions/string/
+- Math Functions: https://docs.n8n.io/code-examples/expressions/math/
+- Array Functions: https://docs.n8n.io/code-examples/expressions/array/
+- Object Functions: https://docs.n8n.io/code-examples/expressions/object/
+
+#### **Workflow Patterns:**
+- n8n Workflow Patterns: https://docs.n8n.io/workflows/workflow-patterns/
+- Conditional Workflows: https://docs.n8n.io/workflows/workflow-patterns/conditional/
+- Looping Workflows: https://docs.n8n.io/workflows/workflow-patterns/looping/
+- Parallel Processing: https://docs.n8n.io/workflows/workflow-patterns/parallel/
+- Error Handling Patterns: https://docs.n8n.io/workflows/workflow-patterns/error-handling/
+- Data Transformation: https://docs.n8n.io/workflows/workflow-patterns/data-transformation/
+
+#### **Version Control & Backup:**
+- Git for Workflows: Version control best practices
+- n8n Workflow Export/Import: https://docs.n8n.io/workflows/import-export/
+- Backup Strategies: Automated workflow backups
+- Workflow Templates: Reusable workflow patterns
+- Workflow Sharing: Community collaboration
+- Workflow Documentation: Best practices
+- Workflow Testing: Validation strategies
+
+#### **Error Handling & Debugging:**
+- n8n Error Handling: https://docs.n8n.io/workflows/error-handling/
+- Common n8n Errors: Troubleshooting guide
+- Debugging Techniques: Step-by-step debugging
+- Log Analysis: Understanding execution logs
+- Error Recovery: Retry mechanisms
+- Testing Strategies: Workflow validation
+- Performance Monitoring: Resource usage
+
+#### **Workflow Optimization:**
+- n8n Performance Tips: https://docs.n8n.io/workflows/workflow-optimization/
+- Memory Management: Efficient resource usage
+- Execution Time Optimization: Faster workflows
+- Data Processing Optimization: Efficient data handling
+- Node Configuration: Optimal settings
+- Workflow Structure: Best practices
+- Monitoring and Metrics: Performance tracking
+
 ### **Tools Needed:**
 - n8n instance
 - Postman (for API testing)
 - Text editor for documentation
 - Workflow collection access
+- Git repository (for version control)
+- Backup storage (cloud or local)
+- Monitoring tools
 
 ---
 

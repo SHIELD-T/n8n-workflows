@@ -1,6 +1,6 @@
 {
   "name": "Example Workflow 2",
-  "description": "Automated workflow for Foundation phase learning objectives with intelligent processing and error handling.",
+  "description": "Webhook-based workflow demonstrating trigger concepts, data validation, and response handling. Ideal for Week 1 webhook and API learning.",
   "tags": [
     "basics",
     "progress-tracking",

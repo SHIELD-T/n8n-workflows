@@ -18,6 +18,7 @@
 
 ### **📹 Video Lesson: "n8n UI Deep Dive"**
 **Duration:** 45 minutes
+**Watch:** [Master n8n in 2 Hours: Complete Beginner's Guide for 2025](https://www.youtube.com/watch?v=AURnISajubk) - n8n UI deep dive section
 
 #### **What You'll Learn:**
 - Advanced UI navigation

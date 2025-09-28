@@ -12,7 +12,7 @@
 **Time:** 2-3 hours
 
 #### **Morning (1 hour):**
-- Watch: "Authentication Methods in n8n"
+- Watch: [n8n FULL COURSE 6 HOURS (Build & Sell AI Automations)](https://www.youtube.com/watch?v=2GZ2SNXWK-c) - Authentication methods in n8n section
 - Learn: OAuth 2.0 vs API Keys
 - Practice: Setting up different auth methods
 
@@ -35,7 +35,7 @@ Set up both OAuth 2.0 and API key authentication for 3 services.
 **Time:** 2-3 hours
 
 #### **Morning (1 hour):**
-- Watch: "Form Builder Integration"
+- Watch: [N8N FULL COURSE 5 HOURS (Build & Automate Anything)](https://www.youtube.com/watch?v=7WsbtZwOx_U) - Form builder integration section
 - Learn: Tally, Typeform integration
 - Practice: Form processing workflows
 
@@ -58,7 +58,7 @@ Build workflows that process data from 2 different form builders.
 **Time:** 2-3 hours
 
 #### **Morning (1 hour):**
-- Watch: "Email and Calendar Triggers"
+- Watch: [What I Wish I Had Known Before Building 100+ n8n Workflows](https://www.youtube.com/watch?v=VB0ANci--Dc) - Email and calendar triggers section
 - Learn: Gmail webhooks, calendar events
 - Practice: Email and calendar automation
 
@@ -81,7 +81,7 @@ Create workflows triggered by email events and calendar changes.
 **Time:** 2-3 hours
 
 #### **Morning (1 hour):**
-- Watch: "Notion Automation in n8n"
+- Watch: [How I 100% Automated Long Form Content with n8n](https://www.youtube.com/watch?v=lF2bvXoV-Zg) - Notion automation in n8n section
 - Learn: Database updates, content generation
 - Practice: Notion integration
 
@@ -104,7 +104,7 @@ Build workflows that automate Notion database operations.
 **Time:** 2-3 hours
 
 #### **Morning (1 hour):**
-- Watch: "Building Slack and Telegram Bots"
+- Watch: [n8n Beginner Course (1/9) - Introduction to Automation](https://www.youtube.com/watch?v=4BVTkqbn_tY) - Building Slack and Telegram bots section
 - Learn: Bot development, client reporting
 - Practice: Bot automation
 
@@ -127,7 +127,7 @@ Create bots for Slack and Telegram with automated responses.
 **Time:** 3-4 hours
 
 #### **Morning (1.5 hours):**
-- Watch: "Building Complete Automation Systems"
+- Watch: [N8N FULL COURSE 5 HOURS (Build & Automate Anything)](https://www.youtube.com/watch?v=7WsbtZwOx_U) - Building complete automation systems section
 - Learn: System integration patterns
 - Practice: Multi-tool workflows
 
@@ -193,18 +193,110 @@ Complete the real-world tools project and share your success.
 ## 📚 RESOURCES
 
 ### **Video Lessons:**
-- Authentication Methods in n8n
-- Form Builder Integration
-- Email and Calendar Triggers
-- Notion Automation in n8n
-- Building Slack and Telegram Bots
-- Building Complete Automation Systems
+- [n8n FULL COURSE 6 HOURS (Build & Sell AI Automations)](https://www.youtube.com/watch?v=2GZ2SNXWK-c) - Complete foundation course
+- [N8N FULL COURSE 5 HOURS (Build & Automate Anything)](https://www.youtube.com/watch?v=7WsbtZwOx_U) - Complete workflow building course
+- [What I Wish I Had Known Before Building 100+ n8n Workflows](https://www.youtube.com/watch?v=VB0ANci--Dc) - Pro tips and advanced techniques
+- [How I 100% Automated Long Form Content with n8n](https://www.youtube.com/watch?v=lF2bvXoV-Zg) - Real-world automation example
+- [n8n Beginner Course (1/9) - Introduction to Automation](https://www.youtube.com/watch?v=4BVTkqbn_tY) - Modular beginner series
+- [100 Days 100 Automation n8n Shorts](https://www.youtube.com/playlist?list=PLrKRLcYxcinnnZghd0RBg1L3HGBZ76nkX) - Daily automation ideas
 
 ### **Reading Materials:**
 - n8n Documentation: Integrations
 - OAuth 2.0 Guide
 - Form Builder APIs
 - Bot Development Guide
+
+### **Comprehensive Research Resources:**
+
+#### **Authentication & Security:**
+- n8n Authentication: https://docs.n8n.io/integrations/builtin/credentials/
+- OAuth 2.0 Guide: https://oauth.net/2/
+- OAuth 2.0 Security Best Practices: https://tools.ietf.org/html/rfc6819
+- API Key Management: Secure credential storage
+- JWT Tokens: JSON Web Token authentication
+- SAML Authentication: Enterprise SSO
+- Multi-Factor Authentication: Enhanced security
+- Credential Rotation: Security best practices
+
+#### **Form Builder Integration:**
+- Tally API Documentation: https://tally.so/help/api
+- Typeform API Documentation: https://developer.typeform.com/
+- Google Forms API: https://developers.google.com/apps-script/reference/forms
+- JotForm API: https://api.jotform.com/docs/
+- Formspree API: https://formspree.io/docs/
+- Netlify Forms API: https://docs.netlify.com/forms/setup/
+- Form Data Processing: Validation and transformation
+- Form Analytics: Usage tracking and insights
+
+#### **Email & Calendar Integration:**
+- Gmail API Documentation: https://developers.google.com/gmail/api
+- Google Calendar API: https://developers.google.com/calendar
+- Outlook API Documentation: https://docs.microsoft.com/en-us/graph/
+- Email Parsing: Content extraction
+- Calendar Event Management: CRUD operations
+- Email Automation: Automated responses
+- Calendar Automation: Meeting scheduling
+- Email Analytics: Engagement tracking
+
+#### **Notion Integration:**
+- Notion API Documentation: https://developers.notion.com/
+- Notion Database Operations: CRUD operations
+- Notion Page Management: Content creation
+- Notion Block Operations: Content manipulation
+- Notion Search API: Content discovery
+- Notion Webhooks: Real-time updates
+- Notion Templates: Reusable content
+- Notion Automation: Workflow integration
+
+#### **Slack & Telegram Bots:**
+- Slack API Documentation: https://api.slack.com/
+- Slack Bot Framework: https://api.slack.com/bot-users
+- Telegram Bot API: https://core.telegram.org/bots/api
+- Bot Development: Interactive bots
+- Bot Analytics: Usage tracking
+- Bot Security: Access control
+- Bot Deployment: Production deployment
+- Bot Maintenance: Updates and monitoring
+
+#### **System Integration Patterns:**
+- API Integration Patterns: REST, GraphQL, SOAP
+- Webhook Integration: Real-time data
+- Event-Driven Architecture: Asynchronous processing
+- Microservices Integration: Distributed systems
+- Service Mesh: Inter-service communication
+- API Gateway: Traffic management
+- Message Queues: Asynchronous communication
+- Data Synchronization: Multi-system consistency
+
+#### **Real-World Tool APIs:**
+- Google Workspace APIs: https://developers.google.com/workspace
+- Microsoft 365 APIs: https://docs.microsoft.com/en-us/graph/
+- Salesforce API: https://developer.salesforce.com/docs/atlas.en-us.api_rest.meta/api_rest/
+- HubSpot API: https://developers.hubspot.com/docs/api/overview
+- Zapier API: https://zapier.com/developer/
+- Airtable API: https://airtable.com/developers/web/api/introduction
+- Trello API: https://developer.atlassian.com/cloud/trello/
+- Asana API: https://developers.asana.com/docs
+
+#### **Integration Best Practices:**
+- API Rate Limiting: Usage optimization
+- Error Handling: Robust error management
+- Data Validation: Input validation
+- Security Best Practices: Protection measures
+- Performance Optimization: Speed improvement
+- Monitoring: System health tracking
+- Testing: Integration validation
+- Documentation: API documentation
+
+#### **Workflow Orchestration:**
+- Workflow Design Patterns: Best practices
+- Data Flow Management: Information architecture
+- Error Recovery: Fault tolerance
+- Retry Mechanisms: Automatic retry
+- Circuit Breakers: System protection
+- Load Balancing: Traffic distribution
+- Caching: Performance optimization
+- Monitoring: System observability
 
 ### **Tools Needed:**
 - Gmail account
@@ -213,6 +305,9 @@ Complete the real-world tools project and share your success.
 - Slack workspace
 - Telegram account
 - Form builder accounts
+- API testing tools
+- Webhook testing tools
+- Integration monitoring tools
 
 ---
 

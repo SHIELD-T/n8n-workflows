@@ -18,6 +18,7 @@
 
 ### **📹 Video Lesson: "Workflow Optimization & Maintenance"**
 **Duration:** 45 minutes
+**Watch:** [What I Wish I Had Known Before Building 100+ n8n Workflows](https://www.youtube.com/watch?v=VB0ANci--Dc) - Workflow optimization and maintenance section
 
 #### **What You'll Learn:**
 - Workflow optimization techniques

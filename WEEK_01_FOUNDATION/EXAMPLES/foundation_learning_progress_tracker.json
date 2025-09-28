@@ -1,6 +1,6 @@
 {
   "name": "Foundation Learning Progress Tracker",
-  "description": "Track learning progress throughout the foundation phase with automated progress monitoring and milestone celebrations.",
+  "description": "Learning progress tracker that monitors daily task completion, tracks milestones, and sends celebration notifications. Perfect for Week 1-2 foundation phase.",
   "tags": [
     "basics",
     "progress-tracking",

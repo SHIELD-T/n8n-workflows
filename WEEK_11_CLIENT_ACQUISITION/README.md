@@ -12,7 +12,7 @@
 **Time:** 2-3 hours
 
 #### **Morning (1 hour):**
-- Watch: "Identifying Automation Opportunities"
+- Watch: [n8n FULL COURSE 6 HOURS (Build & Sell AI Automations)](https://www.youtube.com/watch?v=2GZ2SNXWK-c) - Identifying automation opportunities section
 - Learn: Local businesses, coaches, agencies
 - Practice: Niche identification
 
@@ -35,7 +35,7 @@ Identify 5 niches that need automation and research their pain points.
 **Time:** 2-3 hours
 
 #### **Morning (1 hour):**
-- Watch: "Service Packaging Strategies"
+- Watch: [N8N FULL COURSE 5 HOURS (Build & Automate Anything)](https://www.youtube.com/watch?v=7WsbtZwOx_U) - Service packaging strategies section
 - Learn: One-off, retainers, templates
 - Practice: Service design
 
@@ -58,7 +58,7 @@ Create 3 service packages with clear pricing and deliverables.
 **Time:** 2-3 hours
 
 #### **Morning (1 hour):**
-- Watch: "Building Your Automation Portfolio"
+- Watch: [What I Wish I Had Known Before Building 100+ n8n Workflows](https://www.youtube.com/watch?v=VB0ANci--Dc) - Building your automation portfolio section
 - Learn: Showcase workflows, case studies
 - Practice: Portfolio design
 
@@ -81,7 +81,7 @@ Create a portfolio showcasing 5 workflows with case studies.
 **Time:** 2-3 hours
 
 #### **Morning (1 hour):**
-- Watch: "Client Outreach Strategies"
+- Watch: [How I 100% Automated Long Form Content with n8n](https://www.youtube.com/watch?v=lF2bvXoV-Zg) - Client outreach strategies section
 - Learn: Cold email, LinkedIn, Telegram
 - Practice: Outreach techniques
 
@@ -104,7 +104,7 @@ Create outreach campaigns for 3 different channels.
 **Time:** 2-3 hours
 
 #### **Morning (1 hour):**
-- Watch: "Closing Automation Clients"
+- Watch: [n8n Beginner Course (1/9) - Introduction to Automation](https://www.youtube.com/watch?v=4BVTkqbn_tY) - Closing automation clients section
 - Learn: Pricing, proposals, contracts
 - Practice: Sales techniques
 
@@ -127,7 +127,7 @@ Create proposal templates and practice sales conversations.
 **Time:** 3-4 hours
 
 #### **Morning (1.5 hours):**
-- Watch: "Project Delivery and Management"
+- Watch: [N8N FULL COURSE 5 HOURS (Build & Automate Anything)](https://www.youtube.com/watch?v=7WsbtZwOx_U) - Project delivery and management section
 - Learn: Project management, client communication
 - Practice: Delivery techniques
 
@@ -194,12 +194,12 @@ Complete the client acquisition project and share your success.
 ## 📚 RESOURCES
 
 ### **Video Lessons:**
-- Identifying Automation Opportunities
-- Service Packaging Strategies
-- Building Your Automation Portfolio
-- Client Outreach Strategies
-- Closing Automation Clients
-- Project Delivery and Management
+- [n8n FULL COURSE 6 HOURS (Build & Sell AI Automations)](https://www.youtube.com/watch?v=2GZ2SNXWK-c) - Complete foundation course with business focus
+- [N8N FULL COURSE 5 HOURS (Build & Automate Anything)](https://www.youtube.com/watch?v=7WsbtZwOx_U) - Complete workflow building course
+- [What I Wish I Had Known Before Building 100+ n8n Workflows](https://www.youtube.com/watch?v=VB0ANci--Dc) - Pro tips and advanced techniques
+- [How I 100% Automated Long Form Content with n8n](https://www.youtube.com/watch?v=lF2bvXoV-Zg) - Real-world automation example
+- [n8n Beginner Course (1/9) - Introduction to Automation](https://www.youtube.com/watch?v=4BVTkqbn_tY) - Modular beginner series
+- [100 Days 100 Automation n8n Shorts](https://www.youtube.com/playlist?list=PLrKRLcYxcinnnZghd0RBg1L3HGBZ76nkX) - Daily automation ideas
 
 ### **Reading Materials:**
 - Business Development Guide
@@ -207,12 +207,117 @@ Complete the client acquisition project and share your success.
 - Portfolio Best Practices
 - Sales Techniques
 
+### **Comprehensive Research Resources:**
+
+#### **Market Research & Niche Identification:**
+- Automation Market Analysis: Industry trends and opportunities
+- Niche Research: Target market identification
+- Competitor Analysis: Market positioning
+- Customer Personas: Target audience definition
+- Market Sizing: Opportunity assessment
+- Industry Reports: McKinsey, Deloitte, Gartner
+- Automation Use Cases: Real-world examples
+- ROI Calculators: Value proposition tools
+
+#### **Service Packaging & Pricing:**
+- Service Design: Value proposition development
+- Pricing Strategies: Value-based pricing
+- Service Tiers: Package differentiation
+- Pricing Models: Hourly, project, retainer
+- Cost Analysis: Profit margin calculation
+- Competitive Pricing: Market positioning
+- Value Proposition: Unique selling points
+- Service Level Agreements: Quality standards
+
+#### **Portfolio Development:**
+- Portfolio Design: Showcase strategies
+- Case Studies: Success story development
+- Workflow Demos: Interactive examples
+- Client Testimonials: Social proof
+- Portfolio Platforms: Website builders
+- Content Creation: Visual storytelling
+- SEO Optimization: Search visibility
+- Portfolio Analytics: Performance tracking
+
+#### **Client Outreach & Marketing:**
+- Cold Email Strategies: Outreach templates
+- LinkedIn Marketing: Professional networking
+- Content Marketing: Thought leadership
+- Social Media Marketing: Brand building
+- Email Marketing: Nurture campaigns
+- SEO Marketing: Search optimization
+- Paid Advertising: Google Ads, LinkedIn Ads
+- Referral Programs: Client acquisition
+
+#### **Sales & Closing:**
+- Sales Process: Lead qualification
+- Proposal Writing: Project proposals
+- Contract Negotiation: Terms and conditions
+- Pricing Presentations: Value demonstration
+- Objection Handling: Common concerns
+- Closing Techniques: Deal completion
+- Follow-up Strategies: Relationship building
+- Sales Analytics: Performance tracking
+
+#### **Project Management:**
+- Project Planning: Timeline and milestones
+- Client Communication: Regular updates
+- Scope Management: Change control
+- Quality Assurance: Deliverable standards
+- Risk Management: Issue identification
+- Resource Management: Team coordination
+- Budget Management: Cost control
+- Project Documentation: Knowledge management
+
+#### **Business Development:**
+- Business Planning: Strategic planning
+- Financial Management: Budgeting and forecasting
+- Legal Considerations: Contracts and compliance
+- Insurance: Professional liability
+- Accounting: Bookkeeping and taxes
+- Business Registration: Legal entity setup
+- Banking: Business accounts
+- Business Credit: Credit building
+
+#### **Client Relationship Management:**
+- CRM Systems: Customer relationship management
+- Client Onboarding: New client setup
+- Account Management: Relationship maintenance
+- Upselling: Additional services
+- Cross-selling: Related services
+- Client Retention: Loyalty programs
+- Feedback Collection: Satisfaction surveys
+- Client Success: Value realization
+
+#### **Marketing & Branding:**
+- Brand Development: Identity creation
+- Website Development: Online presence
+- Content Strategy: Content planning
+- Social Media Strategy: Platform management
+- Email Marketing: Campaign management
+- SEO Strategy: Search optimization
+- Paid Advertising: Campaign management
+- Analytics: Performance measurement
+
+#### **Professional Development:**
+- Industry Certifications: Credential building
+- Networking: Professional connections
+- Continuing Education: Skill development
+- Mentorship: Guidance and support
+- Industry Events: Conferences and meetups
+- Professional Associations: Membership benefits
+- Thought Leadership: Industry expertise
+- Public Speaking: Presentation skills
+
 ### **Tools Needed:**
 - Portfolio platform
 - Email marketing tools
 - LinkedIn account
 - Proposal templates
 - Project management tools
+- CRM system
+- Website builder
+- Analytics tools
 
 ---
 

@@ -1,6 +1,6 @@
 {
   "name": "Workflow Scaling Management System",
-  "description": "Manage workflow scaling with automated resource allocation and performance monitoring.",
+  "description": "Workflow scaling management system that monitors load, scales resources, and manages performance under varying conditions. Ideal for Week 5 scaling automation mastery.",
   "tags": [
     "optimization",
     "performance",

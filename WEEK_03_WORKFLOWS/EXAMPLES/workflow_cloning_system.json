@@ -1,6 +1,6 @@
 {
   "name": "Workflow Cloning System",
-  "description": "Automated workflow for Workflow Building phase learning objectives with intelligent processing and error handling.",
+  "description": "Workflow cloning system that duplicates workflows, modifies configurations, and manages workflow versions. Demonstrates Week 3 workflow management skills.",
   "tags": [
     "optimization",
     "performance",

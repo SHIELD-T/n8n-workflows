@@ -1,6 +1,6 @@
 {
   "name": "Workflow Performance Monitoring System",
-  "description": "Monitor workflow performance with real-time metrics, error tracking, and optimization recommendations.",
+  "description": "Performance monitoring system that tracks workflow execution times, resource usage, and performance metrics. Perfect for Week 3 workflow optimization learning.",
   "tags": [
     "workflows",
     "analytics",

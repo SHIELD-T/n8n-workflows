@@ -12,7 +12,7 @@
 **Time:** 2-3 hours
 
 #### **Morning (1 hour):**
-- Watch: "Deploying AI Workflows"
+- Watch: [How to Build AI Agents with n8n in 2025! (Full Course)](https://www.youtube.com/watch?v=geR9PeCuHK4) - Deploying AI workflows section
 - Learn: AI deployment strategies
 - Practice: AI production deployment
 
@@ -35,7 +35,7 @@ Deploy 3 AI workflows to production environment.
 **Time:** 2-3 hours
 
 #### **Morning (1 hour):**
-- Watch: "Maintaining AI Workflows"
+- Watch: [Build AI Agents & Automate Workflows (Zero to Hero)](https://www.youtube.com/watch?v=DkV7ztrhLh8) - Maintaining AI workflows section
 - Learn: AI maintenance strategies
 - Practice: AI maintenance techniques
 
@@ -58,7 +58,7 @@ Create a maintenance schedule for AI workflows.
 **Time:** 2-3 hours
 
 #### **Morning (1 hour):**
-- Watch: "Scaling AI Workflows"
+- Watch: [N8N Tutorial: Building N8N AI Agents (Beginner to Pro)](https://www.youtube.com/watch?v=lSwMtsm6oDU) - Scaling AI workflows section
 - Learn: AI scaling strategies
 - Practice: AI scaling techniques
 
@@ -81,7 +81,7 @@ Scale 2 AI workflows for high-volume processing.
 **Time:** 2-3 hours
 
 #### **Morning (1 hour):**
-- Watch: "Documenting AI Workflows"
+- Watch: [How to Build AI Automations & Agents (Step-by-Step)](https://www.youtube.com/watch?v=bKX8t3QA04s) - Documenting AI workflows section
 - Learn: AI documentation best practices
 - Practice: AI documentation techniques
 
@@ -104,7 +104,7 @@ Create comprehensive documentation for 5 AI workflows.
 **Time:** 2-3 hours
 
 #### **Morning (1 hour):**
-- Watch: "Troubleshooting AI Workflows"
+- Watch: [n8n Tutorial for Beginners: Complete AI Automation Guide](https://www.youtube.com/watch?v=CfD17vBCPEU) - Troubleshooting AI workflows section
 - Learn: AI troubleshooting strategies
 - Practice: AI debugging techniques
 
@@ -127,7 +127,7 @@ Create a troubleshooting guide for AI workflows.
 **Time:** 3-4 hours
 
 #### **Morning (1.5 hours):**
-- Watch: "AI Workflow Best Practices"
+- Watch: [n8n Tutorial for Beginners 2025: Build AI Agents Step-by-Step](https://www.youtube.com/watch?v=PfdnYe2690E) - AI workflow best practices section
 - Learn: AI best practices and standards
 - Practice: AI best practice implementation
 
@@ -193,12 +193,12 @@ Complete the production AI project and share your success.
 ## 📚 RESOURCES
 
 ### **Video Lessons:**
-- Deploying AI Workflows
-- Maintaining AI Workflows
-- Scaling AI Workflows
-- Documenting AI Workflows
-- Troubleshooting AI Workflows
-- AI Workflow Best Practices
+- [How to Build AI Agents with n8n in 2025! (Full Course)](https://www.youtube.com/watch?v=geR9PeCuHK4) - Complete AI agent course
+- [Build AI Agents & Automate Workflows (Zero to Hero)](https://www.youtube.com/watch?v=DkV7ztrhLh8) - AI automation masterclass
+- [N8N Tutorial: Building N8N AI Agents (Beginner to Pro)](https://www.youtube.com/watch?v=lSwMtsm6oDU) - AI agent features walkthrough
+- [How to Build AI Automations & Agents (Step-by-Step)](https://www.youtube.com/watch?v=bKX8t3QA04s) - Complex agent workflows
+- [n8n Tutorial for Beginners: Complete AI Automation Guide](https://www.youtube.com/watch?v=CfD17vBCPEU) - Essential AI workflow building
+- [n8n Tutorial for Beginners 2025: Build AI Agents Step-by-Step](https://www.youtube.com/watch?v=PfdnYe2690E) - Beginner-friendly AI tutorial
 
 ### **Reading Materials:**
 - n8n Documentation: AI Production
@@ -206,11 +206,107 @@ Complete the production AI project and share your success.
 - AI Maintenance Strategies
 - AI Scaling Patterns
 
+### **Comprehensive Research Resources:**
+
+#### **AI Workflow Deployment:**
+- n8n AI Production Deployment: https://docs.n8n.io/hosting/installation/
+- AI Model Deployment: Production deployment
+- AI Container Deployment: Docker, Kubernetes
+- AI Cloud Deployment: AWS, GCP, Azure
+- AI Edge Deployment: Distributed processing
+- AI Blue-Green Deployment: Zero-downtime updates
+- AI Canary Deployment: Gradual rollouts
+- AI Rollback Strategies: Version management
+
+#### **AI Workflow Maintenance:**
+- AI System Maintenance: Regular upkeep
+- AI Model Updates: Version management
+- AI Performance Tuning: Optimization
+- AI Bug Fixes: Issue resolution
+- AI Security Updates: Vulnerability patches
+- AI Backup Strategies: Data protection
+- AI Disaster Recovery: Business continuity
+- AI Maintenance Scheduling: Automated tasks
+
+#### **AI Workflow Scaling:**
+- AI Horizontal Scaling: Load distribution
+- AI Vertical Scaling: Resource increase
+- AI Auto-scaling: Dynamic resource allocation
+- AI Load Balancing: Traffic distribution
+- AI Caching: Performance improvement
+- AI CDN Integration: Content delivery
+- AI Database Scaling: Data management
+- AI Network Scaling: Bandwidth optimization
+
+#### **AI Workflow Documentation:**
+- AI System Documentation: Technical documentation
+- AI API Documentation: Interface documentation
+- AI User Guides: End-user documentation
+- AI Troubleshooting Guides: Issue resolution
+- AI Best Practices: Industry standards
+- AI Code Comments: Inline documentation
+- AI Architecture Diagrams: System visualization
+- AI Runbooks: Operational procedures
+
+#### **AI Workflow Troubleshooting:**
+- AI Debugging Techniques: Issue identification
+- AI Log Analysis: Error investigation
+- AI Performance Analysis: Bottleneck identification
+- AI Error Classification: Issue categorization
+- AI Root Cause Analysis: Problem identification
+- AI Solution Implementation: Fix deployment
+- AI Testing: Validation procedures
+- AI Monitoring: Continuous observation
+
+#### **AI Workflow Best Practices:**
+- AI Development Best Practices: Coding standards
+- AI Deployment Best Practices: Production standards
+- AI Security Best Practices: Protection measures
+- AI Performance Best Practices: Optimization techniques
+- AI Monitoring Best Practices: Observation standards
+- AI Documentation Best Practices: Knowledge management
+- AI Testing Best Practices: Quality assurance
+- AI Maintenance Best Practices: Upkeep procedures
+
+#### **AI Production Operations:**
+- AI DevOps: Development and operations
+- AI CI/CD: Continuous integration and deployment
+- AI Infrastructure as Code: Automated provisioning
+- AI Configuration Management: Environment setup
+- AI Secret Management: Credential storage
+- AI Environment Management: Development, staging, production
+- AI Release Management: Version control
+- AI Change Management: Modification procedures
+
+#### **AI Monitoring & Alerting:**
+- AI System Monitoring: Health checks
+- AI Performance Monitoring: Metrics tracking
+- AI Error Monitoring: Issue detection
+- AI Alert Systems: Notification management
+- AI Dashboards: Visualization
+- AI Reporting: Performance analysis
+- AI Analytics: Usage insights
+- AI SLA Monitoring: Service level agreements
+
+#### **AI Quality Assurance:**
+- AI Testing Strategies: Comprehensive testing
+- AI Quality Gates: Validation checkpoints
+- AI Code Review: Quality control
+- AI Performance Testing: Load validation
+- AI Security Testing: Vulnerability assessment
+- AI Compliance Testing: Regulatory validation
+- AI User Acceptance Testing: End-user validation
+- AI Regression Testing: Change validation
+
 ### **Tools Needed:**
 - Production environment
 - Monitoring tools
 - Documentation tools
 - Troubleshooting tools
+- Deployment tools
+- Scaling tools
+- Quality assurance tools
+- Performance monitoring tools
 
 ---
 

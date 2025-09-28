@@ -18,6 +18,7 @@
 
 ### **📹 Video Lesson: "Advanced Workflow Patterns"**
 **Duration:** 45 minutes
+**Watch:** [N8N FULL COURSE 5 HOURS (Build & Automate Anything)](https://www.youtube.com/watch?v=7WsbtZwOx_U) - Advanced workflow patterns section
 
 #### **What You'll Learn:**
 - Parallel processing patterns

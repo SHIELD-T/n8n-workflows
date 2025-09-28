@@ -18,6 +18,7 @@
 
 ### **📹 Video Lesson: "n8n Expression Syntax"**
 **Duration:** 45 minutes
+**Watch:** [N8N FULL COURSE 5 HOURS (Build & Automate Anything)](https://www.youtube.com/watch?v=7WsbtZwOx_U) - n8n expression syntax
 
 #### **What You'll Learn:**
 - Expression syntax basics

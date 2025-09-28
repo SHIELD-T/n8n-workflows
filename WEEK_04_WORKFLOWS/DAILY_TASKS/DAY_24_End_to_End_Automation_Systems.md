@@ -18,6 +18,7 @@
 
 ### **📹 Video Lesson: "End-to-End Automation Design"**
 **Duration:** 45 minutes
+**Watch:** [N8N FULL COURSE 5 HOURS (Build & Automate Anything)](https://www.youtube.com/watch?v=7WsbtZwOx_U) - Building end-to-end systems section
 
 #### **What You'll Learn:**
 - System integration patterns
