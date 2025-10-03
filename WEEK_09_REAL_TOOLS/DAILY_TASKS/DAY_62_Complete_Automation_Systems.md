@@ -18,6 +18,7 @@
 
 ### **📹 Video Lesson: "Building Complete Automation Systems"**
 **Duration:** 1 hour
+**Watch:** [n8n Quick Start Tutorial (selected sections)](https://www.youtube.com/watch?v=4cQWJViybAQ) - Focus on system architecture (14m47s)
 
 #### **What You'll Learn:**
 - System integration patterns

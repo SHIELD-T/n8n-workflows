@@ -18,6 +18,7 @@
 
 ### **📹 Video Lesson: "Notion Automation in n8n"**
 **Duration:** 45 minutes
+**Watch:** [Notion Automation with n8n](https://www.youtube.com/watch?v=4cQWJViybAQ) - Complete 15 minute Notion automation tutorial
 
 #### **What You'll Learn:**
 - Notion API integration

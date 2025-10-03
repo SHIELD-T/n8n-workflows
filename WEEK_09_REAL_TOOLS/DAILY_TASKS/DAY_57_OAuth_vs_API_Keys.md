@@ -18,6 +18,7 @@
 
 ### **📹 Video Lesson: "Authentication Methods in n8n"**
 **Duration:** 45 minutes
+**Watch:** [OAuth2 vs API Keys](https://www.youtube.com/watch?v=4cQWJViybAQ) - Complete 10 minute authentication tutorial
 
 #### **What You'll Learn:**
 - OAuth 2.0 authentication flow

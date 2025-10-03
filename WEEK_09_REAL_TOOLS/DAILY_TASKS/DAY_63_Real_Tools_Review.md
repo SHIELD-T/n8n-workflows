@@ -18,6 +18,7 @@
 
 ### **📚 Review All Real-World Tool Concepts**
 **Duration:** 45 minutes
+**Watch:** [Email & Calendar Automation (as overview)](https://www.youtube.com/watch?v=4cQWJViybAQ) - Complete 13 minute tool integration overview
 
 #### **What You'll Review:**
 - OAuth 2.0 vs API Keys authentication

@@ -63,3 +63,10 @@ config.json
 UDEMY_COURSE_CREATION_GUIDE.md
 INVESTOR_PITCH_DECK_*.md
 INVESTOR_LMS_WALKTHROUGH.md
+
+# Exclude personal/setup files
+blog_newsletter_automation_workflow.json
+linkedin_startup_scraper.json
+GMAIL_CATEGORIZATION_SETUP_GUIDE.md
+LINKEDIN_STARTUP_SCRAPER_SETUP.md
+NEWSLETTER_AUTOMATION_SETUP_GUIDE.md

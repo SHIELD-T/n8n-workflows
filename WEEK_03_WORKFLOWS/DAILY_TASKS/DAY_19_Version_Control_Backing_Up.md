@@ -18,7 +18,7 @@
 
 ### **📹 Video Lesson: "Workflow Version Control"**
 **Duration:** 45 minutes
-**Watch:** [N8N FULL COURSE 5 HOURS (Build & Automate Anything)](https://www.youtube.com/watch?v=7WsbtZwOx_U) - Workflow version control
+**Watch:** [How To Set Up N8N Self Hosting In 3 Minutes](https://www.youtube.com/watch?v=kq5bmrjPPAY) - Complete ~10 minute deployment and backup guide
 
 #### **What You'll Learn:**
 - Version control concepts

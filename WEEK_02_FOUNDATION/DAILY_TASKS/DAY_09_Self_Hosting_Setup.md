@@ -18,7 +18,7 @@
 
 ### **📹 Video Lesson: "Advanced Render Deployment"**
 **Duration:** 45 minutes
-**Watch:** [Master n8n in 2 Hours: Complete Beginner's Guide for 2025](https://www.youtube.com/watch?v=AURnISajubk) - Advanced deployment section
+**Watch:** [How To Set Up N8N Self Hosting In 3 Minutes (6 Ways)](https://www.youtube.com/watch?v=kq5bmrjPPAY) - Complete 10-minute advanced deployment guide
 
 #### **What You'll Learn:**
 - Advanced Render configuration

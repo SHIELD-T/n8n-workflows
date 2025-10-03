@@ -6,6 +6,27 @@
 - Build your first real-world automation
 - Complete the foundation phase
 
+## 🏠 SARAH'S FOUNDATION BUILDING CHALLENGE
+
+### **Sarah's Next Level**
+Sarah has her basic automations working, but now she needs:
+- Robust error handling for her photo organizer
+- Advanced API integrations for her expense tracker
+- Real-world testing and debugging skills
+- Production-ready automation systems
+
+### **🎯 YOUR MISSION:**
+Transform Sarah's basic automations into production-ready systems!
+
+### **🛠️ WHAT YOU'LL BUILD:**
+- Error-resistant photo organization system
+- Advanced expense tracking with multiple data sources
+- Comprehensive debugging and monitoring system
+- Production-ready automation infrastructure
+
+### **💡 THE CHALLENGE:**
+Make Sarah's automations bulletproof and ready for real-world use!
+
 ## 📅 DAILY BREAKDOWN
 
 ### **DAY 8: MONDAY - Understanding Triggers Deep Dive**
@@ -28,6 +49,9 @@
 
 #### **📝 DAILY TASK:**
 Create a webhook that receives data and logs it to console.
+
+#### **🎯 SARAH'S CHALLENGE:**
+Build advanced triggers for Sarah's photo organizer that handle multiple input sources.
 
 ---
 
@@ -52,6 +76,9 @@ Create a webhook that receives data and logs it to console.
 #### **📝 DAILY TASK:**
 Deploy optimized production n8n on Render with monitoring and backups.
 
+#### **🎯 SARAH'S CHALLENGE:**
+Upgrade Sarah's automation server with production monitoring and backup systems.
+
 ---
 
 ### **DAY 10: WEDNESDAY - Exploring n8n UI**
@@ -74,6 +101,9 @@ Deploy optimized production n8n on Render with monitoring and backups.
 
 #### **📝 DAILY TASK:**
 Create 3 different workflows and execute them successfully.
+
+#### **🎯 SARAH'S CHALLENGE:**
+Build Sarah's advanced dashboard with real-time monitoring and analytics.
 
 ---
 
@@ -98,6 +128,9 @@ Create 3 different workflows and execute them successfully.
 #### **📝 DAILY TASK:**
 Complete a working automation that processes form data and sends notifications.
 
+#### **🎯 SARAH'S CHALLENGE:**
+Build Sarah's intelligent expense processing system with form data and smart notifications.
+
 ---
 
 ### **DAY 12: FRIDAY - Webhooks & APIs 101**
@@ -120,6 +153,9 @@ Complete a working automation that processes form data and sends notifications.
 
 #### **📝 DAILY TASK:**
 Make successful API calls to 3 different services using n8n.
+
+#### **🎯 SARAH'S CHALLENGE:**
+Integrate Sarah's expense tracker with banking APIs, receipt scanning services, and budgeting apps.
 
 ---
 
@@ -144,6 +180,9 @@ Make successful API calls to 3 different services using n8n.
 #### **📝 DAILY TASK:**
 Create a workflow with error handling and successfully debug it.
 
+#### **🎯 SARAH'S CHALLENGE:**
+Make Sarah's photo organizer bulletproof with comprehensive error handling and debugging.
+
 ---
 
 ### **DAY 14: SUNDAY - Foundation Review & Project**
@@ -167,25 +206,36 @@ Create a workflow with error handling and successfully debug it.
 #### **📝 DAILY TASK:**
 Complete the foundation phase project and share your success.
 
+#### **🎯 SARAH'S CHALLENGE:**
+Complete Sarah's production-ready digital life automation system.
+
 ---
 
-## 🎯 WEEK 2 PROJECT
-**Goal:** Build a complete automation that demonstrates foundation skills
+## 🎯 WEEK 2 PROJECT: SARAH'S PRODUCTION-READY SYSTEM
+**Goal:** Transform Sarah's basic automations into production-ready systems
 
 ### **Project Requirements:**
-1. Use webhook trigger
-2. Process incoming data
-3. Make API calls
-4. Handle errors gracefully
-5. Send notifications
+1. Upgrade photo organizer with advanced error handling
+2. Build multi-source expense tracking system
+3. Implement comprehensive monitoring and debugging
+4. Create production-ready infrastructure
+5. Test and validate all systems
 6. Document the entire process
 
 ### **Deliverables:**
-- Working automation workflow
-- Error handling implementation
-- API integration examples
+- Production-ready photo organization system
+- Advanced expense tracking with multiple APIs
+- Comprehensive error handling and debugging
+- Monitoring and analytics dashboard
 - Documentation of your process
 - Community post sharing your success
+
+### **🏆 SUCCESS METRICS:**
+- 99.9% uptime on all automations
+- 0 critical errors in production
+- 5+ API integrations working seamlessly
+- 3+ hours saved per week
+- Complete system monitoring
 
 ---
 

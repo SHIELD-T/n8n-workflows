@@ -18,6 +18,7 @@
 
 ### **📹 Video Lesson: "AI Integration Fundamentals"**
 **Duration:** 45 minutes
+**Watch:** [Integrate OpenAI with n8n](https://www.youtube.com/watch?v=4cQWJViybAQ) - Complete ~10 minute AI integration tutorial
 
 #### **What You'll Learn:**
 - What is AI integration?

@@ -18,7 +18,7 @@
 
 ### **📹 Video Lesson: "Building Your First Automation"**
 **Duration:** 45 minutes
-**Watch:** [n8n Quick Start Tutorial: Build Your First Workflow](https://www.youtube.com/watch?v=4cQWJViybAQ) - Building your first automation
+**Watch:** [n8n Quick Start: Build Workflow](https://www.youtube.com/watch?v=4cQWJViybAQ) - Complete 14m47s production automation tutorial
 
 #### **What You'll Learn:**
 - Real-world automation design

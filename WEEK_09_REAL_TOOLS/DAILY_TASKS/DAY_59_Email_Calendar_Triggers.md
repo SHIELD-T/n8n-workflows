@@ -18,6 +18,7 @@
 
 ### **📹 Video Lesson: "Email and Calendar Triggers"**
 **Duration:** 45 minutes
+**Watch:** [Email & Calendar Automation](https://www.youtube.com/watch?v=4cQWJViybAQ) - Complete 13 minute email and calendar tutorial
 
 #### **What You'll Learn:**
 - Gmail webhook setup

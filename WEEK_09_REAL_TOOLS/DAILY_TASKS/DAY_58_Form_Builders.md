@@ -18,6 +18,7 @@
 
 ### **📹 Video Lesson: "Form Builder Integration"**
 **Duration:** 45 minutes
+**Watch:** [Form Builder Automation](https://www.youtube.com/watch?v=4cQWJViybAQ) - Complete 14 minute form automation tutorial
 
 #### **What You'll Learn:**
 - Tally form integration

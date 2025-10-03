@@ -1,4 +1,4 @@
-# 🚀 AUTOMATOR PRO: MASTER N8N + AI TO BUILD YOUR OWN AUTOMATION BUSINESS
+# 🚀 **Automator Pro: Master n8n + AI to Build Your Own Automation Business**
 
 > **From Zero to Automation Agency: Build, Sell, and Scale with n8n & AI Agents**
 
@@ -9,9 +9,23 @@
 [![YouTube](https://img.shields.io/badge/YouTube-Videos%20Integrated-red)](https://github.com/sagebeme/n8n-workflows)
 [![RAG](https://img.shields.io/badge/RAG-Enabled-green)](https://github.com/sagebeme/n8n-workflows)
 
-## 🎯 COURSE OVERVIEW
+## 🎯 **HYBRID LEARNING MODEL: Learn Together, Build Differently**
 
-**Automator Pro** is a comprehensive 15-week course designed to take complete beginners from zero automation knowledge to building their own profitable automation business using n8n, AI agents, and cutting-edge RAG technology.
+**Automator Pro** is a comprehensive 15-week course where students learn core automation concepts together, but work on industry-specific projects that align with their career goals and market opportunities.
+
+### **🏢 Choose Your Industry Track:**
+- **💳 Fintech/Payments** - Smart money management, payment processing, fraud detection
+- **🏥 HealthTech/Telemedicine** - Health data management, telemedicine, wellness tracking  
+- **🎓 EdTech** - Learning optimization, skill tracking, educational content
+- **🛒 E-commerce** - Online store management, inventory, customer service
+- **📈 Marketing** - Personal branding, campaign management, content automation
+- **🚚 Logistics** - Delivery management, route optimization, supply chain
+
+### **🎯 Course Philosophy:**
+- **Unified Learning**: All students learn the same core automation concepts
+- **Industry Specialization**: Projects tailored to your chosen industry track
+- **Peer Learning**: Cross-industry knowledge sharing and networking
+- **Market Focus**: Skills aligned with high-growth industry demands
 
 ### ✨ **What You'll Achieve:**
 - 🏗️ **Build 50+ automation workflows** from scratch

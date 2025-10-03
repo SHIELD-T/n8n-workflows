@@ -18,7 +18,7 @@
 
 ### **📹 Video Lesson: "n8n Interface Walkthrough"**
 **Duration:** 45 minutes
-**Watch:** [Master n8n in 2 Hours: Complete Beginner's Guide for 2025](https://www.youtube.com/watch?v=AURnISajubk) - n8n interface walkthrough
+**Watch:** [Deep Dive: n8n Interface Walkthrough (2025)](https://www.youtube.com/watch?v=J2O4BlTulRg) - First 15 minutes on n8n interface and navigation
 
 #### **What You'll Learn:**
 - n8n interface overview

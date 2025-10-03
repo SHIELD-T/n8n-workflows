@@ -18,7 +18,7 @@
 
 ### **📹 Video Lesson: "What is Automation? Why It Matters in 2025+"**
 **Duration:** 45 minutes
-**Watch:** [n8n FULL COURSE 6 HOURS (Build & Sell AI Automations)](https://www.youtube.com/watch?v=2GZ2SNXWK-c) - Introduction to automation concepts
+**Watch:** [Automation Trends, Workforce Data & AI Future](https://www.youtube.com/watch?v=BnI0IpJO2gQ) - First 12 minutes on automation basics and trends
 
 #### **What You'll Learn:**
 - Definition of automation and its types

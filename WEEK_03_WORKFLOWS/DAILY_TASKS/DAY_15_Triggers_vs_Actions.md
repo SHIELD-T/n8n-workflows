@@ -18,7 +18,7 @@
 
 ### **📹 Video Lesson: "Understanding Triggers vs. Actions"**
 **Duration:** 45 minutes
-**Watch:** [N8N FULL COURSE 5 HOURS (Build & Automate Anything)](https://www.youtube.com/watch?v=7WsbtZwOx_U) - Understanding triggers vs. actions
+**Watch:** [n8n Quick Start Tutorial (Triggers section)](https://www.youtube.com/watch?v=4cQWJViybAQ) - Focus on triggers vs actions (14m47s)
 
 #### **What You'll Learn:**
 - Trigger vs. action concepts

@@ -18,7 +18,7 @@
 
 ### **📹 Video Lesson: "Webhooks & APIs for Beginners"**
 **Duration:** 45 minutes
-**Watch:** [n8n FULL COURSE 6 HOURS (Build & Sell AI Automations)](https://www.youtube.com/watch?v=2GZ2SNXWK-c) - Webhooks & APIs for beginners section
+**Watch:** [Using webhooks in n8n (parameters, responses and triggers)](https://www.youtube.com/watch?v=IvUYJQkf6sA) - Complete 15-minute webhook tutorial
 
 #### **What You'll Learn:**
 - What are webhooks and APIs
