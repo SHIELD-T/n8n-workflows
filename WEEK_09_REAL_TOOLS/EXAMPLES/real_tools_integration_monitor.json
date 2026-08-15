@@ -48,6 +48,10 @@
       "Week 10 workflows",
       "Previous week workflows",
       "Course example workflows"
+    ],
+    "credentials_required": [
+      "Notion API integration (internal integration token)",
+      "Slack OAuth2 / Slack API token"
     ]
   },
   "meta": {
@@ -57,6 +61,21 @@
     "last_updated": "2025-09-07T14:31:14.052990"
   },
   "nodes": [
+    {
+      "id": "sticky-sticky-note",
+      "name": "Sticky Note",
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        220,
+        40
+      ],
+      "parameters": {
+        "content": "## Real Tools Integration Monitor\n\nMonitor real-world tool integrations with automated health checks and performance tracking.\n\n**Credentials needed before running:**\n- Notion API integration (internal integration token)\n- Slack OAuth2 / Slack API token\n\n**How to use:** Import into n8n, add the credentials above under *Credentials*, then run manually (or trigger it) to test.",
+        "height": 300,
+        "width": 420
+      }
+    },
     {
       "parameters": {
         "httpMethod": "POST",
@@ -173,33 +192,33 @@
     }
   ],
   "connections": {
-    "webhook-trigger": {
+    "Real Tools Integration Trigger": {
       "main": [
         [
           {
-            "node": "set-integration-data",
+            "node": "Set Integration Data",
             "type": "main",
             "index": 0
           }
         ]
       ]
     },
-    "set-integration-data": {
+    "Set Integration Data": {
       "main": [
         [
           {
-            "node": "create-integration-entry",
+            "node": "Create Integration Entry",
             "type": "main",
             "index": 0
           }
         ]
       ]
     },
-    "create-integration-entry": {
+    "Create Integration Entry": {
       "main": [
         [
           {
-            "node": "send-integration-notification",
+            "node": "Send Integration Notification",
             "type": "main",
             "index": 0
           }

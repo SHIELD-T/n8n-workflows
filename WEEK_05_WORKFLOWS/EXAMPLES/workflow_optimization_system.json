@@ -46,7 +46,8 @@
       "Week 6 workflows",
       "Previous week workflows",
       "Course example workflows"
-    ]
+    ],
+    "credentials_required": []
   },
   "meta": {
     "templateCredsSetupCompleted": true,
@@ -56,12 +57,168 @@
   },
   "nodes": [
     {
+      "id": "sticky-sticky-note",
+      "name": "Sticky Note",
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        220,
+        40
+      ],
+      "parameters": {
+        "content": "## Workflow Optimization System\n\nWorkflow optimization system that continuously monitors performance, identifies bottlenecks, and implements optimization strategies. Perfect for Week 5 workflow optimization mastery.\n\n**Credentials needed before running:** None — this workflow only uses built-in nodes and/or public test APIs (no login required).\n\n**How to use:** Import into n8n, add the credentials above under *Credentials*, then run manually (or trigger it) to test.",
+        "height": 300,
+        "width": 420
+      }
+    },
+    {
+      "id": "sticky-sticky-note-1",
+      "name": "Sticky Note 1",
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        700,
+        100
+      ],
+      "parameters": {
+        "content": "## ⚠️ Placeholder endpoint\n\nReplace this URL with a real API before running. This is a stand-in for teaching purposes.",
+        "height": 160,
+        "width": 300
+      }
+    },
+    {
+      "id": "sticky-sticky-note-2",
+      "name": "Sticky Note 2",
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        1420,
+        100
+      ],
+      "parameters": {
+        "content": "## ⚠️ Placeholder endpoint\n\nReplace this URL with a real API before running. This is a stand-in for teaching purposes.",
+        "height": 160,
+        "width": 300
+      }
+    },
+    {
+      "id": "sticky-sticky-note-3",
+      "name": "Sticky Note 3",
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        1420,
+        280
+      ],
+      "parameters": {
+        "content": "## ⚠️ Placeholder endpoint\n\nReplace this URL with a real API before running. This is a stand-in for teaching purposes.",
+        "height": 160,
+        "width": 300
+      }
+    },
+    {
+      "id": "sticky-sticky-note-4",
+      "name": "Sticky Note 4",
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        1420,
+        460
+      ],
+      "parameters": {
+        "content": "## ⚠️ Placeholder endpoint\n\nReplace this URL with a real API before running. This is a stand-in for teaching purposes.",
+        "height": 160,
+        "width": 300
+      }
+    },
+    {
+      "id": "sticky-sticky-note-5",
+      "name": "Sticky Note 5",
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        1420,
+        640
+      ],
+      "parameters": {
+        "content": "## ⚠️ Placeholder endpoint\n\nReplace this URL with a real API before running. This is a stand-in for teaching purposes.",
+        "height": 160,
+        "width": 300
+      }
+    },
+    {
+      "id": "sticky-sticky-note-6",
+      "name": "Sticky Note 6",
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        1660,
+        100
+      ],
+      "parameters": {
+        "content": "## ⚠️ Placeholder endpoint\n\nReplace this URL with a real API before running. This is a stand-in for teaching purposes.",
+        "height": 160,
+        "width": 300
+      }
+    },
+    {
+      "id": "sticky-sticky-note-7",
+      "name": "Sticky Note 7",
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        2380,
+        100
+      ],
+      "parameters": {
+        "content": "## ⚠️ Placeholder endpoint\n\nReplace this URL with a real API before running. This is a stand-in for teaching purposes.",
+        "height": 160,
+        "width": 300
+      }
+    },
+    {
+      "id": "sticky-sticky-note-8",
+      "name": "Sticky Note 8",
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        2620,
+        100
+      ],
+      "parameters": {
+        "content": "## ⚠️ Placeholder endpoint\n\nReplace this URL with a real API before running. This is a stand-in for teaching purposes.",
+        "height": 160,
+        "width": 300
+      }
+    },
+    {
+      "id": "sticky-sticky-note-9",
+      "name": "Sticky Note 9",
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        2860,
+        100
+      ],
+      "parameters": {
+        "content": "## ⚠️ Placeholder endpoint\n\nReplace this URL with a real API before running. This is a stand-in for teaching purposes.",
+        "height": 160,
+        "width": 300
+      }
+    },
+    {
       "name": "Workflow Optimization System",
       "type": "n8n-nodes-base.webhook",
       "parameters": {
         "path": "workflow-optimization",
         "httpMethod": "POST"
-      }
+      },
+      "id": "workflow-optimization-system",
+      "typeVersion": 2,
+      "position": [
+        240,
+        300
+      ]
     },
     {
       "name": "Initialize Optimization",
@@ -91,10 +248,16 @@
             }
           ]
         }
-      }
+      },
+      "id": "initialize-optimization",
+      "typeVersion": 3.4,
+      "position": [
+        480,
+        300
+      ]
     },
     {
-      "name": "Analyze Workflow Performance",
+      "name": "⚠️ Analyze Workflow Performance (placeholder)",
       "type": "n8n-nodes-base.httpRequest",
       "parameters": {
         "method": "GET",
@@ -110,7 +273,13 @@
             }
           }
         }
-      }
+      },
+      "id": "analyze-workflow-performance",
+      "typeVersion": 4.2,
+      "position": [
+        720,
+        300
+      ]
     },
     {
       "name": "Process Performance Metrics",
@@ -140,7 +309,13 @@
             }
           ]
         }
-      }
+      },
+      "id": "process-performance-metrics",
+      "typeVersion": 3.4,
+      "position": [
+        960,
+        300
+      ]
     },
     {
       "name": "Check Optimization Need",
@@ -155,50 +330,80 @@
             }
           ]
         }
-      }
+      },
+      "id": "check-optimization-need",
+      "typeVersion": 2,
+      "position": [
+        1200,
+        300
+      ]
     },
     {
-      "name": "Optimize Execution Time",
+      "name": "⚠️ Optimize Execution Time (placeholder)",
       "type": "n8n-nodes-base.httpRequest",
       "parameters": {
         "method": "POST",
         "url": "https://api.optimization-engine.com/optimize-execution",
         "bodyContentType": "json",
         "jsonBody": "={{ { \"optimization_id\": $json.optimization_id, \"workflow_name\": $json.workflow_name, \"avg_execution_time\": $json.avg_execution_time, \"optimization_type\": \"execution_time\", \"timestamp\": $now } }}"
-      }
+      },
+      "id": "optimize-execution-time",
+      "typeVersion": 4.2,
+      "position": [
+        1440,
+        300
+      ]
     },
     {
-      "name": "Optimize Memory Usage",
+      "name": "⚠️ Optimize Memory Usage (placeholder)",
       "type": "n8n-nodes-base.httpRequest",
       "parameters": {
         "method": "POST",
         "url": "https://api.optimization-engine.com/optimize-memory",
         "bodyContentType": "json",
         "jsonBody": "={{ { \"optimization_id\": $json.optimization_id, \"workflow_name\": $json.workflow_name, \"memory_usage\": $json.memory_usage, \"optimization_type\": \"memory_usage\", \"timestamp\": $now } }}"
-      }
+      },
+      "id": "optimize-memory-usage",
+      "typeVersion": 4.2,
+      "position": [
+        1440,
+        480
+      ]
     },
     {
-      "name": "Optimize CPU Usage",
+      "name": "⚠️ Optimize CPU Usage (placeholder)",
       "type": "n8n-nodes-base.httpRequest",
       "parameters": {
         "method": "POST",
         "url": "https://api.optimization-engine.com/optimize-cpu",
         "bodyContentType": "json",
         "jsonBody": "={{ { \"optimization_id\": $json.optimization_id, \"workflow_name\": $json.workflow_name, \"cpu_usage\": $json.cpu_usage, \"optimization_type\": \"cpu_usage\", \"timestamp\": $now } }}"
-      }
+      },
+      "id": "optimize-cpu-usage",
+      "typeVersion": 4.2,
+      "position": [
+        1440,
+        660
+      ]
     },
     {
-      "name": "Optimize Error Rate",
+      "name": "⚠️ Optimize Error Rate (placeholder)",
       "type": "n8n-nodes-base.httpRequest",
       "parameters": {
         "method": "POST",
         "url": "https://api.optimization-engine.com/optimize-errors",
         "bodyContentType": "json",
         "jsonBody": "={{ { \"optimization_id\": $json.optimization_id, \"workflow_name\": $json.workflow_name, \"error_rate\": $json.error_rate, \"optimization_type\": \"error_rate\", \"timestamp\": $now } }}"
-      }
+      },
+      "id": "optimize-error-rate",
+      "typeVersion": 4.2,
+      "position": [
+        1440,
+        840
+      ]
     },
     {
-      "name": "Monitor Optimization Results",
+      "name": "⚠️ Monitor Optimization Results (placeholder)",
       "type": "n8n-nodes-base.httpRequest",
       "parameters": {
         "method": "GET",
@@ -214,7 +419,13 @@
             }
           }
         }
-      }
+      },
+      "id": "monitor-optimization-results",
+      "typeVersion": 4.2,
+      "position": [
+        1680,
+        300
+      ]
     },
     {
       "name": "Analyze Optimization Results",
@@ -244,7 +455,13 @@
             }
           ]
         }
-      }
+      },
+      "id": "analyze-optimization-results",
+      "typeVersion": 3.4,
+      "position": [
+        1920,
+        300
+      ]
     },
     {
       "name": "Generate Optimization Report",
@@ -262,37 +479,61 @@
             }
           ]
         }
-      }
+      },
+      "id": "generate-optimization-report",
+      "typeVersion": 3.4,
+      "position": [
+        2160,
+        300
+      ]
     },
     {
-      "name": "Update Optimization Dashboard",
+      "name": "⚠️ Update Optimization Dashboard (placeholder)",
       "type": "n8n-nodes-base.httpRequest",
       "parameters": {
         "method": "POST",
         "url": "https://api.optimization-dashboard.com/update",
         "bodyContentType": "json",
         "jsonBody": "={{ { \"dashboard\": \"workflow-optimization\", \"data\": $json.optimization_report, \"timestamp\": $now } }}"
-      }
+      },
+      "id": "update-optimization-dashboard",
+      "typeVersion": 4.2,
+      "position": [
+        2400,
+        300
+      ]
     },
     {
-      "name": "Send Optimization Notification",
+      "name": "⚠️ Send Optimization Notification (placeholder)",
       "type": "n8n-nodes-base.httpRequest",
       "parameters": {
         "method": "POST",
         "url": "https://api.slack.com/api/chat.postMessage",
         "bodyContentType": "json",
         "jsonBody": "={{ { \"channel\": \"#optimization-alerts\", \"text\": \"⚡ Workflow Optimization Complete\", \"attachments\": [{ \"color\": \"good\", \"fields\": [{ \"title\": \"Optimization ID\", \"value\": $json.optimization_id, \"short\": true }, { \"title\": \"Workflow\", \"value\": $json.workflow_name, \"short\": true }, { \"title\": \"Overall Improvement\", \"value\": $json.overall_improvement + \"%\", \"short\": true }, { \"title\": \"Execution\", \"value\": $json.execution_improvement + \"%\", \"short\": true }, { \"title\": \"Memory\", \"value\": $json.memory_improvement + \"%\", \"short\": true }, { \"title\": \"CPU\", \"value\": $json.cpu_improvement + \"%\", \"short\": true }, { \"title\": \"Errors\", \"value\": $json.error_improvement + \"%\", \"short\": true }] }] } }}"
-      }
+      },
+      "id": "send-optimization-notification",
+      "typeVersion": 4.2,
+      "position": [
+        2640,
+        300
+      ]
     },
     {
-      "name": "Log Optimization Data",
+      "name": "⚠️ Log Optimization Data (placeholder)",
       "type": "n8n-nodes-base.httpRequest",
       "parameters": {
         "method": "POST",
         "url": "https://api.optimization-log.com/log",
         "bodyContentType": "json",
         "jsonBody": "={{ { \"type\": \"workflow_optimization\", \"data\": $json.optimization_report, \"timestamp\": $now } }}"
-      }
+      },
+      "id": "log-optimization-data",
+      "typeVersion": 4.2,
+      "position": [
+        2880,
+        300
+      ]
     },
     {
       "name": "Handle Optimization Error",
@@ -314,10 +555,189 @@
             }
           ]
         }
-      }
+      },
+      "id": "handle-optimization-error",
+      "typeVersion": 3.4
     }
   ],
-  "connections": {},
+  "connections": {
+    "Workflow Optimization System": {
+      "main": [
+        [
+          {
+            "node": "Initialize Optimization",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Initialize Optimization": {
+      "main": [
+        [
+          {
+            "node": "⚠️ Analyze Workflow Performance (placeholder)",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "⚠️ Analyze Workflow Performance (placeholder)": {
+      "main": [
+        [
+          {
+            "node": "Process Performance Metrics",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Process Performance Metrics": {
+      "main": [
+        [
+          {
+            "node": "Check Optimization Need",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Check Optimization Need": {
+      "main": [
+        [
+          {
+            "node": "⚠️ Optimize Execution Time (placeholder)",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "⚠️ Optimize Memory Usage (placeholder)",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "⚠️ Optimize CPU Usage (placeholder)",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "⚠️ Optimize Error Rate (placeholder)",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Handle Optimization Error",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "⚠️ Optimize Execution Time (placeholder)": {
+      "main": [
+        [
+          {
+            "node": "⚠️ Monitor Optimization Results (placeholder)",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "⚠️ Optimize Memory Usage (placeholder)": {
+      "main": [
+        [
+          {
+            "node": "⚠️ Monitor Optimization Results (placeholder)",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "⚠️ Optimize CPU Usage (placeholder)": {
+      "main": [
+        [
+          {
+            "node": "⚠️ Monitor Optimization Results (placeholder)",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "⚠️ Optimize Error Rate (placeholder)": {
+      "main": [
+        [
+          {
+            "node": "⚠️ Monitor Optimization Results (placeholder)",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "⚠️ Monitor Optimization Results (placeholder)": {
+      "main": [
+        [
+          {
+            "node": "Analyze Optimization Results",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Analyze Optimization Results": {
+      "main": [
+        [
+          {
+            "node": "Generate Optimization Report",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Generate Optimization Report": {
+      "main": [
+        [
+          {
+            "node": "⚠️ Update Optimization Dashboard (placeholder)",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "⚠️ Update Optimization Dashboard (placeholder)": {
+      "main": [
+        [
+          {
+            "node": "⚠️ Send Optimization Notification (placeholder)",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "⚠️ Send Optimization Notification (placeholder)": {
+      "main": [
+        [
+          {
+            "node": "⚠️ Log Optimization Data (placeholder)",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
   "active": false,
   "settings": {},
   "pinData": {},

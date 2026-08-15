@@ -47,6 +47,9 @@
       "Week 7 workflows",
       "Previous week workflows",
       "Course example workflows"
+    ],
+    "credentials_required": [
+      "OpenAI API key"
     ]
   },
   "meta": {
@@ -57,12 +60,63 @@
   },
   "nodes": [
     {
+      "id": "sticky-sticky-note",
+      "name": "Sticky Note",
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        220,
+        40
+      ],
+      "parameters": {
+        "content": "## Multimodal Ai Workflow\n\nAutomated workflow for AI Integration phase learning objectives with intelligent processing and error handling.\n\n**Credentials needed before running:**\n- OpenAI API key\n\n**How to use:** Import into n8n, add the credentials above under *Credentials*, then run manually (or trigger it) to test.",
+        "height": 300,
+        "width": 420
+      }
+    },
+    {
+      "id": "sticky-sticky-note-1",
+      "name": "Sticky Note 1",
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        1900,
+        100
+      ],
+      "parameters": {
+        "content": "## ⚠️ Placeholder endpoint\n\nReplace this URL with a real API before running. This is a stand-in for teaching purposes.",
+        "height": 160,
+        "width": 300
+      }
+    },
+    {
+      "id": "sticky-sticky-note-2",
+      "name": "Sticky Note 2",
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        2140,
+        100
+      ],
+      "parameters": {
+        "content": "## ⚠️ Placeholder endpoint\n\nReplace this URL with a real API before running. This is a stand-in for teaching purposes.",
+        "height": 160,
+        "width": 300
+      }
+    },
+    {
       "name": "Multi-Modal AI Processing",
       "type": "n8n-nodes-base.webhook",
       "parameters": {
         "path": "multimodal-ai",
         "httpMethod": "POST"
-      }
+      },
+      "id": "multi-modal-ai-processing",
+      "typeVersion": 2,
+      "position": [
+        240,
+        300
+      ]
     },
     {
       "name": "Initialize Multi-Modal AI",
@@ -88,7 +142,13 @@
             }
           ]
         }
-      }
+      },
+      "id": "initialize-multi-modal-ai",
+      "typeVersion": 3.4,
+      "position": [
+        480,
+        300
+      ]
     },
     {
       "name": "Detect Input Type",
@@ -114,7 +174,13 @@
             }
           ]
         }
-      }
+      },
+      "id": "detect-input-type",
+      "typeVersion": 3.4,
+      "position": [
+        720,
+        300
+      ]
     },
     {
       "name": "Text AI Processing",
@@ -139,7 +205,13 @@
           "temperature": 0.3,
           "maxTokens": 600
         }
-      }
+      },
+      "id": "text-ai-processing",
+      "typeVersion": 1.3,
+      "position": [
+        960,
+        300
+      ]
     },
     {
       "name": "Image AI Processing",
@@ -152,7 +224,13 @@
         "options": {
           "maxTokens": 500
         }
-      }
+      },
+      "id": "image-ai-processing",
+      "typeVersion": 1.3,
+      "position": [
+        960,
+        480
+      ]
     },
     {
       "name": "Audio AI Processing",
@@ -180,7 +258,13 @@
             }
           ]
         }
-      }
+      },
+      "id": "audio-ai-processing",
+      "typeVersion": 4.2,
+      "position": [
+        960,
+        660
+      ]
     },
     {
       "name": "Process Text Results",
@@ -202,7 +286,13 @@
             }
           ]
         }
-      }
+      },
+      "id": "process-text-results",
+      "typeVersion": 3.4,
+      "position": [
+        1200,
+        300
+      ]
     },
     {
       "name": "Process Image Results",
@@ -224,7 +314,13 @@
             }
           ]
         }
-      }
+      },
+      "id": "process-image-results",
+      "typeVersion": 3.4,
+      "position": [
+        1200,
+        480
+      ]
     },
     {
       "name": "Process Audio Results",
@@ -246,7 +342,13 @@
             }
           ]
         }
-      }
+      },
+      "id": "process-audio-results",
+      "typeVersion": 3.4,
+      "position": [
+        1200,
+        660
+      ]
     },
     {
       "name": "Cross-Modal Analysis",
@@ -271,7 +373,13 @@
           "temperature": 0.4,
           "maxTokens": 800
         }
-      }
+      },
+      "id": "cross-modal-analysis",
+      "typeVersion": 1.3,
+      "position": [
+        1440,
+        300
+      ]
     },
     {
       "name": "Generate Multi-Modal Report",
@@ -289,27 +397,45 @@
             }
           ]
         }
-      }
+      },
+      "id": "generate-multi-modal-report",
+      "typeVersion": 3.4,
+      "position": [
+        1680,
+        300
+      ]
     },
     {
-      "name": "Send Multi-Modal Results",
+      "name": "⚠️ Send Multi-Modal Results (placeholder)",
       "type": "n8n-nodes-base.httpRequest",
       "parameters": {
         "method": "POST",
         "url": "https://api.multimodal-service.com/results",
         "bodyContentType": "json",
         "jsonBody": "={{ { \"results\": $json.multimodal_report, \"timestamp\": $now } }}"
-      }
+      },
+      "id": "send-multi-modal-results",
+      "typeVersion": 4.2,
+      "position": [
+        1920,
+        300
+      ]
     },
     {
-      "name": "Log Multi-Modal Activity",
+      "name": "⚠️ Log Multi-Modal Activity (placeholder)",
       "type": "n8n-nodes-base.httpRequest",
       "parameters": {
         "method": "POST",
         "url": "https://api.multimodal-log.com/log",
         "bodyContentType": "json",
         "jsonBody": "={{ { \"type\": \"multimodal_processing\", \"data\": $json.multimodal_report, \"timestamp\": $now } }}"
-      }
+      },
+      "id": "log-multi-modal-activity",
+      "typeVersion": 4.2,
+      "position": [
+        2160,
+        300
+      ]
     },
     {
       "name": "Handle Multi-Modal Error",
@@ -331,10 +457,160 @@
             }
           ]
         }
-      }
+      },
+      "id": "handle-multi-modal-error",
+      "typeVersion": 3.4
     }
   ],
-  "connections": {},
+  "connections": {
+    "Multi-Modal AI Processing": {
+      "main": [
+        [
+          {
+            "node": "Initialize Multi-Modal AI",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Initialize Multi-Modal AI": {
+      "main": [
+        [
+          {
+            "node": "Detect Input Type",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Detect Input Type": {
+      "main": [
+        [
+          {
+            "node": "Text AI Processing",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Image AI Processing",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Audio AI Processing",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Handle Multi-Modal Error",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Text AI Processing": {
+      "main": [
+        [
+          {
+            "node": "Process Text Results",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Image AI Processing": {
+      "main": [
+        [
+          {
+            "node": "Process Image Results",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Audio AI Processing": {
+      "main": [
+        [
+          {
+            "node": "Process Audio Results",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Process Text Results": {
+      "main": [
+        [
+          {
+            "node": "Cross-Modal Analysis",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Process Image Results": {
+      "main": [
+        [
+          {
+            "node": "Cross-Modal Analysis",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Process Audio Results": {
+      "main": [
+        [
+          {
+            "node": "Cross-Modal Analysis",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Cross-Modal Analysis": {
+      "main": [
+        [
+          {
+            "node": "Generate Multi-Modal Report",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Generate Multi-Modal Report": {
+      "main": [
+        [
+          {
+            "node": "⚠️ Send Multi-Modal Results (placeholder)",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "⚠️ Send Multi-Modal Results (placeholder)": {
+      "main": [
+        [
+          {
+            "node": "⚠️ Log Multi-Modal Activity (placeholder)",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
   "active": false,
   "settings": {},
   "pinData": {},

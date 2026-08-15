@@ -5,9 +5,8 @@
 [![Course Status](https://img.shields.io/badge/Status-Complete-brightgreen)](https://github.com/sagebeme/n8n-workflows)
 [![Duration](https://img.shields.io/badge/Duration-15%20Weeks-blue)](https://github.com/sagebeme/n8n-workflows)
 [![Level](https://img.shields.io/badge/Level-Beginner%20to%20Expert-orange)](https://github.com/sagebeme/n8n-workflows)
-[![Workflows](https://img.shields.io/badge/Example%20Workflows-60+-purple)](https://github.com/sagebeme/n8n-workflows)
-[![YouTube](https://img.shields.io/badge/YouTube-Videos%20Integrated-red)](https://github.com/sagebeme/n8n-workflows)
-[![RAG](https://img.shields.io/badge/RAG-Enabled-green)](https://github.com/sagebeme/n8n-workflows)
+[![Workflows](https://img.shields.io/badge/Example%20Workflows-60-purple)](https://github.com/sagebeme/n8n-workflows)
+[![YouTube](https://img.shields.io/badge/YouTube-18%20Curated%20Videos-red)](https://github.com/sagebeme/n8n-workflows)
 
 ## 🎯 **HYBRID LEARNING MODEL: Learn Together, Build Differently**
 
@@ -28,13 +27,45 @@
 - **Market Focus**: Skills aligned with high-growth industry demands
 
 ### ✨ **What You'll Achieve:**
-- 🏗️ **Build 50+ automation workflows** from scratch
+- 🏗️ **Build on 60+ example automation workflows** across every phase of the course
 - 🤖 **Integrate AI agents** into your workflows
-- 🧠 **Master RAG (Retrieval-Augmented Generation)** for intelligent automation
-- 📺 **Follow 105+ YouTube video lessons** with direct links
+- 🧠 **Get introduced to RAG (Retrieval-Augmented Generation)** concepts for intelligent automation
+- 📺 **Follow 18 curated YouTube videos**, linked throughout all 106 daily lessons
 - 💼 **Start your automation business** and get your first client
 - 📈 **Scale to agency level** with team management
 - 🎓 **Graduate as an automation expert** ready for the market
+
+---
+
+## 🧭 HOW TO USE THIS REPO
+
+New to n8n or to this course? Start here.
+
+### **1. Get n8n running**
+Pick one:
+- **n8n Cloud (easiest):** Sign up at [n8n.io](https://n8n.io) for a hosted instance — no installation required. A free trial is available.
+- **Self-hosted with Docker (free, more control):** Install [Docker](https://docs.docker.com/get-docker/), then run:
+  ```bash
+  docker volume create n8n_data
+  docker run -it --rm --name n8n -p 5678:5678 -v n8n_data:/home/node/.n8n docker.n8n.io/n8nio/n8n
+  ```
+  Open `http://localhost:5678` in your browser to access the n8n editor. See the [official self-hosting docs](https://docs.n8n.io/hosting/) for production setups (Render, a VPS, etc.).
+
+### **2. Import an example workflow**
+Every week's `EXAMPLES/` folder contains ready-to-use `.json` workflow files. To load one into n8n:
+- Open the n8n editor, click **Menu (☰) → Import from File**, and select the `.json` file, **or**
+- Drag and drop the `.json` file directly onto the n8n canvas.
+
+### **3. Check the sticky notes first**
+Each imported workflow includes sticky notes on the canvas listing exactly which credentials/accounts (API keys, OAuth apps, etc.) you need to configure before the workflow will run. Read these before hitting "Execute."
+
+### **4. Follow the structure**
+- **Start with [Week 1](WEEK_01_FOUNDATION/README.md)** and move sequentially — later weeks build on earlier ones.
+- Each week folder has three parts that work together:
+  - **`README.md`** — the week's objectives, daily breakdown, and project goal
+  - **`DAILY_TASKS/*.md`** — one file per day with concrete, step-by-step instructions and video links
+  - **`EXAMPLES/*.json`** — importable n8n workflows referenced by that week's lessons
+- Work through `DAILY_TASKS` in order, importing the matching `EXAMPLES` workflow when a lesson points you to one.
 
 ---
 
@@ -43,9 +74,9 @@
 | **Component** | **Count** | **Description** |
 |---------------|-----------|------------------|
 | **Total Weeks** | 15 | Complete learning journey |
-| **Daily Tasks** | 105 | Detailed daily instructions (7 per week) |
-| **YouTube Videos** | 105+ | Direct video links for each daily task |
-| **Example Workflows** | 60+ | Ready-to-use n8n workflows (4 per week) |
+| **Daily Tasks** | 106 | Detailed daily instructions (Week 8 runs 8 days; every other week runs 7) |
+| **YouTube Videos** | 18 curated videos | Linked throughout the 106 daily lessons (17 videos + 1 playlist) |
+| **Example Workflows** | 60 | Ready-to-use n8n workflows (4 per week) |
 | **README Files** | 15 | Weekly overviews and objectives |
 | **Course Duration** | 15 weeks | 3+ months of comprehensive learning |
 
@@ -63,7 +94,7 @@
 - **Week 5:** Production deployment, monitoring, maintenance
 
 ### **🤖 PHASE 3: AI INTEGRATION (Weeks 6-8)**
-- **Week 6:** AI agents, ChatGPT integration, LLM providers, **RAG implementation**
+- **Week 6:** AI agents, ChatGPT integration, LLM providers, **intro to RAG concepts**
 - **Week 7:** Advanced AI patterns, optimization, intelligent systems
 - **Week 8:** AI deployment, maintenance, scaling
 
@@ -136,7 +167,7 @@ Each day includes:
 ## 📺 YOUTUBE VIDEO INTEGRATION
 
 ### **🎥 Video Learning Experience:**
-- **105+ Direct Video Links** - Every daily task includes relevant YouTube videos
+- **18 Curated Videos** (17 individual videos + 1 playlist) - linked throughout the 106 daily lessons; the same handful of full-length courses and playlists get pointed to from the specific section relevant to that day, so you're not rewatching from scratch each time
 - **Curated Content** - Hand-picked videos from top n8n and automation experts
 - **Progressive Learning** - Videos aligned with weekly learning objectives
 - **Multiple Formats** - Full courses, tutorials, and quick start guides
@@ -166,8 +197,7 @@ Each day includes:
 - **Claude** - Anthropic's AI models
 - **Mistral** - Open-source AI models
 - **Local LLMs** - Self-hosted AI solutions
-- **RAG (Retrieval-Augmented Generation)** - Advanced AI with document retrieval
-- **Vector Databases** - Pinecone, Qdrant
+- **RAG (Retrieval-Augmented Generation)** - Concepts introduced in Week 6 (no example workflow in this repo implements a vector store yet)
 
 ### **Business Tools:**
 - **Notion** - Documentation and project management
@@ -187,7 +217,7 @@ By the end of this course, you will be able to:
 - ✅ Install and configure n8n on your own server
 - ✅ Build complex automation workflows from scratch
 - ✅ Integrate AI agents into your workflows
-- ✅ Implement RAG (Retrieval-Augmented Generation) systems
+- ✅ Understand the fundamentals of RAG (Retrieval-Augmented Generation) and where it fits in AI automation
 - ✅ Connect real-world tools and APIs
 - ✅ Debug, optimize, and scale automation systems
 
@@ -242,8 +272,8 @@ By the end of this course, you will be able to:
 - **Daily Tasks** - Step-by-step instructions
 
 ### **🔧 Practical Resources:**
-- **60+ Example Workflows** - Ready-to-use n8n workflows with enhanced descriptions
-- **105+ YouTube Videos** - Direct video links for each daily task
+- **60 Example Workflows** - Ready-to-use n8n workflows with enhanced descriptions
+- **18 Curated YouTube Videos** - Linked throughout the 106 daily tasks
 - **Enhanced Metadata** - Course-specific tags and descriptions
 - **Code Templates** - Reusable automation patterns
 - **API Documentation** - Integration guides
@@ -273,28 +303,19 @@ By the end of this course, you will be able to:
 
 ---
 
-## 📈 SUCCESS STORIES
-
-*"This course transformed me from a complete beginner to running my own automation agency. The step-by-step approach and real-world examples made all the difference."* - **Sarah M., Automation Consultant**
-
-*"The AI integration modules were game-changing. I now offer AI-powered automation services that my clients love."* - **Mike R., Business Owner**
-
-*"The business modules helped me understand how to package and price my services. I got my first client within 90 days!"* - **Lisa K., Freelancer**
-
----
-
 ## 🔗 QUICK LINKS
 
 - 📋 **[Course Overview](AUTOMATOR_PRO_COURSE_OVERVIEW.md)** - Complete course details
 - 📚 **[Structure Guide](COURSE_STRUCTURE_OVERVIEW.md)** - Weekly breakdown
 - 🏗️ **[Week 1: Foundation](WEEK_01_FOUNDATION/README.md)** - Start here
 - 🎓 **[Week 15: Graduation](WEEK_15_GRADUATION/README.md)** - Course completion
+- 🤝 **[Contributing](CONTRIBUTING.md)** - Report an issue or suggest a fix
 
 ---
 
 ## 📞 CONTACT & SUPPORT
 
-- **GitHub Issues** - Technical questions and bug reports
+- **GitHub Issues** - Technical questions and bug reports (see [CONTRIBUTING.md](CONTRIBUTING.md))
 - **Community Discord** - Peer support and collaboration
 - **Email Support** - Direct instructor assistance
 - **Documentation** - Comprehensive guides and tutorials
@@ -303,7 +324,7 @@ By the end of this course, you will be able to:
 
 ## 📄 LICENSE
 
-This course is provided under the MIT License. Feel free to use, modify, and distribute for educational purposes.
+© 2026 — All rights reserved. This course content is proprietary; please do not redistribute without permission.
 
 ---
 
@@ -317,7 +338,7 @@ Special thanks to the n8n community, AI model providers, and all the automation 
 
 ---
 
-*Last updated: January 2025*
-*Course version: 1.1*
-*Total content: 15 weeks, 105 daily tasks, 105+ YouTube videos, 60+ example workflows*
+*Last updated: August 2026*
+*Course version: 1.2*
+*Total content: 15 weeks, 106 daily tasks, 18 curated YouTube videos, 60 example workflows*
 *Complete automation course with enhanced workflows, YouTube integration, and comprehensive documentation*

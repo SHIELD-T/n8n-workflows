@@ -323,14 +323,14 @@ Complete Alex's business automation system with all workflow building skills.
 
 ## ✅ WEEK 3 CHECKLIST
 
-- [ ] Master trigger types
-- [ ] Learn built-in nodes
-- [ ] Understand expressions
-- [ ] Implement error handling
-- [ ] Set up version control
-- [ ] Clone and modify workflows
-- [ ] Complete week 3 project
-- [ ] Share progress in community
+- [ ] Built and tested Manual, Webhook, and Schedule trigger workflows, confirming both success and error branches via curl (Day 15)
+- [ ] Built an HTTP + IF + SET + SplitInBatches workflow and confirmed SplitInBatches ran across multiple batches in Execution History (Day 16)
+- [ ] Built a 5-expression workflow and verified a conditional output (e.g. `text_category`) flips correctly between two different test inputs (Day 17)
+- [ ] Built a workflow with configured HTTP retry logic, confirmed 3 retry attempts in the execution log, and verified distinct success/failure branches (Day 18)
+- [ ] Exported and re-imported at least one workflow from a JSON backup, verifying it executes identically after restoration (Day 19)
+- [ ] Cloned and modified 2 existing workflows with new API endpoints/expressions, each tested and documented with a changelog note (Day 20)
+- [ ] Built and tested the Week 3 capstone workflow end-to-end, including both its success and error paths via curl (Day 21)
+- [ ] Shared progress in the community and completed Alex's Week 3 business automation project deliverables
 
 ---
 

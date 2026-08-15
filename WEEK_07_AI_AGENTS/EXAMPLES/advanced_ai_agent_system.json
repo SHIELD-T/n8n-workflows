@@ -47,6 +47,9 @@
       "Week 8 workflows",
       "Previous week workflows",
       "Course example workflows"
+    ],
+    "credentials_required": [
+      "OpenAI API key"
     ]
   },
   "meta": {
@@ -57,12 +60,123 @@
   },
   "nodes": [
     {
+      "id": "sticky-sticky-note",
+      "name": "Sticky Note",
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        220,
+        40
+      ],
+      "parameters": {
+        "content": "## Advanced Ai Agent System\n\nAutomated workflow for AI Integration phase learning objectives with intelligent processing and error handling.\n\n**Credentials needed before running:**\n- OpenAI API key\n\n**How to use:** Import into n8n, add the credentials above under *Credentials*, then run manually (or trigger it) to test.",
+        "height": 300,
+        "width": 420
+      }
+    },
+    {
+      "id": "sticky-sticky-note-1",
+      "name": "Sticky Note 1",
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        1180,
+        100
+      ],
+      "parameters": {
+        "content": "## ⚠️ Placeholder endpoint\n\nReplace this URL with a real API before running. This is a stand-in for teaching purposes.",
+        "height": 160,
+        "width": 300
+      }
+    },
+    {
+      "id": "sticky-sticky-note-2",
+      "name": "Sticky Note 2",
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        1180,
+        280
+      ],
+      "parameters": {
+        "content": "## ⚠️ Placeholder endpoint\n\nReplace this URL with a real API before running. This is a stand-in for teaching purposes.",
+        "height": 160,
+        "width": 300
+      }
+    },
+    {
+      "id": "sticky-sticky-note-3",
+      "name": "Sticky Note 3",
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        1180,
+        460
+      ],
+      "parameters": {
+        "content": "## ⚠️ Placeholder endpoint\n\nReplace this URL with a real API before running. This is a stand-in for teaching purposes.",
+        "height": 160,
+        "width": 300
+      }
+    },
+    {
+      "id": "sticky-sticky-note-4",
+      "name": "Sticky Note 4",
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        1180,
+        640
+      ],
+      "parameters": {
+        "content": "## ⚠️ Placeholder endpoint\n\nReplace this URL with a real API before running. This is a stand-in for teaching purposes.",
+        "height": 160,
+        "width": 300
+      }
+    },
+    {
+      "id": "sticky-sticky-note-5",
+      "name": "Sticky Note 5",
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        2140,
+        100
+      ],
+      "parameters": {
+        "content": "## ⚠️ Placeholder endpoint\n\nReplace this URL with a real API before running. This is a stand-in for teaching purposes.",
+        "height": 160,
+        "width": 300
+      }
+    },
+    {
+      "id": "sticky-sticky-note-6",
+      "name": "Sticky Note 6",
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        2380,
+        100
+      ],
+      "parameters": {
+        "content": "## ⚠️ Placeholder endpoint\n\nReplace this URL with a real API before running. This is a stand-in for teaching purposes.",
+        "height": 160,
+        "width": 300
+      }
+    },
+    {
       "name": "Advanced AI Agent System",
       "type": "n8n-nodes-base.webhook",
       "parameters": {
         "path": "advanced-ai-agent-system",
         "httpMethod": "POST"
-      }
+      },
+      "id": "advanced-ai-agent-system",
+      "typeVersion": 2,
+      "position": [
+        240,
+        300
+      ]
     },
     {
       "name": "Initialize Advanced Agent System",
@@ -88,7 +202,13 @@
             }
           ]
         }
-      }
+      },
+      "id": "initialize-advanced-agent-system",
+      "typeVersion": 3.4,
+      "position": [
+        480,
+        300
+      ]
     },
     {
       "name": "Process Complex Request",
@@ -114,7 +234,13 @@
             }
           ]
         }
-      }
+      },
+      "id": "process-complex-request",
+      "typeVersion": 3.4,
+      "position": [
+        720,
+        300
+      ]
     },
     {
       "name": "Master Agent Analysis",
@@ -139,47 +265,77 @@
           "temperature": 0.2,
           "maxTokens": 600
         }
-      }
+      },
+      "id": "master-agent-analysis",
+      "typeVersion": 1.3,
+      "position": [
+        960,
+        300
+      ]
     },
     {
-      "name": "Deploy Research Agent",
+      "name": "⚠️ Deploy Research Agent (placeholder)",
       "type": "n8n-nodes-base.httpRequest",
       "parameters": {
         "method": "POST",
         "url": "https://api.agent-deployer.com/deploy-research-agent",
         "bodyContentType": "json",
         "jsonBody": "={{ { \"agent_system_id\": $json.agent_system_id, \"agent_type\": \"research\", \"task\": \"Market research and trend analysis\", \"priority\": $json.priority_level, \"timestamp\": $now } }}"
-      }
+      },
+      "id": "deploy-research-agent",
+      "typeVersion": 4.2,
+      "position": [
+        1200,
+        300
+      ]
     },
     {
-      "name": "Deploy Analysis Agent",
+      "name": "⚠️ Deploy Analysis Agent (placeholder)",
       "type": "n8n-nodes-base.httpRequest",
       "parameters": {
         "method": "POST",
         "url": "https://api.agent-deployer.com/deploy-analysis-agent",
         "bodyContentType": "json",
         "jsonBody": "={{ { \"agent_system_id\": $json.agent_system_id, \"agent_type\": \"analysis\", \"task\": \"Data analysis and insights generation\", \"priority\": $json.priority_level, \"timestamp\": $now } }}"
-      }
+      },
+      "id": "deploy-analysis-agent",
+      "typeVersion": 4.2,
+      "position": [
+        1200,
+        480
+      ]
     },
     {
-      "name": "Deploy Communication Agent",
+      "name": "⚠️ Deploy Communication Agent (placeholder)",
       "type": "n8n-nodes-base.httpRequest",
       "parameters": {
         "method": "POST",
         "url": "https://api.agent-deployer.com/deploy-communication-agent",
         "bodyContentType": "json",
         "jsonBody": "={{ { \"agent_system_id\": $json.agent_system_id, \"agent_type\": \"communication\", \"task\": \"Stakeholder communication and reporting\", \"priority\": $json.priority_level, \"timestamp\": $now } }}"
-      }
+      },
+      "id": "deploy-communication-agent",
+      "typeVersion": 4.2,
+      "position": [
+        1200,
+        660
+      ]
     },
     {
-      "name": "Deploy Decision Agent",
+      "name": "⚠️ Deploy Decision Agent (placeholder)",
       "type": "n8n-nodes-base.httpRequest",
       "parameters": {
         "method": "POST",
         "url": "https://api.agent-deployer.com/deploy-decision-agent",
         "bodyContentType": "json",
         "jsonBody": "={{ { \"agent_system_id\": $json.agent_system_id, \"agent_type\": \"decision\", \"task\": \"Strategic decision making and recommendations\", \"priority\": $json.priority_level, \"timestamp\": $now } }}"
-      }
+      },
+      "id": "deploy-decision-agent",
+      "typeVersion": 4.2,
+      "position": [
+        1200,
+        840
+      ]
     },
     {
       "name": "Collect Agent Results",
@@ -189,27 +345,33 @@
           "assignments": [
             {
               "name": "research_results",
-              "value": "={{ $('Deploy Research Agent').item.json.results }}"
+              "value": "={{ $('⚠️ Deploy Research Agent (placeholder)').item.json.results }}"
             },
             {
               "name": "analysis_results",
-              "value": "={{ $('Deploy Analysis Agent').item.json.results }}"
+              "value": "={{ $('⚠️ Deploy Analysis Agent (placeholder)').item.json.results }}"
             },
             {
               "name": "communication_results",
-              "value": "={{ $('Deploy Communication Agent').item.json.results }}"
+              "value": "={{ $('⚠️ Deploy Communication Agent (placeholder)').item.json.results }}"
             },
             {
               "name": "decision_results",
-              "value": "={{ $('Deploy Decision Agent').item.json.results }}"
+              "value": "={{ $('⚠️ Deploy Decision Agent (placeholder)').item.json.results }}"
             },
             {
               "name": "all_agent_results",
-              "value": "={{ { \"research\": $('Deploy Research Agent').item.json.results, \"analysis\": $('Deploy Analysis Agent').item.json.results, \"communication\": $('Deploy Communication Agent').item.json.results, \"decision\": $('Deploy Decision Agent').item.json.results } }}"
+              "value": "={{ { \"research\": $('⚠️ Deploy Research Agent (placeholder)').item.json.results, \"analysis\": $('⚠️ Deploy Analysis Agent (placeholder)').item.json.results, \"communication\": $('⚠️ Deploy Communication Agent (placeholder)').item.json.results, \"decision\": $('⚠️ Deploy Decision Agent (placeholder)').item.json.results } }}"
             }
           ]
         }
-      }
+      },
+      "id": "collect-agent-results",
+      "typeVersion": 3.4,
+      "position": [
+        1440,
+        300
+      ]
     },
     {
       "name": "Master Agent Synthesis",
@@ -234,7 +396,13 @@
           "temperature": 0.3,
           "maxTokens": 1000
         }
-      }
+      },
+      "id": "master-agent-synthesis",
+      "typeVersion": 1.3,
+      "position": [
+        1680,
+        300
+      ]
     },
     {
       "name": "Generate Advanced Agent Report",
@@ -252,27 +420,45 @@
             }
           ]
         }
-      }
+      },
+      "id": "generate-advanced-agent-report",
+      "typeVersion": 3.4,
+      "position": [
+        1920,
+        300
+      ]
     },
     {
-      "name": "Send Advanced Agent Results",
+      "name": "⚠️ Send Advanced Agent Results (placeholder)",
       "type": "n8n-nodes-base.httpRequest",
       "parameters": {
         "method": "POST",
         "url": "https://api.advanced-agent-service.com/results",
         "bodyContentType": "json",
         "jsonBody": "={{ { \"results\": $json.advanced_agent_report, \"timestamp\": $now } }}"
-      }
+      },
+      "id": "send-advanced-agent-results",
+      "typeVersion": 4.2,
+      "position": [
+        2160,
+        300
+      ]
     },
     {
-      "name": "Log Advanced Agent Activity",
+      "name": "⚠️ Log Advanced Agent Activity (placeholder)",
       "type": "n8n-nodes-base.httpRequest",
       "parameters": {
         "method": "POST",
         "url": "https://api.advanced-agent-log.com/log",
         "bodyContentType": "json",
         "jsonBody": "={{ { \"type\": \"advanced_agent_processing\", \"data\": $json.advanced_agent_report, \"timestamp\": $now } }}"
-      }
+      },
+      "id": "log-advanced-agent-activity",
+      "typeVersion": 4.2,
+      "position": [
+        2400,
+        300
+      ]
     },
     {
       "name": "Handle Advanced Agent Error",
@@ -294,10 +480,165 @@
             }
           ]
         }
-      }
+      },
+      "id": "handle-advanced-agent-error",
+      "typeVersion": 3.4
     }
   ],
-  "connections": {},
+  "connections": {
+    "Advanced AI Agent System": {
+      "main": [
+        [
+          {
+            "node": "Initialize Advanced Agent System",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Initialize Advanced Agent System": {
+      "main": [
+        [
+          {
+            "node": "Process Complex Request",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Process Complex Request": {
+      "main": [
+        [
+          {
+            "node": "Master Agent Analysis",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Master Agent Analysis": {
+      "main": [
+        [
+          {
+            "node": "⚠️ Deploy Research Agent (placeholder)",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "⚠️ Deploy Analysis Agent (placeholder)",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "⚠️ Deploy Communication Agent (placeholder)",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "⚠️ Deploy Decision Agent (placeholder)",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Handle Advanced Agent Error",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "⚠️ Deploy Research Agent (placeholder)": {
+      "main": [
+        [
+          {
+            "node": "Collect Agent Results",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "⚠️ Deploy Analysis Agent (placeholder)": {
+      "main": [
+        [
+          {
+            "node": "Collect Agent Results",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "⚠️ Deploy Communication Agent (placeholder)": {
+      "main": [
+        [
+          {
+            "node": "Collect Agent Results",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "⚠️ Deploy Decision Agent (placeholder)": {
+      "main": [
+        [
+          {
+            "node": "Collect Agent Results",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Collect Agent Results": {
+      "main": [
+        [
+          {
+            "node": "Master Agent Synthesis",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Master Agent Synthesis": {
+      "main": [
+        [
+          {
+            "node": "Generate Advanced Agent Report",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Generate Advanced Agent Report": {
+      "main": [
+        [
+          {
+            "node": "⚠️ Send Advanced Agent Results (placeholder)",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "⚠️ Send Advanced Agent Results (placeholder)": {
+      "main": [
+        [
+          {
+            "node": "⚠️ Log Advanced Agent Activity (placeholder)",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
   "active": false,
   "settings": {},
   "pinData": {},

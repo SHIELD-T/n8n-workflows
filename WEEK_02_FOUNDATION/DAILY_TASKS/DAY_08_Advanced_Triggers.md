@@ -1,353 +1,42 @@
-# 📅 DAY 8: MONDAY - Understanding Triggers Deep Dive
+# DAY 8: Understanding Triggers Deep Dive
+**Week:** 2 — Foundation  |  **Time:** 2-3 hours  |  **Difficulty:** Beginner
 
-## 🎯 TODAY'S OBJECTIVES
-- Master advanced trigger concepts
-- Learn trigger configuration options
-- Practice complex trigger setups
-- Build workflows with multiple triggers
+## 🎯 What You'll Learn
+- The difference between Webhook, Schedule, and Manual triggers, and when to reach for each
+- How to add conditions inside a trigger's downstream IF node so a workflow only proceeds on valid data
+- How to combine two trigger types into one workflow using a shared IF node to route by source
+- How to read Execution History to tell whether a trigger workflow behaved as expected
 
-## ⏰ TIME ALLOCATION
-**Total Time:** 2-3 hours
-- **Morning:** 1 hour (Learning)
-- **Afternoon:** 1 hour (Hands-on Practice)
-- **Evening:** 30 minutes (Community & Review)
+## 🎥 Watch First
+- [n8n Triggers Explained & Demo](https://www.youtube.com/watch?v=4cQWJViybAQ) — Focus on webhooks & triggers section (14m47s). Watch for how the presenter tests a webhook with an external tool before wiring up downstream nodes — you'll do the same today.
 
----
+## 🛠️ Build It: Step-by-Step
+1. New workflow. Add a **Webhook** node named "Conditional Webhook" — HTTP Method `POST`, Path `advanced-webhook`. Copy its Test URL.
+2. Add an **IF** node "Validate Data" connected to it. Conditions (String, combinator AND): `{{ $json.type }}` "is not empty", and `{{ $json.data }}` "is not empty".
+3. On the true branch, add a **Set/Edit Fields** node "Process Valid Data" with fields: `processed_type` = `{{ $json.type }}`, `processed_data` = `{{ $json.data }}`, `processed_at` = `{{ $now }}`, `status` = `processed`.
+4. Add a **Respond to Webhook** node after it: Respond With = JSON, Response Body = `{{ { "status": "success", "processed_at": $json.processed_at } } }}`.
+5. Click **Execute Workflow** (so it listens for a test call), then from a terminal run:
+   `curl -X POST <your-webhook-test-url> -H "Content-Type: application/json" -d '{"type":"order","data":"test-payload"}'`
+   Confirm you get back `{"status":"success","processed_at":"..."}`.
+6. Re-run the curl with `-d '{"type":"order"}'` (missing `data`) and confirm in Execution History that the IF node's false branch fired instead of the success path.
+7. Build a second, separate workflow: **Schedule Trigger** (Interval: every 2 hours) → **IF** node "Check Business Hours" (Number: `{{ $now.hour() }}` ≥ 9 AND `{{ $now.hour() }}` < 17) → **Set** node with `task_type`, `executed_at`, `is_business_hours`. Trigger it manually and confirm the branch taken matches the current hour.
+8. Build a third workflow where **both** a Manual Trigger and the Webhook node from step 1 feed into the same "Validate Data" IF node. Execute once manually and once via curl, and confirm both runs appear in Execution History with the same downstream logic applied.
 
-## 🌅 MORNING SESSION (1 hour)
+**Stuck?** Import `WEEK_02_FOUNDATION/EXAMPLES/advanced_triggers_debugging.json` (Menu → Import from File in n8n) to see a working version with all three trigger types wired to shared validation and processing logic, then compare it to what you built.
 
-### **📹 Video Lesson: "Advanced Trigger Concepts"**
-**Duration:** 45 minutes
-**Watch:** [n8n Triggers Explained & Demo](https://www.youtube.com/watch?v=4cQWJViybAQ) - Focus on webhooks & triggers section (14m47s)
+## 🔑 Credentials Needed
+None — Webhook, Schedule Trigger, Manual Trigger, IF, and Set nodes require no external credentials today.
 
-#### **What You'll Learn:**
-- Advanced trigger configurations
-- Trigger conditions and filters
-- Multiple trigger workflows
-- Trigger performance optimization
+## ✅ Definition of Done
+- [ ] Your webhook returns `{"status":"success",...}` when tested with curl and a valid JSON payload
+- [ ] Your webhook's IF node routes an incomplete payload down a different branch than a complete one, confirmed in Execution History
+- [ ] Your Schedule Trigger workflow's business-hours IF node evaluates correctly for the current time
+- [ ] You've triggered the same downstream logic from two different trigger types in one workflow and confirmed both executions in history
 
-#### **Key Concepts:**
-- **Trigger Conditions:** When triggers should fire
-- **Trigger Filters:** Data filtering at trigger level
-- **Multiple Triggers:** Combining different trigger types
-- **Performance:** Optimizing trigger efficiency
+## 🐛 Common Pitfalls
+- **Testing before listening:** n8n only captures test webhook calls while it's actively listening (after clicking Execute Workflow) — a curl sent before that shows nothing.
+- **Test URL vs Production URL:** the Test URL only works while the editor is open and listening; the workflow must be Activated (toggle top-right) before its Production URL responds.
+- **Assumed OR logic:** IF node conditions default to AND — if you want "either field empty routes to error," check each condition individually rather than assuming it.
 
-#### **Take Notes On:**
-- 5 advanced trigger features
-- Trigger condition examples
-- Performance optimization techniques
-- Best practices for triggers
-
----
-
-### **📖 Reading Assignment**
-**Duration:** 15 minutes
-
-#### **Read: "n8n Advanced Triggers Guide"**
-- Trigger conditions
-- Data filtering
-- Performance optimization
-- Troubleshooting triggers
-
-#### **Key Takeaways:**
-- Triggers can have conditions
-- Filtering reduces unnecessary executions
-- Performance matters for production
-- Debugging triggers requires patience
-
----
-
-## 🌞 AFTERNOON SESSION (1 hour)
-
-### **🛠️ Hands-on Practice: "Advanced Trigger Setup"**
-**Duration:** 30 minutes
-
-#### **Task: Create Advanced Trigger Workflows**
-
-**Step-by-Step Instructions:**
-
-1. **Conditional Webhook Trigger**
-   - Create webhook with conditions
-   - Add data validation
-   - Test with different payloads
-   - Handle invalid data
-
-2. **Scheduled Trigger with Filters**
-   - Create schedule trigger
-   - Add time-based conditions
-   - Filter by day of week
-   - Test different schedules
-
-3. **Multiple Trigger Workflow**
-   - Combine webhook and schedule
-   - Use IF nodes for routing
-   - Handle different trigger sources
-   - Test complete flow
-
----
-
-### **🔍 Explore Trigger Performance**
-**Duration:** 30 minutes
-
-#### **Task: Optimize Trigger Performance**
-
-**For Each Trigger Type:**
-1. **Performance Testing**
-   - Measure execution times
-   - Monitor resource usage
-   - Test under load
-   - Identify bottlenecks
-
-2. **Optimization Techniques**
-   - Reduce unnecessary executions
-   - Optimize data processing
-   - Use efficient conditions
-   - Implement caching
-
-3. **Production Readiness**
-   - Test error scenarios
-   - Implement monitoring
-   - Set up alerts
-   - Document configurations
-
----
-
-## 🌙 EVENING SESSION (30 minutes)
-
-### **📸 Share Your Advanced Triggers**
-**Duration:** 20 minutes
-
-#### **Community Post: "My Advanced Trigger Workflows"**
-
-**Share:**
-- Screenshots of advanced triggers
-- Performance optimization results
-- Challenges faced
-- Questions for the community
-
-#### **Post Template:**
-```
-Day 8 Complete! 🎉
-
-**Advanced Triggers I Built:**
-[Screenshots of workflows]
-
-**Performance Optimizations:**
-- Reduced execution time by X%
-- Implemented conditional triggers
-- Added data filtering
-
-**Challenges:**
-- [Any issues you faced]
-
-**Questions:**
-- [Any questions for the community]
-
-Ready for Day 9! 🚀
-```
-
----
-
-### **📋 Review Tomorrow's Materials**
-**Duration:** 10 minutes
-
-#### **Preview Day 9:**
-- Self-hosting setup and configuration
-- Docker management
-- SSL certificates
-- Production deployment
-
-#### **Prepare:**
-- Review Docker commands
-- Have domain ready
-- Plan SSL setup
-
----
-
-## 📝 DAILY TASK
-
-### **🎯 Main Task: Create Advanced Trigger Workflows**
-
-**Build workflows using advanced trigger configurations.**
-
-#### **Advanced Webhook Trigger:**
-```json
-{
-  "nodes": [
-    {
-      "name": "Conditional Webhook",
-      "type": "n8n-nodes-base.webhook",
-      "parameters": {
-        "path": "advanced-webhook",
-        "httpMethod": "POST",
-        "options": {
-          "response": {
-            "responseMode": "responseNode"
-          }
-        }
-      }
-    },
-    {
-      "name": "Validate Data",
-      "type": "n8n-nodes-base.if",
-      "parameters": {
-        "conditions": {
-          "string": [
-            {
-              "value1": "={{ $json.type }}",
-              "operation": "isNotEmpty"
-            },
-            {
-              "value1": "={{ $json.data }}",
-              "operation": "isNotEmpty"
-            }
-          ]
-        }
-      }
-    },
-    {
-      "name": "Process Valid Data",
-      "type": "n8n-nodes-base.set",
-      "parameters": {
-        "assignments": {
-          "assignments": [
-            {
-              "name": "processed_type",
-              "value": "={{ $json.type }}"
-            },
-            {
-              "name": "processed_data",
-              "value": "={{ $json.data }}"
-            },
-            {
-              "name": "processed_at",
-              "value": "={{ $now }}"
-            },
-            {
-              "name": "status",
-              "value": "processed"
-            }
-          ]
-        }
-      }
-    },
-    {
-      "name": "Return Success",
-      "type": "n8n-nodes-base.respondToWebhook",
-      "parameters": {
-        "respondWith": "json",
-        "responseBody": "={{ { \"status\": \"success\", \"processed_at\": $json.processed_at } }}"
-      }
-    }
-  ]
-}
-```
-
-#### **Scheduled Trigger with Conditions:**
-```json
-{
-  "nodes": [
-    {
-      "name": "Business Hours Trigger",
-      "type": "n8n-nodes-base.scheduleTrigger",
-      "parameters": {
-        "rule": {
-          "interval": [
-            {
-              "field": "hours",
-              "hoursInterval": 2
-            }
-          ]
-        }
-      }
-    },
-    {
-      "name": "Check Business Hours",
-      "type": "n8n-nodes-base.if",
-      "parameters": {
-        "conditions": {
-          "number": [
-            {
-              "value1": "={{ $now.hour() }}",
-              "operation": "largerEqual",
-              "value2": 9
-            },
-            {
-              "value1": "={{ $now.hour() }}",
-              "operation": "smaller",
-              "value2": 17
-            }
-          ]
-        }
-      }
-    },
-    {
-      "name": "Business Hours Task",
-      "type": "n8n-nodes-base.set",
-      "parameters": {
-        "assignments": {
-          "assignments": [
-            {
-              "name": "task_type",
-              "value": "Business Hours Check"
-            },
-            {
-              "name": "executed_at",
-              "value": "={{ $now }}"
-            },
-            {
-              "name": "is_business_hours",
-              "value": "true"
-            }
-          ]
-        }
-      }
-    }
-  ]
-}
-```
-
----
-
-## ✅ DAILY CHECKLIST
-
-- [ ] Watch "Advanced Trigger Concepts" video
-- [ ] Read advanced triggers guide
-- [ ] Create conditional webhook
-- [ ] Create scheduled trigger with conditions
-- [ ] Test trigger performance
-- [ ] Optimize trigger efficiency
-- [ ] Share progress in community
-- [ ] Review tomorrow's materials
-- [ ] Complete daily task
-
----
-
-## 🎯 SUCCESS METRICS
-
-**By the end of today, you should:**
-- Understand advanced trigger concepts
-- Know how to use trigger conditions
-- Have built complex trigger workflows
-- Be able to optimize trigger performance
-- Be ready for production deployment
-
----
-
-## 💡 PRO TIPS
-
-1. **Use Conditions Wisely:** Don't over-complicate triggers
-2. **Test Performance:** Always measure execution times
-3. **Handle Errors:** Implement proper error handling
-4. **Document Configurations:** Keep notes on complex setups
-5. **Monitor Usage:** Track trigger execution patterns
-
----
-
-## 🚀 TOMORROW PREVIEW
-
-**Day 9:** We'll dive into self-hosting setup, learn about Docker management, and configure your production environment. Get ready to deploy! 🐳
-
----
-
-*Remember: Advanced triggers are the foundation of complex automation! Master these concepts! 🚀*
+## 🏭 Industry Track Application
+Sarah's photo organizer needs to accept photos from multiple input sources — a phone app that pushes instantly and a desktop folder that syncs on a schedule. Build the "two triggers into one IF node" workflow from step 8 as this system: rename the fields to `source` (`"phone"` or `"desktop"`) and `filename`, and route both sources into the same "Process Valid Data" logic. Test by sending a fake phone upload via curl and a fake desktop sync via Manual Trigger, then confirm both appear correctly in Execution History.

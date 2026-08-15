@@ -45,7 +45,8 @@
       "Week 6 workflows",
       "Previous week workflows",
       "Course example workflows"
-    ]
+    ],
+    "credentials_required": []
   },
   "meta": {
     "templateCredsSetupCompleted": true,
@@ -55,12 +56,108 @@
   },
   "nodes": [
     {
+      "id": "sticky-sticky-note",
+      "name": "Sticky Note",
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        220,
+        40
+      ],
+      "parameters": {
+        "content": "## Production Deployment Workflow\n\nProduction deployment workflow that automates deployment processes, manages versions, and ensures production readiness. Ideal for Week 5 production deployment mastery.\n\n**Credentials needed before running:** None — this workflow only uses built-in nodes and/or public test APIs (no login required).\n\n**How to use:** Import into n8n, add the credentials above under *Credentials*, then run manually (or trigger it) to test.",
+        "height": 300,
+        "width": 420
+      }
+    },
+    {
+      "id": "sticky-sticky-note-1",
+      "name": "Sticky Note 1",
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        940,
+        100
+      ],
+      "parameters": {
+        "content": "## ⚠️ Placeholder endpoint\n\nReplace this URL with a real API before running. This is a stand-in for teaching purposes.",
+        "height": 160,
+        "width": 300
+      }
+    },
+    {
+      "id": "sticky-sticky-note-2",
+      "name": "Sticky Note 2",
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        1420,
+        100
+      ],
+      "parameters": {
+        "content": "## ⚠️ Placeholder endpoint\n\nReplace this URL with a real API before running. This is a stand-in for teaching purposes.",
+        "height": 160,
+        "width": 300
+      }
+    },
+    {
+      "id": "sticky-sticky-note-3",
+      "name": "Sticky Note 3",
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        2140,
+        100
+      ],
+      "parameters": {
+        "content": "## ⚠️ Placeholder endpoint\n\nReplace this URL with a real API before running. This is a stand-in for teaching purposes.",
+        "height": 160,
+        "width": 300
+      }
+    },
+    {
+      "id": "sticky-sticky-note-4",
+      "name": "Sticky Note 4",
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        2620,
+        100
+      ],
+      "parameters": {
+        "content": "## ⚠️ Placeholder endpoint\n\nReplace this URL with a real API before running. This is a stand-in for teaching purposes.",
+        "height": 160,
+        "width": 300
+      }
+    },
+    {
+      "id": "sticky-sticky-note-5",
+      "name": "Sticky Note 5",
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        2380,
+        280
+      ],
+      "parameters": {
+        "content": "## ⚠️ Placeholder endpoint\n\nReplace this URL with a real API before running. This is a stand-in for teaching purposes.",
+        "height": 160,
+        "width": 300
+      }
+    },
+    {
       "name": "Production Deployment Trigger",
       "type": "n8n-nodes-base.webhook",
       "parameters": {
         "path": "production-deployment",
         "httpMethod": "POST"
-      }
+      },
+      "id": "production-deployment-trigger",
+      "typeVersion": 2,
+      "position": [
+        240,
+        300
+      ]
     },
     {
       "name": "Initialize Deployment",
@@ -90,7 +187,13 @@
             }
           ]
         }
-      }
+      },
+      "id": "initialize-deployment",
+      "typeVersion": 3.4,
+      "position": [
+        480,
+        300
+      ]
     },
     {
       "name": "Validate Deployment Request",
@@ -109,17 +212,29 @@
             }
           ]
         }
-      }
+      },
+      "id": "validate-deployment-request",
+      "typeVersion": 2,
+      "position": [
+        720,
+        300
+      ]
     },
     {
-      "name": "Backup Current Production",
+      "name": "⚠️ Backup Current Production (placeholder)",
       "type": "n8n-nodes-base.httpRequest",
       "parameters": {
         "method": "POST",
         "url": "https://api.backup-service.com/backup",
         "bodyContentType": "json",
         "jsonBody": "={{ { \"environment\": \"production\", \"deployment_id\": $json.deployment_id, \"backup_type\": \"pre_deployment\", \"timestamp\": $now } }}"
-      }
+      },
+      "id": "backup-current-production",
+      "typeVersion": 4.2,
+      "position": [
+        960,
+        300
+      ]
     },
     {
       "name": "Deploy to Green Environment",
@@ -129,10 +244,16 @@
         "url": "https://api.render.com/v1/services/YOUR_SERVICE_ID/deploys",
         "bodyContentType": "json",
         "jsonBody": "={{ { \"environment\": \"green\", \"workflow_version\": $json.workflow_version, \"deployment_id\": $json.deployment_id, \"deployment_type\": $json.deployment_type } }}"
-      }
+      },
+      "id": "deploy-to-green-environment",
+      "typeVersion": 4.2,
+      "position": [
+        1200,
+        300
+      ]
     },
     {
-      "name": "Health Check Green Environment",
+      "name": "⚠️ Health Check Green Environment (placeholder)",
       "type": "n8n-nodes-base.httpRequest",
       "parameters": {
         "method": "GET",
@@ -148,7 +269,13 @@
             }
           }
         }
-      }
+      },
+      "id": "health-check-green-environment",
+      "typeVersion": 4.2,
+      "position": [
+        1440,
+        300
+      ]
     },
     {
       "name": "Validate Health Check",
@@ -163,7 +290,13 @@
             }
           ]
         }
-      }
+      },
+      "id": "validate-health-check",
+      "typeVersion": 2,
+      "position": [
+        1680,
+        300
+      ]
     },
     {
       "name": "Switch Traffic to Green",
@@ -173,10 +306,16 @@
         "url": "https://api.render.com/v1/services/YOUR_SERVICE_ID/switch",
         "bodyContentType": "json",
         "jsonBody": "={{ { \"from_environment\": \"blue\", \"to_environment\": \"green\", \"deployment_id\": $json.deployment_id, \"switch_time\": $now } }}"
-      }
+      },
+      "id": "switch-traffic-to-green",
+      "typeVersion": 4.2,
+      "position": [
+        1920,
+        300
+      ]
     },
     {
-      "name": "Monitor Post-Deployment",
+      "name": "⚠️ Monitor Post-Deployment (placeholder)",
       "type": "n8n-nodes-base.httpRequest",
       "parameters": {
         "method": "GET",
@@ -193,7 +332,13 @@
             }
           }
         }
-      }
+      },
+      "id": "monitor-post-deployment",
+      "typeVersion": 4.2,
+      "position": [
+        2160,
+        300
+      ]
     },
     {
       "name": "Deployment Success",
@@ -219,17 +364,29 @@
             }
           ]
         }
-      }
+      },
+      "id": "deployment-success",
+      "typeVersion": 3.4,
+      "position": [
+        2400,
+        300
+      ]
     },
     {
-      "name": "Send Success Notification",
+      "name": "⚠️ Send Success Notification (placeholder)",
       "type": "n8n-nodes-base.httpRequest",
       "parameters": {
         "method": "POST",
         "url": "https://api.slack.com/api/chat.postMessage",
         "bodyContentType": "json",
         "jsonBody": "={{ { \"channel\": \"#deployments\", \"text\": \"✅ Production Deployment Successful\", \"attachments\": [{ \"color\": \"good\", \"fields\": [{ \"title\": \"Deployment ID\", \"value\": $json.deployment_id, \"short\": true }, { \"title\": \"Version\", \"value\": $json.workflow_version, \"short\": true }, { \"title\": \"Type\", \"value\": $json.deployment_type, \"short\": true }, { \"title\": \"Duration\", \"value\": $json.deployment_duration + \"ms\", \"short\": true }] }] } }}"
-      }
+      },
+      "id": "send-success-notification",
+      "typeVersion": 4.2,
+      "position": [
+        2640,
+        300
+      ]
     },
     {
       "name": "Handle Health Check Failure",
@@ -251,7 +408,9 @@
             }
           ]
         }
-      }
+      },
+      "id": "handle-health-check-failure",
+      "typeVersion": 3.4
     },
     {
       "name": "Execute Rollback",
@@ -261,17 +420,29 @@
         "url": "https://api.render.com/v1/services/YOUR_SERVICE_ID/rollback",
         "bodyContentType": "json",
         "jsonBody": "={{ { \"deployment_id\": $json.deployment_id, \"from_environment\": \"green\", \"to_environment\": \"blue\", \"rollback_reason\": \"health_check_failed\", \"timestamp\": $now } }}"
-      }
+      },
+      "id": "execute-rollback",
+      "typeVersion": 4.2,
+      "position": [
+        2160,
+        480
+      ]
     },
     {
-      "name": "Send Rollback Notification",
+      "name": "⚠️ Send Rollback Notification (placeholder)",
       "type": "n8n-nodes-base.httpRequest",
       "parameters": {
         "method": "POST",
         "url": "https://api.slack.com/api/chat.postMessage",
         "bodyContentType": "json",
         "jsonBody": "={{ { \"channel\": \"#deployments\", \"text\": \"🔄 Production Rollback Executed\", \"attachments\": [{ \"color\": \"warning\", \"fields\": [{ \"title\": \"Deployment ID\", \"value\": $json.deployment_id, \"short\": true }, { \"title\": \"Rollback Reason\", \"value\": \"Health check failed\", \"short\": true }, { \"title\": \"Rollback Time\", \"value\": $now, \"short\": true }] }] } }}"
-      }
+      },
+      "id": "send-rollback-notification",
+      "typeVersion": 4.2,
+      "position": [
+        2400,
+        480
+      ]
     },
     {
       "name": "Handle Validation Error",
@@ -293,10 +464,159 @@
             }
           ]
         }
-      }
+      },
+      "id": "handle-validation-error",
+      "typeVersion": 3.4
     }
   ],
-  "connections": {},
+  "connections": {
+    "Production Deployment Trigger": {
+      "main": [
+        [
+          {
+            "node": "Initialize Deployment",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Initialize Deployment": {
+      "main": [
+        [
+          {
+            "node": "Validate Deployment Request",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Validate Deployment Request": {
+      "main": [
+        [
+          {
+            "node": "⚠️ Backup Current Production (placeholder)",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Handle Validation Error",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "⚠️ Backup Current Production (placeholder)": {
+      "main": [
+        [
+          {
+            "node": "Deploy to Green Environment",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Deploy to Green Environment": {
+      "main": [
+        [
+          {
+            "node": "⚠️ Health Check Green Environment (placeholder)",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "⚠️ Health Check Green Environment (placeholder)": {
+      "main": [
+        [
+          {
+            "node": "Validate Health Check",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Validate Health Check": {
+      "main": [
+        [
+          {
+            "node": "Switch Traffic to Green",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Handle Health Check Failure",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Switch Traffic to Green": {
+      "main": [
+        [
+          {
+            "node": "⚠️ Monitor Post-Deployment (placeholder)",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "⚠️ Monitor Post-Deployment (placeholder)": {
+      "main": [
+        [
+          {
+            "node": "Deployment Success",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Deployment Success": {
+      "main": [
+        [
+          {
+            "node": "⚠️ Send Success Notification (placeholder)",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Handle Health Check Failure": {
+      "main": [
+        [
+          {
+            "node": "Execute Rollback",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Execute Rollback": {
+      "main": [
+        [
+          {
+            "node": "⚠️ Send Rollback Notification (placeholder)",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
   "active": false,
   "settings": {},
   "pinData": {},

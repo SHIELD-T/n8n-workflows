@@ -45,6 +45,10 @@
       "All course workflows",
       "Graduation projects",
       "Business implementation workflows"
+    ],
+    "credentials_required": [
+      "Notion API integration (internal integration token)",
+      "Slack OAuth2 / Slack API token"
     ]
   },
   "meta": {
@@ -54,6 +58,21 @@
     "last_updated": "2025-09-07T14:31:14.863092"
   },
   "nodes": [
+    {
+      "id": "sticky-sticky-note",
+      "name": "Sticky Note",
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        220,
+        40
+      ],
+      "parameters": {
+        "content": "## Portfolio Finalization System\n\nAutomated workflow for Graduation phase learning objectives with intelligent processing and error handling.\n\n**Credentials needed before running:**\n- Notion API integration (internal integration token)\n- Slack OAuth2 / Slack API token\n\n**How to use:** Import into n8n, add the credentials above under *Credentials*, then run manually (or trigger it) to test.",
+        "height": 300,
+        "width": 420
+      }
+    },
     {
       "parameters": {
         "httpMethod": "POST",
@@ -225,62 +244,62 @@
     }
   ],
   "connections": {
-    "webhook-trigger": {
+    "Portfolio Finalization Trigger": {
       "main": [
         [
           {
-            "node": "portfolio-status-check",
+            "node": "Portfolio Status Check",
             "type": "main",
             "index": 0
           }
         ]
       ]
     },
-    "portfolio-status-check": {
+    "Portfolio Status Check": {
       "main": [
         [
           {
-            "node": "set-finalization-status",
+            "node": "Set Finalization Status",
             "type": "main",
             "index": 0
           }
         ],
         [
           {
-            "node": "set-error-status",
+            "node": "Set Error Status",
             "type": "main",
             "index": 0
           }
         ]
       ]
     },
-    "set-finalization-status": {
+    "Set Finalization Status": {
       "main": [
         [
           {
-            "node": "update-portfolio-database",
+            "node": "Update Portfolio Database",
             "type": "main",
             "index": 0
           }
         ]
       ]
     },
-    "update-portfolio-database": {
+    "Update Portfolio Database": {
       "main": [
         [
           {
-            "node": "send-finalization-notification",
+            "node": "Send Finalization Notification",
             "type": "main",
             "index": 0
           }
         ]
       ]
     },
-    "set-error-status": {
+    "Set Error Status": {
       "main": [
         [
           {
-            "node": "send-error-notification",
+            "node": "Send Error Notification",
             "type": "main",
             "index": 0
           }

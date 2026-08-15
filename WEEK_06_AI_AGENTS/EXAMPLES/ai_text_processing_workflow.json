@@ -47,6 +47,9 @@
       "Week 7 workflows",
       "Previous week workflows",
       "Course example workflows"
+    ],
+    "credentials_required": [
+      "OpenAI API key"
     ]
   },
   "meta": {
@@ -57,12 +60,63 @@
   },
   "nodes": [
     {
+      "id": "sticky-sticky-note",
+      "name": "Sticky Note",
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        220,
+        40
+      ],
+      "parameters": {
+        "content": "## Ai Text Processing Workflow\n\nAutomated workflow for AI Integration phase learning objectives with intelligent processing and error handling.\n\n**Credentials needed before running:**\n- OpenAI API key\n\n**How to use:** Import into n8n, add the credentials above under *Credentials*, then run manually (or trigger it) to test.",
+        "height": 300,
+        "width": 420
+      }
+    },
+    {
+      "id": "sticky-sticky-note-1",
+      "name": "Sticky Note 1",
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        1660,
+        100
+      ],
+      "parameters": {
+        "content": "## ⚠️ Placeholder endpoint\n\nReplace this URL with a real API before running. This is a stand-in for teaching purposes.",
+        "height": 160,
+        "width": 300
+      }
+    },
+    {
+      "id": "sticky-sticky-note-2",
+      "name": "Sticky Note 2",
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        1900,
+        100
+      ],
+      "parameters": {
+        "content": "## ⚠️ Placeholder endpoint\n\nReplace this URL with a real API before running. This is a stand-in for teaching purposes.",
+        "height": 160,
+        "width": 300
+      }
+    },
+    {
       "name": "AI Text Processing Workflow",
       "type": "n8n-nodes-base.webhook",
       "parameters": {
         "path": "ai-text-processing",
         "httpMethod": "POST"
-      }
+      },
+      "id": "ai-text-processing-workflow",
+      "typeVersion": 2,
+      "position": [
+        240,
+        300
+      ]
     },
     {
       "name": "Initialize Text Processing",
@@ -88,7 +142,13 @@
             }
           ]
         }
-      }
+      },
+      "id": "initialize-text-processing",
+      "typeVersion": 3.4,
+      "position": [
+        480,
+        300
+      ]
     },
     {
       "name": "Process Input Text",
@@ -110,7 +170,13 @@
             }
           ]
         }
-      }
+      },
+      "id": "process-input-text",
+      "typeVersion": 3.4,
+      "position": [
+        720,
+        300
+      ]
     },
     {
       "name": "AI Text Analysis",
@@ -135,7 +201,13 @@
           "temperature": 0.3,
           "maxTokens": 800
         }
-      }
+      },
+      "id": "ai-text-analysis",
+      "typeVersion": 1.3,
+      "position": [
+        960,
+        300
+      ]
     },
     {
       "name": "Process Analysis Results",
@@ -157,7 +229,13 @@
             }
           ]
         }
-      }
+      },
+      "id": "process-analysis-results",
+      "typeVersion": 3.4,
+      "position": [
+        1200,
+        300
+      ]
     },
     {
       "name": "Generate Text Report",
@@ -175,27 +253,45 @@
             }
           ]
         }
-      }
+      },
+      "id": "generate-text-report",
+      "typeVersion": 3.4,
+      "position": [
+        1440,
+        300
+      ]
     },
     {
-      "name": "Send Text Analysis Results",
+      "name": "⚠️ Send Text Analysis Results (placeholder)",
       "type": "n8n-nodes-base.httpRequest",
       "parameters": {
         "method": "POST",
         "url": "https://api.text-analysis.com/results",
         "bodyContentType": "json",
         "jsonBody": "={{ { \"results\": $json.text_report, \"timestamp\": $now } }}"
-      }
+      },
+      "id": "send-text-analysis-results",
+      "typeVersion": 4.2,
+      "position": [
+        1680,
+        300
+      ]
     },
     {
-      "name": "Log Text Processing",
+      "name": "⚠️ Log Text Processing (placeholder)",
       "type": "n8n-nodes-base.httpRequest",
       "parameters": {
         "method": "POST",
         "url": "https://api.text-log.com/log",
         "bodyContentType": "json",
         "jsonBody": "={{ { \"type\": \"text_processing\", \"data\": $json.text_report, \"timestamp\": $now } }}"
-      }
+      },
+      "id": "log-text-processing",
+      "typeVersion": 4.2,
+      "position": [
+        1920,
+        300
+      ]
     },
     {
       "name": "Handle Text Processing Error",
@@ -217,10 +313,95 @@
             }
           ]
         }
-      }
+      },
+      "id": "handle-text-processing-error",
+      "typeVersion": 3.4
     }
   ],
-  "connections": {},
+  "connections": {
+    "AI Text Processing Workflow": {
+      "main": [
+        [
+          {
+            "node": "Initialize Text Processing",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Initialize Text Processing": {
+      "main": [
+        [
+          {
+            "node": "Process Input Text",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Process Input Text": {
+      "main": [
+        [
+          {
+            "node": "AI Text Analysis",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "AI Text Analysis": {
+      "main": [
+        [
+          {
+            "node": "Process Analysis Results",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Handle Text Processing Error",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Process Analysis Results": {
+      "main": [
+        [
+          {
+            "node": "Generate Text Report",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Generate Text Report": {
+      "main": [
+        [
+          {
+            "node": "⚠️ Send Text Analysis Results (placeholder)",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "⚠️ Send Text Analysis Results (placeholder)": {
+      "main": [
+        [
+          {
+            "node": "⚠️ Log Text Processing (placeholder)",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
   "active": false,
   "settings": {},
   "pinData": {},

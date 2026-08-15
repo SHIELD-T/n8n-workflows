@@ -48,6 +48,11 @@
       "Week 11 workflows",
       "Previous week workflows",
       "Course example workflows"
+    ],
+    "credentials_required": [
+      "Airtable Personal Access Token",
+      "OpenAI API key",
+      "Slack OAuth2 / Slack API token"
     ]
   },
   "meta": {
@@ -57,6 +62,126 @@
     "last_updated": "2025-09-07T14:31:14.195435"
   },
   "nodes": [
+    {
+      "id": "sticky-sticky-note",
+      "name": "Sticky Note",
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        220,
+        40
+      ],
+      "parameters": {
+        "content": "## Performance Optimization System\n\nAutomated workflow for Real-World Tools phase learning objectives with intelligent processing and error handling.\n\n**Credentials needed before running:**\n- Airtable Personal Access Token\n- OpenAI API key\n- Slack OAuth2 / Slack API token\n\n**How to use:** Import into n8n, add the credentials above under *Credentials*, then run manually (or trigger it) to test.",
+        "height": 300,
+        "width": 420
+      }
+    },
+    {
+      "id": "sticky-sticky-note-1",
+      "name": "Sticky Note 1",
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        660,
+        100
+      ],
+      "parameters": {
+        "content": "## ⚠️ Placeholder endpoint\n\nReplace this URL with a real API before running. This is a stand-in for teaching purposes.",
+        "height": 160,
+        "width": 300
+      }
+    },
+    {
+      "id": "sticky-sticky-note-2",
+      "name": "Sticky Note 2",
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        880,
+        100
+      ],
+      "parameters": {
+        "content": "## ⚠️ Placeholder endpoint\n\nReplace this URL with a real API before running. This is a stand-in for teaching purposes.",
+        "height": 160,
+        "width": 300
+      }
+    },
+    {
+      "id": "sticky-sticky-note-3",
+      "name": "Sticky Note 3",
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        1100,
+        100
+      ],
+      "parameters": {
+        "content": "## ⚠️ Placeholder endpoint\n\nReplace this URL with a real API before running. This is a stand-in for teaching purposes.",
+        "height": 160,
+        "width": 300
+      }
+    },
+    {
+      "id": "sticky-sticky-note-4",
+      "name": "Sticky Note 4",
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        1320,
+        100
+      ],
+      "parameters": {
+        "content": "## ⚠️ Placeholder endpoint\n\nReplace this URL with a real API before running. This is a stand-in for teaching purposes.",
+        "height": 160,
+        "width": 300
+      }
+    },
+    {
+      "id": "sticky-sticky-note-5",
+      "name": "Sticky Note 5",
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        1540,
+        100
+      ],
+      "parameters": {
+        "content": "## ⚠️ Placeholder endpoint\n\nReplace this URL with a real API before running. This is a stand-in for teaching purposes.",
+        "height": 160,
+        "width": 300
+      }
+    },
+    {
+      "id": "sticky-sticky-note-6",
+      "name": "Sticky Note 6",
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        1980,
+        100
+      ],
+      "parameters": {
+        "content": "## ⚠️ Placeholder endpoint\n\nReplace this URL with a real API before running. This is a stand-in for teaching purposes.",
+        "height": 160,
+        "width": 300
+      }
+    },
+    {
+      "id": "sticky-sticky-note-7",
+      "name": "Sticky Note 7",
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        2200,
+        100
+      ],
+      "parameters": {
+        "content": "## ⚠️ Placeholder endpoint\n\nReplace this URL with a real API before running. This is a stand-in for teaching purposes.",
+        "height": 160,
+        "width": 300
+      }
+    },
     {
       "parameters": {
         "path": "performance-optimization",
@@ -68,7 +193,8 @@
       "position": [
         240,
         300
-      ]
+      ],
+      "id": "performance-optimization-trigger"
     },
     {
       "parameters": {
@@ -103,7 +229,8 @@
       "position": [
         460,
         300
-      ]
+      ],
+      "id": "initialize-optimization"
     },
     {
       "parameters": {
@@ -122,13 +249,14 @@
           }
         }
       },
-      "name": "Analyze Integration A Performance",
+      "name": "⚠️ Analyze Integration A Performance (placeholder)",
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 1,
       "position": [
         680,
         300
-      ]
+      ],
+      "id": "analyze-integration-a-performance"
     },
     {
       "parameters": {
@@ -147,13 +275,14 @@
           }
         }
       },
-      "name": "Analyze Integration B Performance",
+      "name": "⚠️ Analyze Integration B Performance (placeholder)",
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 1,
       "position": [
         900,
         300
-      ]
+      ],
+      "id": "analyze-integration-b-performance"
     },
     {
       "parameters": {
@@ -172,13 +301,14 @@
           }
         }
       },
-      "name": "Analyze Integration C Performance",
+      "name": "⚠️ Analyze Integration C Performance (placeholder)",
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 1,
       "position": [
         1120,
         300
-      ]
+      ],
+      "id": "analyze-integration-c-performance"
     },
     {
       "parameters": {
@@ -197,13 +327,14 @@
           }
         }
       },
-      "name": "Analyze Integration D Performance",
+      "name": "⚠️ Analyze Integration D Performance (placeholder)",
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 1,
       "position": [
         1340,
         300
-      ]
+      ],
+      "id": "analyze-integration-d-performance"
     },
     {
       "parameters": {
@@ -222,13 +353,14 @@
           }
         }
       },
-      "name": "Analyze Integration E Performance",
+      "name": "⚠️ Analyze Integration E Performance (placeholder)",
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 1,
       "position": [
         1560,
         300
-      ]
+      ],
+      "id": "analyze-integration-e-performance"
     },
     {
       "parameters": {
@@ -243,7 +375,7 @@
             },
             {
               "role": "user",
-              "content": "={{ 'Analyze performance for these integrations:\\nIntegration A: Response Time ' + $('Analyze Integration A Performance').item.json.avg_response_time + 'ms, Throughput ' + $('Analyze Integration A Performance').item.json.throughput + ' req/s\\nIntegration B: Response Time ' + $('Analyze Integration B Performance').item.json.avg_response_time + 'ms, Throughput ' + $('Analyze Integration B Performance').item.json.throughput + ' req/s\\nIntegration C: Response Time ' + $('Analyze Integration C Performance').item.json.avg_response_time + 'ms, Throughput ' + $('Analyze Integration C Performance').item.json.throughput + ' req/s\\nIntegration D: Response Time ' + $('Analyze Integration D Performance').item.json.avg_response_time + 'ms, Throughput ' + $('Analyze Integration D Performance').item.json.throughput + ' req/s\\nIntegration E: Response Time ' + $('Analyze Integration E Performance').item.json.avg_response_time + 'ms, Throughput ' + $('Analyze Integration E Performance').item.json.throughput + ' req/s\\n\\nGenerate: optimization recommendations, performance improvements, and optimization strategies.' }}"
+              "content": "={{ 'Analyze performance for these integrations:\\nIntegration A: Response Time ' + $('⚠️ Analyze Integration A Performance (placeholder)').item.json.avg_response_time + 'ms, Throughput ' + $('⚠️ Analyze Integration A Performance (placeholder)').item.json.throughput + ' req/s\\nIntegration B: Response Time ' + $('⚠️ Analyze Integration B Performance (placeholder)').item.json.avg_response_time + 'ms, Throughput ' + $('⚠️ Analyze Integration B Performance (placeholder)').item.json.throughput + ' req/s\\nIntegration C: Response Time ' + $('⚠️ Analyze Integration C Performance (placeholder)').item.json.avg_response_time + 'ms, Throughput ' + $('⚠️ Analyze Integration C Performance (placeholder)').item.json.throughput + ' req/s\\nIntegration D: Response Time ' + $('⚠️ Analyze Integration D Performance (placeholder)').item.json.avg_response_time + 'ms, Throughput ' + $('⚠️ Analyze Integration D Performance (placeholder)').item.json.throughput + ' req/s\\nIntegration E: Response Time ' + $('⚠️ Analyze Integration E Performance (placeholder)').item.json.avg_response_time + 'ms, Throughput ' + $('⚠️ Analyze Integration E Performance (placeholder)').item.json.throughput + ' req/s\\n\\nGenerate: optimization recommendations, performance improvements, and optimization strategies.' }}"
             }
           ]
         }
@@ -254,7 +386,8 @@
       "position": [
         1780,
         300
-      ]
+      ],
+      "id": "ai-performance-analysis"
     },
     {
       "parameters": {
@@ -263,13 +396,14 @@
         "bodyContentType": "json",
         "jsonBody": "={{ { \"optimization_id\": $json.optimization_id, \"target_integrations\": $json.target_integrations, \"optimization_goals\": $json.optimization_goals, \"ai_recommendations\": $json.choices[0].message.content, \"timestamp\": $now } }}"
       },
-      "name": "Apply Optimizations",
+      "name": "⚠️ Apply Optimizations (placeholder)",
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 1,
       "position": [
         2000,
         300
-      ]
+      ],
+      "id": "apply-optimizations"
     },
     {
       "parameters": {
@@ -287,13 +421,14 @@
           }
         }
       },
-      "name": "Monitor Optimization Results",
+      "name": "⚠️ Monitor Optimization Results (placeholder)",
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 1,
       "position": [
         2220,
         300
-      ]
+      ],
+      "id": "monitor-optimization-results"
     },
     {
       "parameters": {
@@ -318,7 +453,8 @@
       "position": [
         2440,
         300
-      ]
+      ],
+      "id": "store-optimization-results"
     },
     {
       "parameters": {
@@ -332,7 +468,8 @@
       "position": [
         2660,
         300
-      ]
+      ],
+      "id": "send-optimization-report"
     }
   ],
   "connections": {
@@ -351,58 +488,58 @@
       "main": [
         [
           {
-            "node": "Analyze Integration A Performance",
+            "node": "⚠️ Analyze Integration A Performance (placeholder)",
             "type": "main",
             "index": 0
           }
         ]
       ]
     },
-    "Analyze Integration A Performance": {
+    "⚠️ Analyze Integration A Performance (placeholder)": {
       "main": [
         [
           {
-            "node": "Analyze Integration B Performance",
+            "node": "⚠️ Analyze Integration B Performance (placeholder)",
             "type": "main",
             "index": 0
           }
         ]
       ]
     },
-    "Analyze Integration B Performance": {
+    "⚠️ Analyze Integration B Performance (placeholder)": {
       "main": [
         [
           {
-            "node": "Analyze Integration C Performance",
+            "node": "⚠️ Analyze Integration C Performance (placeholder)",
             "type": "main",
             "index": 0
           }
         ]
       ]
     },
-    "Analyze Integration C Performance": {
+    "⚠️ Analyze Integration C Performance (placeholder)": {
       "main": [
         [
           {
-            "node": "Analyze Integration D Performance",
+            "node": "⚠️ Analyze Integration D Performance (placeholder)",
             "type": "main",
             "index": 0
           }
         ]
       ]
     },
-    "Analyze Integration D Performance": {
+    "⚠️ Analyze Integration D Performance (placeholder)": {
       "main": [
         [
           {
-            "node": "Analyze Integration E Performance",
+            "node": "⚠️ Analyze Integration E Performance (placeholder)",
             "type": "main",
             "index": 0
           }
         ]
       ]
     },
-    "Analyze Integration E Performance": {
+    "⚠️ Analyze Integration E Performance (placeholder)": {
       "main": [
         [
           {
@@ -417,25 +554,25 @@
       "main": [
         [
           {
-            "node": "Apply Optimizations",
+            "node": "⚠️ Apply Optimizations (placeholder)",
             "type": "main",
             "index": 0
           }
         ]
       ]
     },
-    "Apply Optimizations": {
+    "⚠️ Apply Optimizations (placeholder)": {
       "main": [
         [
           {
-            "node": "Monitor Optimization Results",
+            "node": "⚠️ Monitor Optimization Results (placeholder)",
             "type": "main",
             "index": 0
           }
         ]
       ]
     },
-    "Monitor Optimization Results": {
+    "⚠️ Monitor Optimization Results (placeholder)": {
       "main": [
         [
           {

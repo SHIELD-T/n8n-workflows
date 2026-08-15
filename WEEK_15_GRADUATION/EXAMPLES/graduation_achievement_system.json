@@ -45,6 +45,10 @@
       "All course workflows",
       "Graduation projects",
       "Business implementation workflows"
+    ],
+    "credentials_required": [
+      "Notion API integration (internal integration token)",
+      "Slack OAuth2 / Slack API token"
     ]
   },
   "meta": {
@@ -54,6 +58,21 @@
     "last_updated": "2025-09-07T14:31:14.927879"
   },
   "nodes": [
+    {
+      "id": "sticky-sticky-note",
+      "name": "Sticky Note",
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        220,
+        40
+      ],
+      "parameters": {
+        "content": "## Graduation Achievement System\n\nAutomated workflow for Graduation phase learning objectives with intelligent processing and error handling.\n\n**Credentials needed before running:**\n- Notion API integration (internal integration token)\n- Slack OAuth2 / Slack API token\n\n**How to use:** Import into n8n, add the credentials above under *Credentials*, then run manually (or trigger it) to test.",
+        "height": 300,
+        "width": 420
+      }
+    },
     {
       "parameters": {
         "httpMethod": "POST",
@@ -225,62 +244,62 @@
     }
   ],
   "connections": {
-    "webhook-trigger": {
+    "Graduation Achievement Trigger": {
       "main": [
         [
           {
-            "node": "graduation-status-check",
+            "node": "Graduation Status Check",
             "type": "main",
             "index": 0
           }
         ]
       ]
     },
-    "graduation-status-check": {
+    "Graduation Status Check": {
       "main": [
         [
           {
-            "node": "set-achievement-status",
+            "node": "Set Achievement Status",
             "type": "main",
             "index": 0
           }
         ],
         [
           {
-            "node": "set-error-status",
+            "node": "Set Error Status",
             "type": "main",
             "index": 0
           }
         ]
       ]
     },
-    "set-achievement-status": {
+    "Set Achievement Status": {
       "main": [
         [
           {
-            "node": "update-graduation-database",
+            "node": "Update Graduation Database",
             "type": "main",
             "index": 0
           }
         ]
       ]
     },
-    "update-graduation-database": {
+    "Update Graduation Database": {
       "main": [
         [
           {
-            "node": "send-achievement-notification",
+            "node": "Send Achievement Notification",
             "type": "main",
             "index": 0
           }
         ]
       ]
     },
-    "set-error-status": {
+    "Set Error Status": {
       "main": [
         [
           {
-            "node": "send-error-notification",
+            "node": "Send Error Notification",
             "type": "main",
             "index": 0
           }

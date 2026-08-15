@@ -45,7 +45,8 @@
       "Week 8 workflows",
       "Previous week workflows",
       "Course example workflows"
-    ]
+    ],
+    "credentials_required": []
   },
   "meta": {
     "templateCredsSetupCompleted": true,
@@ -55,12 +56,108 @@
   },
   "nodes": [
     {
+      "id": "sticky-sticky-note",
+      "name": "Sticky Note",
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        220,
+        40
+      ],
+      "parameters": {
+        "content": "## Agent Communication System\n\nAutomated workflow for AI Integration phase learning objectives with intelligent processing and error handling.\n\n**Credentials needed before running:** None — this workflow only uses built-in nodes and/or public test APIs (no login required).\n\n**How to use:** Import into n8n, add the credentials above under *Credentials*, then run manually (or trigger it) to test.",
+        "height": 300,
+        "width": 420
+      }
+    },
+    {
+      "id": "sticky-sticky-note-1",
+      "name": "Sticky Note 1",
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        1420,
+        100
+      ],
+      "parameters": {
+        "content": "## ⚠️ Placeholder endpoint\n\nReplace this URL with a real API before running. This is a stand-in for teaching purposes.",
+        "height": 160,
+        "width": 300
+      }
+    },
+    {
+      "id": "sticky-sticky-note-2",
+      "name": "Sticky Note 2",
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        1420,
+        280
+      ],
+      "parameters": {
+        "content": "## ⚠️ Placeholder endpoint\n\nReplace this URL with a real API before running. This is a stand-in for teaching purposes.",
+        "height": 160,
+        "width": 300
+      }
+    },
+    {
+      "id": "sticky-sticky-note-3",
+      "name": "Sticky Note 3",
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        1420,
+        460
+      ],
+      "parameters": {
+        "content": "## ⚠️ Placeholder endpoint\n\nReplace this URL with a real API before running. This is a stand-in for teaching purposes.",
+        "height": 160,
+        "width": 300
+      }
+    },
+    {
+      "id": "sticky-sticky-note-4",
+      "name": "Sticky Note 4",
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        1900,
+        100
+      ],
+      "parameters": {
+        "content": "## ⚠️ Placeholder endpoint\n\nReplace this URL with a real API before running. This is a stand-in for teaching purposes.",
+        "height": 160,
+        "width": 300
+      }
+    },
+    {
+      "id": "sticky-sticky-note-5",
+      "name": "Sticky Note 5",
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        2140,
+        100
+      ],
+      "parameters": {
+        "content": "## ⚠️ Placeholder endpoint\n\nReplace this URL with a real API before running. This is a stand-in for teaching purposes.",
+        "height": 160,
+        "width": 300
+      }
+    },
+    {
       "name": "Agent Communication System",
       "type": "n8n-nodes-base.webhook",
       "parameters": {
         "path": "agent-communication-system",
         "httpMethod": "POST"
-      }
+      },
+      "id": "agent-communication-system",
+      "typeVersion": 2,
+      "position": [
+        240,
+        300
+      ]
     },
     {
       "name": "Initialize Communication System",
@@ -86,7 +183,13 @@
             }
           ]
         }
-      }
+      },
+      "id": "initialize-communication-system",
+      "typeVersion": 3.4,
+      "position": [
+        480,
+        300
+      ]
     },
     {
       "name": "Process Communication Message",
@@ -116,7 +219,13 @@
             }
           ]
         }
-      }
+      },
+      "id": "process-communication-message",
+      "typeVersion": 3.4,
+      "position": [
+        720,
+        300
+      ]
     },
     {
       "name": "Validate Communication Protocol",
@@ -138,7 +247,13 @@
             }
           ]
         }
-      }
+      },
+      "id": "validate-communication-protocol",
+      "typeVersion": 2,
+      "position": [
+        960,
+        300
+      ]
     },
     {
       "name": "Route Message",
@@ -153,37 +268,61 @@
             }
           ]
         }
-      }
+      },
+      "id": "route-message",
+      "typeVersion": 2,
+      "position": [
+        1200,
+        300
+      ]
     },
     {
-      "name": "Process Request Message",
+      "name": "⚠️ Process Request Message (placeholder)",
       "type": "n8n-nodes-base.httpRequest",
       "parameters": {
         "method": "POST",
         "url": "https://api.agent-communication.com/process-request",
         "bodyContentType": "json",
         "jsonBody": "={{ { \"communication_session_id\": $json.communication_session_id, \"sender_agent\": $json.sender_agent, \"receiver_agent\": $json.receiver_agent, \"message_type\": $json.message_type, \"message_content\": $json.message_content, \"message_priority\": $json.message_priority, \"timestamp\": $now } }}"
-      }
+      },
+      "id": "process-request-message",
+      "typeVersion": 4.2,
+      "position": [
+        1440,
+        300
+      ]
     },
     {
-      "name": "Process Response Message",
+      "name": "⚠️ Process Response Message (placeholder)",
       "type": "n8n-nodes-base.httpRequest",
       "parameters": {
         "method": "POST",
         "url": "https://api.agent-communication.com/process-response",
         "bodyContentType": "json",
         "jsonBody": "={{ { \"communication_session_id\": $json.communication_session_id, \"sender_agent\": $json.sender_agent, \"receiver_agent\": $json.receiver_agent, \"message_type\": $json.message_type, \"message_content\": $json.message_content, \"message_priority\": $json.message_priority, \"timestamp\": $now } }}"
-      }
+      },
+      "id": "process-response-message",
+      "typeVersion": 4.2,
+      "position": [
+        1440,
+        480
+      ]
     },
     {
-      "name": "Process Broadcast Message",
+      "name": "⚠️ Process Broadcast Message (placeholder)",
       "type": "n8n-nodes-base.httpRequest",
       "parameters": {
         "method": "POST",
         "url": "https://api.agent-communication.com/process-broadcast",
         "bodyContentType": "json",
         "jsonBody": "={{ { \"communication_session_id\": $json.communication_session_id, \"sender_agent\": $json.sender_agent, \"receiver_agent\": \"all\", \"message_type\": $json.message_type, \"message_content\": $json.message_content, \"message_priority\": $json.message_priority, \"timestamp\": $now } }}"
-      }
+      },
+      "id": "process-broadcast-message",
+      "typeVersion": 4.2,
+      "position": [
+        1440,
+        660
+      ]
     },
     {
       "name": "Generate Communication Report",
@@ -201,27 +340,45 @@
             }
           ]
         }
-      }
+      },
+      "id": "generate-communication-report",
+      "typeVersion": 3.4,
+      "position": [
+        1680,
+        300
+      ]
     },
     {
-      "name": "Send Communication Results",
+      "name": "⚠️ Send Communication Results (placeholder)",
       "type": "n8n-nodes-base.httpRequest",
       "parameters": {
         "method": "POST",
         "url": "https://api.communication-service.com/results",
         "bodyContentType": "json",
         "jsonBody": "={{ { \"results\": $json.communication_report, \"timestamp\": $now } }}"
-      }
+      },
+      "id": "send-communication-results",
+      "typeVersion": 4.2,
+      "position": [
+        1920,
+        300
+      ]
     },
     {
-      "name": "Log Communication Activity",
+      "name": "⚠️ Log Communication Activity (placeholder)",
       "type": "n8n-nodes-base.httpRequest",
       "parameters": {
         "method": "POST",
         "url": "https://api.communication-log.com/log",
         "bodyContentType": "json",
         "jsonBody": "={{ { \"type\": \"agent_communication\", \"data\": $json.communication_report, \"timestamp\": $now } }}"
-      }
+      },
+      "id": "log-communication-activity",
+      "typeVersion": 4.2,
+      "position": [
+        2160,
+        300
+      ]
     },
     {
       "name": "Handle Communication Error",
@@ -243,10 +400,142 @@
             }
           ]
         }
-      }
+      },
+      "id": "handle-communication-error",
+      "typeVersion": 3.4
     }
   ],
-  "connections": {},
+  "connections": {
+    "Agent Communication System": {
+      "main": [
+        [
+          {
+            "node": "Initialize Communication System",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Initialize Communication System": {
+      "main": [
+        [
+          {
+            "node": "Process Communication Message",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Process Communication Message": {
+      "main": [
+        [
+          {
+            "node": "Validate Communication Protocol",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Validate Communication Protocol": {
+      "main": [
+        [
+          {
+            "node": "Route Message",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Handle Communication Error",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Route Message": {
+      "main": [
+        [
+          {
+            "node": "⚠️ Process Request Message (placeholder)",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "⚠️ Process Response Message (placeholder)",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "⚠️ Process Broadcast Message (placeholder)",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "⚠️ Process Request Message (placeholder)": {
+      "main": [
+        [
+          {
+            "node": "Generate Communication Report",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "⚠️ Process Response Message (placeholder)": {
+      "main": [
+        [
+          {
+            "node": "Generate Communication Report",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "⚠️ Process Broadcast Message (placeholder)": {
+      "main": [
+        [
+          {
+            "node": "Generate Communication Report",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Generate Communication Report": {
+      "main": [
+        [
+          {
+            "node": "⚠️ Send Communication Results (placeholder)",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "⚠️ Send Communication Results (placeholder)": {
+      "main": [
+        [
+          {
+            "node": "⚠️ Log Communication Activity (placeholder)",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
   "active": false,
   "settings": {},
   "pinData": {},

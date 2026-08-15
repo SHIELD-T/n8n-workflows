@@ -45,7 +45,8 @@
       "Week 3 workflows",
       "Previous week workflows",
       "Course example workflows"
-    ]
+    ],
+    "credentials_required": []
   },
   "meta": {
     "templateCredsSetupCompleted": true,
@@ -55,12 +56,33 @@
   },
   "nodes": [
     {
+      "id": "sticky-sticky-note",
+      "name": "Sticky Note",
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        220,
+        40
+      ],
+      "parameters": {
+        "content": "## Advanced Triggers Debugging\n\nAdvanced trigger debugging workflow demonstrating multiple trigger types, error handling, and debugging techniques. Ideal for Week 2 advanced trigger concepts.\n\n**Credentials needed before running:** None — this workflow only uses built-in nodes and/or public test APIs (no login required).\n\n**How to use:** Import into n8n, add the credentials above under *Credentials*, then run manually (or trigger it) to test.",
+        "height": 300,
+        "width": 420
+      }
+    },
+    {
       "name": "Advanced Trigger System",
       "type": "n8n-nodes-base.webhook",
       "parameters": {
         "path": "advanced-triggers",
         "httpMethod": "POST"
-      }
+      },
+      "id": "advanced-trigger-system",
+      "typeVersion": 2,
+      "position": [
+        240,
+        300
+      ]
     },
     {
       "name": "Schedule Advanced Trigger",
@@ -74,12 +96,24 @@
             }
           ]
         }
-      }
+      },
+      "id": "schedule-advanced-trigger",
+      "typeVersion": 1.2,
+      "position": [
+        240,
+        480
+      ]
     },
     {
       "name": "Manual Advanced Trigger",
       "type": "n8n-nodes-base.manualTrigger",
-      "parameters": {}
+      "parameters": {},
+      "id": "manual-advanced-trigger",
+      "typeVersion": 1,
+      "position": [
+        240,
+        660
+      ]
     },
     {
       "name": "Initialize Advanced Processing",
@@ -105,7 +139,13 @@
             }
           ]
         }
-      }
+      },
+      "id": "initialize-advanced-processing",
+      "typeVersion": 3.4,
+      "position": [
+        480,
+        300
+      ]
     },
     {
       "name": "Advanced Data Validation",
@@ -119,7 +159,13 @@
             }
           ]
         }
-      }
+      },
+      "id": "advanced-data-validation",
+      "typeVersion": 2,
+      "position": [
+        720,
+        300
+      ]
     },
     {
       "name": "Advanced Data Processing",
@@ -145,7 +191,13 @@
             }
           ]
         }
-      }
+      },
+      "id": "advanced-data-processing",
+      "typeVersion": 3.4,
+      "position": [
+        960,
+        300
+      ]
     },
     {
       "name": "Advanced Error Handling",
@@ -160,7 +212,13 @@
             }
           ]
         }
-      }
+      },
+      "id": "advanced-error-handling",
+      "typeVersion": 2,
+      "position": [
+        1200,
+        300
+      ]
     },
     {
       "name": "Handle Processing Delay",
@@ -182,7 +240,13 @@
             }
           ]
         }
-      }
+      },
+      "id": "handle-processing-delay",
+      "typeVersion": 3.4,
+      "position": [
+        1440,
+        300
+      ]
     },
     {
       "name": "Advanced Debugging",
@@ -200,7 +264,13 @@
             }
           ]
         }
-      }
+      },
+      "id": "advanced-debugging",
+      "typeVersion": 3.4,
+      "position": [
+        1680,
+        300
+      ]
     },
     {
       "name": "Advanced Result Processing",
@@ -218,7 +288,13 @@
             }
           ]
         }
-      }
+      },
+      "id": "advanced-result-processing",
+      "typeVersion": 3.4,
+      "position": [
+        1920,
+        300
+      ]
     },
     {
       "name": "Handle Validation Error",
@@ -240,10 +316,126 @@
             }
           ]
         }
-      }
+      },
+      "id": "handle-validation-error",
+      "typeVersion": 3.4
     }
   ],
-  "connections": {},
+  "connections": {
+    "Advanced Trigger System": {
+      "main": [
+        [
+          {
+            "node": "Initialize Advanced Processing",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Schedule Advanced Trigger": {
+      "main": [
+        [
+          {
+            "node": "Initialize Advanced Processing",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Manual Advanced Trigger": {
+      "main": [
+        [
+          {
+            "node": "Initialize Advanced Processing",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Initialize Advanced Processing": {
+      "main": [
+        [
+          {
+            "node": "Advanced Data Validation",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Advanced Data Validation": {
+      "main": [
+        [
+          {
+            "node": "Advanced Data Processing",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Handle Validation Error",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Advanced Data Processing": {
+      "main": [
+        [
+          {
+            "node": "Advanced Error Handling",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Advanced Error Handling": {
+      "main": [
+        [
+          {
+            "node": "Handle Processing Delay",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Advanced Debugging",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Handle Processing Delay": {
+      "main": [
+        [
+          {
+            "node": "Advanced Debugging",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Advanced Debugging": {
+      "main": [
+        [
+          {
+            "node": "Advanced Result Processing",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
   "active": false,
   "settings": {},
   "pinData": {},

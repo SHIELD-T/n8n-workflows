@@ -8,164 +8,164 @@
 
 ## 📅 DAILY BREAKDOWN
 
-### **DAY 29: MONDAY - Workflow Project Management**
+### **DAY 29: MONDAY - Production Workflow Deployment Strategies**
 **Time:** 2-3 hours
 
 #### **Morning (1 hour):**
-- Watch: [N8N FULL COURSE 5 HOURS (Build & Automate Anything)](https://www.youtube.com/watch?v=7WsbtZwOx_U) - Managing workflow projects section
-- Learn: Project organization and management
-- Practice: Workflow project structure
+- Watch: [What I Wish I Had Known Before Building 100+ n8n Workflows](https://www.youtube.com/watch?v=VB0ANci--Dc) - Production deployment strategies section
+- Learn: Blue-green deployment, versioning, automated rollback
+- Practice: Deployment metadata and health-check patterns
 
 #### **Afternoon (1 hour):**
-- Hands-on: Organize your workflow projects
-- Practice: Project management techniques
-- Experiment: Different project structures
+- Hands-on: Build a blue-green "Production Deployment Pipeline" workflow
+- Practice: Health checks, traffic switching, rollback
+- Experiment: Force a failing health check and confirm rollback fires
 
 #### **Evening (30 minutes):**
-- Share: Your project organization
-- Ask: Questions about project management
-- Document: Project management best practices
+- Share: Your deployment pipeline setup
+- Ask: Questions about deployment strategies
+- Document: Your rollback trigger conditions
 
 #### **📝 DAILY TASK:**
-Organize all your workflows into a structured project system.
+Build and test a blue-green "Production Deployment Pipeline" workflow with a working rollback path, verified end-to-end via webhook.site and Execution History.
 
 ---
 
-### **DAY 30: TUESDAY - Workflow Deployment**
+### **DAY 30: TUESDAY - Scaling Automation Systems**
 **Time:** 2-3 hours
 
 #### **Morning (1 hour):**
-- Watch: [What I Wish I Had Known Before Building 100+ n8n Workflows](https://www.youtube.com/watch?v=VB0ANci--Dc) - Deploying workflows to production section
-- Learn: Deployment strategies and best practices
-- Practice: Production deployment
+- Watch: [What I Wish I Had Known Before Building 100+ n8n Workflows](https://www.youtube.com/watch?v=VB0ANci--Dc) - Scaling automation systems section
+- Learn: Scale-up/scale-down decisions from a load metric
+- Practice: Persisting state across executions with workflow static data
 
 #### **Afternoon (1 hour):**
-- Hands-on: Deploy workflows to production
-- Practice: Deployment techniques
-- Experiment: Different deployment methods
+- Hands-on: Build a "Scalable Load Handler" workflow
+- Practice: Threshold-based scaling with a Switch node
+- Experiment: Fire 10 concurrent webhook calls and inspect the results
 
 #### **Evening (30 minutes):**
-- Share: Your deployment experience
-- Get: Feedback on deployment
-- Document: Deployment strategies
+- Share: Your scaling setup and concurrency test results
+- Get: Feedback on your thresholds
+- Document: Your average execution duration baseline
 
 #### **📝 DAILY TASK:**
-Deploy 3 workflows to production environment.
+Build a "Scalable Load Handler" workflow and prove it handles 10 concurrent webhook calls with zero failures in Execution History.
 
 ---
 
-### **DAY 31: WEDNESDAY - Workflow Monitoring**
+### **DAY 31: WEDNESDAY - Workflow Optimization & Maintenance**
 **Time:** 2-3 hours
 
 #### **Morning (1 hour):**
-- Watch: [N8N FULL COURSE 5 HOURS (Build & Automate Anything)](https://www.youtube.com/watch?v=7WsbtZwOx_U) - Monitoring workflow performance section
-- Learn: Monitoring strategies and tools
-- Practice: Performance monitoring
+- Watch: [What I Wish I Had Known Before Building 100+ n8n Workflows](https://www.youtube.com/watch?v=VB0ANci--Dc) - Workflow optimization and maintenance section
+- Learn: Querying n8n's own Executions API for real performance data
+- Practice: Turning execution data into an actionable health score
 
 #### **Afternoon (1 hour):**
-- Hands-on: Set up workflow monitoring
-- Practice: Monitoring techniques
-- Experiment: Different monitoring tools
+- Hands-on: Build a scheduled "Automated Maintenance Sweep" workflow
+- Practice: Flagging workflows above an error-rate/duration threshold
+- Experiment: Verify the Schedule Trigger fires automatically
 
 #### **Evening (30 minutes):**
-- Share: Your monitoring setup
-- Ask: Questions about monitoring
-- Document: Monitoring best practices
+- Share: Your health-score formula and thresholds
+- Ask: Questions about maintenance scheduling
+- Document: Your maintenance cadence decision
 
 #### **📝 DAILY TASK:**
-Set up comprehensive monitoring for your workflows.
+Build a scheduled "Automated Maintenance Sweep" that pulls real data from n8n's own Executions API and computes a 0-100 health score.
 
 ---
 
-### **DAY 32: THURSDAY - Production-Ready Workflows**
+### **DAY 32: THURSDAY - Production System Management**
 **Time:** 2-3 hours
 
 #### **Morning (1 hour):**
-- Watch: [What I Wish I Had Known Before Building 100+ n8n Workflows](https://www.youtube.com/watch?v=VB0ANci--Dc) - Building production-ready workflows section
-- Learn: Production requirements and standards
-- Practice: Production workflow design
+- Watch: [What I Wish I Had Known Before Building 100+ n8n Workflows](https://www.youtube.com/watch?v=VB0ANci--Dc) - Production system management section
+- Learn: Aggregating multiple health checks into one verdict
+- Practice: Forcing failures to verify an alert path actually fires
 
 #### **Afternoon (1 hour):**
-- Hands-on: Build production-ready workflows
-- Practice: Production standards
-- Experiment: Production techniques
+- Hands-on: Build a "Production Health Control Center" workflow
+- Practice: Handling non-2xx responses without crashing the workflow
+- Experiment: Force a 500 response and confirm the incident alert fires
 
 #### **Evening (30 minutes):**
-- Share: Your production workflows
-- Get: Feedback on production readiness
-- Document: Production standards
+- Share: Your health control center setup
+- Ask: Questions about alerting thresholds
+- Document: Which check matters most for your industry track
 
 #### **📝 DAILY TASK:**
-Build 2 production-ready workflows with all standards.
+Build a "Production Health Control Center" that aggregates 3 real health checks and prove both the alert path and the healthy path fire correctly.
 
 ---
 
-### **DAY 33: FRIDAY - Workflow Security**
-**Time:** 2-3 hours
-
-#### **Morning (1 hour):**
-- Watch: [N8N FULL COURSE 5 HOURS (Build & Automate Anything)](https://www.youtube.com/watch?v=7WsbtZwOx_U) - Securing your workflows section
-- Learn: Security best practices
-- Practice: Security implementation
-
-#### **Afternoon (1 hour):**
-- Hands-on: Implement security measures
-- Practice: Security techniques
-- Experiment: Different security approaches
-
-#### **Evening (30 minutes):**
-- Share: Your security implementation
-- Ask: Questions about security
-- Document: Security best practices
-
-#### **📝 DAILY TASK:**
-Implement comprehensive security for your workflows.
-
----
-
-### **DAY 34: SATURDAY - Workflow Maintenance**
+### **DAY 33: FRIDAY - Production Optimization Review**
 **Time:** 3-4 hours
 
 #### **Morning (1.5 hours):**
-- Watch: [n8n Beginner Course (1/9) - Introduction to Automation](https://www.youtube.com/watch?v=4BVTkqbn_tY) - Maintaining your workflows section
-- Learn: Maintenance strategies and schedules
-- Practice: Maintenance techniques
+- Watch: [What I Wish I Had Known Before Building 100+ n8n Workflows](https://www.youtube.com/watch?v=VB0ANci--Dc) - Production optimization review section
+- Learn: Chaining workflows with the Execute Workflow node
+- Practice: Reviewing what you built on Days 29-31
 
 #### **Afternoon (1.5 hours):**
-- Hands-on: Maintain your workflows
-- Practice: Maintenance procedures
-- Experiment: Different maintenance approaches
+- Hands-on: Build a "Production Orchestrator" that calls your Day 29-31 workflows
+- Practice: Tracing linked sub-executions in Execution History
+- Experiment: Confirm all 3 sub-workflow calls succeed end-to-end
 
 #### **Evening (1 hour):**
-- Share: Your maintenance experience
-- Get: Feedback on maintenance
-- Document: Maintenance procedures
+- Share: Your orchestrator setup
+- Get: Feedback on your integration approach
+- Document: Which sub-workflow you'd optimize first
 
 #### **📝 DAILY TASK:**
-Create a maintenance schedule and implement it.
+Chain your Day 29-31 workflows into one "Production Orchestrator" using Execute Workflow nodes, and confirm the linked sub-executions in Execution History.
 
 ---
 
-### **DAY 35: SUNDAY - Workflow Building Review**
+### **DAY 34: SATURDAY - Production Optimization Mastery**
 **Time:** 2-3 hours
 
 #### **Morning (1 hour):**
-- Review: All workflow building concepts
-- Practice: Key techniques
-- Prepare: Week 5 project
+- Watch: [What I Wish I Had Known Before Building 100+ n8n Workflows](https://www.youtube.com/watch?v=VB0ANci--Dc) - Production optimization mastery section
+- Learn: Weighted multi-metric optimization scoring
+- Practice: Branching so expensive steps only run when needed
 
 #### **Afternoon (1 hour):**
-- Build: Complete week 5 project
-- Test: All functionality
-- Document: Your process
+- Hands-on: Build an "Advanced Optimization Engine" workflow
+- Practice: Testing both the below-threshold and above-threshold paths
+- Experiment: Compare execution Duration between the two paths
 
-#### **Evening (1 hour):**
-- Share: Your week 5 project
-- Get: Feedback from community
-- Plan: Week 6 preparation
+#### **Evening (30 minutes):**
+- Share: Your optimization score formula
+- Ask: Questions about weighting metrics
+- Document: The Duration difference you measured
 
 #### **📝 DAILY TASK:**
-Complete the production workflow project and share your success.
+Build an "Advanced Optimization Engine" that only runs its optimization steps when a computed score falls below threshold, and measure the Duration difference.
+
+---
+
+### **DAY 35: SUNDAY - Production Optimization Review (Week 5 Capstone)**
+**Time:** 3-4 hours
+
+#### **Morning (1.5 hours):**
+- Watch: [What I Wish I Had Known Before Building 100+ n8n Workflows](https://www.youtube.com/watch?v=VB0ANci--Dc) - Production optimization review section
+- Review: All Week 5 workflows (deployment, scaling, maintenance, management, optimization)
+- Prepare: Extend your Day 33 orchestrator to call all 4 workflows
+
+#### **Afternoon (1.5 hours):**
+- Build: Extend the "Production Orchestrator" to chain all 4 Week 5 workflows
+- Test: Full end-to-end run; find the platform's bottleneck via per-node execution time
+- Document: Export the finished orchestrator as your Week 5 deliverable
+
+#### **Evening (1 hour):**
+- Share: Your finished platform and the bottleneck you found
+- Get: Feedback from the community
+- Plan: Deactivate every leftover Schedule Trigger before starting Week 6
+
+#### **📝 DAILY TASK:**
+Extend the orchestrator to chain all 4 Week 5 workflows, identify the platform's slowest node, export the finished workflow, and deactivate every Schedule Trigger built this week.
 
 ---
 
@@ -296,14 +296,14 @@ Complete the production workflow project and share your success.
 
 ## ✅ WEEK 5 CHECKLIST
 
-- [ ] Organize workflow projects
-- [ ] Deploy to production
-- [ ] Set up monitoring
-- [ ] Build production workflows
-- [ ] Implement security
-- [ ] Create maintenance procedures
-- [ ] Complete week 5 project
-- [ ] Share progress in community
+- [ ] Built and tested a blue-green "Production Deployment Pipeline" with a working, verified rollback path (Day 29)
+- [ ] Built a "Scalable Load Handler" and proved it handles 10 concurrent webhook calls with zero failures (Day 30)
+- [ ] Built a scheduled "Automated Maintenance Sweep" that pulls real data from n8n's own Executions API and computes a health score (Day 31)
+- [ ] Built a "Production Health Control Center" and proved both the alert path (forced 500) and the healthy path fire correctly (Day 32)
+- [ ] Chained the Day 29-31 workflows into a "Production Orchestrator" via Execute Workflow nodes, with linked sub-executions visible in Execution History (Day 33)
+- [ ] Built an "Advanced Optimization Engine" that only runs its optimization steps below a computed score threshold, with a measured Duration difference (Day 34)
+- [ ] Extended the orchestrator to chain all 4 Week 5 workflows, identified the platform's slowest node, exported the workflow, and deactivated every leftover Schedule Trigger (Day 35)
+- [ ] Joined the course community and posted at least one update
 
 ---
 

@@ -45,7 +45,8 @@
       "Week 5 workflows",
       "Previous week workflows",
       "Course example workflows"
-    ]
+    ],
+    "credentials_required": []
   },
   "meta": {
     "templateCredsSetupCompleted": true,
@@ -55,12 +56,33 @@
   },
   "nodes": [
     {
+      "id": "sticky-sticky-note",
+      "name": "Sticky Note",
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        220,
+        40
+      ],
+      "parameters": {
+        "content": "## Data Processing Workflow\n\nAdvanced data processing workflow demonstrating complex transformations, data validation, and format conversions. Perfect for Week 4 data processing mastery.\n\n**Credentials needed before running:** None — this workflow only uses built-in nodes and/or public test APIs (no login required).\n\n**How to use:** Import into n8n, add the credentials above under *Credentials*, then run manually (or trigger it) to test.",
+        "height": 300,
+        "width": 420
+      }
+    },
+    {
       "name": "Data Processing Trigger",
       "type": "n8n-nodes-base.webhook",
       "parameters": {
         "path": "data-processing",
         "httpMethod": "POST"
-      }
+      },
+      "id": "data-processing-trigger",
+      "typeVersion": 2,
+      "position": [
+        240,
+        300
+      ]
     },
     {
       "name": "Initialize Data Processing",
@@ -86,7 +108,13 @@
             }
           ]
         }
-      }
+      },
+      "id": "initialize-data-processing",
+      "typeVersion": 3.4,
+      "position": [
+        480,
+        300
+      ]
     },
     {
       "name": "Validate Input Data",
@@ -100,7 +128,13 @@
             }
           ]
         }
-      }
+      },
+      "id": "validate-input-data",
+      "typeVersion": 2,
+      "position": [
+        720,
+        300
+      ]
     },
     {
       "name": "Clean and Validate Data",
@@ -122,7 +156,13 @@
             }
           ]
         }
-      }
+      },
+      "id": "clean-and-validate-data",
+      "typeVersion": 3.4,
+      "position": [
+        960,
+        300
+      ]
     },
     {
       "name": "Transform to CSV Format",
@@ -144,7 +184,13 @@
             }
           ]
         }
-      }
+      },
+      "id": "transform-to-csv-format",
+      "typeVersion": 3.4,
+      "position": [
+        1200,
+        300
+      ]
     },
     {
       "name": "Process Individual Records",
@@ -152,7 +198,13 @@
       "parameters": {
         "batchSize": 1,
         "options": {}
-      }
+      },
+      "id": "process-individual-records",
+      "typeVersion": 3,
+      "position": [
+        1920,
+        300
+      ]
     },
     {
       "name": "Enhance Record Data",
@@ -170,7 +222,13 @@
             }
           ]
         }
-      }
+      },
+      "id": "enhance-record-data",
+      "typeVersion": 3.4,
+      "position": [
+        1680,
+        300
+      ]
     },
     {
       "name": "Generate Final CSV",
@@ -192,7 +250,13 @@
             }
           ]
         }
-      }
+      },
+      "id": "generate-final-csv",
+      "typeVersion": 3.4,
+      "position": [
+        1680,
+        480
+      ]
     },
     {
       "name": "Handle Validation Error",
@@ -214,10 +278,104 @@
             }
           ]
         }
-      }
+      },
+      "id": "handle-validation-error",
+      "typeVersion": 3.4
     }
   ],
-  "connections": {},
+  "connections": {
+    "Data Processing Trigger": {
+      "main": [
+        [
+          {
+            "node": "Initialize Data Processing",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Initialize Data Processing": {
+      "main": [
+        [
+          {
+            "node": "Validate Input Data",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Validate Input Data": {
+      "main": [
+        [
+          {
+            "node": "Clean and Validate Data",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Handle Validation Error",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Clean and Validate Data": {
+      "main": [
+        [
+          {
+            "node": "Transform to CSV Format",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Transform to CSV Format": {
+      "main": [
+        [
+          {
+            "node": "Process Individual Records",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Process Individual Records": {
+      "main": [
+        [
+          {
+            "node": "Generate Final CSV",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Enhance Record Data",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Enhance Record Data": {
+      "main": [
+        [
+          {
+            "node": "Process Individual Records",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
   "active": false,
   "settings": {},
   "pinData": {},

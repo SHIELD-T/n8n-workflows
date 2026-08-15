@@ -45,7 +45,8 @@
       "Week 3 workflows",
       "Previous week workflows",
       "Course example workflows"
-    ]
+    ],
+    "credentials_required": []
   },
   "meta": {
     "templateCredsSetupCompleted": true,
@@ -54,6 +55,21 @@
     "last_updated": "2025-09-07T14:31:15.362518"
   },
   "nodes": [
+    {
+      "id": "sticky-sticky-note",
+      "name": "Sticky Note",
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        80,
+        -160
+      ],
+      "parameters": {
+        "content": "## Form Processing Workflow\n\nForm processing workflow that handles form submissions, validates data, and sends automated responses. Demonstrates Week 2 form handling and data processing skills.\n\n**Credentials needed before running:** None — this workflow only uses built-in nodes and/or public test APIs (no login required).\n\n**How to use:** Import into n8n, add the credentials above under *Credentials*, then run manually (or trigger it) to test.",
+        "height": 300,
+        "width": 420
+      }
+    },
     {
       "id": "webhook-trigger-2",
       "name": "Form Submission Webhook",
@@ -65,7 +81,8 @@
       "parameters": {
         "path": "form-submission",
         "httpMethod": "POST"
-      }
+      },
+      "typeVersion": 2
     },
     {
       "id": "data-validation-2",
@@ -88,7 +105,8 @@
             }
           ]
         }
-      }
+      },
+      "typeVersion": 2
     },
     {
       "id": "process-data-2",
@@ -127,7 +145,8 @@
             }
           ]
         }
-      }
+      },
+      "typeVersion": 3.4
     },
     {
       "id": "format-notification-2",
@@ -150,7 +169,8 @@
             }
           ]
         }
-      }
+      },
+      "typeVersion": 3.4
     },
     {
       "id": "send-notification-2",
@@ -173,7 +193,8 @@
             }
           ]
         }
-      }
+      },
+      "typeVersion": 3.4
     },
     {
       "id": "success-response-2",
@@ -186,7 +207,8 @@
       "parameters": {
         "respondWith": "json",
         "responseBody": "={{ { \"status\": \"success\", \"submission_id\": $json.submission_id, \"processed_at\": $json.submitted_at } }}"
-      }
+      },
+      "typeVersion": 1.1
     },
     {
       "id": "error-response-2",
@@ -199,7 +221,8 @@
       "parameters": {
         "respondWith": "json",
         "responseBody": "={{ { \"status\": \"error\", \"message\": \"Invalid form data\", \"timestamp\": $now } }}"
-      }
+      },
+      "typeVersion": 1.1
     }
   ],
   "connections": {

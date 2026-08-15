@@ -77,7 +77,7 @@ Build a complete automation system with 5+ steps.
 
 ---
 
-### **DAY 25: THURSDAY - Workflow Optimization**
+### **DAY 25: THURSDAY - Workflow Optimization & Performance**
 **Time:** 2-3 hours
 
 #### **Morning (1 hour):**
@@ -100,72 +100,72 @@ Optimize 3 existing workflows for better performance.
 
 ---
 
-### **DAY 26: FRIDAY - Workflow Testing and Debugging**
+### **DAY 26: FRIDAY - Monitoring & Maintenance**
 **Time:** 2-3 hours
 
 #### **Morning (1 hour):**
-- Watch: [N8N FULL COURSE 5 HOURS (Build & Automate Anything)](https://www.youtube.com/watch?v=7WsbtZwOx_U) - Testing and debugging workflows section
-- Learn: Testing strategies and debugging techniques
-- Practice: Debugging workflows
+- Watch: [What I Wish I Had Known Before Building 100+ n8n Workflows](https://www.youtube.com/watch?v=VB0ANci--Dc) - Workflow monitoring and maintenance section
+- Learn: Health-check design and alert thresholds
+- Practice: Computing a health score from multiple signals
 
 #### **Afternoon (1 hour):**
-- Hands-on: Test and debug workflows
-- Practice: Debugging techniques
-- Experiment: Testing strategies
+- Hands-on: Build a scheduled health-check workflow
+- Practice: Branching into an alert path on a threshold
+- Experiment: Testing both "healthy" and "needs attention" outcomes with pinned data
 
 #### **Evening (30 minutes):**
-- Share: Your testing experience
-- Ask: Questions about debugging
-- Document: Testing best practices
+- Share: Your monitoring setup
+- Ask: Questions about alerting strategy
+- Document: What you'd monitor in a real production system
 
 #### **📝 DAILY TASK:**
-Create a testing strategy for your workflows and debug any issues.
+Build a scheduled monitoring workflow that computes a health score and branches into an alert path when it drops below a threshold.
 
 ---
 
-### **DAY 27: SATURDAY - Workflow Documentation**
+### **DAY 27: SATURDAY - Advanced Workflow Patterns Review**
 **Time:** 3-4 hours
 
 #### **Morning (1.5 hours):**
-- Watch: [n8n Beginner Course (1/9) - Introduction to Automation](https://www.youtube.com/watch?v=4BVTkqbn_tY) - Documenting your workflows section
-- Learn: Documentation best practices
-- Practice: Workflow documentation
+- Watch: [N8N FULL COURSE 5 HOURS (Build & Automate Anything)](https://www.youtube.com/watch?v=7WsbtZwOx_U) - Advanced workflow review section
+- Review: The core pattern from each of Days 22-26 (branching, transformation, integration, optimization, monitoring)
+- Practice: Building a small demonstration workflow combining 2-3 of those patterns
 
 #### **Afternoon (1.5 hours):**
-- Hands-on: Document all your workflows
-- Practice: Documentation techniques
-- Experiment: Different documentation formats
+- Hands-on: Test the demonstration workflow end-to-end via curl
+- Plan: Sketch the full capstone system's architecture, stage by stage
+- Document: List the concrete differences between today's demo and tomorrow's capstone scope
 
 #### **Evening (1 hour):**
-- Share: Your documentation examples
-- Get: Feedback on documentation
-- Document: Documentation standards
+- Share: Your recap and capstone plan
+- Get: Feedback from community
+- Prepare: Tomorrow's capstone build session
 
 #### **📝 DAILY TASK:**
-Create comprehensive documentation for 5 workflows.
+Recap Days 22-26's patterns, build one smaller demonstration workflow exercising 2-3 of them, and produce a concrete architecture plan for tomorrow's capstone.
 
 ---
 
-### **DAY 28: SUNDAY - Workflow Building Review**
-**Time:** 2-3 hours
+### **DAY 28: SUNDAY - Advanced Workflow Capstone Project**
+**Time:** 3-4 hours
 
-#### **Morning (1 hour):**
-- Review: All workflow building concepts
-- Practice: Key techniques
-- Prepare: Week 4 project
+#### **Morning (1.5 hours):**
+- Review: Your Day 27 architecture plan
+- Build: The trigger layer and 3 parallel ingestion branches
+- Test: Each stage incrementally as you build
 
-#### **Afternoon (1 hour):**
-- Build: Complete week 4 project
-- Test: All functionality
-- Document: Your process
+#### **Afternoon (1.5 hours):**
+- Build: Validation, transformation, batch processing, and monitoring stages
+- Build: The end-to-end integration call and final system report
+- Test: The complete pipeline end-to-end via curl, including its error path
 
 #### **Evening (1 hour):**
-- Share: Your week 4 project
-- Get: Feedback from community
-- Plan: Week 5 preparation
+- Share: Your completed capstone system in community
+- Get: Feedback from peers
+- Document: A 4-6 sentence system README for your portfolio
 
 #### **📝 DAILY TASK:**
-Complete the advanced workflow project and share your success.
+Build the full production-style capstone system end-to-end — multi-source ingestion, validation, batch processing, monitoring, and integration — directly from your Day 27 plan.
 
 ---
 
@@ -287,14 +287,14 @@ Complete the advanced workflow project and share your success.
 
 ## ✅ WEEK 4 CHECKLIST
 
-- [ ] Master advanced patterns
-- [ ] Learn data processing
-- [ ] Build end-to-end systems
-- [ ] Optimize workflows
-- [ ] Implement testing
-- [ ] Create documentation
-- [ ] Complete week 4 project
-- [ ] Share progress in community
+- [ ] Built a 3-branch parallel-processing workflow that aggregates and validates all sources before looping through the results (Day 22)
+- [ ] Converted a JSON array to a valid CSV, filtering out incomplete records and enhancing each row with a derived field (Day 23)
+- [ ] Built and tested an end-to-end lead-management system with duplicate detection, verified via curl for both a new lead and a duplicate lead (Day 24)
+- [ ] Measured and reported before/after execution times after tightening timeout and retry settings on a workflow (Day 25)
+- [ ] Deployed an active, Schedule-triggered monitoring workflow that correctly flags "healthy" vs. "needs_attention" based on pinned test data (Day 26)
+- [ ] Built a smaller demonstration workflow combining 2-3 advanced patterns, and wrote a concrete, stage-by-stage architecture plan for the capstone (Day 27)
+- [ ] Built and tested the full production-style capstone system end-to-end, with a written system README (Day 28)
+- [ ] Shared progress in the community and completed the Week 4 industry-track deliverables
 
 ---
 

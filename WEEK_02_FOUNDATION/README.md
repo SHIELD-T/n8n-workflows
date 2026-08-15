@@ -314,14 +314,15 @@ Complete Sarah's production-ready digital life automation system.
 
 ## ✅ WEEK 2 CHECKLIST
 
-- [ ] Master trigger concepts
-- [ ] Set up self-hosted n8n
-- [ ] Build real-world automation
-- [ ] Learn API integration
-- [ ] Master error handling
-- [ ] Complete foundation project
-- [ ] Share progress in community
-- [ ] Prepare for workflow building phase
+- [ ] Built and tested a webhook that validates payloads and routes by condition; combined two trigger types into one shared IF flow, confirmed via curl and Execution History (Day 8)
+- [ ] Deployed a healthcheck-monitored n8n instance with SSL database connection, confirmed `/healthz` returns 200, and set up an external uptime monitor (Day 9)
+- [ ] Built 3 workflows (validation + cleaning, webhook-routed conditional, scheduled) and confirmed distinct executions for each in Execution History (Day 10)
+- [ ] Shipped an end-to-end form-to-notification-to-Sheets automation and verified both its success and validation-failure paths with curl (Day 11)
+- [ ] Made authenticated API calls (public GET, retry-configured, API-key header auth) and ran a Split In Batches workflow, confirmed via Execution History (Day 12)
+- [ ] Built a severity-branching error handler and forced a real node failure to read its exact error output (Day 13)
+- [ ] Completed the Week 2 capstone workflow and verified all three paths — success, validation failure, forced API failure — independently (Day 14)
+- [ ] Shared progress in the community at least twice this week
+- [ ] Completed the Week 2 production-ready project deliverables below
 
 ---
 

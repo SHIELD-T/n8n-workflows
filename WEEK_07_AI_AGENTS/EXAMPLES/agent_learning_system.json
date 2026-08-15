@@ -45,6 +45,9 @@
       "Week 8 workflows",
       "Previous week workflows",
       "Course example workflows"
+    ],
+    "credentials_required": [
+      "OpenAI API key"
     ]
   },
   "meta": {
@@ -55,12 +58,108 @@
   },
   "nodes": [
     {
+      "id": "sticky-sticky-note",
+      "name": "Sticky Note",
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        220,
+        40
+      ],
+      "parameters": {
+        "content": "## Agent Learning System\n\nAutomated workflow for AI Integration phase learning objectives with intelligent processing and error handling.\n\n**Credentials needed before running:**\n- OpenAI API key\n\n**How to use:** Import into n8n, add the credentials above under *Credentials*, then run manually (or trigger it) to test.",
+        "height": 300,
+        "width": 420
+      }
+    },
+    {
+      "id": "sticky-sticky-note-1",
+      "name": "Sticky Note 1",
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        940,
+        100
+      ],
+      "parameters": {
+        "content": "## ⚠️ Placeholder endpoint\n\nReplace this URL with a real API before running. This is a stand-in for teaching purposes.",
+        "height": 160,
+        "width": 300
+      }
+    },
+    {
+      "id": "sticky-sticky-note-2",
+      "name": "Sticky Note 2",
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        940,
+        280
+      ],
+      "parameters": {
+        "content": "## ⚠️ Placeholder endpoint\n\nReplace this URL with a real API before running. This is a stand-in for teaching purposes.",
+        "height": 160,
+        "width": 300
+      }
+    },
+    {
+      "id": "sticky-sticky-note-3",
+      "name": "Sticky Note 3",
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        940,
+        460
+      ],
+      "parameters": {
+        "content": "## ⚠️ Placeholder endpoint\n\nReplace this URL with a real API before running. This is a stand-in for teaching purposes.",
+        "height": 160,
+        "width": 300
+      }
+    },
+    {
+      "id": "sticky-sticky-note-4",
+      "name": "Sticky Note 4",
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        1900,
+        100
+      ],
+      "parameters": {
+        "content": "## ⚠️ Placeholder endpoint\n\nReplace this URL with a real API before running. This is a stand-in for teaching purposes.",
+        "height": 160,
+        "width": 300
+      }
+    },
+    {
+      "id": "sticky-sticky-note-5",
+      "name": "Sticky Note 5",
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        2140,
+        100
+      ],
+      "parameters": {
+        "content": "## ⚠️ Placeholder endpoint\n\nReplace this URL with a real API before running. This is a stand-in for teaching purposes.",
+        "height": 160,
+        "width": 300
+      }
+    },
+    {
       "name": "Agent Learning System",
       "type": "n8n-nodes-base.webhook",
       "parameters": {
         "path": "agent-learning-system",
         "httpMethod": "POST"
-      }
+      },
+      "id": "agent-learning-system",
+      "typeVersion": 2,
+      "position": [
+        240,
+        300
+      ]
     },
     {
       "name": "Initialize Learning System",
@@ -86,7 +185,13 @@
             }
           ]
         }
-      }
+      },
+      "id": "initialize-learning-system",
+      "typeVersion": 3.4,
+      "position": [
+        480,
+        300
+      ]
     },
     {
       "name": "Process Learning Data",
@@ -108,37 +213,61 @@
             }
           ]
         }
-      }
+      },
+      "id": "process-learning-data",
+      "typeVersion": 3.4,
+      "position": [
+        720,
+        300
+      ]
     },
     {
-      "name": "Reinforcement Learning",
+      "name": "⚠️ Reinforcement Learning (placeholder)",
       "type": "n8n-nodes-base.httpRequest",
       "parameters": {
         "method": "POST",
         "url": "https://api.learning-service.com/reinforcement-learning",
         "bodyContentType": "json",
         "jsonBody": "={{ { \"learning_session_id\": $json.learning_session_id, \"training_data\": $json.training_data, \"performance_metrics\": $json.performance_metrics, \"learning_type\": \"reinforcement\", \"timestamp\": $now } }}"
-      }
+      },
+      "id": "reinforcement-learning",
+      "typeVersion": 4.2,
+      "position": [
+        960,
+        300
+      ]
     },
     {
-      "name": "Supervised Learning",
+      "name": "⚠️ Supervised Learning (placeholder)",
       "type": "n8n-nodes-base.httpRequest",
       "parameters": {
         "method": "POST",
         "url": "https://api.learning-service.com/supervised-learning",
         "bodyContentType": "json",
         "jsonBody": "={{ { \"learning_session_id\": $json.learning_session_id, \"training_data\": $json.training_data, \"performance_metrics\": $json.performance_metrics, \"learning_type\": \"supervised\", \"timestamp\": $now } }}"
-      }
+      },
+      "id": "supervised-learning",
+      "typeVersion": 4.2,
+      "position": [
+        960,
+        480
+      ]
     },
     {
-      "name": "Unsupervised Learning",
+      "name": "⚠️ Unsupervised Learning (placeholder)",
       "type": "n8n-nodes-base.httpRequest",
       "parameters": {
         "method": "POST",
         "url": "https://api.learning-service.com/unsupervised-learning",
         "bodyContentType": "json",
         "jsonBody": "={{ { \"learning_session_id\": $json.learning_session_id, \"training_data\": $json.training_data, \"performance_metrics\": $json.performance_metrics, \"learning_type\": \"unsupervised\", \"timestamp\": $now } }}"
-      }
+      },
+      "id": "unsupervised-learning",
+      "typeVersion": 4.2,
+      "position": [
+        960,
+        660
+      ]
     },
     {
       "name": "Analyze Learning Results",
@@ -148,15 +277,15 @@
           "assignments": [
             {
               "name": "reinforcement_results",
-              "value": "={{ $('Reinforcement Learning').item.json.results }}"
+              "value": "={{ $('⚠️ Reinforcement Learning (placeholder)').item.json.results }}"
             },
             {
               "name": "supervised_results",
-              "value": "={{ $('Supervised Learning').item.json.results }}"
+              "value": "={{ $('⚠️ Supervised Learning (placeholder)').item.json.results }}"
             },
             {
               "name": "unsupervised_results",
-              "value": "={{ $('Unsupervised Learning').item.json.results }}"
+              "value": "={{ $('⚠️ Unsupervised Learning (placeholder)').item.json.results }}"
             },
             {
               "name": "learning_improvement",
@@ -164,7 +293,13 @@
             }
           ]
         }
-      }
+      },
+      "id": "analyze-learning-results",
+      "typeVersion": 3.4,
+      "position": [
+        1200,
+        300
+      ]
     },
     {
       "name": "Adaptive Behavior Update",
@@ -189,7 +324,13 @@
           "temperature": 0.3,
           "maxTokens": 500
         }
-      }
+      },
+      "id": "adaptive-behavior-update",
+      "typeVersion": 1.3,
+      "position": [
+        1440,
+        300
+      ]
     },
     {
       "name": "Generate Learning Report",
@@ -207,27 +348,45 @@
             }
           ]
         }
-      }
+      },
+      "id": "generate-learning-report",
+      "typeVersion": 3.4,
+      "position": [
+        1680,
+        300
+      ]
     },
     {
-      "name": "Send Learning Results",
+      "name": "⚠️ Send Learning Results (placeholder)",
       "type": "n8n-nodes-base.httpRequest",
       "parameters": {
         "method": "POST",
         "url": "https://api.learning-service.com/results",
         "bodyContentType": "json",
         "jsonBody": "={{ { \"results\": $json.learning_report, \"timestamp\": $now } }}"
-      }
+      },
+      "id": "send-learning-results",
+      "typeVersion": 4.2,
+      "position": [
+        1920,
+        300
+      ]
     },
     {
-      "name": "Log Learning Activity",
+      "name": "⚠️ Log Learning Activity (placeholder)",
       "type": "n8n-nodes-base.httpRequest",
       "parameters": {
         "method": "POST",
         "url": "https://api.learning-log.com/log",
         "bodyContentType": "json",
         "jsonBody": "={{ { \"type\": \"agent_learning\", \"data\": $json.learning_report, \"timestamp\": $now } }}"
-      }
+      },
+      "id": "log-learning-activity",
+      "typeVersion": 4.2,
+      "position": [
+        2160,
+        300
+      ]
     },
     {
       "name": "Handle Learning Error",
@@ -249,10 +408,138 @@
             }
           ]
         }
-      }
+      },
+      "id": "handle-learning-error",
+      "typeVersion": 3.4
     }
   ],
-  "connections": {},
+  "connections": {
+    "Agent Learning System": {
+      "main": [
+        [
+          {
+            "node": "Initialize Learning System",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Initialize Learning System": {
+      "main": [
+        [
+          {
+            "node": "Process Learning Data",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Process Learning Data": {
+      "main": [
+        [
+          {
+            "node": "⚠️ Reinforcement Learning (placeholder)",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "⚠️ Supervised Learning (placeholder)",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "⚠️ Unsupervised Learning (placeholder)",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Handle Learning Error",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "⚠️ Reinforcement Learning (placeholder)": {
+      "main": [
+        [
+          {
+            "node": "Analyze Learning Results",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "⚠️ Supervised Learning (placeholder)": {
+      "main": [
+        [
+          {
+            "node": "Analyze Learning Results",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "⚠️ Unsupervised Learning (placeholder)": {
+      "main": [
+        [
+          {
+            "node": "Analyze Learning Results",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Analyze Learning Results": {
+      "main": [
+        [
+          {
+            "node": "Adaptive Behavior Update",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Adaptive Behavior Update": {
+      "main": [
+        [
+          {
+            "node": "Generate Learning Report",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Generate Learning Report": {
+      "main": [
+        [
+          {
+            "node": "⚠️ Send Learning Results (placeholder)",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "⚠️ Send Learning Results (placeholder)": {
+      "main": [
+        [
+          {
+            "node": "⚠️ Log Learning Activity (placeholder)",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
   "active": false,
   "settings": {},
   "pinData": {},

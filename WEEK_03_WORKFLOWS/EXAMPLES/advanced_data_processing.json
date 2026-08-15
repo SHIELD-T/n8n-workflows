@@ -45,7 +45,8 @@
       "Week 4 workflows",
       "Previous week workflows",
       "Course example workflows"
-    ]
+    ],
+    "credentials_required": []
   },
   "meta": {
     "templateCredsSetupCompleted": true,
@@ -55,6 +56,21 @@
   },
   "nodes": [
     {
+      "id": "sticky-sticky-note",
+      "name": "Sticky Note",
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        80,
+        -160
+      ],
+      "parameters": {
+        "content": "## Advanced Data Processing\n\nAdvanced data processing workflow demonstrating complex data transformation, conditional logic, and data validation. Perfect for Week 3 workflow building mastery.\n\n**Credentials needed before running:** None — this workflow only uses built-in nodes and/or public test APIs (no login required).\n\n**How to use:** Import into n8n, add the credentials above under *Credentials*, then run manually (or trigger it) to test.",
+        "height": 300,
+        "width": 420
+      }
+    },
+    {
       "id": "manual-trigger-3",
       "name": "Manual Trigger",
       "type": "n8n-nodes-base.manualTrigger",
@@ -62,7 +78,8 @@
         100,
         100
       ],
-      "parameters": {}
+      "parameters": {},
+      "typeVersion": 1
     },
     {
       "id": "data-input-3",
@@ -89,7 +106,8 @@
             }
           ]
         }
-      }
+      },
+      "typeVersion": 3.4
     },
     {
       "id": "data-cleaning-3",
@@ -116,7 +134,8 @@
             }
           ]
         }
-      }
+      },
+      "typeVersion": 3.4
     },
     {
       "id": "data-transformation-3",
@@ -147,7 +166,8 @@
             }
           ]
         }
-      }
+      },
+      "typeVersion": 3.4
     },
     {
       "id": "data-analysis-3",
@@ -174,7 +194,8 @@
             }
           ]
         }
-      }
+      },
+      "typeVersion": 3.4
     },
     {
       "id": "result-formatting-3",
@@ -201,7 +222,8 @@
             }
           ]
         }
-      }
+      },
+      "typeVersion": 3.4
     }
   ],
   "connections": {

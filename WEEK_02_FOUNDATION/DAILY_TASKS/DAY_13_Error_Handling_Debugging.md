@@ -1,396 +1,43 @@
-# 📅 DAY 13: SATURDAY - Error Handling & Debugging
-
-## 🎯 TODAY'S OBJECTIVES
-- Master error handling strategies
-- Learn debugging techniques
-- Practice troubleshooting workflows
-- Build robust error recovery systems
-
-## ⏰ TIME ALLOCATION
-**Total Time:** 3-4 hours
-- **Morning:** 1.5 hours (Learning & Practice)
-- **Afternoon:** 1.5 hours (Hands-on Debugging)
-- **Evening:** 1 hour (Community & Documentation)
-
----
-
-## 🌅 MORNING SESSION (1.5 hours)
-
-### **📹 Video Lesson: "Error Handling in n8n"**
-**Duration:** 45 minutes
-**Watch:** [Mastering Error Handling in n8n: A Pro Guide](https://www.linkedin.com/posts/satyendra-mourya_n8n-workflowautomation-errorhandling-activity-7369948983038791680-bFKX) - ~10 minute professional error handling guide
-
-#### **What You'll Learn:**
-- Common error types and causes
-- Error handling strategies
-- Debugging techniques
-- Recovery mechanisms
-
-#### **Key Concepts:**
-- **Error Types:** Network, validation, authentication
-- **Error Handling:** Try-catch patterns, fallbacks
-- **Debugging:** Log analysis, step-by-step testing
-- **Recovery:** Retry logic, alternative paths
-
-#### **Take Notes On:**
-- 5 common error types
-- Error handling patterns
-- Debugging techniques
-- Recovery strategies
-
----
-
-### **📖 Reading Assignment**
-**Duration:** 15 minutes
-
-#### **Read: "n8n Error Handling Guide"**
-- Error types and causes
-- Handling strategies
-- Debugging techniques
-- Best practices
-
-#### **Key Takeaways:**
-- Errors are inevitable in automation
-- Proper handling improves reliability
-- Debugging requires systematic approach
-- Recovery mechanisms prevent failures
-
----
-
-### **🛠️ Practice Error Scenarios**
-**Duration:** 30 minutes
-
-#### **Task: Create Error-Prone Workflows**
-
-**Step-by-Step Instructions:**
-
-1. **Network Error Simulation**
-   - Create workflow with invalid URLs
-   - Test network timeout scenarios
-   - Practice error handling
-   - Implement retry logic
-
-2. **Validation Error Testing**
-   - Create workflows with invalid data
-   - Test data validation failures
-   - Practice error recovery
-   - Implement fallback mechanisms
-
-3. **Authentication Error Handling**
-   - Test with invalid credentials
-   - Practice authentication failures
-   - Implement error recovery
-   - Add notification systems
-
----
-
-## 🌞 AFTERNOON SESSION (1.5 hours)
-
-### **🔍 Hands-on Debugging Practice**
-**Duration:** 45 minutes
-
-#### **Task: Debug Complex Workflows**
-
-**For Each Workflow:**
-1. **Identify Issues**
-   - Analyze execution logs
-   - Identify error patterns
-   - Locate failure points
-   - Understand error causes
-
-2. **Implement Fixes**
-   - Add error handling
-   - Implement retry logic
-   - Add validation
-   - Test fixes
-
-3. **Validate Solutions**
-   - Test error scenarios
-   - Verify error handling
-   - Check recovery mechanisms
-   - Monitor performance
-
----
-
-### **📊 Build Robust Error Recovery**
-**Duration:** 45 minutes
-
-#### **Task: Create Error-Resilient Workflows**
-
-**Create These Workflows:**
-
-1. **Network Error Recovery**
-   - Implement retry logic
-   - Add timeout handling
-   - Use alternative endpoints
-   - Log error information
-
-2. **Data Validation Recovery**
-   - Add data validation
-   - Implement fallback values
-   - Handle missing data
-   - Notify on errors
-
-3. **Authentication Recovery**
-   - Handle auth failures
-   - Implement token refresh
-   - Add fallback auth
-   - Log auth issues
-
----
-
-## 🌙 EVENING SESSION (1 hour)
-
-### **📸 Share Your Debugging Experience**
-**Duration:** 30 minutes
-
-#### **Community Post: "My Error Handling Journey"**
-
-**Share:**
-- Screenshots of error handling workflows
-- Debugging techniques used
-- Error recovery strategies
-- Questions for the community
-
-#### **Post Template:**
-```
-Day 13 Complete! 🎉
-
-**Error Handling Workflows:**
-[Screenshots of workflows]
-
-**Debugging Techniques:**
-- Log analysis
-- Step-by-step testing
-- Error pattern identification
-- Systematic troubleshooting
-
-**Recovery Strategies:**
-- Retry logic
-- Fallback mechanisms
-- Alternative paths
-- Error notifications
-
-**Questions:**
-- [Any questions for the community]
-
-Ready for Day 14! 🚀
-```
-
----
-
-### **📋 Review Tomorrow's Materials**
-**Duration:** 30 minutes
-
-#### **Preview Day 14:**
-- Foundation review and project
-- Week 2 completion
-- Preparation for Week 3
-- Advanced workflow building
-
-#### **Prepare:**
-- Review Week 2 progress
-- Plan Week 3 learning
-- Set up advanced tools
-- Connect with community
-
----
-
-## 📝 DAILY TASK
-
-### **🎯 Main Task: Build Error-Resilient Workflows**
-
-**Create workflows with comprehensive error handling and recovery.**
-
-#### **Error-Resilient Workflow Example:**
-```json
-{
-  "nodes": [
-    {
-      "name": "Manual Trigger",
-      "type": "n8n-nodes-base.manualTrigger",
-      "parameters": {}
-    },
-    {
-      "name": "API Request with Error Handling",
-      "type": "n8n-nodes-base.httpRequest",
-      "parameters": {
-        "method": "GET",
-        "url": "https://api.example.com/data",
-        "options": {
-          "retry": {
-            "retry": {
-              "retries": 3,
-              "retryDelay": 2000
-            }
-          },
-          "timeout": 10000,
-          "response": {
-            "response": {
-              "responseFormat": "json"
-            }
-          }
-        }
-      }
-    },
-    {
-      "name": "Check for Errors",
-      "type": "n8n-nodes-base.if",
-      "parameters": {
-        "conditions": {
-          "number": [
-            {
-              "value1": "={{ $json.statusCode }}",
-              "operation": "largerEqual",
-              "value2": 400
-            }
-          ]
-        }
-      }
-    },
-    {
-      "name": "Handle API Error",
-      "type": "n8n-nodes-base.set",
-      "parameters": {
-        "assignments": {
-          "assignments": [
-            {
-              "name": "error_type",
-              "value": "API_ERROR"
-            },
-            {
-              "name": "error_message",
-              "value": "={{ $json.error.message || 'Unknown API error' }}"
-            },
-            {
-              "name": "error_code",
-              "value": "={{ $json.statusCode }}"
-            },
-            {
-              "name": "error_time",
-              "value": "={{ $now }}"
-            },
-            {
-              "name": "status",
-              "value": "error"
-            }
-          ]
-        }
-      }
-    },
-    {
-      "name": "Process Success",
-      "type": "n8n-nodes-base.set",
-      "parameters": {
-        "assignments": {
-          "assignments": [
-            {
-              "name": "data_count",
-              "value": "={{ $json.data.length }}"
-            },
-            {
-              "name": "processed_at",
-              "value": "={{ $now }}"
-            },
-            {
-              "name": "status",
-              "value": "success"
-            }
-          ]
-        }
-      }
-    },
-    {
-      "name": "Log Error",
-      "type": "n8n-nodes-base.set",
-      "parameters": {
-        "assignments": {
-          "assignments": [
-            {
-              "name": "log_level",
-              "value": "ERROR"
-            },
-            {
-              "name": "log_message",
-              "value": "API request failed: {{ $json.error_message }}"
-            },
-            {
-              "name": "log_time",
-              "value": "={{ $now }}"
-            }
-          ]
-        }
-      }
-    },
-    {
-      "name": "Send Error Notification",
-      "type": "n8n-nodes-base.slack",
-      "parameters": {
-        "channel": "#alerts",
-        "text": "🚨 API Error Alert",
-        "blocks": [
-          {
-            "type": "section",
-            "text": {
-              "type": "mrkdwn",
-              "text": "*Error Type:* {{ $json.error_type }}\n*Error Code:* {{ $json.error_code }}\n*Error Message:* {{ $json.error_message }}\n*Time:* {{ $json.error_time }}"
-            }
-          }
-        ]
-      }
-    }
-  ]
-}
-```
-
-#### **Expected Result:**
-- Workflow handles API errors gracefully
-- Retry logic attempts recovery
-- Errors are logged and notified
-- Success cases are processed normally
-
----
-
-## ✅ DAILY CHECKLIST
-
-- [ ] Watch "Error Handling in n8n" video
-- [ ] Read error handling guide
-- [ ] Practice error scenarios
-- [ ] Debug complex workflows
-- [ ] Build error recovery systems
-- [ ] Test error handling
-- [ ] Validate recovery mechanisms
-- [ ] Share progress in community
-- [ ] Review tomorrow's materials
-- [ ] Complete daily task
-
----
-
-## 🎯 SUCCESS METRICS
-
-**By the end of today, you should:**
-- Understand error handling strategies
-- Know debugging techniques
-- Be able to troubleshoot workflows
-- Have built error-resilient systems
-- Be ready for advanced work
-
----
-
-## 💡 PRO TIPS
-
-1. **Expect Errors:** Always plan for failures
-2. **Log Everything:** Keep detailed error logs
-3. **Test Failures:** Practice error scenarios
-4. **Implement Recovery:** Add retry and fallback logic
-5. **Monitor Errors:** Set up error notifications
-
----
-
-## 🚀 TOMORROW PREVIEW
-
-**Day 14:** We'll review all foundation concepts, complete the foundation project, and prepare for advanced workflow building. Get ready to level up! 🚀
-
----
-
-*Remember: Error handling separates amateur from professional automation! Master these skills! 🚀*
+# DAY 13: Error Handling & Debugging
+**Week:** 2 — Foundation  |  **Time:** 3-4 hours  |  **Difficulty:** Beginner
+
+## 🎯 What You'll Learn
+- How to intentionally break a workflow so you can practice reading n8n's error output
+- How to branch on error severity so different failures trigger different responses
+- How to add retry logic and timeouts directly on nodes that call external services
+- How to use Execution History to trace exactly which node failed and why
+
+## 🎥 Watch First
+- [Mastering Error Handling in n8n: A Pro Guide](https://www.linkedin.com/posts/satyendra-mourya_n8n-workflowautomation-errorhandling-activity-7369948983038791680-bFKX) — ~10 minute professional error handling guide. Watch for the specific pattern used to separate "expected, recoverable" errors from "unexpected, needs a human" errors — that distinction drives today's build.
+
+## 🛠️ Build It: Step-by-Step
+1. New workflow. Add **Webhook** node "API Error Webhook" — Method `POST`, Path `api-error`.
+2. Add **Set** node "Analyze Error": `error_type` = `{{ $json.error_type || 'UNKNOWN' }}`, `error_message` = `{{ $json.error_message || 'No error message provided' }}`, `error_code` = `{{ $json.error_code || 'N/A' }}`, `severity` = `{{ $json.severity || 'MEDIUM' }}`.
+3. Add **IF** node "Check Severity": String `{{ $json.severity }}` equals `HIGH`.
+4. On true, add **Set** node "High Severity Alert" with `alert_message` = `🚨 HIGH SEVERITY ERROR: {{ $json.error_message }}`. On false, add **Set** node "Medium Severity Alert" with `alert_message` = `⚠️ MEDIUM SEVERITY: {{ $json.error_message }}`.
+5. Connect both branches into a single **Set** node "Log Error" recording `logged_at` = `{{ $now }}`.
+6. Activate the workflow and test both severities:
+   `curl -X POST <production-url> -H "Content-Type: application/json" -d '{"error_type":"API_TIMEOUT","error_message":"Connection timed out","severity":"HIGH"}'`
+   `curl -X POST <production-url> -H "Content-Type: application/json" -d '{"error_type":"VALIDATION","error_message":"Missing field","severity":"LOW"}'`
+   Confirm in Execution History that the HIGH call ran through "High Severity Alert" and the other through "Medium Severity Alert".
+7. Build a second, deliberately broken workflow: **Manual Trigger** → **HTTP Request** node pointed at `https://httpbin.org/status/500`, with Timeout = 5000ms and Retry On Fail = 3 tries. Execute it, let it fail, then open the failed execution and read the exact error message n8n shows.
+8. Add an **IF** node after the HTTP Request checking `{{ $json.statusCode }}` ≥ 400, routing the true branch to a **Set** node "Handle API Error" logging `error_type`, `error_code`, `error_time`. Re-execute and confirm this branch fires and captures the 500.
+
+**Stuck?** Import `WEEK_02_FOUNDATION/EXAMPLES/error_handling_workflow.json` (Menu → Import from File in n8n) to see a working version of the severity-branching pattern from steps 1-6, then compare it to what you built.
+
+## 🔑 Credentials Needed
+None — today's workflows use only Webhook, HTTP Request (to public test endpoints), IF, and Set nodes.
+
+## ✅ Definition of Done
+- [ ] A curl call with `"severity":"HIGH"` visibly routes through "High Severity Alert" in Execution History; a non-HIGH call routes through "Medium Severity Alert"
+- [ ] Your intentionally-broken HTTP Request node has produced at least one real failed execution, and you've read its specific error message (not just its red status)
+- [ ] Your status-code IF node correctly identifies a 500 response as an error and routes it to "Handle API Error"
+- [ ] You can explain, in your own words, the difference between a node turning red (a technical failure) and an IF node routing to an "error" branch (a business-logic decision)
+
+## 🐛 Common Pitfalls
+- **Treating every red node the same:** a timeout, an auth failure, and a malformed expression all show red but need completely different fixes — read the specific error text, not just the color.
+- **No workflow-level Error Trigger:** today's IF-based branching only catches errors reflected in response data (like a status code field) — it won't catch the workflow itself crashing (e.g., an unhandled expression error), which needs a dedicated Error Trigger node on a separate error-handling workflow.
+- **Retries masking a real problem:** if a node "succeeds" on the 3rd retry, you may be hiding a flaky dependency instead of fixing it — note retry counts so a pattern doesn't turn into a production incident.
+
+## 🏭 Industry Track Application
+Sarah's photo organizer needs to survive bad input without losing photos or crashing silently. Take the severity-branching workflow from steps 1-6 and adapt it: replace `error_type`/`error_message` with `upload_source` and `failure_reason` (e.g., `corrupt_file`, `unsupported_format`, `storage_full`), and route `storage_full` to its own HIGH-severity path since it needs immediate action, while `unsupported_format` routes to MEDIUM since it can wait. Test both with curl and confirm each hits the correct branch.

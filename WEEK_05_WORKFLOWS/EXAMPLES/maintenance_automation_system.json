@@ -47,7 +47,8 @@
       "Week 6 workflows",
       "Previous week workflows",
       "Course example workflows"
-    ]
+    ],
+    "credentials_required": []
   },
   "meta": {
     "templateCredsSetupCompleted": true,
@@ -57,12 +58,153 @@
   },
   "nodes": [
     {
+      "id": "sticky-sticky-note",
+      "name": "Sticky Note",
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        220,
+        40
+      ],
+      "parameters": {
+        "content": "## Maintenance Automation System\n\nMaintenance automation system that schedules, monitors, and manages workflow maintenance tasks. Perfect for Week 5 production system management mastery.\n\n**Credentials needed before running:** None — this workflow only uses built-in nodes and/or public test APIs (no login required).\n\n**How to use:** Import into n8n, add the credentials above under *Credentials*, then run manually (or trigger it) to test.",
+        "height": 300,
+        "width": 420
+      }
+    },
+    {
+      "id": "sticky-sticky-note-1",
+      "name": "Sticky Note 1",
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        700,
+        100
+      ],
+      "parameters": {
+        "content": "## ⚠️ Placeholder endpoint\n\nReplace this URL with a real API before running. This is a stand-in for teaching purposes.",
+        "height": 160,
+        "width": 300
+      }
+    },
+    {
+      "id": "sticky-sticky-note-2",
+      "name": "Sticky Note 2",
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        940,
+        100
+      ],
+      "parameters": {
+        "content": "## ⚠️ Placeholder endpoint\n\nReplace this URL with a real API before running. This is a stand-in for teaching purposes.",
+        "height": 160,
+        "width": 300
+      }
+    },
+    {
+      "id": "sticky-sticky-note-3",
+      "name": "Sticky Note 3",
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        1180,
+        100
+      ],
+      "parameters": {
+        "content": "## ⚠️ Placeholder endpoint\n\nReplace this URL with a real API before running. This is a stand-in for teaching purposes.",
+        "height": 160,
+        "width": 300
+      }
+    },
+    {
+      "id": "sticky-sticky-note-4",
+      "name": "Sticky Note 4",
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        1420,
+        100
+      ],
+      "parameters": {
+        "content": "## ⚠️ Placeholder endpoint\n\nReplace this URL with a real API before running. This is a stand-in for teaching purposes.",
+        "height": 160,
+        "width": 300
+      }
+    },
+    {
+      "id": "sticky-sticky-note-5",
+      "name": "Sticky Note 5",
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        1660,
+        100
+      ],
+      "parameters": {
+        "content": "## ⚠️ Placeholder endpoint\n\nReplace this URL with a real API before running. This is a stand-in for teaching purposes.",
+        "height": 160,
+        "width": 300
+      }
+    },
+    {
+      "id": "sticky-sticky-note-6",
+      "name": "Sticky Note 6",
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        2620,
+        100
+      ],
+      "parameters": {
+        "content": "## ⚠️ Placeholder endpoint\n\nReplace this URL with a real API before running. This is a stand-in for teaching purposes.",
+        "height": 160,
+        "width": 300
+      }
+    },
+    {
+      "id": "sticky-sticky-note-7",
+      "name": "Sticky Note 7",
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        2860,
+        100
+      ],
+      "parameters": {
+        "content": "## ⚠️ Placeholder endpoint\n\nReplace this URL with a real API before running. This is a stand-in for teaching purposes.",
+        "height": 160,
+        "width": 300
+      }
+    },
+    {
+      "id": "sticky-sticky-note-8",
+      "name": "Sticky Note 8",
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        3100,
+        100
+      ],
+      "parameters": {
+        "content": "## ⚠️ Placeholder endpoint\n\nReplace this URL with a real API before running. This is a stand-in for teaching purposes.",
+        "height": 160,
+        "width": 300
+      }
+    },
+    {
       "name": "Maintenance Automation System",
       "type": "n8n-nodes-base.webhook",
       "parameters": {
         "path": "maintenance-automation",
         "httpMethod": "POST"
-      }
+      },
+      "id": "maintenance-automation-system",
+      "typeVersion": 2,
+      "position": [
+        240,
+        300
+      ]
     },
     {
       "name": "Schedule Maintenance",
@@ -76,7 +218,13 @@
             }
           ]
         }
-      }
+      },
+      "id": "schedule-maintenance",
+      "typeVersion": 1.2,
+      "position": [
+        240,
+        480
+      ]
     },
     {
       "name": "Initialize Maintenance",
@@ -102,57 +250,93 @@
             }
           ]
         }
-      }
+      },
+      "id": "initialize-maintenance",
+      "typeVersion": 3.4,
+      "position": [
+        480,
+        300
+      ]
     },
     {
-      "name": "Execute Log Cleanup",
+      "name": "⚠️ Execute Log Cleanup (placeholder)",
       "type": "n8n-nodes-base.httpRequest",
       "parameters": {
         "method": "POST",
         "url": "https://api.maintenance-service.com/log-cleanup",
         "bodyContentType": "json",
         "jsonBody": "={{ { \"maintenance_id\": $json.maintenance_id, \"task\": \"log_cleanup\", \"retention_days\": 30, \"timestamp\": $now } }}"
-      }
+      },
+      "id": "execute-log-cleanup",
+      "typeVersion": 4.2,
+      "position": [
+        720,
+        300
+      ]
     },
     {
-      "name": "Execute Cache Clear",
+      "name": "⚠️ Execute Cache Clear (placeholder)",
       "type": "n8n-nodes-base.httpRequest",
       "parameters": {
         "method": "POST",
         "url": "https://api.maintenance-service.com/cache-clear",
         "bodyContentType": "json",
         "jsonBody": "={{ { \"maintenance_id\": $json.maintenance_id, \"task\": \"cache_clear\", \"cache_types\": [\"workflow_cache\", \"data_cache\", \"session_cache\"], \"timestamp\": $now } }}"
-      }
+      },
+      "id": "execute-cache-clear",
+      "typeVersion": 4.2,
+      "position": [
+        960,
+        300
+      ]
     },
     {
-      "name": "Execute Database Optimization",
+      "name": "⚠️ Execute Database Optimization (placeholder)",
       "type": "n8n-nodes-base.httpRequest",
       "parameters": {
         "method": "POST",
         "url": "https://api.maintenance-service.com/database-optimization",
         "bodyContentType": "json",
         "jsonBody": "={{ { \"maintenance_id\": $json.maintenance_id, \"task\": \"database_optimization\", \"optimization_types\": [\"index_rebuild\", \"statistics_update\", \"fragmentation_check\"], \"timestamp\": $now } }}"
-      }
+      },
+      "id": "execute-database-optimization",
+      "typeVersion": 4.2,
+      "position": [
+        1200,
+        300
+      ]
     },
     {
-      "name": "Execute Workflow Health Check",
+      "name": "⚠️ Execute Workflow Health Check (placeholder)",
       "type": "n8n-nodes-base.httpRequest",
       "parameters": {
         "method": "POST",
         "url": "https://api.maintenance-service.com/workflow-health-check",
         "bodyContentType": "json",
         "jsonBody": "={{ { \"maintenance_id\": $json.maintenance_id, \"task\": \"workflow_health_check\", \"check_types\": [\"execution_status\", \"error_rates\", \"performance_metrics\"], \"timestamp\": $now } }}"
-      }
+      },
+      "id": "execute-workflow-health-check",
+      "typeVersion": 4.2,
+      "position": [
+        1440,
+        300
+      ]
     },
     {
-      "name": "Execute Performance Monitoring",
+      "name": "⚠️ Execute Performance Monitoring (placeholder)",
       "type": "n8n-nodes-base.httpRequest",
       "parameters": {
         "method": "POST",
         "url": "https://api.maintenance-service.com/performance-monitoring",
         "bodyContentType": "json",
         "jsonBody": "={{ { \"maintenance_id\": $json.maintenance_id, \"task\": \"performance_monitoring\", \"monitoring_types\": [\"cpu_usage\", \"memory_usage\", \"disk_usage\", \"network_latency\"], \"timestamp\": $now } }}"
-      }
+      },
+      "id": "execute-performance-monitoring",
+      "typeVersion": 4.2,
+      "position": [
+        1680,
+        300
+      ]
     },
     {
       "name": "Collect Maintenance Results",
@@ -162,27 +346,33 @@
           "assignments": [
             {
               "name": "log_cleanup_result",
-              "value": "={{ $('Execute Log Cleanup').item.json.status }}"
+              "value": "={{ $('⚠️ Execute Log Cleanup (placeholder)').item.json.status }}"
             },
             {
               "name": "cache_clear_result",
-              "value": "={{ $('Execute Cache Clear').item.json.status }}"
+              "value": "={{ $('⚠️ Execute Cache Clear (placeholder)').item.json.status }}"
             },
             {
               "name": "database_optimization_result",
-              "value": "={{ $('Execute Database Optimization').item.json.status }}"
+              "value": "={{ $('⚠️ Execute Database Optimization (placeholder)').item.json.status }}"
             },
             {
               "name": "workflow_health_result",
-              "value": "={{ $('Execute Workflow Health Check').item.json.status }}"
+              "value": "={{ $('⚠️ Execute Workflow Health Check (placeholder)').item.json.status }}"
             },
             {
               "name": "performance_monitoring_result",
-              "value": "={{ $('Execute Performance Monitoring').item.json.status }}"
+              "value": "={{ $('⚠️ Execute Performance Monitoring (placeholder)').item.json.status }}"
             }
           ]
         }
-      }
+      },
+      "id": "collect-maintenance-results",
+      "typeVersion": 3.4,
+      "position": [
+        1920,
+        300
+      ]
     },
     {
       "name": "Analyze Maintenance Results",
@@ -208,7 +398,13 @@
             }
           ]
         }
-      }
+      },
+      "id": "analyze-maintenance-results",
+      "typeVersion": 3.4,
+      "position": [
+        2160,
+        300
+      ]
     },
     {
       "name": "Generate Maintenance Report",
@@ -226,37 +422,61 @@
             }
           ]
         }
-      }
+      },
+      "id": "generate-maintenance-report",
+      "typeVersion": 3.4,
+      "position": [
+        2400,
+        300
+      ]
     },
     {
-      "name": "Update Maintenance Dashboard",
+      "name": "⚠️ Update Maintenance Dashboard (placeholder)",
       "type": "n8n-nodes-base.httpRequest",
       "parameters": {
         "method": "POST",
         "url": "https://api.maintenance-dashboard.com/update",
         "bodyContentType": "json",
         "jsonBody": "={{ { \"dashboard\": \"maintenance-overview\", \"data\": $json.maintenance_report, \"timestamp\": $now } }}"
-      }
+      },
+      "id": "update-maintenance-dashboard",
+      "typeVersion": 4.2,
+      "position": [
+        2640,
+        300
+      ]
     },
     {
-      "name": "Send Maintenance Notification",
+      "name": "⚠️ Send Maintenance Notification (placeholder)",
       "type": "n8n-nodes-base.httpRequest",
       "parameters": {
         "method": "POST",
         "url": "https://api.slack.com/api/chat.postMessage",
         "bodyContentType": "json",
         "jsonBody": "={{ { \"channel\": \"#maintenance-alerts\", \"text\": \"🔧 Automated Maintenance Complete\", \"attachments\": [{ \"color\": $json.maintenance_status === 'success' ? \"good\" : \"warning\", \"fields\": [{ \"title\": \"Maintenance ID\", \"value\": $json.maintenance_id, \"short\": true }, { \"title\": \"Type\", \"value\": $json.maintenance_type, \"short\": true }, { \"title\": \"Success Rate\", \"value\": $json.maintenance_success_rate + \"%\", \"short\": true }, { \"title\": \"Status\", \"value\": $json.maintenance_status, \"short\": true }, { \"title\": \"Successful Tasks\", \"value\": $json.successful_tasks + \"/\" + $json.total_tasks, \"short\": true }, { \"title\": \"Log Cleanup\", \"value\": $json.log_cleanup_result, \"short\": true }, { \"title\": \"Cache Clear\", \"value\": $json.cache_clear_result, \"short\": true }, { \"title\": \"Database Optimization\", \"value\": $json.database_optimization_result, \"short\": true }] }] } }}"
-      }
+      },
+      "id": "send-maintenance-notification",
+      "typeVersion": 4.2,
+      "position": [
+        2880,
+        300
+      ]
     },
     {
-      "name": "Log Maintenance Data",
+      "name": "⚠️ Log Maintenance Data (placeholder)",
       "type": "n8n-nodes-base.httpRequest",
       "parameters": {
         "method": "POST",
         "url": "https://api.maintenance-log.com/log",
         "bodyContentType": "json",
         "jsonBody": "={{ { \"type\": \"maintenance_automation\", \"data\": $json.maintenance_report, \"timestamp\": $now } }}"
-      }
+      },
+      "id": "log-maintenance-data",
+      "typeVersion": 4.2,
+      "position": [
+        3120,
+        300
+      ]
     },
     {
       "name": "Schedule Next Maintenance",
@@ -278,7 +498,13 @@
             }
           ]
         }
-      }
+      },
+      "id": "schedule-next-maintenance",
+      "typeVersion": 3.4,
+      "position": [
+        3360,
+        300
+      ]
     },
     {
       "name": "Handle Maintenance Error",
@@ -300,10 +526,172 @@
             }
           ]
         }
-      }
+      },
+      "id": "handle-maintenance-error",
+      "typeVersion": 3.4
     }
   ],
-  "connections": {},
+  "connections": {
+    "Maintenance Automation System": {
+      "main": [
+        [
+          {
+            "node": "Initialize Maintenance",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Schedule Maintenance": {
+      "main": [
+        [
+          {
+            "node": "Initialize Maintenance",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Initialize Maintenance": {
+      "main": [
+        [
+          {
+            "node": "⚠️ Execute Log Cleanup (placeholder)",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "⚠️ Execute Log Cleanup (placeholder)": {
+      "main": [
+        [
+          {
+            "node": "⚠️ Execute Cache Clear (placeholder)",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Handle Maintenance Error",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "⚠️ Execute Cache Clear (placeholder)": {
+      "main": [
+        [
+          {
+            "node": "⚠️ Execute Database Optimization (placeholder)",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "⚠️ Execute Database Optimization (placeholder)": {
+      "main": [
+        [
+          {
+            "node": "⚠️ Execute Workflow Health Check (placeholder)",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "⚠️ Execute Workflow Health Check (placeholder)": {
+      "main": [
+        [
+          {
+            "node": "⚠️ Execute Performance Monitoring (placeholder)",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "⚠️ Execute Performance Monitoring (placeholder)": {
+      "main": [
+        [
+          {
+            "node": "Collect Maintenance Results",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Collect Maintenance Results": {
+      "main": [
+        [
+          {
+            "node": "Analyze Maintenance Results",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Analyze Maintenance Results": {
+      "main": [
+        [
+          {
+            "node": "Generate Maintenance Report",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Generate Maintenance Report": {
+      "main": [
+        [
+          {
+            "node": "⚠️ Update Maintenance Dashboard (placeholder)",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "⚠️ Update Maintenance Dashboard (placeholder)": {
+      "main": [
+        [
+          {
+            "node": "⚠️ Send Maintenance Notification (placeholder)",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "⚠️ Send Maintenance Notification (placeholder)": {
+      "main": [
+        [
+          {
+            "node": "⚠️ Log Maintenance Data (placeholder)",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "⚠️ Log Maintenance Data (placeholder)": {
+      "main": [
+        [
+          {
+            "node": "Schedule Next Maintenance",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
   "active": false,
   "settings": {},
   "pinData": {},

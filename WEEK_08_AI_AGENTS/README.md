@@ -8,76 +8,99 @@
 
 ## 📅 DAILY BREAKDOWN
 
-### **DAY 50: MONDAY - AI Workflow Deployment**
+### **DAY 50: MONDAY - AI Agents Week 7 Recap & Review**
+**Time:** 2-3 hours
+
+#### **Morning (1 hour):**
+- Review: AI agent concepts from Week 7 (communication, learning, decision-making, optimization, monitoring)
+- No dedicated video today — revisit whichever Week 7 video covered agent optimization/monitoring most directly
+- Practice: Re-execute your most complex Week 7 workflow and confirm it's still healthy
+
+#### **Afternoon (1 hour):**
+- Hands-on: Audit every AI workflow built in Week 7 and rate your skills 1-5 across 4 areas
+- Practice: Tag your best Week 7 workflow as your "Week 8 deployment candidate"
+- Experiment: Compare your workflow's structure to the WEEK_08_AI_AGENTS/EXAMPLES files
+
+#### **Evening (30 minutes):**
+- Share: Your Week 7 recap and Week 8 goals
+- Ask: Questions about AI deployment
+- Document: Which workflow you'll deploy first and why
+
+#### **📝 DAILY TASK:**
+Audit all Week 7 AI workflows, self-assess your skills, and tag one workflow as your Week 8 deployment candidate.
+
+---
+
+### **DAY 51: TUESDAY - AI Workflow Deployment**
 **Time:** 2-3 hours
 
 #### **Morning (1 hour):**
 - Watch: [How to Build AI Agents with n8n in 2025! (Full Course)](https://www.youtube.com/watch?v=geR9PeCuHK4) - Deploying AI workflows section
-- Learn: AI deployment strategies
+- Learn: AI deployment strategies, production vs. test webhook URLs
 - Practice: AI production deployment
 
 #### **Afternoon (1 hour):**
-- Hands-on: Deploy AI workflows to production
-- Practice: AI deployment techniques
-- Experiment: Different deployment methods
+- Hands-on: Deploy your Day 50 candidate workflow to production, verify with curl
+- Practice: Explicit success/error response paths
+- Experiment: Trigger the error path deliberately and confirm it's caught
 
 #### **Evening (30 minutes):**
-- Share: Your AI deployment experience
+- Share: Your production webhook test results
 - Ask: Questions about AI deployment
-- Document: AI deployment strategies
+- Document: Your rollback plan
 
 #### **📝 DAILY TASK:**
-Deploy 3 AI workflows to production environment.
+Deploy 1 AI workflow to production with a verified curl test and a written rollback plan.
 
 ---
 
-### **DAY 51: TUESDAY - AI Workflow Maintenance**
+### **DAY 52: WEDNESDAY - AI Workflow Maintenance**
 **Time:** 2-3 hours
 
 #### **Morning (1 hour):**
 - Watch: [Build AI Agents & Automate Workflows (Zero to Hero)](https://www.youtube.com/watch?v=DkV7ztrhLh8) - Maintaining AI workflows section
-- Learn: AI maintenance strategies
+- Learn: AI maintenance strategies, credential rotation, health checks
 - Practice: AI maintenance techniques
 
 #### **Afternoon (1 hour):**
-- Hands-on: Maintain AI workflows
-- Practice: AI maintenance procedures
-- Experiment: Different maintenance approaches
+- Hands-on: Build a Schedule Trigger workflow that health-checks your Day 51 deployment
+- Practice: Healthy/Unhealthy branching and maintenance logging
+- Experiment: Deactivate the target workflow and confirm the check catches it
 
 #### **Evening (30 minutes):**
-- Share: Your AI maintenance experience
-- Get: Feedback on AI maintenance
+- Share: Your maintenance workflow and log entry
+- Get: Feedback on your maintenance schedule interval
 - Document: AI maintenance procedures
 
 #### **📝 DAILY TASK:**
-Create a maintenance schedule for AI workflows.
+Build a scheduled health-check workflow for your deployed AI workflow, with at least one logged maintenance entry.
 
 ---
 
-### **DAY 52: WEDNESDAY - AI Workflow Scaling**
+### **DAY 53: THURSDAY - AI Workflow Scaling**
 **Time:** 2-3 hours
 
 #### **Morning (1 hour):**
 - Watch: [N8N Tutorial: Building N8N AI Agents (Beginner to Pro)](https://www.youtube.com/watch?v=lSwMtsm6oDU) - Scaling AI workflows section
-- Learn: AI scaling strategies
+- Learn: AI scaling strategies, batch processing, rate limits
 - Practice: AI scaling techniques
 
 #### **Afternoon (1 hour):**
-- Hands-on: Scale AI workflows
-- Practice: AI scaling procedures
-- Experiment: Different scaling approaches
+- Hands-on: Add Split In Batches + throttling to a workflow processing 20+ items
+- Practice: Comparing unbatched vs. batched/throttled runs
+- Experiment: Calculate batch size against your AI provider's rate limit
 
 #### **Evening (30 minutes):**
-- Share: Your AI scaling experience
+- Share: Your scaling test results
 - Ask: Questions about AI scaling
 - Document: AI scaling patterns
 
 #### **📝 DAILY TASK:**
-Scale 2 AI workflows for high-volume processing.
+Scale 1 AI workflow to reliably process a 20+ item batch using Split In Batches and rate-limit-aware throttling.
 
 ---
 
-### **DAY 53: THURSDAY - AI Workflow Documentation**
+### **DAY 54: FRIDAY - AI Workflow Documentation**
 **Time:** 2-3 hours
 
 #### **Morning (1 hour):**
@@ -86,21 +109,21 @@ Scale 2 AI workflows for high-volume processing.
 - Practice: AI documentation techniques
 
 #### **Afternoon (1 hour):**
-- Hands-on: Document AI workflows
-- Practice: AI documentation procedures
-- Experiment: Different documentation formats
+- Hands-on: Document 5 AI workflows with Sticky Notes and written input/output contracts
+- Practice: Writing a runbook entry for your most complex workflow
+- Experiment: Run the "stranger test" on your Day 51 workflow's docs
 
 #### **Evening (30 minutes):**
 - Share: Your AI documentation
-- Get: Feedback on AI documentation
+- Get: Feedback on your documentation
 - Document: AI documentation standards
 
 #### **📝 DAILY TASK:**
-Create comprehensive documentation for 5 AI workflows.
+Create comprehensive documentation (Sticky Notes + input/output contracts) for 5 AI workflows.
 
 ---
 
-### **DAY 54: FRIDAY - AI Workflow Troubleshooting**
+### **DAY 55: SATURDAY - AI Workflow Troubleshooting**
 **Time:** 2-3 hours
 
 #### **Morning (1 hour):**
@@ -109,9 +132,9 @@ Create comprehensive documentation for 5 AI workflows.
 - Practice: AI debugging techniques
 
 #### **Afternoon (1 hour):**
-- Hands-on: Troubleshoot AI workflows
-- Practice: AI debugging procedures
-- Experiment: Different troubleshooting approaches
+- Hands-on: Deliberately break a workflow 3 ways and capture the exact errors
+- Practice: Add response-validation to catch malformed AI output
+- Experiment: Test your troubleshooting guide against a 4th, unseen failure
 
 #### **Evening (30 minutes):**
 - Share: Your AI troubleshooting experience
@@ -119,11 +142,11 @@ Create comprehensive documentation for 5 AI workflows.
 - Document: AI troubleshooting patterns
 
 #### **📝 DAILY TASK:**
-Create a troubleshooting guide for AI workflows.
+Create a Symptom/Cause/Where-to-Look/Fix troubleshooting guide covering at least 5 reproduced failure modes.
 
 ---
 
-### **DAY 55: SATURDAY - AI Workflow Best Practices**
+### **DAY 56: SUNDAY - AI Workflow Best Practices**
 **Time:** 3-4 hours
 
 #### **Morning (1.5 hours):**
@@ -132,40 +155,40 @@ Create a troubleshooting guide for AI workflows.
 - Practice: AI best practice implementation
 
 #### **Afternoon (1.5 hours):**
-- Hands-on: Implement AI best practices
-- Practice: AI best practice procedures
-- Experiment: Different best practice approaches
+- Hands-on: Audit all workflows for hardcoded secrets, add input validation and standardized error handling
+- Practice: Add independent execution logging
+- Experiment: Run the 5-workflow best-practices checklist with pass/fail per item
 
 #### **Evening (1 hour):**
-- Share: Your AI best practices
-- Get: Feedback on AI best practices
+- Share: Your AI best practices audit results
+- Get: Feedback on your best practices
 - Document: AI best practice standards
 
 #### **📝 DAILY TASK:**
-Implement best practices in all your AI workflows.
+Run a best-practices audit (secrets, validation, error shape, logging) against all your AI workflows and fix every failing item.
 
 ---
 
-### **DAY 56: SUNDAY - AI Agents Review**
+### **DAY 57: MONDAY - AI Agents Capstone Review**
 **Time:** 2-3 hours
 
 #### **Morning (1 hour):**
-- Review: All AI agent concepts
-- Practice: Key AI techniques
-- Prepare: Week 8 project
+- Review: All AI agent concepts from Weeks 6-8
+- No dedicated video today — revisit the Day 51 deployment video's production/error-handling sections
+- Prepare: Select the 3 workflows for your capstone system
 
 #### **Afternoon (1 hour):**
-- Build: Complete week 8 project
-- Test: All AI functionality
-- Document: Your process
+- Build: Chain 3 production workflows end-to-end (deploy, monitor, scale, document, troubleshoot, best-practice all in one system)
+- Test: Full chain execution plus a deliberate handoff-failure test
+- Document: Your process and a System Status summary with honest gaps
 
 #### **Evening (1 hour):**
-- Share: Your week 8 project
+- Share: Your capstone system
 - Get: Feedback from community
 - Plan: Week 9 preparation
 
 #### **📝 DAILY TASK:**
-Complete the production AI project and share your success.
+Assemble and deploy a chained 3-workflow production system, verified end-to-end, with a written System Status summary.
 
 ---
 
@@ -312,14 +335,15 @@ Complete the production AI project and share your success.
 
 ## ✅ WEEK 8 CHECKLIST
 
-- [ ] Deploy AI workflows
-- [ ] Implement maintenance
-- [ ] Scale AI workflows
-- [ ] Create documentation
-- [ ] Set up troubleshooting
-- [ ] Implement best practices
-- [ ] Complete week 8 project
-- [ ] Share progress in community
+- [ ] Audited all Week 7 AI workflows and tagged a deployment candidate (Day 50)
+- [ ] Deployed 1 AI workflow to production with a curl-verified webhook and rollback plan (Day 51)
+- [ ] Built a scheduled health-check workflow with at least one logged maintenance entry (Day 52)
+- [ ] Scaled 1 AI workflow to process a 20+ item batch with Split In Batches and throttling (Day 53)
+- [ ] Documented 5 AI workflows with Sticky Notes and written input/output contracts (Day 54)
+- [ ] Built a troubleshooting guide covering 5+ reproduced failure modes (Day 55)
+- [ ] Passed a best-practices audit (no hardcoded secrets, input validation, consistent errors, logging) on all workflows (Day 56)
+- [ ] Deployed a chained 3-workflow capstone system verified end-to-end, with a written System Status summary (Day 57)
+- [ ] Shared progress in the community throughout the week
 
 ---
 

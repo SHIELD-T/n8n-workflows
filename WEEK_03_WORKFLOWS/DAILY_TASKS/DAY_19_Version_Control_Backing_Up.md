@@ -1,315 +1,36 @@
-# 📅 DAY 19: FRIDAY - Version Control & Backing Up
-
-## 🎯 TODAY'S OBJECTIVES
-- Master workflow version control
-- Learn backup strategies
-- Practice export/import workflows
-- Organize workflow projects
-
-## ⏰ TIME ALLOCATION
-**Total Time:** 2-3 hours
-- **Morning:** 1 hour (Learning)
-- **Afternoon:** 1 hour (Hands-on Practice)
-- **Evening:** 30 minutes (Community & Review)
-
----
-
-## 🌅 MORNING SESSION (1 hour)
-
-### **📹 Video Lesson: "Workflow Version Control"**
-**Duration:** 45 minutes
-**Watch:** [How To Set Up N8N Self Hosting In 3 Minutes](https://www.youtube.com/watch?v=kq5bmrjPPAY) - Complete ~10 minute deployment and backup guide
-
-#### **What You'll Learn:**
-- Version control concepts
-- Export/import workflows
-- Backup strategies
-- Workflow organization
-
-#### **Key Concepts:**
-- **Version Control:** Track workflow changes
-- **Export/Import:** Backup and restore workflows
-- **Backup Strategies:** Regular backups, cloud storage
-- **Organization:** Folders, tags, naming conventions
-
-#### **Take Notes On:**
-- 5 version control best practices
-- Backup strategies
-- Organization techniques
-- Import/export procedures
-
----
-
-### **📖 Reading Assignment**
-**Duration:** 15 minutes
-
-#### **Read: "n8n Workflow Management Guide"**
-- Version control best practices
-- Backup strategies
-- Organization techniques
-- Import/export procedures
-
-#### **Key Takeaways:**
-- Version control prevents data loss
-- Regular backups are essential
-- Organization improves productivity
-- Import/export enables sharing
-
----
-
-## 🌞 AFTERNOON SESSION (1 hour)
-
-### **🛠️ Hands-on Practice: "Version Control Mastery"**
-**Duration:** 30 minutes
-
-#### **Task: Implement Version Control**
-
-**Step-by-Step Instructions:**
-
-1. **Export Workflows**
-   - Export individual workflows
-   - Export workflow collections
-   - Test export functionality
-   - Verify export files
-
-2. **Import Workflows**
-   - Import from backup files
-   - Test import functionality
-   - Verify imported workflows
-   - Handle import conflicts
-
-3. **Backup Strategies**
-   - Create manual backups
-   - Set up automated backups
-   - Test backup restoration
-   - Document backup procedures
-
----
-
-### **🔍 Workflow Organization**
-**Duration:** 30 minutes
-
-#### **Task: Organize Your Workflows**
-
-**For Your Workflow Collection:**
-1. **Create Folders**
-   - Organize by project
-   - Group by functionality
-   - Use descriptive names
-   - Maintain hierarchy
-
-2. **Add Tags and Descriptions**
-   - Tag workflows by type
-   - Add detailed descriptions
-   - Use consistent naming
-   - Document purposes
-
-3. **Version Management**
-   - Track workflow versions
-   - Document changes
-   - Maintain change logs
-   - Archive old versions
-
----
-
-## 🌙 EVENING SESSION (30 minutes)
-
-### **📸 Share Your Organization**
-**Duration:** 20 minutes
-
-#### **Community Post: "My Workflow Organization"**
-
-**Share:**
-- Screenshots of your organized workflows
-- Backup strategies you implemented
-- Organization techniques
-- Questions for the community
-
-#### **Post Template:**
-```
-Day 19 Complete! 🎉
-
-**Workflow Organization:**
-[Screenshots of organized workflows]
-
-**What I Implemented:**
-- Version control system
-- Backup strategies
-- Folder organization
-- Tagging system
-
-**Backup Strategy:**
-- [Describe your backup approach]
-
-**Questions:**
-- [Any questions for the community]
-
-Ready for Day 20! 🚀
-```
-
----
-
-### **📋 Review Tomorrow's Materials**
-**Duration:** 10 minutes
-
-#### **Preview Day 20:**
-- Cloning and modifying pre-built workflows
-- Workflow customization
-- Template usage
-- Best practices
-
-#### **Prepare:**
-- Review workflow collection
-- Plan customization projects
-- Set up template system
-
----
-
-## 📝 DAILY TASK
-
-### **🎯 Main Task: Export All Workflows and Create Backup System**
-
-**Set up comprehensive version control and backup system.**
-
-#### **Version Control Implementation:**
-
-**1. Export All Workflows**
-```bash
-# Create backup directory
-mkdir -p ~/n8n-backups/$(date +%Y%m%d)
-
-# Export workflows (manual process in n8n UI)
-# Go to each workflow and export as JSON
-# Save to backup directory with descriptive names
-```
-
-**2. Create Backup Script**
-```bash
-#!/bin/bash
-# n8n-backup.sh
-
-BACKUP_DIR="~/n8n-backups/$(date +%Y%m%d_%H%M%S)"
-mkdir -p "$BACKUP_DIR"
-
-# Export workflows
-echo "Exporting workflows..."
-# Add your export commands here
-
-# Copy n8n data directory
-echo "Backing up n8n data..."
-cp -r ~/.n8n "$BACKUP_DIR/"
-
-# Create backup manifest
-echo "Creating backup manifest..."
-cat > "$BACKUP_DIR/backup-manifest.txt" << EOF
-Backup Date: $(date)
-n8n Version: $(n8n --version)
-Workflow Count: $(find ~/.n8n/workflows -name "*.json" | wc -l)
-Backup Type: Full
-EOF
-
-echo "Backup completed: $BACKUP_DIR"
-```
-
-**3. Workflow Organization Structure**
-```
-n8n-workflows/
-├── 01-foundation/
-│   ├── basic-workflows/
-│   ├── trigger-examples/
-│   └── error-handling/
-├── 02-integrations/
-│   ├── api-workflows/
-│   ├── webhook-examples/
-│   └── data-processing/
-├── 03-advanced/
-│   ├── complex-workflows/
-│   ├── ai-integrations/
-│   └── production-ready/
-├── 04-templates/
-│   ├── reusable-templates/
-│   ├── client-workflows/
-│   └── business-automation/
-└── 05-backups/
-    ├── daily-backups/
-    ├── weekly-backups/
-    └── monthly-backups/
-```
-
-**4. Workflow Naming Convention**
-```
-[Category]-[Function]-[Version]-[Date].json
-
-Examples:
-- foundation-webhook-basic-v1-20241201.json
-- integration-api-processing-v2-20241201.json
-- advanced-ai-workflow-v1-20241201.json
-- template-lead-capture-v1-20241201.json
-```
-
-**5. Backup Schedule**
-```bash
-# Daily backup (automated)
-0 2 * * * /path/to/n8n-backup.sh
-
-# Weekly full backup
-0 3 * * 0 /path/to/n8n-full-backup.sh
-
-# Monthly archive
-0 4 1 * * /path/to/n8n-archive.sh
-```
-
-#### **Expected Result:**
-- All workflows exported and backed up
-- Organized folder structure
-- Automated backup system
-- Version control implemented
-- Documentation created
-
----
-
-## ✅ DAILY CHECKLIST
-
-- [ ] Watch "Workflow Version Control" video
-- [ ] Read workflow management guide
-- [ ] Export all workflows
-- [ ] Create backup directory structure
-- [ ] Set up automated backups
-- [ ] Organize workflows into folders
-- [ ] Add tags and descriptions
-- [ ] Create naming conventions
-- [ ] Test backup restoration
-- [ ] Share progress in community
-- [ ] Review tomorrow's materials
-- [ ] Complete daily task
-
----
-
-## 🎯 SUCCESS METRICS
-
-**By the end of today, you should:**
-- Have all workflows backed up
-- Understand version control
-- Know backup strategies
-- Have organized workflow structure
-- Be ready for workflow cloning
-
----
-
-## 💡 PRO TIPS
-
-1. **Backup Regularly:** Set up automated backups
-2. **Organize Early:** Start with good organization
-3. **Use Naming Conventions:** Consistent naming helps
-4. **Document Changes:** Keep change logs
-5. **Test Restores:** Always test backup restoration
-
----
-
-## 🚀 TOMORROW PREVIEW
-
-**Day 20:** We'll dive into cloning and modifying pre-built workflows, learn customization techniques, and start working with templates. Get ready for workflow customization! 🔄
-
----
-
-*Remember: Version control prevents data loss! Master these practices! 🚀*
+# DAY 19: Version Control & Backing Up
+**Week:** 3 — Workflows  |  **Time:** 2-3 hours  |  **Difficulty:** Intermediate
+
+## 🎯 What You'll Learn
+- How to export a single workflow and a small collection from the n8n UI
+- How to import a workflow from a JSON backup file and verify it restored correctly
+- A practical folder/naming convention for organizing exported workflow JSON files
+- How to write a simple backup script that copies your n8n data directory
+
+## 🎥 Watch First
+- [How To Set Up N8N Self Hosting In 3 Minutes](https://www.youtube.com/watch?v=kq5bmrjPPAY) — ~10 minute deployment and backup guide. Focus on the parts covering data persistence and where workflow data actually lives on disk.
+
+## 🛠️ Build It: Step-by-Step
+1. Open any 2 workflows you built earlier in Week 3. For each, use the n8n menu (⋮ top-right of the canvas) → **Download** to export it as a `.json` file to your local machine.
+2. Create a local folder structure: `n8n-backups/YYYYMMDD/` (use today's actual date) and move both exported JSON files into it, renaming them using the convention `[category]-[function]-v1-[date].json`, e.g. `week3-triggers-v1-20260815.json`.
+3. Open one exported JSON file in a text editor and confirm it contains a `"nodes"` array and a `"connections"` object — this is what n8n actually restores from.
+4. Test restoration: create a brand-new empty workflow in n8n, then use menu → **Import from File** and select one of your exported JSONs. Confirm all nodes and connections reappear exactly as they were, then execute it to confirm it still runs.
+5. Write a simple local backup script (bash or PowerShell) that copies your n8n data directory (`~/.n8n` if self-hosted) to a timestamped folder, and run it once manually to confirm it produces a non-empty backup folder.
+6. Document your naming convention and folder structure in a short note (2-3 sentences) so a teammate could find any given workflow's latest backup.
+
+## 🔑 Credentials Needed
+None — export/import is entirely local to your n8n instance. If self-hosting, you'll need filesystem/SSH access to your server for the data-directory backup script.
+
+## ✅ Definition of Done
+- [ ] Two workflows successfully exported as `.json` files using the naming convention `[category]-[function]-v1-[date].json`
+- [ ] At least one exported workflow successfully re-imported into a new empty workflow and confirmed to execute identically to the original
+- [ ] A backup script exists and was run at least once, producing a timestamped folder with actual file contents (not empty)
+- [ ] Folder structure and naming convention documented in a short note
+
+## 🐛 Common Pitfalls
+- **Export via "Download" does not include saved credentials** — they must be re-entered (or securely migrated separately) after import on a new instance.
+- **Importing a workflow with the same name as an existing one creates a duplicate** rather than overwriting it — check your workflow list for accidental duplicates after testing import.
+- **A backup script that copies the database file mid-write can produce a corrupted backup** — stop the n8n process, or use a proper DB dump command, for anything beyond this practice exercise.
+
+## 🏭 Industry Track Application
+Set up Alex's business automation backup system — export all of Alex's lead-response and inventory workflows, organize them under `alex-business/[system-name]/` with dated backups, and write a one-paragraph disaster-recovery note explaining how Alex's team would restore the lead capture system if the n8n instance were lost.

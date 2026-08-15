@@ -45,6 +45,10 @@
       "Week 3 workflows",
       "Previous week workflows",
       "Course example workflows"
+    ],
+    "credentials_required": [
+      "Notion API integration (internal integration token)",
+      "Slack OAuth2 / Slack API token"
     ]
   },
   "meta": {
@@ -54,6 +58,21 @@
     "last_updated": "2025-09-07T14:31:15.355495"
   },
   "nodes": [
+    {
+      "id": "sticky-sticky-note",
+      "name": "Sticky Note",
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        220,
+        40
+      ],
+      "parameters": {
+        "content": "## Advanced Foundation Skills Assessment\n\nAdvanced skills assessment workflow that evaluates foundation knowledge, tracks progress, and provides personalized learning recommendations. Perfect for Week 2 foundation mastery.\n\n**Credentials needed before running:**\n- Notion API integration (internal integration token)\n- Slack OAuth2 / Slack API token\n\n**How to use:** Import into n8n, add the credentials above under *Credentials*, then run manually (or trigger it) to test.",
+        "height": 300,
+        "width": 420
+      }
+    },
     {
       "parameters": {
         "httpMethod": "POST",
@@ -263,62 +282,62 @@
     }
   ],
   "connections": {
-    "webhook-trigger": {
+    "Skills Assessment Trigger": {
       "main": [
         [
           {
-            "node": "set-assessment-data",
+            "node": "Set Assessment Data",
             "type": "main",
             "index": 0
           }
         ]
       ]
     },
-    "set-assessment-data": {
+    "Set Assessment Data": {
       "main": [
         [
           {
-            "node": "skill-level-check",
+            "node": "Skill Level Check",
             "type": "main",
             "index": 0
           }
         ]
       ]
     },
-    "skill-level-check": {
+    "Skill Level Check": {
       "main": [
         [
           {
-            "node": "create-advanced-assessment",
+            "node": "Create Advanced Assessment",
             "type": "main",
             "index": 0
           }
         ],
         [
           {
-            "node": "create-assessment-entry",
+            "node": "Create Assessment Entry",
             "type": "main",
             "index": 0
           }
         ]
       ]
     },
-    "create-advanced-assessment": {
+    "Create Advanced Assessment": {
       "main": [
         [
           {
-            "node": "send-advanced-celebration",
+            "node": "Send Advanced Celebration",
             "type": "main",
             "index": 0
           }
         ]
       ]
     },
-    "create-assessment-entry": {
+    "Create Assessment Entry": {
       "main": [
         [
           {
-            "node": "send-assessment-update",
+            "node": "Send Assessment Update",
             "type": "main",
             "index": 0
           }

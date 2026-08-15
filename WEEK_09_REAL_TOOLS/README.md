@@ -8,7 +8,7 @@
 
 ## 📅 DAILY BREAKDOWN
 
-### **DAY 57: MONDAY - OAuth 2.0 vs API Keys**
+### **DAY 58: MONDAY - OAuth 2.0 vs API Keys**
 **Time:** 2-3 hours
 
 #### **Morning (1 hour):**
@@ -31,7 +31,7 @@ Set up both OAuth 2.0 and API key authentication for 3 services.
 
 ---
 
-### **DAY 58: TUESDAY - Working with Form Builders**
+### **DAY 59: TUESDAY - Working with Form Builders**
 **Time:** 2-3 hours
 
 #### **Morning (1 hour):**
@@ -54,7 +54,7 @@ Build workflows that process data from 2 different form builders.
 
 ---
 
-### **DAY 59: WEDNESDAY - Trigger Workflows from Emails/Calendar**
+### **DAY 60: WEDNESDAY - Trigger Workflows from Emails/Calendar**
 **Time:** 2-3 hours
 
 #### **Morning (1 hour):**
@@ -77,7 +77,7 @@ Create workflows triggered by email events and calendar changes.
 
 ---
 
-### **DAY 60: THURSDAY - Automating Notion**
+### **DAY 61: THURSDAY - Automating Notion**
 **Time:** 2-3 hours
 
 #### **Morning (1 hour):**
@@ -100,7 +100,7 @@ Build workflows that automate Notion database operations.
 
 ---
 
-### **DAY 61: FRIDAY - Slack & Telegram Bots**
+### **DAY 62: FRIDAY - Slack & Telegram Bots**
 **Time:** 2-3 hours
 
 #### **Morning (1 hour):**
@@ -123,7 +123,7 @@ Create bots for Slack and Telegram with automated responses.
 
 ---
 
-### **DAY 62: SATURDAY - Combine Tools into Full Systems**
+### **DAY 63: SATURDAY - Combine Tools into Full Systems**
 **Time:** 3-4 hours
 
 #### **Morning (1.5 hours):**
@@ -146,7 +146,7 @@ Build a complete automation system using 5+ different tools.
 
 ---
 
-### **DAY 63: SUNDAY - Real Tools Review**
+### **DAY 64: SUNDAY - Real Tools Review**
 **Time:** 2-3 hours
 
 #### **Morning (1 hour):**

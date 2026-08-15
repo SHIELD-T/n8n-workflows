@@ -50,6 +50,10 @@
       "Week 7 workflows",
       "Previous week workflows",
       "Course example workflows"
+    ],
+    "credentials_required": [
+      "Notion API integration (internal integration token)",
+      "Slack OAuth2 / Slack API token"
     ]
   },
   "meta": {
@@ -59,6 +63,21 @@
     "last_updated": "2025-09-07T14:31:14.648989"
   },
   "nodes": [
+    {
+      "id": "sticky-sticky-note",
+      "name": "Sticky Note",
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        220,
+        40
+      ],
+      "parameters": {
+        "content": "## AI Agent Performance Monitor\n\nMonitor AI agent performance with metrics tracking, quality assessment, and optimization insights.\n\n**Credentials needed before running:**\n- Notion API integration (internal integration token)\n- Slack OAuth2 / Slack API token\n\n**How to use:** Import into n8n, add the credentials above under *Credentials*, then run manually (or trigger it) to test.",
+        "height": 300,
+        "width": 420
+      }
+    },
     {
       "parameters": {
         "httpMethod": "POST",
@@ -175,33 +194,33 @@
     }
   ],
   "connections": {
-    "webhook-trigger": {
+    "AI Agent Performance Trigger": {
       "main": [
         [
           {
-            "node": "set-performance-data",
+            "node": "Set Performance Data",
             "type": "main",
             "index": 0
           }
         ]
       ]
     },
-    "set-performance-data": {
+    "Set Performance Data": {
       "main": [
         [
           {
-            "node": "create-performance-entry",
+            "node": "Create Performance Entry",
             "type": "main",
             "index": 0
           }
         ]
       ]
     },
-    "create-performance-entry": {
+    "Create Performance Entry": {
       "main": [
         [
           {
-            "node": "send-performance-notification",
+            "node": "Send Performance Notification",
             "type": "main",
             "index": 0
           }

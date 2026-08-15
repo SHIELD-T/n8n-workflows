@@ -45,7 +45,8 @@
       "Week 5 workflows",
       "Previous week workflows",
       "Course example workflows"
-    ]
+    ],
+    "credentials_required": []
   },
   "meta": {
     "templateCredsSetupCompleted": true,
@@ -55,12 +56,48 @@
   },
   "nodes": [
     {
+      "id": "sticky-sticky-note",
+      "name": "Sticky Note",
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        220,
+        40
+      ],
+      "parameters": {
+        "content": "## End To End System Workflow\n\nEnd-to-end system workflow demonstrating complete automation solutions, system integration, and production-ready architectures. Ideal for Week 4 end-to-end system mastery.\n\n**Credentials needed before running:** None — this workflow only uses built-in nodes and/or public test APIs (no login required).\n\n**How to use:** Import into n8n, add the credentials above under *Credentials*, then run manually (or trigger it) to test.",
+        "height": 300,
+        "width": 420
+      }
+    },
+    {
+      "id": "sticky-sticky-note-1",
+      "name": "Sticky Note 1",
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        1660,
+        100
+      ],
+      "parameters": {
+        "content": "## ⚠️ Placeholder endpoint\n\nReplace this URL with a real API before running. This is a stand-in for teaching purposes.",
+        "height": 160,
+        "width": 300
+      }
+    },
+    {
       "name": "End-to-End System Trigger",
       "type": "n8n-nodes-base.webhook",
       "parameters": {
         "path": "end-to-end-system",
         "httpMethod": "POST"
-      }
+      },
+      "id": "end-to-end-system-trigger",
+      "typeVersion": 2,
+      "position": [
+        240,
+        300
+      ]
     },
     {
       "name": "Initialize End-to-End System",
@@ -86,7 +123,13 @@
             }
           ]
         }
-      }
+      },
+      "id": "initialize-end-to-end-system",
+      "typeVersion": 3.4,
+      "position": [
+        480,
+        300
+      ]
     },
     {
       "name": "Input Data Collection",
@@ -108,7 +151,13 @@
             }
           ]
         }
-      }
+      },
+      "id": "input-data-collection",
+      "typeVersion": 3.4,
+      "position": [
+        720,
+        300
+      ]
     },
     {
       "name": "Data Validation",
@@ -122,7 +171,13 @@
             }
           ]
         }
-      }
+      },
+      "id": "data-validation",
+      "typeVersion": 2,
+      "position": [
+        960,
+        300
+      ]
     },
     {
       "name": "Data Processing",
@@ -144,7 +199,13 @@
             }
           ]
         }
-      }
+      },
+      "id": "data-processing",
+      "typeVersion": 3.4,
+      "position": [
+        1200,
+        300
+      ]
     },
     {
       "name": "Output Generation",
@@ -166,17 +227,29 @@
             }
           ]
         }
-      }
+      },
+      "id": "output-generation",
+      "typeVersion": 3.4,
+      "position": [
+        1440,
+        300
+      ]
     },
     {
-      "name": "Send Notification",
+      "name": "⚠️ Send Notification (placeholder)",
       "type": "n8n-nodes-base.httpRequest",
       "parameters": {
         "method": "POST",
         "url": "https://api.slack.com/api/chat.postMessage",
         "bodyContentType": "json",
         "jsonBody": "={{ { \"channel\": \"#system-notifications\", \"text\": \"✅ End-to-End System Processing Complete\", \"attachments\": [{ \"color\": \"good\", \"fields\": [{ \"title\": \"System ID\", \"value\": $json.system_id, \"short\": true }, { \"title\": \"Processing Time\", \"value\": $json.processing_time + \"ms\", \"short\": true }, { \"title\": \"Status\", \"value\": $json.processing_status, \"short\": true }] }] } }}"
-      }
+      },
+      "id": "send-notification",
+      "typeVersion": 4.2,
+      "position": [
+        1680,
+        300
+      ]
     },
     {
       "name": "Final System Report",
@@ -194,7 +267,13 @@
             }
           ]
         }
-      }
+      },
+      "id": "final-system-report",
+      "typeVersion": 3.4,
+      "position": [
+        1920,
+        300
+      ]
     },
     {
       "name": "Handle Validation Error",
@@ -216,10 +295,97 @@
             }
           ]
         }
-      }
+      },
+      "id": "handle-validation-error",
+      "typeVersion": 3.4
     }
   ],
-  "connections": {},
+  "connections": {
+    "End-to-End System Trigger": {
+      "main": [
+        [
+          {
+            "node": "Initialize End-to-End System",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Initialize End-to-End System": {
+      "main": [
+        [
+          {
+            "node": "Input Data Collection",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Input Data Collection": {
+      "main": [
+        [
+          {
+            "node": "Data Validation",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Data Validation": {
+      "main": [
+        [
+          {
+            "node": "Data Processing",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Handle Validation Error",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Data Processing": {
+      "main": [
+        [
+          {
+            "node": "Output Generation",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Output Generation": {
+      "main": [
+        [
+          {
+            "node": "⚠️ Send Notification (placeholder)",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "⚠️ Send Notification (placeholder)": {
+      "main": [
+        [
+          {
+            "node": "Final System Report",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
   "active": false,
   "settings": {},
   "pinData": {},

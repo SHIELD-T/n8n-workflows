@@ -45,6 +45,11 @@
       "Week 11 workflows",
       "Previous week workflows",
       "Course example workflows"
+    ],
+    "credentials_required": [
+      "Airtable Personal Access Token",
+      "OpenAI API key",
+      "Slack OAuth2 / Slack API token"
     ]
   },
   "meta": {
@@ -54,6 +59,81 @@
     "last_updated": "2025-09-07T14:31:14.057543"
   },
   "nodes": [
+    {
+      "id": "sticky-sticky-note",
+      "name": "Sticky Note",
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        220,
+        40
+      ],
+      "parameters": {
+        "content": "## Data Synchronization System\n\nAutomated workflow for Real-World Tools phase learning objectives with intelligent processing and error handling.\n\n**Credentials needed before running:**\n- Airtable Personal Access Token\n- OpenAI API key\n- Slack OAuth2 / Slack API token\n\n**How to use:** Import into n8n, add the credentials above under *Credentials*, then run manually (or trigger it) to test.",
+        "height": 300,
+        "width": 420
+      }
+    },
+    {
+      "id": "sticky-sticky-note-1",
+      "name": "Sticky Note 1",
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        660,
+        100
+      ],
+      "parameters": {
+        "content": "## ⚠️ Placeholder endpoint\n\nReplace this URL with a real API before running. This is a stand-in for teaching purposes.",
+        "height": 160,
+        "width": 300
+      }
+    },
+    {
+      "id": "sticky-sticky-note-2",
+      "name": "Sticky Note 2",
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        1100,
+        100
+      ],
+      "parameters": {
+        "content": "## ⚠️ Placeholder endpoint\n\nReplace this URL with a real API before running. This is a stand-in for teaching purposes.",
+        "height": 160,
+        "width": 300
+      }
+    },
+    {
+      "id": "sticky-sticky-note-3",
+      "name": "Sticky Note 3",
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        1320,
+        100
+      ],
+      "parameters": {
+        "content": "## ⚠️ Placeholder endpoint\n\nReplace this URL with a real API before running. This is a stand-in for teaching purposes.",
+        "height": 160,
+        "width": 300
+      }
+    },
+    {
+      "id": "sticky-sticky-note-4",
+      "name": "Sticky Note 4",
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        1540,
+        100
+      ],
+      "parameters": {
+        "content": "## ⚠️ Placeholder endpoint\n\nReplace this URL with a real API before running. This is a stand-in for teaching purposes.",
+        "height": 160,
+        "width": 300
+      }
+    },
     {
       "parameters": {
         "path": "data-synchronization",
@@ -65,7 +145,8 @@
       "position": [
         240,
         300
-      ]
+      ],
+      "id": "data-sync-trigger"
     },
     {
       "parameters": {
@@ -100,7 +181,8 @@
       "position": [
         460,
         300
-      ]
+      ],
+      "id": "initialize-sync-process"
     },
     {
       "parameters": {
@@ -109,13 +191,14 @@
         "bodyContentType": "json",
         "jsonBody": "={{ { \"sync_id\": $json.sync_id, \"source_system\": $json.source_system, \"target_systems\": $json.target_systems, \"sync_data\": $json.sync_data, \"timestamp\": $now } }}"
       },
-      "name": "Check Data Conflicts",
+      "name": "⚠️ Check Data Conflicts (placeholder)",
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 1,
       "position": [
         680,
         300
-      ]
+      ],
+      "id": "check-data-conflicts"
     },
     {
       "parameters": {
@@ -142,7 +225,8 @@
       "position": [
         900,
         300
-      ]
+      ],
+      "id": "resolve-data-conflicts"
     },
     {
       "parameters": {
@@ -151,13 +235,14 @@
         "bodyContentType": "json",
         "jsonBody": "={{ { \"sync_id\": $json.sync_id, \"source_system\": $json.source_system, \"sync_data\": $json.resolved_data, \"timestamp\": $now } }}"
       },
-      "name": "Sync to System B",
+      "name": "⚠️ Sync to System B (placeholder)",
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 1,
       "position": [
         1120,
         300
-      ]
+      ],
+      "id": "sync-to-system-b"
     },
     {
       "parameters": {
@@ -166,13 +251,14 @@
         "bodyContentType": "json",
         "jsonBody": "={{ { \"sync_id\": $json.sync_id, \"source_system\": $json.source_system, \"sync_data\": $json.resolved_data, \"timestamp\": $now } }}"
       },
-      "name": "Sync to System C",
+      "name": "⚠️ Sync to System C (placeholder)",
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 1,
       "position": [
         1340,
         300
-      ]
+      ],
+      "id": "sync-to-system-c"
     },
     {
       "parameters": {
@@ -190,13 +276,14 @@
           }
         }
       },
-      "name": "Validate Sync Results",
+      "name": "⚠️ Validate Sync Results (placeholder)",
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 1,
       "position": [
         1560,
         300
-      ]
+      ],
+      "id": "validate-sync-results"
     },
     {
       "parameters": {
@@ -222,7 +309,8 @@
       "position": [
         1780,
         300
-      ]
+      ],
+      "id": "ai-sync-analysis"
     },
     {
       "parameters": {
@@ -248,7 +336,8 @@
       "position": [
         2000,
         300
-      ]
+      ],
+      "id": "store-sync-results"
     },
     {
       "parameters": {
@@ -262,7 +351,8 @@
       "position": [
         2220,
         300
-      ]
+      ],
+      "id": "send-sync-report"
     }
   ],
   "connections": {
@@ -281,14 +371,14 @@
       "main": [
         [
           {
-            "node": "Check Data Conflicts",
+            "node": "⚠️ Check Data Conflicts (placeholder)",
             "type": "main",
             "index": 0
           }
         ]
       ]
     },
-    "Check Data Conflicts": {
+    "⚠️ Check Data Conflicts (placeholder)": {
       "main": [
         [
           {
@@ -303,36 +393,36 @@
       "main": [
         [
           {
-            "node": "Sync to System B",
+            "node": "⚠️ Sync to System B (placeholder)",
             "type": "main",
             "index": 0
           }
         ]
       ]
     },
-    "Sync to System B": {
+    "⚠️ Sync to System B (placeholder)": {
       "main": [
         [
           {
-            "node": "Sync to System C",
+            "node": "⚠️ Sync to System C (placeholder)",
             "type": "main",
             "index": 0
           }
         ]
       ]
     },
-    "Sync to System C": {
+    "⚠️ Sync to System C (placeholder)": {
       "main": [
         [
           {
-            "node": "Validate Sync Results",
+            "node": "⚠️ Validate Sync Results (placeholder)",
             "type": "main",
             "index": 0
           }
         ]
       ]
     },
-    "Validate Sync Results": {
+    "⚠️ Validate Sync Results (placeholder)": {
       "main": [
         [
           {

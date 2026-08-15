@@ -45,7 +45,8 @@
       "Week 4 workflows",
       "Previous week workflows",
       "Course example workflows"
-    ]
+    ],
+    "credentials_required": []
   },
   "meta": {
     "templateCredsSetupCompleted": true,
@@ -54,6 +55,21 @@
     "last_updated": "2025-09-07T14:31:13.956057"
   },
   "nodes": [
+    {
+      "id": "sticky-sticky-note",
+      "name": "Sticky Note",
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        80,
+        -160
+      ],
+      "parameters": {
+        "content": "## Conditional Processing Workflow\n\nConditional processing workflow demonstrating IF nodes, switch logic, and dynamic routing based on data conditions. Ideal for Week 3 conditional logic mastery.\n\n**Credentials needed before running:** None — this workflow only uses built-in nodes and/or public test APIs (no login required).\n\n**How to use:** Import into n8n, add the credentials above under *Credentials*, then run manually (or trigger it) to test.",
+        "height": 300,
+        "width": 420
+      }
+    },
     {
       "id": "webhook-trigger-4",
       "name": "Multi-Source Webhook",
@@ -65,7 +81,8 @@
       "parameters": {
         "path": "multi-source",
         "httpMethod": "POST"
-      }
+      },
+      "typeVersion": 2
     },
     {
       "id": "source-detection-4",
@@ -85,7 +102,8 @@
             }
           ]
         }
-      }
+      },
+      "typeVersion": 2
     },
     {
       "id": "form-processing-4",
@@ -120,7 +138,8 @@
             }
           ]
         }
-      }
+      },
+      "typeVersion": 3.4
     },
     {
       "id": "api-processing-4",
@@ -155,7 +174,8 @@
             }
           ]
         }
-      }
+      },
+      "typeVersion": 3.4
     },
     {
       "id": "data-validation-4",
@@ -174,7 +194,8 @@
             }
           ]
         }
-      }
+      },
+      "typeVersion": 2
     },
     {
       "id": "format-output-4",
@@ -197,7 +218,8 @@
             }
           ]
         }
-      }
+      },
+      "typeVersion": 3.4
     },
     {
       "id": "send-notification-4",
@@ -220,7 +242,8 @@
             }
           ]
         }
-      }
+      },
+      "typeVersion": 3.4
     },
     {
       "id": "error-handling-4",
@@ -247,7 +270,8 @@
             }
           ]
         }
-      }
+      },
+      "typeVersion": 3.4
     },
     {
       "id": "error-notification-4",
@@ -270,7 +294,8 @@
             }
           ]
         }
-      }
+      },
+      "typeVersion": 3.4
     }
   ],
   "connections": {

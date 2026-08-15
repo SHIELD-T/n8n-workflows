@@ -45,7 +45,8 @@
       "Week 5 workflows",
       "Previous week workflows",
       "Course example workflows"
-    ]
+    ],
+    "credentials_required": []
   },
   "meta": {
     "templateCredsSetupCompleted": true,
@@ -55,12 +56,33 @@
   },
   "nodes": [
     {
+      "id": "sticky-sticky-note",
+      "name": "Sticky Note",
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        220,
+        40
+      ],
+      "parameters": {
+        "content": "## Advanced Pattern Workflow\n\nAdvanced pattern workflow demonstrating parallel processing, loops, and complex workflow architectures. Perfect for Week 4 advanced workflow patterns mastery.\n\n**Credentials needed before running:** None — this workflow only uses built-in nodes and/or public test APIs (no login required).\n\n**How to use:** Import into n8n, add the credentials above under *Credentials*, then run manually (or trigger it) to test.",
+        "height": 300,
+        "width": 420
+      }
+    },
+    {
       "name": "Advanced Pattern Trigger",
       "type": "n8n-nodes-base.webhook",
       "parameters": {
         "path": "advanced-patterns",
         "httpMethod": "POST"
-      }
+      },
+      "id": "advanced-pattern-trigger",
+      "typeVersion": 2,
+      "position": [
+        240,
+        300
+      ]
     },
     {
       "name": "Initialize Advanced Processing",
@@ -86,7 +108,13 @@
             }
           ]
         }
-      }
+      },
+      "id": "initialize-advanced-processing",
+      "typeVersion": 3.4,
+      "position": [
+        480,
+        300
+      ]
     },
     {
       "name": "Parallel Branch 1",
@@ -101,7 +129,13 @@
             }
           }
         }
-      }
+      },
+      "id": "parallel-branch-1",
+      "typeVersion": 4.2,
+      "position": [
+        720,
+        300
+      ]
     },
     {
       "name": "Parallel Branch 2",
@@ -116,7 +150,13 @@
             }
           }
         }
-      }
+      },
+      "id": "parallel-branch-2",
+      "typeVersion": 4.2,
+      "position": [
+        720,
+        480
+      ]
     },
     {
       "name": "Parallel Branch 3",
@@ -131,7 +171,13 @@
             }
           }
         }
-      }
+      },
+      "id": "parallel-branch-3",
+      "typeVersion": 4.2,
+      "position": [
+        720,
+        660
+      ]
     },
     {
       "name": "Process Branch 1",
@@ -149,7 +195,13 @@
             }
           ]
         }
-      }
+      },
+      "id": "process-branch-1",
+      "typeVersion": 3.4,
+      "position": [
+        960,
+        300
+      ]
     },
     {
       "name": "Process Branch 2",
@@ -167,7 +219,13 @@
             }
           ]
         }
-      }
+      },
+      "id": "process-branch-2",
+      "typeVersion": 3.4,
+      "position": [
+        960,
+        480
+      ]
     },
     {
       "name": "Process Branch 3",
@@ -185,7 +243,13 @@
             }
           ]
         }
-      }
+      },
+      "id": "process-branch-3",
+      "typeVersion": 3.4,
+      "position": [
+        960,
+        660
+      ]
     },
     {
       "name": "Aggregate Results",
@@ -207,7 +271,13 @@
             }
           ]
         }
-      }
+      },
+      "id": "aggregate-results",
+      "typeVersion": 3.4,
+      "position": [
+        1200,
+        300
+      ]
     },
     {
       "name": "Loop Through Results",
@@ -215,7 +285,13 @@
       "parameters": {
         "batchSize": 1,
         "options": {}
-      }
+      },
+      "id": "loop-through-results",
+      "typeVersion": 3,
+      "position": [
+        1920,
+        300
+      ]
     },
     {
       "name": "Process Each Result",
@@ -237,7 +313,13 @@
             }
           ]
         }
-      }
+      },
+      "id": "process-each-result",
+      "typeVersion": 3.4,
+      "position": [
+        1680,
+        300
+      ]
     },
     {
       "name": "Final Processing",
@@ -255,10 +337,155 @@
             }
           ]
         }
-      }
+      },
+      "id": "final-processing",
+      "typeVersion": 3.4,
+      "position": [
+        1680,
+        480
+      ]
     }
   ],
-  "connections": {},
+  "connections": {
+    "Advanced Pattern Trigger": {
+      "main": [
+        [
+          {
+            "node": "Initialize Advanced Processing",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Initialize Advanced Processing": {
+      "main": [
+        [
+          {
+            "node": "Parallel Branch 1",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Parallel Branch 2",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Parallel Branch 3",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Parallel Branch 1": {
+      "main": [
+        [
+          {
+            "node": "Process Branch 1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Parallel Branch 2": {
+      "main": [
+        [
+          {
+            "node": "Process Branch 2",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Parallel Branch 3": {
+      "main": [
+        [
+          {
+            "node": "Process Branch 3",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Process Branch 1": {
+      "main": [
+        [
+          {
+            "node": "Aggregate Results",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Process Branch 2": {
+      "main": [
+        [
+          {
+            "node": "Aggregate Results",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Process Branch 3": {
+      "main": [
+        [
+          {
+            "node": "Aggregate Results",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Aggregate Results": {
+      "main": [
+        [
+          {
+            "node": "Loop Through Results",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Loop Through Results": {
+      "main": [
+        [
+          {
+            "node": "Final Processing",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Process Each Result",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Process Each Result": {
+      "main": [
+        [
+          {
+            "node": "Loop Through Results",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
   "active": false,
   "settings": {},
   "pinData": {},

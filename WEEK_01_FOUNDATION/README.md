@@ -337,14 +337,15 @@ Integrate with industry-specific APIs (e.g., banking APIs for Fintech, health AP
 
 ## ✅ WEEK 1 CHECKLIST
 
-- [ ] Understand automation concepts
-- [ ] Learn n8n interface basics
-- [ ] Set up self-hosted n8n instance
-- [ ] Create first webhook automation
-- [ ] Join course community
-- [ ] Complete daily tasks
-- [ ] Finish week 1 project
-- [ ] Share progress in community
+- [ ] Documented 10 automation opportunities with current/proposed/impact (Day 1)
+- [ ] Built and executed 2 workflows in the n8n canvas: text-to-API and text-to-file (Day 2)
+- [ ] Built and tested Manual, Webhook, and Schedule trigger workflows, confirmed via curl (Day 3)
+- [ ] Deployed n8n on Render with a connected PostgreSQL database and active cron keep-alive (Day 4)
+- [ ] Read at least one failed execution's error detail in Execution History (Day 5)
+- [ ] Sent a real Telegram message end-to-end from a webhook-triggered workflow (Day 6)
+- [ ] Made 3 successful API calls (JSONPlaceholder, OpenWeatherMap, NewsAPI) and reproduced a 401 and a 404 on purpose (Day 7)
+- [ ] Joined the course community and posted at least one update
+- [ ] Completed the Week 1 industry-track project deliverables below
 
 ---
 

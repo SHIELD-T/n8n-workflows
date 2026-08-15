@@ -45,7 +45,8 @@
       "Week 4 workflows",
       "Previous week workflows",
       "Course example workflows"
-    ]
+    ],
+    "credentials_required": []
   },
   "meta": {
     "templateCredsSetupCompleted": true,
@@ -55,12 +56,63 @@
   },
   "nodes": [
     {
+      "id": "sticky-sticky-note",
+      "name": "Sticky Note",
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        220,
+        40
+      ],
+      "parameters": {
+        "content": "## Workflow Cloning System\n\nWorkflow cloning system that duplicates workflows, modifies configurations, and manages workflow versions. Demonstrates Week 3 workflow management skills.\n\n**Credentials needed before running:** None — this workflow only uses built-in nodes and/or public test APIs (no login required).\n\n**How to use:** Import into n8n, add the credentials above under *Credentials*, then run manually (or trigger it) to test.",
+        "height": 300,
+        "width": 420
+      }
+    },
+    {
+      "id": "sticky-sticky-note-1",
+      "name": "Sticky Note 1",
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        940,
+        100
+      ],
+      "parameters": {
+        "content": "## ⚠️ Placeholder endpoint\n\nReplace this URL with a real API before running. This is a stand-in for teaching purposes.",
+        "height": 160,
+        "width": 300
+      }
+    },
+    {
+      "id": "sticky-sticky-note-2",
+      "name": "Sticky Note 2",
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        2140,
+        100
+      ],
+      "parameters": {
+        "content": "## ⚠️ Placeholder endpoint\n\nReplace this URL with a real API before running. This is a stand-in for teaching purposes.",
+        "height": 160,
+        "width": 300
+      }
+    },
+    {
       "name": "Workflow Cloning System",
       "type": "n8n-nodes-base.webhook",
       "parameters": {
         "path": "workflow-cloning",
         "httpMethod": "POST"
-      }
+      },
+      "id": "workflow-cloning-system",
+      "typeVersion": 2,
+      "position": [
+        240,
+        300
+      ]
     },
     {
       "name": "Initialize Cloning Process",
@@ -90,7 +142,13 @@
             }
           ]
         }
-      }
+      },
+      "id": "initialize-cloning-process",
+      "typeVersion": 3.4,
+      "position": [
+        480,
+        300
+      ]
     },
     {
       "name": "Validate Source Workflow",
@@ -104,10 +162,16 @@
             }
           ]
         }
-      }
+      },
+      "id": "validate-source-workflow",
+      "typeVersion": 2,
+      "position": [
+        720,
+        300
+      ]
     },
     {
-      "name": "Fetch Source Workflow",
+      "name": "⚠️ Fetch Source Workflow (placeholder)",
       "type": "n8n-nodes-base.httpRequest",
       "parameters": {
         "method": "GET",
@@ -122,7 +186,13 @@
             }
           }
         }
-      }
+      },
+      "id": "fetch-source-workflow",
+      "typeVersion": 4.2,
+      "position": [
+        960,
+        300
+      ]
     },
     {
       "name": "Process Source Workflow",
@@ -148,7 +218,13 @@
             }
           ]
         }
-      }
+      },
+      "id": "process-source-workflow",
+      "typeVersion": 3.4,
+      "position": [
+        1200,
+        300
+      ]
     },
     {
       "name": "Create Cloned Workflow",
@@ -166,7 +242,13 @@
             }
           ]
         }
-      }
+      },
+      "id": "create-cloned-workflow",
+      "typeVersion": 3.4,
+      "position": [
+        1440,
+        300
+      ]
     },
     {
       "name": "Modify Cloned Workflow",
@@ -184,7 +266,13 @@
             }
           ]
         }
-      }
+      },
+      "id": "modify-cloned-workflow",
+      "typeVersion": 3.4,
+      "position": [
+        1680,
+        300
+      ]
     },
     {
       "name": "Validate Cloned Workflow",
@@ -198,17 +286,29 @@
             }
           ]
         }
-      }
+      },
+      "id": "validate-cloned-workflow",
+      "typeVersion": 2,
+      "position": [
+        1920,
+        300
+      ]
     },
     {
-      "name": "Save Cloned Workflow",
+      "name": "⚠️ Save Cloned Workflow (placeholder)",
       "type": "n8n-nodes-base.httpRequest",
       "parameters": {
         "method": "POST",
         "url": "https://api.workflow-manager.com/workflows",
         "bodyContentType": "json",
         "jsonBody": "={{ { \"workflow\": $json.modified_workflow, \"clone_id\": $json.clone_id, \"timestamp\": $now } }}"
-      }
+      },
+      "id": "save-cloned-workflow",
+      "typeVersion": 4.2,
+      "position": [
+        2160,
+        300
+      ]
     },
     {
       "name": "Create Clone Documentation",
@@ -226,7 +326,13 @@
             }
           ]
         }
-      }
+      },
+      "id": "create-clone-documentation",
+      "typeVersion": 3.4,
+      "position": [
+        2400,
+        300
+      ]
     },
     {
       "name": "Generate Clone Report",
@@ -244,7 +350,13 @@
             }
           ]
         }
-      }
+      },
+      "id": "generate-clone-report",
+      "typeVersion": 3.4,
+      "position": [
+        2640,
+        300
+      ]
     },
     {
       "name": "Handle Validation Error",
@@ -266,7 +378,9 @@
             }
           ]
         }
-      }
+      },
+      "id": "handle-validation-error",
+      "typeVersion": 3.4
     },
     {
       "name": "Handle Clone Validation Error",
@@ -288,10 +402,137 @@
             }
           ]
         }
-      }
+      },
+      "id": "handle-clone-validation-error",
+      "typeVersion": 3.4
     }
   ],
-  "connections": {},
+  "connections": {
+    "Workflow Cloning System": {
+      "main": [
+        [
+          {
+            "node": "Initialize Cloning Process",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Initialize Cloning Process": {
+      "main": [
+        [
+          {
+            "node": "Validate Source Workflow",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Validate Source Workflow": {
+      "main": [
+        [
+          {
+            "node": "⚠️ Fetch Source Workflow (placeholder)",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Handle Validation Error",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "⚠️ Fetch Source Workflow (placeholder)": {
+      "main": [
+        [
+          {
+            "node": "Process Source Workflow",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Process Source Workflow": {
+      "main": [
+        [
+          {
+            "node": "Create Cloned Workflow",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Create Cloned Workflow": {
+      "main": [
+        [
+          {
+            "node": "Modify Cloned Workflow",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Modify Cloned Workflow": {
+      "main": [
+        [
+          {
+            "node": "Validate Cloned Workflow",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Validate Cloned Workflow": {
+      "main": [
+        [
+          {
+            "node": "⚠️ Save Cloned Workflow (placeholder)",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Handle Clone Validation Error",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "⚠️ Save Cloned Workflow (placeholder)": {
+      "main": [
+        [
+          {
+            "node": "Create Clone Documentation",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Create Clone Documentation": {
+      "main": [
+        [
+          {
+            "node": "Generate Clone Report",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
   "active": false,
   "settings": {},
   "pinData": {},

@@ -45,6 +45,14 @@
       "Week 10 workflows",
       "Previous week workflows",
       "Course example workflows"
+    ],
+    "credentials_required": [
+      "Airtable Personal Access Token",
+      "Gmail / Google OAuth2",
+      "Notion API integration (internal integration token)",
+      "OpenAI API key",
+      "Slack OAuth2 / Slack API token",
+      "Telegram Bot API token"
     ]
   },
   "meta": {
@@ -54,6 +62,21 @@
     "last_updated": "2025-09-07T14:31:13.986508"
   },
   "nodes": [
+    {
+      "id": "sticky-sticky-note",
+      "name": "Sticky Note",
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        220,
+        40
+      ],
+      "parameters": {
+        "content": "## Content Management Automation System\n\nAutomated workflow for Real-World Tools phase learning objectives with intelligent processing and error handling.\n\n**Credentials needed before running:**\n- Airtable Personal Access Token\n- Gmail / Google OAuth2\n- Notion API integration (internal integration token)\n- OpenAI API key\n- Slack OAuth2 / Slack API token\n- Telegram Bot API token\n\n**How to use:** Import into n8n, add the credentials above under *Credentials*, then run manually (or trigger it) to test.",
+        "height": 300,
+        "width": 420
+      }
+    },
     {
       "parameters": {
         "path": "content-management",
@@ -65,7 +88,8 @@
       "position": [
         240,
         300
-      ]
+      ],
+      "id": "content-management-webhook"
     },
     {
       "parameters": {
@@ -108,7 +132,8 @@
       "position": [
         460,
         300
-      ]
+      ],
+      "id": "process-content-data"
     },
     {
       "parameters": {
@@ -134,7 +159,8 @@
       "position": [
         680,
         300
-      ]
+      ],
+      "id": "generate-structured-content"
     },
     {
       "parameters": {
@@ -160,7 +186,8 @@
       "position": [
         900,
         300
-      ]
+      ],
+      "id": "store-content-data"
     },
     {
       "parameters": {
@@ -175,7 +202,8 @@
       "position": [
         1120,
         300
-      ]
+      ],
+      "id": "create-notion-page"
     },
     {
       "parameters": {
@@ -190,7 +218,8 @@
       "position": [
         1340,
         300
-      ]
+      ],
+      "id": "send-content-notification"
     },
     {
       "parameters": {
@@ -204,7 +233,8 @@
       "position": [
         1560,
         300
-      ]
+      ],
+      "id": "notify-content-team"
     },
     {
       "parameters": {
@@ -227,7 +257,8 @@
       "position": [
         1780,
         300
-      ]
+      ],
+      "id": "create-review-task"
     },
     {
       "parameters": {
@@ -241,7 +272,8 @@
       "position": [
         2000,
         300
-      ]
+      ],
+      "id": "send-telegram-alert"
     },
     {
       "parameters": {
@@ -263,7 +295,8 @@
       "position": [
         2220,
         300
-      ]
+      ],
+      "id": "update-content-status"
     }
   ],
   "connections": {

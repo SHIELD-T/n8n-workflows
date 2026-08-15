@@ -46,6 +46,10 @@
       "Week 5 workflows",
       "Previous week workflows",
       "Course example workflows"
+    ],
+    "credentials_required": [
+      "Notion API integration (internal integration token)",
+      "Slack OAuth2 / Slack API token"
     ]
   },
   "meta": {
@@ -55,6 +59,21 @@
     "last_updated": "2025-09-07T14:31:15.316374"
   },
   "nodes": [
+    {
+      "id": "sticky-sticky-note",
+      "name": "Sticky Note",
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        220,
+        40
+      ],
+      "parameters": {
+        "content": "## Advanced Workflow Optimization Engine\n\nWorkflow optimization engine that analyzes performance, suggests improvements, and implements optimization strategies. Ideal for Week 4 workflow optimization mastery.\n\n**Credentials needed before running:**\n- Notion API integration (internal integration token)\n- Slack OAuth2 / Slack API token\n\n**How to use:** Import into n8n, add the credentials above under *Credentials*, then run manually (or trigger it) to test.",
+        "height": 300,
+        "width": 420
+      }
+    },
     {
       "parameters": {
         "httpMethod": "POST",
@@ -264,62 +283,62 @@
     }
   ],
   "connections": {
-    "webhook-trigger": {
+    "Workflow Optimization Trigger": {
       "main": [
         [
           {
-            "node": "set-optimization-data",
+            "node": "Set Optimization Data",
             "type": "main",
             "index": 0
           }
         ]
       ]
     },
-    "set-optimization-data": {
+    "Set Optimization Data": {
       "main": [
         [
           {
-            "node": "optimization-impact-check",
+            "node": "Optimization Impact Check",
             "type": "main",
             "index": 0
           }
         ]
       ]
     },
-    "optimization-impact-check": {
+    "Optimization Impact Check": {
       "main": [
         [
           {
-            "node": "create-high-impact-optimization",
+            "node": "Create High Impact Optimization",
             "type": "main",
             "index": 0
           }
         ],
         [
           {
-            "node": "create-optimization-entry",
+            "node": "Create Optimization Entry",
             "type": "main",
             "index": 0
           }
         ]
       ]
     },
-    "create-high-impact-optimization": {
+    "Create High Impact Optimization": {
       "main": [
         [
           {
-            "node": "send-high-impact-alert",
+            "node": "Send High Impact Alert",
             "type": "main",
             "index": 0
           }
         ]
       ]
     },
-    "create-optimization-entry": {
+    "Create Optimization Entry": {
       "main": [
         [
           {
-            "node": "send-optimization-update",
+            "node": "Send Optimization Update",
             "type": "main",
             "index": 0
           }

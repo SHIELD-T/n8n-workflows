@@ -1,319 +1,38 @@
-# 📅 DAY 3: WEDNESDAY - Understanding Triggers
+# DAY 3: Understanding Triggers
+**Week:** 1 — Foundation  |  **Time:** 2-3 hours  |  **Difficulty:** Beginner
 
-## 🎯 TODAY'S OBJECTIVES
-- Learn about different trigger types
-- Understand webhook vs schedule vs manual triggers
-- Practice setting up each trigger type
-- Build workflows with different triggers
+## 🎯 What You'll Learn
+- The four core trigger types: Manual, Webhook, Schedule, and Event-based
+- When to choose each trigger type for a given automation
+- How to configure and test a Webhook trigger with a real HTTP request
+- How Cron-style scheduling works in the Schedule Trigger node
 
-## ⏰ TIME ALLOCATION
-**Total Time:** 2-3 hours
-- **Morning:** 1 hour (Learning)
-- **Afternoon:** 1 hour (Hands-on Practice)
-- **Evening:** 30 minutes (Community & Review)
+## 🎥 Watch First
+- [n8n Quick Start Tutorial: Build Your First Workflow](https://www.youtube.com/watch?v=4cQWJViybAQ) — full 14m47s tutorial. Pay close attention to the section where the webhook Test URL is generated and how "Listen for Test Event" works.
 
----
+## 🛠️ Build It: Step-by-Step
+1. Build **Workflow 1 (Manual):** Manual Trigger → Set node with fields `message` = `"Manual trigger executed!"` and `timestamp` = `{{ $now }}`. Execute and confirm both fields appear in the output.
+2. Build **Workflow 2 (Webhook):** Add a **Webhook** node, set HTTP Method to `POST` and Path to `test-webhook`. Click **Listen for Test Event** to activate the test URL.
+3. Open a terminal (or Postman) and send: `curl -X POST <your-test-url> -H "Content-Type: application/json" -d '{"name":"test"}'`.
+4. Confirm the payload `{"name":"test"}` appears in the Webhook node's output panel, then add a Set node after it that captures `received_data = {{ $json }}` and `processed_at = {{ $now }}`.
+5. Build **Workflow 3 (Schedule):** Add a **Schedule Trigger** node, set the interval to every 5 minutes. Add a Set node with `report_type`, `generated_at = {{ $now }}`, and `status = "Completed"`. Activate the workflow and wait for one execution to appear in Execution History (or temporarily set it to every 1 minute to see it fire faster, then reset).
+6. For the Webhook workflow, test with at least 2 different HTTP methods or payloads (e.g., send a GET to the POST-only webhook and confirm it's rejected) to see how method restrictions behave.
 
-## 🌅 MORNING SESSION (1 hour)
+**Stuck?** Import `WEEK_01_FOUNDATION/EXAMPLES/webhook_processing_workflow.json` to see a complete webhook-based workflow, then compare its validation/response pattern to yours.
 
-### **📹 Video Lesson: "Understanding n8n Triggers"**
-**Duration:** 45 minutes
-**Watch:** [n8n Quick Start Tutorial: Build Your First Workflow](https://www.youtube.com/watch?v=4cQWJViybAQ) - Complete 14m47s tutorial on triggers
+## 🔑 Credentials Needed
+None — Manual, Webhook, and Schedule triggers all work without external service credentials. You'll just need curl or Postman installed locally to send test requests.
 
-#### **What You'll Learn:**
-- Different types of triggers
-- When to use each trigger type
-- Trigger configuration options
-- Best practices for triggers
+## ✅ Definition of Done
+- [ ] Your webhook returns the posted JSON body visibly in the node's output panel when tested with curl/Postman
+- [ ] Your Schedule Trigger workflow is Active and has at least one successful execution logged in Execution History
+- [ ] You can state which trigger type you'd use for: "notify me when a customer submits a form" vs. "run a daily report at 8am" vs. "let me manually re-run this for testing"
+- [ ] All three workflows show green (successful) executions
 
-#### **Key Concepts:**
-- **Manual Trigger:** Starts workflows manually
-- **Webhook Trigger:** Receives HTTP requests
-- **Schedule Trigger:** Runs on time intervals
-- **Event Trigger:** Responds to external events
+## 🐛 Common Pitfalls
+- **Webhook test URL vs. production URL:** The "Test URL" only works while you're actively listening (or the workflow is open in test mode) — you must **Activate** the workflow and use the production URL for it to respond outside the editor.
+- **Wrong HTTP method:** If you configured the webhook for POST but curl defaults to GET, you'll get a 404. Always match `-X POST` in curl to the method set in the node.
+- **Schedule Trigger set too frequently:** A 1-minute interval is fine for testing but reset it to something reasonable (hourly/daily) before moving on — tight intervals can flood execution history and hosting resources.
 
-#### **Take Notes On:**
-- 4 main trigger types and their uses
-- Configuration options for each trigger
-- When to use each trigger type
-
----
-
-### **📖 Reading Assignment**
-**Duration:** 15 minutes
-
-#### **Read: "n8n Triggers Documentation"**
-- Trigger types overview
-- Configuration parameters
-- Best practices
-- Common use cases
-
-#### **Key Takeaways:**
-- Triggers are the starting point of workflows
-- Each trigger has specific configuration options
-- Choose triggers based on your use case
-- Triggers can be combined with conditions
-
----
-
-## 🌞 AFTERNOON SESSION (1 hour)
-
-### **🛠️ Hands-on Practice: "Setting Up Different Triggers"**
-**Duration:** 30 minutes
-
-#### **Task: Create Workflows with Different Triggers**
-
-**Step-by-Step Instructions:**
-
-1. **Manual Trigger Workflow**
-   - Create new workflow
-   - Add Manual Trigger node
-   - Add Set node with sample data
-   - Test execution
-
-2. **Webhook Trigger Workflow**
-   - Create new workflow
-   - Add Webhook node
-   - Configure webhook path
-   - Test with HTTP request
-
-3. **Schedule Trigger Workflow**
-   - Create new workflow
-   - Add Schedule Trigger node
-   - Set to run every 5 minutes
-   - Add Set node with timestamp
-
----
-
-### **🔍 Explore Trigger Configurations**
-**Duration:** 30 minutes
-
-#### **Task: Experiment with Trigger Settings**
-
-**For Each Trigger Type:**
-1. **Manual Trigger**
-   - Test different execution modes
-   - Try with and without input data
-
-2. **Webhook Trigger**
-   - Test different HTTP methods
-   - Try with authentication
-   - Test with different data formats
-
-3. **Schedule Trigger**
-   - Test different time intervals
-   - Try cron expressions
-   - Test with timezone settings
-
----
-
-## 🌙 EVENING SESSION (30 minutes)
-
-### **📸 Share Your Progress**
-**Duration:** 20 minutes
-
-#### **Community Post: "My Trigger Experiments"**
-
-**Share:**
-- Screenshots of your trigger workflows
-- What you learned about each trigger type
-- Any challenges faced
-- Questions for the community
-
-#### **Post Template:**
-```
-Day 3 Complete! 🎉
-
-**What I Built:**
-[Screenshots of trigger workflows]
-
-**What I Learned:**
-- Manual triggers for testing
-- Webhook triggers for external events
-- Schedule triggers for automation
-
-**Challenges:**
-- [Any issues you faced]
-
-**Questions:**
-- [Any questions for the community]
-
-Ready for Day 4! 🚀
-```
-
----
-
-### **📋 Review Tomorrow's Materials**
-**Duration:** 10 minutes
-
-#### **Preview Day 4:**
-- Self-hosting n8n with Docker
-- VPS setup and configuration
-- Domain and SSL setup
-
-#### **Prepare:**
-- Research VPS providers
-- Have domain name ready
-- Review Docker basics
-
----
-
-## 📝 DAILY TASK
-
-### **🎯 Main Task: Create Trigger Workflows**
-
-**Create 3 workflows, each using a different trigger type.**
-
-#### **Workflow 1: Manual Trigger**
-```json
-{
-  "nodes": [
-    {
-      "name": "Manual Trigger",
-      "type": "n8n-nodes-base.manualTrigger",
-      "parameters": {}
-    },
-    {
-      "name": "Set Data",
-      "type": "n8n-nodes-base.set",
-      "parameters": {
-        "assignments": {
-          "assignments": [
-            {
-              "name": "message",
-              "value": "Manual trigger executed!"
-            },
-            {
-              "name": "timestamp",
-              "value": "={{ $now }}"
-            }
-          ]
-        }
-      }
-    }
-  ]
-}
-```
-
-#### **Workflow 2: Webhook Trigger**
-```json
-{
-  "nodes": [
-    {
-      "name": "Webhook",
-      "type": "n8n-nodes-base.webhook",
-      "parameters": {
-        "path": "test-webhook",
-        "httpMethod": "POST"
-      }
-    },
-    {
-      "name": "Process Data",
-      "type": "n8n-nodes-base.set",
-      "parameters": {
-        "assignments": {
-          "assignments": [
-            {
-              "name": "received_data",
-              "value": "={{ $json }}"
-            },
-            {
-              "name": "processed_at",
-              "value": "={{ $now }}"
-            }
-          ]
-        }
-      }
-    }
-  ]
-}
-```
-
-#### **Workflow 3: Schedule Trigger**
-```json
-{
-  "nodes": [
-    {
-      "name": "Schedule Trigger",
-      "type": "n8n-nodes-base.scheduleTrigger",
-      "parameters": {
-        "rule": {
-          "interval": [
-            {
-              "field": "minutes",
-              "minutesInterval": 5
-            }
-          ]
-        }
-      }
-    },
-    {
-      "name": "Generate Report",
-      "type": "n8n-nodes-base.set",
-      "parameters": {
-        "assignments": {
-          "assignments": [
-            {
-              "name": "report_type",
-              "value": "Scheduled Report"
-            },
-            {
-              "name": "generated_at",
-              "value": "={{ $now }}"
-            },
-            {
-              "name": "status",
-              "value": "Completed"
-            }
-          ]
-        }
-      }
-    }
-  ]
-}
-```
-
----
-
-## ✅ DAILY CHECKLIST
-
-- [ ] Watch "Understanding n8n Triggers" video
-- [ ] Read n8n triggers documentation
-- [ ] Create manual trigger workflow
-- [ ] Create webhook trigger workflow
-- [ ] Create schedule trigger workflow
-- [ ] Test all trigger configurations
-- [ ] Share progress in community
-- [ ] Review tomorrow's materials
-- [ ] Complete daily task
-
----
-
-## 🎯 SUCCESS METRICS
-
-**By the end of today, you should:**
-- Understand different trigger types
-- Know when to use each trigger
-- Have built workflows with all trigger types
-- Be comfortable configuring triggers
-- Know trigger best practices
-
----
-
-## 💡 PRO TIPS
-
-1. **Start Simple:** Begin with manual triggers for testing
-2. **Test Webhooks:** Use tools like Postman to test webhooks
-3. **Schedule Carefully:** Don't set schedules too frequent
-4. **Document URLs:** Keep track of webhook URLs
-5. **Use Conditions:** Combine triggers with IF nodes
-
----
-
-## 🚀 TOMORROW PREVIEW
-
-**Day 4:** We'll dive into self-hosting n8n, learn about Docker, and set up your production environment. Get ready to deploy! 🐳
-
----
-
-*Remember: Triggers are the foundation of automation! Master these concepts! 🚀*
+## 🏭 Industry Track Application
+Build a webhook for your chosen industry track — e.g., a payment-received webhook for Fintech, a health-metric-submitted webhook for HealthTech, or a course-progress webhook for EdTech. Send it a realistic sample payload (at least 3 fields) via curl and confirm the data lands correctly in the node output.

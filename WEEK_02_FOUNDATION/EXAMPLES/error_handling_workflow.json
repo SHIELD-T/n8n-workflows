@@ -45,7 +45,8 @@
       "Week 3 workflows",
       "Previous week workflows",
       "Course example workflows"
-    ]
+    ],
+    "credentials_required": []
   },
   "meta": {
     "templateCredsSetupCompleted": true,
@@ -54,6 +55,21 @@
     "last_updated": "2025-09-07T14:31:15.364175"
   },
   "nodes": [
+    {
+      "id": "sticky-sticky-note",
+      "name": "Sticky Note",
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        80,
+        -160
+      ],
+      "parameters": {
+        "content": "## Error Handling Workflow\n\nComprehensive error handling workflow demonstrating retry logic, error notifications, and graceful failure handling. Perfect for Week 2 error handling mastery.\n\n**Credentials needed before running:** None — this workflow only uses built-in nodes and/or public test APIs (no login required).\n\n**How to use:** Import into n8n, add the credentials above under *Credentials*, then run manually (or trigger it) to test.",
+        "height": 300,
+        "width": 420
+      }
+    },
     {
       "id": "webhook-trigger-3",
       "name": "API Error Webhook",
@@ -65,7 +81,8 @@
       "parameters": {
         "path": "api-error",
         "httpMethod": "POST"
-      }
+      },
+      "typeVersion": 2
     },
     {
       "id": "error-analysis-3",
@@ -100,7 +117,8 @@
             }
           ]
         }
-      }
+      },
+      "typeVersion": 3.4
     },
     {
       "id": "severity-check-3",
@@ -120,7 +138,8 @@
             }
           ]
         }
-      }
+      },
+      "typeVersion": 2
     },
     {
       "id": "high-severity-3",
@@ -147,7 +166,8 @@
             }
           ]
         }
-      }
+      },
+      "typeVersion": 3.4
     },
     {
       "id": "medium-severity-3",
@@ -174,7 +194,8 @@
             }
           ]
         }
-      }
+      },
+      "typeVersion": 3.4
     },
     {
       "id": "log-error-3",
@@ -197,7 +218,8 @@
             }
           ]
         }
-      }
+      },
+      "typeVersion": 3.4
     },
     {
       "id": "send-alert-3",
@@ -220,7 +242,8 @@
             }
           ]
         }
-      }
+      },
+      "typeVersion": 3.4
     }
   ],
   "connections": {

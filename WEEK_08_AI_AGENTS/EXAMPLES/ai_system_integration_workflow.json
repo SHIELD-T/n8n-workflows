@@ -47,6 +47,9 @@
       "Week 9 workflows",
       "Previous week workflows",
       "Course example workflows"
+    ],
+    "credentials_required": [
+      "OpenAI API key"
     ]
   },
   "meta": {
@@ -56,6 +59,141 @@
     "last_updated": "2025-09-07T14:31:13.971948"
   },
   "nodes": [
+    {
+      "id": "sticky-sticky-note",
+      "name": "Sticky Note",
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        220,
+        40
+      ],
+      "parameters": {
+        "content": "## AI System Integration Workflow\n\nAutomated workflow for AI Integration phase learning objectives with intelligent processing and error handling.\n\n**Credentials needed before running:**\n- OpenAI API key\n\n**How to use:** Import into n8n, add the credentials above under *Credentials*, then run manually (or trigger it) to test.",
+        "height": 300,
+        "width": 420
+      }
+    },
+    {
+      "id": "sticky-sticky-note-1",
+      "name": "Sticky Note 1",
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        660,
+        100
+      ],
+      "parameters": {
+        "content": "## ⚠️ Placeholder endpoint\n\nReplace this URL with a real API before running. This is a stand-in for teaching purposes.",
+        "height": 160,
+        "width": 300
+      }
+    },
+    {
+      "id": "sticky-sticky-note-2",
+      "name": "Sticky Note 2",
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        880,
+        100
+      ],
+      "parameters": {
+        "content": "## ⚠️ Placeholder endpoint\n\nReplace this URL with a real API before running. This is a stand-in for teaching purposes.",
+        "height": 160,
+        "width": 300
+      }
+    },
+    {
+      "id": "sticky-sticky-note-3",
+      "name": "Sticky Note 3",
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        1100,
+        100
+      ],
+      "parameters": {
+        "content": "## ⚠️ Placeholder endpoint\n\nReplace this URL with a real API before running. This is a stand-in for teaching purposes.",
+        "height": 160,
+        "width": 300
+      }
+    },
+    {
+      "id": "sticky-sticky-note-4",
+      "name": "Sticky Note 4",
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        1320,
+        100
+      ],
+      "parameters": {
+        "content": "## ⚠️ Placeholder endpoint\n\nReplace this URL with a real API before running. This is a stand-in for teaching purposes.",
+        "height": 160,
+        "width": 300
+      }
+    },
+    {
+      "id": "sticky-sticky-note-5",
+      "name": "Sticky Note 5",
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        1540,
+        100
+      ],
+      "parameters": {
+        "content": "## ⚠️ Placeholder endpoint\n\nReplace this URL with a real API before running. This is a stand-in for teaching purposes.",
+        "height": 160,
+        "width": 300
+      }
+    },
+    {
+      "id": "sticky-sticky-note-6",
+      "name": "Sticky Note 6",
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        1980,
+        100
+      ],
+      "parameters": {
+        "content": "## ⚠️ Placeholder endpoint\n\nReplace this URL with a real API before running. This is a stand-in for teaching purposes.",
+        "height": 160,
+        "width": 300
+      }
+    },
+    {
+      "id": "sticky-sticky-note-7",
+      "name": "Sticky Note 7",
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        2420,
+        100
+      ],
+      "parameters": {
+        "content": "## ⚠️ Placeholder endpoint\n\nReplace this URL with a real API before running. This is a stand-in for teaching purposes.",
+        "height": 160,
+        "width": 300
+      }
+    },
+    {
+      "id": "sticky-sticky-note-8",
+      "name": "Sticky Note 8",
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        2640,
+        100
+      ],
+      "parameters": {
+        "content": "## ⚠️ Placeholder endpoint\n\nReplace this URL with a real API before running. This is a stand-in for teaching purposes.",
+        "height": 160,
+        "width": 300
+      }
+    },
     {
       "parameters": {
         "path": "ai-system-integration",
@@ -67,7 +205,8 @@
       "position": [
         240,
         300
-      ]
+      ],
+      "id": "ai-system-integration"
     },
     {
       "parameters": {
@@ -98,7 +237,8 @@
       "position": [
         460,
         300
-      ]
+      ],
+      "id": "initialize-integration-system"
     },
     {
       "parameters": {
@@ -107,13 +247,14 @@
         "bodyContentType": "json",
         "jsonBody": "={{ { \"integration_id\": $json.integration_id, \"integration_type\": $json.integration_type, \"targets\": $json.integration_targets, \"timestamp\": $now } }}"
       },
-      "name": "Integrate AI Services",
+      "name": "⚠️ Integrate AI Services (placeholder)",
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 1,
       "position": [
         680,
         300
-      ]
+      ],
+      "id": "integrate-ai-services"
     },
     {
       "parameters": {
@@ -122,13 +263,14 @@
         "bodyContentType": "json",
         "jsonBody": "={{ { \"integration_id\": $json.integration_id, \"data_sources\": [\"database\", \"api\", \"file\", \"stream\"], \"timestamp\": $now } }}"
       },
-      "name": "Connect Data Sources",
+      "name": "⚠️ Connect Data Sources (placeholder)",
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 1,
       "position": [
         900,
         300
-      ]
+      ],
+      "id": "connect-data-sources"
     },
     {
       "parameters": {
@@ -137,13 +279,14 @@
         "bodyContentType": "json",
         "jsonBody": "={{ { \"integration_id\": $json.integration_id, \"apis\": [\"rest\", \"graphql\", \"webhook\", \"streaming\"], \"timestamp\": $now } }}"
       },
-      "name": "Integrate APIs",
+      "name": "⚠️ Integrate APIs (placeholder)",
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 1,
       "position": [
         1120,
         300
-      ]
+      ],
+      "id": "integrate-apis"
     },
     {
       "parameters": {
@@ -152,13 +295,14 @@
         "bodyContentType": "json",
         "jsonBody": "={{ { \"integration_id\": $json.integration_id, \"workflows\": [\"automation\", \"orchestration\", \"coordination\", \"synchronization\"], \"timestamp\": $now } }}"
       },
-      "name": "Integrate Workflows",
+      "name": "⚠️ Integrate Workflows (placeholder)",
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 1,
       "position": [
         1340,
         300
-      ]
+      ],
+      "id": "integrate-workflows"
     },
     {
       "parameters": {
@@ -176,13 +320,14 @@
           }
         }
       },
-      "name": "Monitor Integration Status",
+      "name": "⚠️ Monitor Integration Status (placeholder)",
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 1,
       "position": [
         1560,
         300
-      ]
+      ],
+      "id": "monitor-integration-status"
     },
     {
       "parameters": {
@@ -212,7 +357,8 @@
       "position": [
         1780,
         300
-      ]
+      ],
+      "id": "ai-integration-analysis"
     },
     {
       "parameters": {
@@ -221,13 +367,14 @@
         "bodyContentType": "json",
         "jsonBody": "={{ { \"integration_id\": $json.integration_id, \"optimization_type\": \"performance\", \"ai_recommendations\": $json.choices[0].message.content, \"timestamp\": $now } }}"
       },
-      "name": "Optimize Integration",
+      "name": "⚠️ Optimize Integration (placeholder)",
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 1,
       "position": [
         2000,
         300
-      ]
+      ],
+      "id": "optimize-integration"
     },
     {
       "parameters": {
@@ -235,7 +382,7 @@
           "assignments": [
             {
               "name": "integration_report",
-              "value": "={{ { \"integration_id\": $json.integration_id, \"integration_type\": $json.integration_type, \"start_time\": $json.start_time, \"integration_targets\": $json.integration_targets, \"integration_status\": { \"ai_services_status\": $json.ai_services_status, \"data_sources_status\": $json.data_sources_status, \"apis_status\": $json.apis_status, \"workflows_status\": $json.workflows_status, \"overall_status\": $json.overall_status }, \"ai_integration_analysis\": $json.choices[0].message.content, \"integration_results\": $json, \"optimization_status\": $('Optimize Integration').item.json.status, \"processing_time\": $now.diff($json.start_time, 'milliseconds'), \"completed_at\": $now } }}"
+              "value": "={{ { \"integration_id\": $json.integration_id, \"integration_type\": $json.integration_type, \"start_time\": $json.start_time, \"integration_targets\": $json.integration_targets, \"integration_status\": { \"ai_services_status\": $json.ai_services_status, \"data_sources_status\": $json.data_sources_status, \"apis_status\": $json.apis_status, \"workflows_status\": $json.workflows_status, \"overall_status\": $json.overall_status }, \"ai_integration_analysis\": $json.choices[0].message.content, \"integration_results\": $json, \"optimization_status\": $('⚠️ Optimize Integration (placeholder)').item.json.status, \"processing_time\": $now.diff($json.start_time, 'milliseconds'), \"completed_at\": $now } }}"
             },
             {
               "name": "success_message",
@@ -250,7 +397,8 @@
       "position": [
         2220,
         300
-      ]
+      ],
+      "id": "generate-integration-report"
     },
     {
       "parameters": {
@@ -259,13 +407,14 @@
         "bodyContentType": "json",
         "jsonBody": "={{ { \"results\": $json.integration_report, \"timestamp\": $now } }}"
       },
-      "name": "Send Integration Results",
+      "name": "⚠️ Send Integration Results (placeholder)",
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 1,
       "position": [
         2440,
         300
-      ]
+      ],
+      "id": "send-integration-results"
     },
     {
       "parameters": {
@@ -274,13 +423,14 @@
         "bodyContentType": "json",
         "jsonBody": "={{ { \"type\": \"ai_system_integration\", \"data\": $json.integration_report, \"timestamp\": $now } }}"
       },
-      "name": "Log Integration Activity",
+      "name": "⚠️ Log Integration Activity (placeholder)",
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 1,
       "position": [
         2660,
         300
-      ]
+      ],
+      "id": "log-integration-activity"
     },
     {
       "parameters": {
@@ -303,7 +453,8 @@
       "position": [
         500,
         500
-      ]
+      ],
+      "id": "handle-integration-error"
     }
   ],
   "connections": {
@@ -322,58 +473,58 @@
       "main": [
         [
           {
-            "node": "Integrate AI Services",
+            "node": "⚠️ Integrate AI Services (placeholder)",
             "type": "main",
             "index": 0
           }
         ]
       ]
     },
-    "Integrate AI Services": {
+    "⚠️ Integrate AI Services (placeholder)": {
       "main": [
         [
           {
-            "node": "Connect Data Sources",
+            "node": "⚠️ Connect Data Sources (placeholder)",
             "type": "main",
             "index": 0
           }
         ]
       ]
     },
-    "Connect Data Sources": {
+    "⚠️ Connect Data Sources (placeholder)": {
       "main": [
         [
           {
-            "node": "Integrate APIs",
+            "node": "⚠️ Integrate APIs (placeholder)",
             "type": "main",
             "index": 0
           }
         ]
       ]
     },
-    "Integrate APIs": {
+    "⚠️ Integrate APIs (placeholder)": {
       "main": [
         [
           {
-            "node": "Integrate Workflows",
+            "node": "⚠️ Integrate Workflows (placeholder)",
             "type": "main",
             "index": 0
           }
         ]
       ]
     },
-    "Integrate Workflows": {
+    "⚠️ Integrate Workflows (placeholder)": {
       "main": [
         [
           {
-            "node": "Monitor Integration Status",
+            "node": "⚠️ Monitor Integration Status (placeholder)",
             "type": "main",
             "index": 0
           }
         ]
       ]
     },
-    "Monitor Integration Status": {
+    "⚠️ Monitor Integration Status (placeholder)": {
       "main": [
         [
           {
@@ -388,14 +539,14 @@
       "main": [
         [
           {
-            "node": "Optimize Integration",
+            "node": "⚠️ Optimize Integration (placeholder)",
             "type": "main",
             "index": 0
           }
         ]
       ]
     },
-    "Optimize Integration": {
+    "⚠️ Optimize Integration (placeholder)": {
       "main": [
         [
           {
@@ -410,18 +561,18 @@
       "main": [
         [
           {
-            "node": "Send Integration Results",
+            "node": "⚠️ Send Integration Results (placeholder)",
             "type": "main",
             "index": 0
           }
         ]
       ]
     },
-    "Send Integration Results": {
+    "⚠️ Send Integration Results (placeholder)": {
       "main": [
         [
           {
-            "node": "Log Integration Activity",
+            "node": "⚠️ Log Integration Activity (placeholder)",
             "type": "main",
             "index": 0
           }

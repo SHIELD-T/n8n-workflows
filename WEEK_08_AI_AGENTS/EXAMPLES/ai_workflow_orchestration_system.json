@@ -47,6 +47,9 @@
       "Week 9 workflows",
       "Previous week workflows",
       "Course example workflows"
+    ],
+    "credentials_required": [
+      "OpenAI API key"
     ]
   },
   "meta": {
@@ -56,6 +59,141 @@
     "last_updated": "2025-09-07T14:31:13.966776"
   },
   "nodes": [
+    {
+      "id": "sticky-sticky-note",
+      "name": "Sticky Note",
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        220,
+        40
+      ],
+      "parameters": {
+        "content": "## AI Workflow Orchestration System\n\nAutomated workflow for AI Integration phase learning objectives with intelligent processing and error handling.\n\n**Credentials needed before running:**\n- OpenAI API key\n\n**How to use:** Import into n8n, add the credentials above under *Credentials*, then run manually (or trigger it) to test.",
+        "height": 300,
+        "width": 420
+      }
+    },
+    {
+      "id": "sticky-sticky-note-1",
+      "name": "Sticky Note 1",
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        660,
+        100
+      ],
+      "parameters": {
+        "content": "## ⚠️ Placeholder endpoint\n\nReplace this URL with a real API before running. This is a stand-in for teaching purposes.",
+        "height": 160,
+        "width": 300
+      }
+    },
+    {
+      "id": "sticky-sticky-note-2",
+      "name": "Sticky Note 2",
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        880,
+        100
+      ],
+      "parameters": {
+        "content": "## ⚠️ Placeholder endpoint\n\nReplace this URL with a real API before running. This is a stand-in for teaching purposes.",
+        "height": 160,
+        "width": 300
+      }
+    },
+    {
+      "id": "sticky-sticky-note-3",
+      "name": "Sticky Note 3",
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        1100,
+        100
+      ],
+      "parameters": {
+        "content": "## ⚠️ Placeholder endpoint\n\nReplace this URL with a real API before running. This is a stand-in for teaching purposes.",
+        "height": 160,
+        "width": 300
+      }
+    },
+    {
+      "id": "sticky-sticky-note-4",
+      "name": "Sticky Note 4",
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        1320,
+        100
+      ],
+      "parameters": {
+        "content": "## ⚠️ Placeholder endpoint\n\nReplace this URL with a real API before running. This is a stand-in for teaching purposes.",
+        "height": 160,
+        "width": 300
+      }
+    },
+    {
+      "id": "sticky-sticky-note-5",
+      "name": "Sticky Note 5",
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        1540,
+        100
+      ],
+      "parameters": {
+        "content": "## ⚠️ Placeholder endpoint\n\nReplace this URL with a real API before running. This is a stand-in for teaching purposes.",
+        "height": 160,
+        "width": 300
+      }
+    },
+    {
+      "id": "sticky-sticky-note-6",
+      "name": "Sticky Note 6",
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        1980,
+        100
+      ],
+      "parameters": {
+        "content": "## ⚠️ Placeholder endpoint\n\nReplace this URL with a real API before running. This is a stand-in for teaching purposes.",
+        "height": 160,
+        "width": 300
+      }
+    },
+    {
+      "id": "sticky-sticky-note-7",
+      "name": "Sticky Note 7",
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        2420,
+        100
+      ],
+      "parameters": {
+        "content": "## ⚠️ Placeholder endpoint\n\nReplace this URL with a real API before running. This is a stand-in for teaching purposes.",
+        "height": 160,
+        "width": 300
+      }
+    },
+    {
+      "id": "sticky-sticky-note-8",
+      "name": "Sticky Note 8",
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        2640,
+        100
+      ],
+      "parameters": {
+        "content": "## ⚠️ Placeholder endpoint\n\nReplace this URL with a real API before running. This is a stand-in for teaching purposes.",
+        "height": 160,
+        "width": 300
+      }
+    },
     {
       "parameters": {
         "path": "ai-workflow-orchestration",
@@ -67,7 +205,8 @@
       "position": [
         240,
         300
-      ]
+      ],
+      "id": "ai-workflow-orchestration"
     },
     {
       "parameters": {
@@ -98,7 +237,8 @@
       "position": [
         460,
         300
-      ]
+      ],
+      "id": "initialize-orchestration-system"
     },
     {
       "parameters": {
@@ -107,13 +247,14 @@
         "bodyContentType": "json",
         "jsonBody": "={{ { \"orchestration_id\": $json.orchestration_id, \"orchestration_type\": $json.orchestration_type, \"targets\": $json.orchestration_targets, \"timestamp\": $now } }}"
       },
-      "name": "Orchestrate Workflows",
+      "name": "⚠️ Orchestrate Workflows (placeholder)",
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 1,
       "position": [
         680,
         300
-      ]
+      ],
+      "id": "orchestrate-workflows"
     },
     {
       "parameters": {
@@ -122,13 +263,14 @@
         "bodyContentType": "json",
         "jsonBody": "={{ { \"orchestration_id\": $json.orchestration_id, \"processes\": [\"data_processing\", \"ai_analysis\", \"decision_making\", \"output_generation\"], \"timestamp\": $now } }}"
       },
-      "name": "Coordinate Processes",
+      "name": "⚠️ Coordinate Processes (placeholder)",
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 1,
       "position": [
         900,
         300
-      ]
+      ],
+      "id": "coordinate-processes"
     },
     {
       "parameters": {
@@ -137,13 +279,14 @@
         "bodyContentType": "json",
         "jsonBody": "={{ { \"orchestration_id\": $json.orchestration_id, \"tasks\": [\"priority_based\", \"dependency_based\", \"resource_based\", \"deadline_based\"], \"timestamp\": $now } }}"
       },
-      "name": "Schedule Tasks",
+      "name": "⚠️ Schedule Tasks (placeholder)",
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 1,
       "position": [
         1120,
         300
-      ]
+      ],
+      "id": "schedule-tasks"
     },
     {
       "parameters": {
@@ -152,13 +295,14 @@
         "bodyContentType": "json",
         "jsonBody": "={{ { \"orchestration_id\": $json.orchestration_id, \"resources\": [\"cpu\", \"memory\", \"storage\", \"network\"], \"timestamp\": $now } }}"
       },
-      "name": "Allocate Resources",
+      "name": "⚠️ Allocate Resources (placeholder)",
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 1,
       "position": [
         1340,
         300
-      ]
+      ],
+      "id": "allocate-resources"
     },
     {
       "parameters": {
@@ -176,13 +320,14 @@
           }
         }
       },
-      "name": "Monitor Orchestration Status",
+      "name": "⚠️ Monitor Orchestration Status (placeholder)",
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 1,
       "position": [
         1560,
         300
-      ]
+      ],
+      "id": "monitor-orchestration-status"
     },
     {
       "parameters": {
@@ -212,7 +357,8 @@
       "position": [
         1780,
         300
-      ]
+      ],
+      "id": "ai-orchestration-analysis"
     },
     {
       "parameters": {
@@ -221,13 +367,14 @@
         "bodyContentType": "json",
         "jsonBody": "={{ { \"orchestration_id\": $json.orchestration_id, \"optimization_type\": \"efficiency\", \"ai_recommendations\": $json.choices[0].message.content, \"timestamp\": $now } }}"
       },
-      "name": "Optimize Orchestration",
+      "name": "⚠️ Optimize Orchestration (placeholder)",
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 1,
       "position": [
         2000,
         300
-      ]
+      ],
+      "id": "optimize-orchestration"
     },
     {
       "parameters": {
@@ -235,7 +382,7 @@
           "assignments": [
             {
               "name": "orchestration_report",
-              "value": "={{ { \"orchestration_id\": $json.orchestration_id, \"orchestration_type\": $json.orchestration_type, \"start_time\": $json.start_time, \"orchestration_targets\": $json.orchestration_targets, \"orchestration_status\": { \"workflows_status\": $json.workflows_status, \"processes_status\": $json.processes_status, \"tasks_status\": $json.tasks_status, \"resources_status\": $json.resources_status, \"overall_status\": $json.overall_status }, \"ai_orchestration_analysis\": $json.choices[0].message.content, \"orchestration_results\": $json, \"optimization_status\": $('Optimize Orchestration').item.json.status, \"processing_time\": $now.diff($json.start_time, 'milliseconds'), \"completed_at\": $now } }}"
+              "value": "={{ { \"orchestration_id\": $json.orchestration_id, \"orchestration_type\": $json.orchestration_type, \"start_time\": $json.start_time, \"orchestration_targets\": $json.orchestration_targets, \"orchestration_status\": { \"workflows_status\": $json.workflows_status, \"processes_status\": $json.processes_status, \"tasks_status\": $json.tasks_status, \"resources_status\": $json.resources_status, \"overall_status\": $json.overall_status }, \"ai_orchestration_analysis\": $json.choices[0].message.content, \"orchestration_results\": $json, \"optimization_status\": $('⚠️ Optimize Orchestration (placeholder)').item.json.status, \"processing_time\": $now.diff($json.start_time, 'milliseconds'), \"completed_at\": $now } }}"
             },
             {
               "name": "success_message",
@@ -250,7 +397,8 @@
       "position": [
         2220,
         300
-      ]
+      ],
+      "id": "generate-orchestration-report"
     },
     {
       "parameters": {
@@ -259,13 +407,14 @@
         "bodyContentType": "json",
         "jsonBody": "={{ { \"results\": $json.orchestration_report, \"timestamp\": $now } }}"
       },
-      "name": "Send Orchestration Results",
+      "name": "⚠️ Send Orchestration Results (placeholder)",
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 1,
       "position": [
         2440,
         300
-      ]
+      ],
+      "id": "send-orchestration-results"
     },
     {
       "parameters": {
@@ -274,13 +423,14 @@
         "bodyContentType": "json",
         "jsonBody": "={{ { \"type\": \"ai_workflow_orchestration\", \"data\": $json.orchestration_report, \"timestamp\": $now } }}"
       },
-      "name": "Log Orchestration Activity",
+      "name": "⚠️ Log Orchestration Activity (placeholder)",
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 1,
       "position": [
         2660,
         300
-      ]
+      ],
+      "id": "log-orchestration-activity"
     },
     {
       "parameters": {
@@ -303,7 +453,8 @@
       "position": [
         500,
         500
-      ]
+      ],
+      "id": "handle-orchestration-error"
     }
   ],
   "connections": {
@@ -322,58 +473,58 @@
       "main": [
         [
           {
-            "node": "Orchestrate Workflows",
+            "node": "⚠️ Orchestrate Workflows (placeholder)",
             "type": "main",
             "index": 0
           }
         ]
       ]
     },
-    "Orchestrate Workflows": {
+    "⚠️ Orchestrate Workflows (placeholder)": {
       "main": [
         [
           {
-            "node": "Coordinate Processes",
+            "node": "⚠️ Coordinate Processes (placeholder)",
             "type": "main",
             "index": 0
           }
         ]
       ]
     },
-    "Coordinate Processes": {
+    "⚠️ Coordinate Processes (placeholder)": {
       "main": [
         [
           {
-            "node": "Schedule Tasks",
+            "node": "⚠️ Schedule Tasks (placeholder)",
             "type": "main",
             "index": 0
           }
         ]
       ]
     },
-    "Schedule Tasks": {
+    "⚠️ Schedule Tasks (placeholder)": {
       "main": [
         [
           {
-            "node": "Allocate Resources",
+            "node": "⚠️ Allocate Resources (placeholder)",
             "type": "main",
             "index": 0
           }
         ]
       ]
     },
-    "Allocate Resources": {
+    "⚠️ Allocate Resources (placeholder)": {
       "main": [
         [
           {
-            "node": "Monitor Orchestration Status",
+            "node": "⚠️ Monitor Orchestration Status (placeholder)",
             "type": "main",
             "index": 0
           }
         ]
       ]
     },
-    "Monitor Orchestration Status": {
+    "⚠️ Monitor Orchestration Status (placeholder)": {
       "main": [
         [
           {
@@ -388,14 +539,14 @@
       "main": [
         [
           {
-            "node": "Optimize Orchestration",
+            "node": "⚠️ Optimize Orchestration (placeholder)",
             "type": "main",
             "index": 0
           }
         ]
       ]
     },
-    "Optimize Orchestration": {
+    "⚠️ Optimize Orchestration (placeholder)": {
       "main": [
         [
           {
@@ -410,18 +561,18 @@
       "main": [
         [
           {
-            "node": "Send Orchestration Results",
+            "node": "⚠️ Send Orchestration Results (placeholder)",
             "type": "main",
             "index": 0
           }
         ]
       ]
     },
-    "Send Orchestration Results": {
+    "⚠️ Send Orchestration Results (placeholder)": {
       "main": [
         [
           {
-            "node": "Log Orchestration Activity",
+            "node": "⚠️ Log Orchestration Activity (placeholder)",
             "type": "main",
             "index": 0
           }

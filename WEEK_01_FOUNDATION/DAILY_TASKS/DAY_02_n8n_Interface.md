@@ -1,255 +1,39 @@
-# 📅 DAY 2: TUESDAY - Intro to n8n Core Concepts
-
-## 🎯 TODAY'S OBJECTIVES
-- Learn the n8n interface and navigation
-- Understand core concepts (nodes, triggers, execution)
-- Practice building your first workflow
-- Get comfortable with the n8n canvas
-
-## ⏰ TIME ALLOCATION
-**Total Time:** 2-3 hours
-- **Morning:** 1 hour (Learning)
-- **Afternoon:** 1 hour (Hands-on Practice)
-- **Evening:** 30 minutes (Community & Review)
-
----
-
-## 🌅 MORNING SESSION (1 hour)
-
-### **📹 Video Lesson: "n8n Interface Walkthrough"**
-**Duration:** 45 minutes
-**Watch:** [Deep Dive: n8n Interface Walkthrough (2025)](https://www.youtube.com/watch?v=J2O4BlTulRg) - First 15 minutes on n8n interface and navigation
-
-#### **What You'll Learn:**
-- n8n interface overview
-- Workflow canvas navigation
-- Node library exploration
-- Basic workflow creation
-
-#### **Key Concepts:**
-- **Workflow Canvas:** Main area for building workflows
-- **Node Library:** Available nodes and their functions
-- **Execution History:** Track workflow runs
-- **Credentials:** Secure storage for API keys
-
-#### **Take Notes On:**
-- 5 essential n8n interface elements
-- 3 types of nodes you'll use most
-- How to navigate the workflow canvas
-
----
-
-### **📖 Reading Assignment**
-**Duration:** 15 minutes
-
-#### **Read: "n8n Core Concepts Documentation"**
-- Nodes and their purposes
-- Triggers vs. actions
-- Data flow between nodes
-- Execution modes
-
-#### **Key Takeaways:**
-- Nodes are the building blocks of workflows
-- Triggers start workflows, actions perform tasks
-- Data flows from left to right
-- Each execution creates a new run
-
----
-
-## 🌞 AFTERNOON SESSION (1 hour)
-
-### **🛠️ Hands-on Practice: "Your First Workflow"**
-**Duration:** 30 minutes
-
-#### **Task: Create a Simple Manual Workflow**
-
-**Step-by-Step Instructions:**
-
-1. **Open n8n Interface**
-   - Navigate to your n8n instance
-   - Click "New Workflow"
-
-2. **Add Manual Trigger**
-   - Drag "Manual Trigger" from node library
-   - This starts your workflow manually
-
-3. **Add Set Node**
-   - Drag "Set" node from node library
-   - Connect it to the Manual Trigger
-
-4. **Configure Set Node**
-   - Click on the Set node
-   - Add a field: `message` = `"Hello from n8n!"`
-   - Save the node
-
-5. **Add HTTP Request Node**
-   - Drag "HTTP Request" node
-   - Connect it to the Set node
-   - Configure: Method = POST, URL = `https://httpbin.org/post`
-   - Body = `{{ $json.message }}`
-
-6. **Execute Workflow**
-   - Click "Execute Workflow"
-   - Watch the data flow through nodes
-
----
-
-### **🔍 Explore Node Library**
-**Duration:** 30 minutes
-
-#### **Task: Familiarize Yourself with Common Nodes**
-
-**Nodes to Explore:**
-1. **Manual Trigger** - Starts workflows manually
-2. **Webhook** - Receives HTTP requests
-3. **HTTP Request** - Makes API calls
-4. **Set** - Manipulates data
-5. **IF** - Conditional logic
-6. **Code** - Custom JavaScript
-7. **Email** - Sends emails
-8. **Slack** - Slack integration
-9. **Google Sheets** - Spreadsheet operations
-10. **Telegram** - Telegram bot
-
-#### **For Each Node, Note:**
-- What it does
-- When you'd use it
-- Required parameters
-- Example use cases
-
----
-
-## 🌙 EVENING SESSION (30 minutes)
-
-### **📸 Share Your Progress**
-**Duration:** 20 minutes
-
-#### **Community Post: "My First n8n Workflow"**
-
-**Share:**
-- Screenshot of your workflow
-- What you learned
-- Any challenges faced
-- Questions for the community
-
-#### **Post Template:**
-```
-Day 2 Complete! 🎉
-
-**What I Built:**
-[Screenshot of workflow]
-
-**What I Learned:**
-- How to add and connect nodes
-- Basic data flow concepts
-- HTTP Request node usage
-
-**Challenges:**
-- [Any issues you faced]
-
-**Questions:**
-- [Any questions for the community]
-
-Looking forward to Day 3! 🚀
-```
-
----
-
-### **📋 Review Tomorrow's Materials**
-**Duration:** 10 minutes
-
-#### **Preview Day 3:**
-- Understanding different trigger types
-- Webhook setup and testing
-- API integration basics
-
-#### **Prepare:**
-- Review HTTP basics
-- Have Postman ready (if available)
-- Clear your workspace
-
----
-
-## 📝 DAILY TASK
-
-### **🎯 Main Task: Build a Simple Workflow**
-
-**Create a workflow that takes text input and outputs it to a file.**
-
-#### **Step-by-Step Instructions:**
-
-1. **Create New Workflow**
-   - Open n8n
-   - Click "New Workflow"
-
-2. **Add Manual Trigger**
-   - Drag "Manual Trigger" from library
-   - This will start your workflow
-
-3. **Add Set Node**
-   - Drag "Set" node
-   - Connect to Manual Trigger
-   - Configure:
-     - Field: `text`
-     - Value: `"This is my first n8n workflow!"`
-
-4. **Add Write Binary File Node**
-   - Drag "Write Binary File" node
-   - Connect to Set node
-   - Configure:
-     - File Name: `output.txt`
-     - Data: `{{ $json.text }}`
-
-5. **Execute and Test**
-   - Click "Execute Workflow"
-   - Check if file was created
-   - Verify file contents
-
-#### **Expected Result:**
-- Workflow executes successfully
-- File named `output.txt` is created
-- File contains your text message
-
----
-
-## ✅ DAILY CHECKLIST
-
-- [ ] Watch "n8n Interface Walkthrough" video
-- [ ] Read n8n core concepts documentation
-- [ ] Create first manual workflow
-- [ ] Explore node library
-- [ ] Build text-to-file workflow
-- [ ] Share progress in community
-- [ ] Review tomorrow's materials
-- [ ] Complete daily task
-
----
-
-## 🎯 SUCCESS METRICS
-
-**By the end of today, you should:**
-- Understand the n8n interface
-- Know core concepts (nodes, triggers, execution)
-- Have built your first workflow
-- Be comfortable navigating the canvas
-- Know common node types and their uses
-
----
-
-## 💡 PRO TIPS
-
-1. **Practice Regularly:** Build workflows daily to reinforce learning
-2. **Explore Nodes:** Don't be afraid to try different nodes
-3. **Use Documentation:** n8n docs are your best friend
-4. **Take Screenshots:** Document your learning journey
-5. **Ask Questions:** Community is there to help
-
----
-
-## 🚀 TOMORROW PREVIEW
-
-**Day 3:** We'll dive into triggers, learn about webhooks, and start building more dynamic workflows. Get ready to make your workflows respond to external events! 🔗
-
----
-
-*Remember: Every expert was once a beginner. You're building the foundation for automation mastery! 🛠️*
+# DAY 2: Intro to n8n Core Concepts
+**Week:** 1 — Foundation  |  **Time:** 2-3 hours  |  **Difficulty:** Beginner
+
+## 🎯 What You'll Learn
+- The n8n interface: canvas, node library, execution history, credentials
+- Core vocabulary: nodes, triggers, actions, data flow between nodes
+- How to add, configure, and connect nodes on the canvas
+- The 10 most common node types and when to reach for each
+
+## 🎥 Watch First
+- [Master n8n in 2 Hours: Complete Beginner's Guide for 2025](https://www.youtube.com/watch?v=AURnISajubk) — first 15 minutes cover the interface and navigation. Watch for where the node library, execution log, and credentials menu live — you'll use all three today.
+
+## 🛠️ Build It: Step-by-Step
+1. Open your n8n instance and click **New Workflow**.
+2. Click the **+** button (or drag from the node panel) to add a **Manual Trigger** node — this becomes your workflow's starting point.
+3. Add a **Set** node (search "Edit Fields (Set)" in the node panel) and connect it to the Manual Trigger by dragging from the trigger's output dot to the Set node's input dot.
+4. Open the Set node and add a field named `message` with the value `Hello from n8n!` (use "Add Field" → String).
+5. Add an **HTTP Request** node after the Set node. Configure: Method = `POST`, URL = `https://httpbin.org/post`, Body Content Type = JSON, and in the body use the expression `{{ $json.message }}`.
+6. Click **Execute Workflow**. Click each node in turn and check its **Output** panel (Table/JSON view) to confirm the message flowed through correctly and httpbin echoed it back.
+7. Now build a second, separate workflow: Manual Trigger → Set node (field `text` = `"This is my first n8n workflow!"`) → **Write Binary File** / **Read/Write Files from Disk** node (File Name: `output.txt`, Data: `{{ $json.text }}`). Execute it and confirm the file was written.
+
+**Stuck?** Import `WEEK_01_FOUNDATION/EXAMPLES/example_workflow_1.json` (Menu → Import from File in n8n) to see a working baseline, then compare its node structure to what you built.
+
+## 🔑 Credentials Needed
+None — Manual Trigger, Set, HTTP Request (to a public test endpoint), and file nodes don't require API credentials today.
+
+## ✅ Definition of Done
+- [ ] Your first workflow executes with a green checkmark on every node and the HTTP Request node's output shows your message echoed back from httpbin.org
+- [ ] Your second workflow creates `output.txt` and you've opened it to confirm it contains your exact text
+- [ ] You can explain, in one sentence each, what a Manual Trigger, a Set node, and an HTTP Request node do
+- [ ] You've opened Execution History and located the run for at least one of today's workflows
+
+## 🐛 Common Pitfalls
+- **Nodes not connecting:** Drag precisely from the small dot on the node's right edge to the dot on the next node's left edge — dropping it on the node body itself won't create a connection.
+- **Expression not resolving:** Forgetting the `=` prefix or `{{ }}` wrapper in a field means n8n treats it as literal text instead of an expression — the field turns red/shows an error if the syntax is malformed.
+- **"Execute Workflow" only runs to the last node clicked:** If you added new nodes after testing, click Execute Workflow again from scratch (not just the last node) to re-run the full chain.
+
+## 🏭 Industry Track Application
+Rebuild the text-to-file workflow using data relevant to your industry track — e.g., a Fintech expense line item, a HealthTech patient note, or an EdTech course-progress entry. Swap the `Set` node's fields for 3-4 industry-relevant fields (e.g., `amount`, `category`, `date` for Fintech) and confirm they all appear correctly in the output file.

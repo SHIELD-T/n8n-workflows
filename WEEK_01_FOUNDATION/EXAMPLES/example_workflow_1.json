@@ -45,7 +45,8 @@
       "Week 2 workflows",
       "Previous week workflows",
       "Course example workflows"
-    ]
+    ],
+    "credentials_required": []
   },
   "meta": {
     "templateCredsSetupCompleted": true,
@@ -55,6 +56,21 @@
   },
   "nodes": [
     {
+      "id": "sticky-sticky-note",
+      "name": "Sticky Note",
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        80,
+        -160
+      ],
+      "parameters": {
+        "content": "## Example Workflow 1\n\nSimple text processing workflow demonstrating basic n8n concepts: manual trigger, data manipulation, and HTTP requests. Perfect for Week 1 foundation learning.\n\n**Credentials needed before running:** None — this workflow only uses built-in nodes and/or public test APIs (no login required).\n\n**How to use:** Import into n8n, add the credentials above under *Credentials*, then run manually (or trigger it) to test.",
+        "height": 300,
+        "width": 420
+      }
+    },
+    {
       "id": "manual-trigger-1",
       "name": "Manual Trigger",
       "type": "n8n-nodes-base.manualTrigger",
@@ -62,7 +78,8 @@
         100,
         100
       ],
-      "parameters": {}
+      "parameters": {},
+      "typeVersion": 1
     },
     {
       "id": "set-node-1",
@@ -85,7 +102,8 @@
             }
           ]
         }
-      }
+      },
+      "typeVersion": 3.4
     },
     {
       "id": "http-request-1",
@@ -101,7 +119,8 @@
         "sendBody": true,
         "bodyContentType": "json",
         "jsonBody": "{\n  \"message\": \"{{ $json.message }}\",\n  \"timestamp\": \"{{ $json.timestamp }}\",\n  \"workflow\": \"First n8n Workflow\"\n}"
-      }
+      },
+      "typeVersion": 4.2
     }
   ],
   "connections": {
