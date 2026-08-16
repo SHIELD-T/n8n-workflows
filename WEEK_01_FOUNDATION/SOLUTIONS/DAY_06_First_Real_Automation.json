@@ -1,0 +1,176 @@
+{
+  "name": "Day 06 Solution: Your First Real Automation",
+  "description": "Webhook (Google Form stand-in) -> normalize fields with fallbacks -> format message -> Telegram notification.",
+  "tags": [
+    "week-01",
+    "day-06",
+    "solution"
+  ],
+  "version": "1.0.0",
+  "nodes": [
+    {
+      "id": "sticky1",
+      "name": "Sticky Note",
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        40,
+        -260
+      ],
+      "parameters": {
+        "content": "## Day 06 Solution: Your First Real Automation\n\nWebhook (simulating a Google Form submission) -> normalize fields with fallbacks -> format Telegram message -> send via Telegram node. Credentials needed: Telegram Bot API token (via @BotFather) to actually deliver the message; the rest of the logic can be tested without it.\n\nSee DAILY_TASKS/DAY_06_First_Real_Automation.md.",
+        "height": 260,
+        "width": 480
+      }
+    },
+    {
+      "id": "webhook1",
+      "name": "Google Form Submission",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2,
+      "position": [
+        80,
+        140
+      ],
+      "parameters": {
+        "path": "google-form-submission",
+        "httpMethod": "POST"
+      }
+    },
+    {
+      "id": "set1",
+      "name": "Normalize Submission",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        320,
+        140
+      ],
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "name": "name",
+              "value": "={{ $json.name || 'Anonymous' }}"
+            },
+            {
+              "name": "email",
+              "value": "={{ $json.email || 'No email provided' }}"
+            },
+            {
+              "name": "message",
+              "value": "={{ $json.message || 'No message provided' }}"
+            },
+            {
+              "name": "submitted_at",
+              "value": "={{ $now }}"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "set2",
+      "name": "Format Telegram Message",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        560,
+        140
+      ],
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "name": "telegram_message",
+              "value": "=*Name:* {{ $json.name }}\\n*Email:* {{ $json.email }}\\n*Message:* {{ $json.message }}\\n*Submitted:* {{ $json.submitted_at }}"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "tg1",
+      "name": "Send Telegram Notification",
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1.2,
+      "position": [
+        800,
+        140
+      ],
+      "parameters": {
+        "operation": "sendMessage",
+        "chatId": "your_chat_id",
+        "text": "={{ $json.telegram_message }}",
+        "additionalFields": {
+          "parse_mode": "Markdown"
+        }
+      }
+    },
+    {
+      "id": "resp1",
+      "name": "Respond Success",
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.1,
+      "position": [
+        1040,
+        140
+      ],
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "={{ { \"status\": \"success\", \"name\": $json.name } }}"
+      }
+    }
+  ],
+  "connections": {
+    "Google Form Submission": {
+      "main": [
+        [
+          {
+            "node": "Normalize Submission",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Normalize Submission": {
+      "main": [
+        [
+          {
+            "node": "Format Telegram Message",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Format Telegram Message": {
+      "main": [
+        [
+          {
+            "node": "Send Telegram Notification",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Send Telegram Notification": {
+      "main": [
+        [
+          {
+            "node": "Respond Success",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {},
+  "pinData": {},
+  "versionId": "1",
+  "id": "day_06_solution"
+}

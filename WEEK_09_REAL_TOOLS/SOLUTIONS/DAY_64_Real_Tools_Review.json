@@ -1,0 +1,228 @@
+{
+  "name": "Day 64 Solution: Real Tools Review",
+  "description": "Portfolio-ready cleaned-up miniature of the Week 9 lead pipeline (Set -> OpenAI -> Airtable -> Slack), plus sticky notes summarizing the week's 6 auth methods, integrations, and personal gap areas.",
+  "tags": [
+    "week9",
+    "real-tools",
+    "review",
+    "portfolio"
+  ],
+  "version": "1.0.0",
+  "nodes": [
+    {
+      "id": "overview-sticky",
+      "name": "Overview",
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        140,
+        20
+      ],
+      "parameters": {
+        "content": "## Day 64 Solution: Real Tools Review\n\nA cleaned-up, portfolio-ready miniature of the Day 63 lead pipeline: manual trigger through Set -> OpenAI -> Airtable -> Slack, with well-named nodes and no leftover debug/test nodes wired into the main path.\n\n**Credentials needed to run for real:** OpenAI API key, Airtable Personal Access Token, Slack OAuth2.\n\n**What this does:** takes a lead's raw text, scores it with AI, stores it in Airtable, and posts a summary to Slack -- the same shape as every tool in this week's chain, condensed for a demo.\n\nSee DAILY_TASKS/DAY_64_Real_Tools_Review.md for the full task.",
+        "height": 300,
+        "width": 460
+      }
+    },
+    {
+      "id": "manual-trigger",
+      "name": "Run Portfolio Demo",
+      "type": "n8n-nodes-base.manualTrigger",
+      "typeVersion": 1,
+      "position": [
+        140,
+        400
+      ],
+      "parameters": {}
+    },
+    {
+      "id": "clean-lead-fields",
+      "name": "Clean Lead Fields",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        400,
+        400
+      ],
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "name": "name",
+              "value": "Jordan Rivera"
+            },
+            {
+              "name": "company",
+              "value": "Rivera Consulting"
+            },
+            {
+              "name": "message",
+              "value": "We need help automating our client intake process across email and forms."
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "score-lead",
+      "name": "Score Lead",
+      "type": "n8n-nodes-base.openAi",
+      "typeVersion": 1.3,
+      "position": [
+        660,
+        400
+      ],
+      "parameters": {
+        "resource": "chat",
+        "operation": "create",
+        "model": "gpt-4o-mini",
+        "messages": {
+          "values": [
+            {
+              "role": "system",
+              "content": "You score inbound leads for sales follow-up. Respond ONLY with strict JSON: {\"lead_score\": number (1-10), \"notes\": string}."
+            },
+            {
+              "role": "user",
+              "content": "={{ 'Name: ' + $json.name + '\\nCompany: ' + $json.company + '\\nMessage: ' + $json.message }}"
+            }
+          ]
+        },
+        "options": {
+          "temperature": 0.3,
+          "maxTokens": 200
+        }
+      }
+    },
+    {
+      "id": "store-lead",
+      "name": "Store Lead",
+      "type": "n8n-nodes-base.airtable",
+      "typeVersion": 2.1,
+      "position": [
+        920,
+        400
+      ],
+      "parameters": {
+        "operation": "create",
+        "base": {
+          "__rl": true,
+          "value": "your_base_id",
+          "mode": "id"
+        },
+        "table": {
+          "__rl": true,
+          "value": "Leads",
+          "mode": "id"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "Name": "={{ $('Clean Lead Fields').item.json.name }}",
+            "Company": "={{ $('Clean Lead Fields').item.json.company }}",
+            "Lead Score": "={{ JSON.parse($json.choices[0].message.content).lead_score }}",
+            "Notes": "={{ JSON.parse($json.choices[0].message.content).notes }}"
+          }
+        }
+      }
+    },
+    {
+      "id": "notify-team",
+      "name": "Notify Team",
+      "type": "n8n-nodes-base.slack",
+      "typeVersion": 2.1,
+      "position": [
+        1180,
+        400
+      ],
+      "parameters": {
+        "resource": "message",
+        "operation": "post",
+        "channel": "#sales-leads",
+        "text": "={{ '\ud83c\udfaf Portfolio demo lead: ' + $('Clean Lead Fields').item.json.name + ' (' + $('Clean Lead Fields').item.json.company + ') scored and stored.' }}",
+        "otherOptions": {}
+      }
+    },
+    {
+      "id": "week9-summary",
+      "name": "Week 9 Summary",
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        140,
+        660
+      ],
+      "parameters": {
+        "content": "## Week 9 Summary\n\n- **6 auth methods configured:** Gmail OAuth2, Slack OAuth2, Notion API (internal integration), Airtable Personal Access Token, OpenAI API key, Telegram Bot Token\n- **2 form integrations:** Tally (flat payload) and Typeform (nested `form_response.answers`), both validating + emailing + logging to Airtable\n- **Email/calendar automation:** Gmail Trigger classifies + logs every email, urgent ones alert Slack; Calendar Trigger reminds meeting attendees\n- **Notion automation:** AI-generated database records, update-by-page-ID, and full AI-written pages\n- **Both bots:** Slack Events bot with threaded AI replies; Telegram bot routing /start, /help, /report and free-text via chained IF nodes\n- **Complete system (Day 63):** 6-tool lead pipeline (webhook, OpenAI, Airtable, Gmail, Slack, Notion, Telegram) with an explicit success check and system-alerts fallback",
+        "height": 340,
+        "width": 520
+      }
+    },
+    {
+      "id": "gap-areas",
+      "name": "Gap Areas",
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        700,
+        660
+      ],
+      "parameters": {
+        "content": "## Gap Areas (things I'm not yet confident about)\n\n1. True push delivery (Gmail Pub/Sub push notifications) vs polling -- only tested polling this week\n2. Notion property-type edge cases (multi-select, relation fields) beyond the basic select/rich_text ones used here\n3. What happens under Slack/Telegram rate limits when a bot gets a burst of messages\n4. Per-node On Error / retry configuration in n8n itself -- documented the idea in Day 63 but haven't exercised n8n's built-in retry UI yet\n5. Typeform's non-text question types (multi-select, file upload) -- only handled plain text answers so far",
+        "height": 340,
+        "width": 380
+      }
+    }
+  ],
+  "connections": {
+    "Run Portfolio Demo": {
+      "main": [
+        [
+          {
+            "node": "Clean Lead Fields",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Clean Lead Fields": {
+      "main": [
+        [
+          {
+            "node": "Score Lead",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Score Lead": {
+      "main": [
+        [
+          {
+            "node": "Store Lead",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Store Lead": {
+      "main": [
+        [
+          {
+            "node": "Notify Team",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {},
+  "pinData": {},
+  "versionId": "1",
+  "id": "day_64_solution"
+}

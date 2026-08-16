@@ -1,0 +1,300 @@
+{
+  "name": "Day 09 Solution: Advanced Self-Hosting Setup",
+  "description": "Env var checklist, a healthcheck self-test pattern, and a scheduled backup skeleton for hardening a Render deployment.",
+  "tags": [
+    "week-02",
+    "day-09",
+    "solution"
+  ],
+  "version": "1.0.0",
+  "nodes": [
+    {
+      "id": "sticky1",
+      "name": "Sticky Note",
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        40,
+        -320
+      ],
+      "parameters": {
+        "content": "## Day 09 Solution: Advanced Self-Hosting Setup\n\nDay 9 is infrastructure hardening (env vars, healthcheck path, SSL/pool settings on Render), not a workflow build. This file documents the checklist plus a healthcheck-style self-test and a scheduled backup pattern (Schedule -> HTTP export -> Write file) referenced in the Industry Track note. Credentials needed: None needed to test the logic in n8n itself — Render/PostgreSQL/UptimeRobot accounts are needed for the real deployment (outside n8n).\n\nSee DAILY_TASKS/DAY_09_Self_Hosting_Setup.md.",
+        "height": 300,
+        "width": 500
+      }
+    },
+    {
+      "id": "trigger1",
+      "name": "Manual Trigger",
+      "type": "n8n-nodes-base.manualTrigger",
+      "typeVersion": 1,
+      "position": [
+        80,
+        140
+      ],
+      "parameters": {}
+    },
+    {
+      "id": "set1",
+      "name": "Env Var Checklist",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        320,
+        140
+      ],
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "name": "required_env_vars",
+              "value": "={{ ['N8N_BASIC_AUTH_ACTIVE=true', 'N8N_BASIC_AUTH_USER', 'N8N_BASIC_AUTH_PASSWORD', 'WEBHOOK_URL', 'GENERIC_TIMEZONE=UTC', 'N8N_ENCRYPTION_KEY', 'DB_POSTGRESDB_SSL_ENABLED=true', 'DB_POSTGRESDB_CONNECTION_TIMEOUT=10000', 'DB_POSTGRESDB_POOL_SIZE=10'] }}"
+            },
+            {
+              "name": "health_check_path",
+              "value": "/healthz"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "http1",
+      "name": "Check Health Endpoint",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        560,
+        140
+      ],
+      "parameters": {
+        "method": "GET",
+        "url": "https://httpbin.org/status/200",
+        "options": {
+          "response": {
+            "response": {
+              "neverError": true
+            }
+          }
+        }
+      }
+    },
+    {
+      "id": "if1",
+      "name": "Is Healthy (200)",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2,
+      "position": [
+        800,
+        140
+      ],
+      "parameters": {
+        "conditions": {
+          "number": [
+            {
+              "value1": "={{ $json.statusCode }}",
+              "operation": "equal",
+              "value2": 200
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "set2",
+      "name": "Instance Healthy",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        1040,
+        60
+      ],
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "name": "health_status",
+              "value": "healthy"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "set3",
+      "name": "Instance Unhealthy",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        1040,
+        220
+      ],
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "name": "health_status",
+              "value": "unhealthy - check env vars"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "sched1",
+      "name": "Scheduled Backup Trigger",
+      "type": "n8n-nodes-base.scheduleTrigger",
+      "typeVersion": 1.2,
+      "position": [
+        80,
+        400
+      ],
+      "parameters": {
+        "rule": {
+          "interval": [
+            {
+              "field": "hours",
+              "hoursInterval": 24
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "http2",
+      "name": "Export Postgres Snapshot (placeholder)",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        320,
+        400
+      ],
+      "parameters": {
+        "method": "POST",
+        "url": "https://api.backup-service.com/v1/export",
+        "sendBody": true,
+        "bodyContentType": "json",
+        "jsonBody": "={{ { source: 'n8n-postgres', requested_at: $now } }}"
+      }
+    },
+    {
+      "id": "sticky2",
+      "name": "Warning: Placeholder Endpoint",
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        320,
+        500
+      ],
+      "parameters": {
+        "content": "⚠️ Placeholder endpoint — replace with a real service when you test this in n8n.",
+        "height": 100,
+        "width": 260
+      }
+    },
+    {
+      "id": "set4",
+      "name": "Log Backup Result",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        560,
+        400
+      ],
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "name": "backup_completed_at",
+              "value": "={{ $now }}"
+            },
+            {
+              "name": "backup_folder",
+              "value": "={{ 'n8n-backups/' + $now.format('yyyyMMdd') }}"
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "connections": {
+    "Manual Trigger": {
+      "main": [
+        [
+          {
+            "node": "Env Var Checklist",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Env Var Checklist": {
+      "main": [
+        [
+          {
+            "node": "Check Health Endpoint",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Check Health Endpoint": {
+      "main": [
+        [
+          {
+            "node": "Is Healthy (200)",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Is Healthy (200)": {
+      "main": [
+        [
+          {
+            "node": "Instance Healthy",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Instance Unhealthy",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Scheduled Backup Trigger": {
+      "main": [
+        [
+          {
+            "node": "Export Postgres Snapshot (placeholder)",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Export Postgres Snapshot (placeholder)": {
+      "main": [
+        [
+          {
+            "node": "Log Backup Result",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {},
+  "pinData": {},
+  "versionId": "1",
+  "id": "day_09_solution"
+}

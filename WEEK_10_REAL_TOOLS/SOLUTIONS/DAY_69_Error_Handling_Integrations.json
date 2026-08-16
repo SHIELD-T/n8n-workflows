@@ -1,0 +1,66 @@
+{
+  "name": "Day 69 Solution: Retry, Fallback, and Error Logging",
+  "description": "Calls a real API with retry enabled, falls back to a secondary API after retries are exhausted, logs every failure to Airtable, and alerts Slack only on fallback/total failure.",
+  "tags": ["day-69", "solution", "week-10"],
+  "version": "1.0.0",
+  "nodes": [
+    { "id": "note1", "name": "Overview", "type": "n8n-nodes-base.stickyNote", "typeVersion": 1,
+      "position": [-40, -300],
+      "parameters": {
+        "content": "## Day 69 Solution: Error Handling for Integrations\n\nPrimary API call has retry enabled (see the node's Settings tab: Retry On Fail = true, Max Tries = 3). If it still fails, a fallback API is called. Every failure is logged; Slack is only alerted on fallback or total failure.\n\n**Credentials needed:** Slack, Airtable (Week 9). Primary/fallback APIs here are real and keyless.\n\nSee `DAILY_TASKS/DAY_69_Error_Handling_Integrations.md`.",
+        "height": 220, "width": 360
+      }
+    },
+    { "id": "trig", "name": "Manual Trigger", "type": "n8n-nodes-base.manualTrigger", "typeVersion": 1,
+      "position": [250, 200], "parameters": {} },
+    { "id": "primary", "name": "Primary API Call (Retry Enabled)", "type": "n8n-nodes-base.httpRequest", "typeVersion": 4.2,
+      "position": [500, 200],
+      "parameters": {
+        "method": "GET", "url": "https://api.open-meteo.com/v1/forecast",
+        "sendQuery": true,
+        "queryParameters": { "parameters": [ { "name": "latitude", "value": "51.5" }, { "name": "longitude", "value": "-0.1" }, { "name": "current_weather", "value": "true" } ] },
+        "options": { "retry": { "retry": { "maxTries": 3, "waitBetweenTries": 2000 } }, "response": { "response": { "responseFormat": "json" } } }
+      }
+    },
+    { "id": "statusCheck", "name": "Classify Status", "type": "n8n-nodes-base.set", "typeVersion": 3.4,
+      "position": [750, 200],
+      "parameters": { "assignments": { "assignments": [
+        { "name": "call_status", "value": "={{ $json.current_weather ? 'success' : 'failed' }}" }
+      ] } } },
+    { "id": "ifSuccess", "name": "Primary Succeeded?", "type": "n8n-nodes-base.if", "typeVersion": 2,
+      "position": [1000, 200],
+      "parameters": { "conditions": { "string": [ { "value1": "={{ $json.call_status }}", "operation": "equal", "value2": "success" } ] } } },
+    { "id": "fallback", "name": "Fallback API Call", "type": "n8n-nodes-base.httpRequest", "typeVersion": 4.2,
+      "position": [1250, 320],
+      "parameters": {
+        "method": "GET", "url": "https://wttr.in/London",
+        "sendQuery": true,
+        "queryParameters": { "parameters": [ { "name": "format", "value": "j1" } ] },
+        "options": { "response": { "response": { "responseFormat": "json" } } }
+      }
+    },
+    { "id": "logError", "name": "Log to Error Log", "type": "n8n-nodes-base.airtable", "typeVersion": 2.1,
+      "position": [1500, 320],
+      "parameters": { "operation": "create", "base": { "value": "YOUR_BASE_ID" }, "table": { "value": "Error Log" } } },
+    { "id": "slackFallbackAlert", "name": "Slack Fallback Alert", "type": "n8n-nodes-base.slack", "typeVersion": 2.1,
+      "position": [1750, 320],
+      "parameters": { "resource": "message", "operation": "post", "channel": "#api-errors",
+        "text": "={{ '⚠️ Primary API failed after retries. Fallback API was used instead.' }}" } },
+    { "id": "noOpSuccess", "name": "No Alert Needed", "type": "n8n-nodes-base.noOp", "typeVersion": 1,
+      "position": [1250, 100], "parameters": {} }
+  ],
+  "connections": {
+    "Manual Trigger": { "main": [[ { "node": "Primary API Call (Retry Enabled)", "type": "main", "index": 0 } ]] },
+    "Primary API Call (Retry Enabled)": { "main": [[ { "node": "Classify Status", "type": "main", "index": 0 } ]] },
+    "Classify Status": { "main": [[ { "node": "Primary Succeeded?", "type": "main", "index": 0 } ]] },
+    "Primary Succeeded?": {
+      "main": [
+        [ { "node": "No Alert Needed", "type": "main", "index": 0 } ],
+        [ { "node": "Fallback API Call", "type": "main", "index": 0 } ]
+      ]
+    },
+    "Fallback API Call": { "main": [[ { "node": "Log to Error Log", "type": "main", "index": 0 } ]] },
+    "Log to Error Log": { "main": [[ { "node": "Slack Fallback Alert", "type": "main", "index": 0 } ]] }
+  },
+  "active": false, "settings": {}, "pinData": {}, "versionId": "1", "id": "day_69_solution"
+}

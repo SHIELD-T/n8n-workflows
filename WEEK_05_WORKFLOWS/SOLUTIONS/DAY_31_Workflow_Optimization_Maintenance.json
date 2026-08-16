@@ -1,0 +1,229 @@
+{
+  "name": "Day 31 Solution: Workflow Optimization & Maintenance",
+  "description": "Pulls real execution data from n8n's own REST API, computes error rate + average duration, flags problem workflows, and scores overall health.",
+  "tags": [
+    "week-05",
+    "day-31",
+    "solution"
+  ],
+  "version": "1.0.0",
+  "nodes": [
+    {
+      "id": "sticky1",
+      "name": "Sticky Note",
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        40,
+        -360
+      ],
+      "parameters": {
+        "content": "## Day 31 Solution: Workflow Optimization & Maintenance\n\nSchedule (6h) -> HTTP Request to your own n8n /api/v1/executions (needs an n8n API key credential) -> Code (computes avg duration + error rate, flags needsAttention) -> IF any flagged -> Set (flag list) -> HTTP alert to webhook.site -> Set (health score formula). Credentials needed: n8n API key (Settings -> n8n API) attached to the HTTP Request node's Header Auth credential.\n\nSee DAILY_TASKS/DAY_31_Workflow_Optimization_Maintenance.md.",
+        "height": 340,
+        "width": 560
+      }
+    },
+    {
+      "id": "sched1",
+      "name": "Maintenance Schedule",
+      "type": "n8n-nodes-base.scheduleTrigger",
+      "typeVersion": 1.2,
+      "position": [
+        80,
+        200
+      ],
+      "parameters": {
+        "rule": {
+          "interval": [
+            {
+              "field": "hours",
+              "hoursInterval": 6
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "http1",
+      "name": "Get n8n Executions",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        320,
+        200
+      ],
+      "parameters": {
+        "method": "GET",
+        "url": "={{ 'http://localhost:5678/api/v1/executions' }}",
+        "options": {
+          "response": {
+            "response": {
+              "neverError": true
+            }
+          }
+        }
+      }
+    },
+    {
+      "id": "code1",
+      "name": "Compute Health Metrics",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        560,
+        200
+      ],
+      "parameters": {
+        "mode": "runOnceForAllItems",
+        "jsCode": "const executions = $input.all().map(i => i.json.data || i.json).flat();\nconst total = executions.length || 1;\nconst failed = executions.filter(e => e.status && e.status !== 'success').length;\nconst errorRatePercent = Math.round((failed / total) * 100);\nconst durations = executions.map(e => (e.stoppedAt && e.startedAt) ? (new Date(e.stoppedAt) - new Date(e.startedAt)) : 0);\nconst avgDurationMs = durations.length ? Math.round(durations.reduce((a,b)=>a+b,0) / durations.length) : 0;\nconst needsAttention = (errorRatePercent > 10 || avgDurationMs > 3000) ? executions.slice(0,5).map(e => e.workflowId || 'unknown') : [];\nreturn [{ json: { total_executions: total, failed_executions: failed, errorRatePercent, avgDurationMs, needsAttention } }];"
+      }
+    },
+    {
+      "id": "if1",
+      "name": "Any Workflows Need Attention?",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2,
+      "position": [
+        800,
+        200
+      ],
+      "parameters": {
+        "conditions": {
+          "string": [
+            {
+              "value1": "={{ $json.needsAttention.length > 0 }}",
+              "operation": "equal",
+              "value2": "true"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "set1",
+      "name": "Flag For Optimization",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        1040,
+        120
+      ],
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "name": "flagged_workflows",
+              "value": "={{ $json.needsAttention }}"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "http2",
+      "name": "Send Alert",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        1280,
+        120
+      ],
+      "parameters": {
+        "method": "POST",
+        "url": "https://webhook.site/your-unique-id",
+        "sendBody": true,
+        "bodyContentType": "json",
+        "jsonBody": "={{ { flagged_workflows: $json.flagged_workflows } }}"
+      }
+    },
+    {
+      "id": "set2",
+      "name": "Health Score",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        1040,
+        300
+      ],
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "name": "health_score",
+              "value": "={{ Math.max(0, Math.round(100 - $('Compute Health Metrics').item.json.errorRatePercent * 2 - $('Compute Health Metrics').item.json.avgDurationMs / 100)) }}"
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "connections": {
+    "Maintenance Schedule": {
+      "main": [
+        [
+          {
+            "node": "Get n8n Executions",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get n8n Executions": {
+      "main": [
+        [
+          {
+            "node": "Compute Health Metrics",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Compute Health Metrics": {
+      "main": [
+        [
+          {
+            "node": "Any Workflows Need Attention?",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Any Workflows Need Attention?": {
+      "main": [
+        [
+          {
+            "node": "Flag For Optimization",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Health Score",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Flag For Optimization": {
+      "main": [
+        [
+          {
+            "node": "Send Alert",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {},
+  "pinData": {},
+  "versionId": "1",
+  "id": "day_31_solution"
+}

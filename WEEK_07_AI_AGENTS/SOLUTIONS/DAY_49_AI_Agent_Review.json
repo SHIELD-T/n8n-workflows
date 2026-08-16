@@ -1,0 +1,252 @@
+{
+  "name": "Day 49 Solution: AI Agent Review",
+  "description": "Orchestrator workflow that calls another Week 7 workflow via Execute Workflow, captures its output, and branches into success/failure logging based on the result status.",
+  "tags": [
+    "week-07",
+    "ai-agents",
+    "day-49",
+    "review",
+    "orchestrator",
+    "solution"
+  ],
+  "version": "1.0.0",
+  "nodes": [
+    {
+      "id": "sticky-overview",
+      "name": "Overview",
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        240,
+        -280
+      ],
+      "parameters": {
+        "content": "## Day 49 Solution: AI Agent Review\n\nAn orchestrator workflow that calls your most-complete Week 7 workflow via Execute Workflow, captures its output, and branches into a success or failure log based on the result's status field — exactly the pattern described in the Day 49 build steps.\n\n**Credentials needed:** None for the orchestrator itself. Whatever the sub-workflow you point it at needs (commonly an OpenAI API key) still applies when that sub-workflow runs.\n\nSee DAILY_TASKS/DAY_49_AI_Agent_Review.md for the full lesson this solves.",
+        "height": 300,
+        "width": 500
+      }
+    },
+    {
+      "id": "manual-trigger",
+      "name": "Manual Trigger",
+      "type": "n8n-nodes-base.manualTrigger",
+      "typeVersion": 1,
+      "position": [
+        240,
+        300
+      ],
+      "parameters": {}
+    },
+    {
+      "id": "execute-week-7-workflow",
+      "name": "Execute Week 7 Workflow",
+      "type": "n8n-nodes-base.executeWorkflow",
+      "typeVersion": 1.2,
+      "position": [
+        480,
+        300
+      ],
+      "parameters": {
+        "source": "database",
+        "workflowId": "={{ \"REPLACE_WITH_YOUR_WORKFLOW_ID\" }}"
+      }
+    },
+    {
+      "id": "sticky-execute-workflow-note",
+      "name": "Execute Workflow Placeholder",
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        480,
+        560
+      ],
+      "parameters": {
+        "content": "## ⚠️ Point this at your own workflow\n\nworkflowId is a placeholder expression. Open this node in n8n and pick your single most-complete Week 7 workflow (e.g. your Day 43-48 solution, imported and given a Webhook or Manual trigger) from the dropdown so Execute Workflow can actually find it — workflow IDs are per-instance and can't be hardcoded ahead of time.",
+        "height": 200,
+        "width": 420
+      }
+    },
+    {
+      "id": "capture-sub-workflow-output",
+      "name": "Capture Sub-Workflow Output",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        720,
+        300
+      ],
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "name": "execution_status",
+              "value": "={{ $json.status || 'unknown' }}"
+            },
+            {
+              "name": "execution_result",
+              "value": "={{ $json }}"
+            },
+            {
+              "name": "captured_at",
+              "value": "={{ $now }}"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "check-success",
+      "name": "Check Success",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2,
+      "position": [
+        960,
+        300
+      ],
+      "parameters": {
+        "conditions": {
+          "string": [
+            {
+              "value1": "={{ $json.execution_status }}",
+              "operation": "equal",
+              "value2": "success"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "log-success",
+      "name": "Log Success",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        1200,
+        160
+      ],
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "name": "log_message",
+              "value": "✅ Orchestrator run succeeded"
+            },
+            {
+              "name": "workflow_status",
+              "value": "success"
+            },
+            {
+              "name": "logged_at",
+              "value": "={{ $now }}"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "log-failure",
+      "name": "Log Failure",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        1200,
+        440
+      ],
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "name": "log_message",
+              "value": "❌ Orchestrator run failed"
+            },
+            {
+              "name": "workflow_status",
+              "value": "failure"
+            },
+            {
+              "name": "error_detail",
+              "value": "={{ $json.execution_result.error || 'Unknown error - check sub-workflow output' }}"
+            },
+            {
+              "name": "logged_at",
+              "value": "={{ $now }}"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "sticky-week7-status",
+      "name": "Week 7 System Status (example note)",
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        960,
+        560
+      ],
+      "parameters": {
+        "content": "## 📝 Week 7 System Status (example)\n\n**What I built:** Seven Week 7 solution workflows (Days 43-48) covering multi-agent orchestration, communication routing, learning, decision making, optimization, and monitoring, plus this Day 49 orchestrator that chains one of them via Execute Workflow.\n\n**Genuinely working end-to-end today:** The webhook triggers, Set-node state/orchestration logic, IF-node branching, and the openAi nodes (with a real OpenAI credential attached) all run and produce real output.\n\n**Still a placeholder:** Every httpRequest node pointed at an api.*-service.com / *-monitor.com / *-engine.com domain — those are fake stand-ins and need a real API (or a mock server) before this is anything more than a teaching demo.",
+        "height": 320,
+        "width": 520
+      }
+    }
+  ],
+  "connections": {
+    "Manual Trigger": {
+      "main": [
+        [
+          {
+            "node": "Execute Week 7 Workflow",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Execute Week 7 Workflow": {
+      "main": [
+        [
+          {
+            "node": "Capture Sub-Workflow Output",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Capture Sub-Workflow Output": {
+      "main": [
+        [
+          {
+            "node": "Check Success",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Check Success": {
+      "main": [
+        [
+          {
+            "node": "Log Success",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Log Failure",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {},
+  "pinData": {},
+  "versionId": "1",
+  "id": "day_49_solution"
+}

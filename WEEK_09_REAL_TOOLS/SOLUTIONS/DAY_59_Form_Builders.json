@@ -1,0 +1,490 @@
+{
+  "name": "Day 59 Solution: Form Builders",
+  "description": "Two webhook-triggered form intake flows (Tally flat payload, Typeform nested payload) that validate required fields, send a confirmation email, and log the submission to Airtable.",
+  "tags": [
+    "week9",
+    "real-tools",
+    "forms",
+    "tally",
+    "typeform",
+    "webhook"
+  ],
+  "version": "1.0.0",
+  "nodes": [
+    {
+      "id": "overview-sticky",
+      "name": "Overview",
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        140,
+        20
+      ],
+      "parameters": {
+        "content": "## Day 59 Solution: Form Builders\n\nTwo independent webhook-triggered flows in this canvas: a Tally-style flat-payload form (top) and a Typeform-style nested-payload form (bottom). Both validate required fields, then send a confirmation email and log the submission to Airtable in parallel.\n\n**Credentials needed to run for real:** Gmail OAuth2, Airtable Personal Access Token.\n\nSee DAILY_TASKS/DAY_59_Form_Builders.md for the full task.",
+        "height": 240,
+        "width": 460
+      }
+    },
+    {
+      "id": "tally-flow-sticky",
+      "name": "Flow 1: Tally",
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        140,
+        300
+      ],
+      "parameters": {
+        "content": "### Tally flow\nTally delivers a flat payload (fields already at the top level of `$json`). Webhook path: `tally-form-submit`.",
+        "height": 140,
+        "width": 260
+      }
+    },
+    {
+      "id": "typeform-flow-sticky",
+      "name": "Flow 2: Typeform",
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        140,
+        760
+      ],
+      "parameters": {
+        "content": "### Typeform flow\nTypeform nests answers inside `form_response.answers[]`, addressed by field ID -- not by name. Webhook path: `typeform-submit`.",
+        "height": 140,
+        "width": 260
+      }
+    },
+    {
+      "id": "typeform-fieldid-sticky",
+      "name": "Placeholder Field IDs",
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        1400,
+        700
+      ],
+      "parameters": {
+        "content": "## Replace before using\n\n`name_field_id`, `email_field_id`, and `message_field_id` below are placeholders. Open a raw Typeform webhook payload in n8n's execution log and copy the real `field.id` values for your form, then swap them in the Extract Typeform Fields node.",
+        "height": 200,
+        "width": 320
+      }
+    },
+    {
+      "id": "tally-webhook",
+      "name": "Tally Form Webhook",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2,
+      "position": [
+        420,
+        380
+      ],
+      "parameters": {
+        "path": "tally-form-submit",
+        "httpMethod": "POST"
+      }
+    },
+    {
+      "id": "tally-extract",
+      "name": "Extract Tally Fields",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        680,
+        380
+      ],
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "name": "name",
+              "value": "={{ $json.name }}"
+            },
+            {
+              "name": "email",
+              "value": "={{ $json.email }}"
+            },
+            {
+              "name": "message",
+              "value": "={{ $json.message }}"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "tally-validate",
+      "name": "Validate Required Fields",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2,
+      "position": [
+        940,
+        380
+      ],
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "typeValidation": "strict"
+          },
+          "conditions": [
+            {
+              "id": "tally-validate-c1",
+              "leftValue": "={{ $json.email }}",
+              "rightValue": "",
+              "operator": {
+                "type": "string",
+                "operation": "notEmpty",
+                "singleValue": true
+              }
+            },
+            {
+              "id": "tally-validate-c2",
+              "leftValue": "={{ $json.name }}",
+              "rightValue": "",
+              "operator": {
+                "type": "string",
+                "operation": "notEmpty",
+                "singleValue": true
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      }
+    },
+    {
+      "id": "tally-send-email",
+      "name": "Send Confirmation Email",
+      "type": "n8n-nodes-base.gmail",
+      "typeVersion": 2.1,
+      "position": [
+        1200,
+        260
+      ],
+      "parameters": {
+        "resource": "message",
+        "operation": "send",
+        "sendTo": "={{ $json.email }}",
+        "subject": "We received your message",
+        "message": "={{ 'Hi ' + $json.name + ',\\n\\nThanks for reaching out -- we received your message and will reply within 1 business day.\\n\\nYour message: ' + $json.message }}",
+        "options": {}
+      }
+    },
+    {
+      "id": "tally-log-airtable",
+      "name": "Log Submission",
+      "type": "n8n-nodes-base.airtable",
+      "typeVersion": 2.1,
+      "position": [
+        1200,
+        440
+      ],
+      "parameters": {
+        "operation": "create",
+        "base": {
+          "__rl": true,
+          "value": "your_base_id",
+          "mode": "id"
+        },
+        "table": {
+          "__rl": true,
+          "value": "Form Submissions",
+          "mode": "id"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "Name": "={{ $json.name }}",
+            "Email": "={{ $json.email }}",
+            "Message": "={{ $json.message }}",
+            "Source": "Tally",
+            "Submitted At": "={{ $now.toISO() }}"
+          }
+        }
+      }
+    },
+    {
+      "id": "tally-validation-failed",
+      "name": "Validation Failed",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        1200,
+        620
+      ],
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "name": "error",
+              "value": "Missing required field: name or email"
+            },
+            {
+              "name": "raw_payload",
+              "value": "={{ $json }}"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "typeform-webhook",
+      "name": "Typeform Webhook",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2,
+      "position": [
+        420,
+        840
+      ],
+      "parameters": {
+        "path": "typeform-submit",
+        "httpMethod": "POST"
+      }
+    },
+    {
+      "id": "typeform-extract",
+      "name": "Extract Typeform Fields",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        680,
+        840
+      ],
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "name": "name",
+              "value": "={{ $json.form_response.answers.find(a => a.field.id === 'name_field_id')?.text }}"
+            },
+            {
+              "name": "email",
+              "value": "={{ $json.form_response.answers.find(a => a.field.id === 'email_field_id')?.email }}"
+            },
+            {
+              "name": "message",
+              "value": "={{ $json.form_response.answers.find(a => a.field.id === 'message_field_id')?.text }}"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "typeform-validate",
+      "name": "Validate Required Fields (Typeform)",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2,
+      "position": [
+        940,
+        840
+      ],
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "typeValidation": "strict"
+          },
+          "conditions": [
+            {
+              "id": "typeform-validate-c1",
+              "leftValue": "={{ $json.email }}",
+              "rightValue": "",
+              "operator": {
+                "type": "string",
+                "operation": "notEmpty",
+                "singleValue": true
+              }
+            },
+            {
+              "id": "typeform-validate-c2",
+              "leftValue": "={{ $json.name }}",
+              "rightValue": "",
+              "operator": {
+                "type": "string",
+                "operation": "notEmpty",
+                "singleValue": true
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      }
+    },
+    {
+      "id": "typeform-send-email",
+      "name": "Send Confirmation Email (Typeform)",
+      "type": "n8n-nodes-base.gmail",
+      "typeVersion": 2.1,
+      "position": [
+        1200,
+        720
+      ],
+      "parameters": {
+        "resource": "message",
+        "operation": "send",
+        "sendTo": "={{ $json.email }}",
+        "subject": "We received your submission",
+        "message": "={{ 'Hi ' + $json.name + ',\\n\\nThanks for filling out our form -- we received your submission and will follow up shortly.\\n\\nYour message: ' + $json.message }}",
+        "options": {}
+      }
+    },
+    {
+      "id": "typeform-log-airtable",
+      "name": "Log Submission (Typeform)",
+      "type": "n8n-nodes-base.airtable",
+      "typeVersion": 2.1,
+      "position": [
+        1200,
+        900
+      ],
+      "parameters": {
+        "operation": "create",
+        "base": {
+          "__rl": true,
+          "value": "your_base_id",
+          "mode": "id"
+        },
+        "table": {
+          "__rl": true,
+          "value": "Form Submissions",
+          "mode": "id"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "Name": "={{ $json.name }}",
+            "Email": "={{ $json.email }}",
+            "Message": "={{ $json.message }}",
+            "Source": "Typeform",
+            "Submitted At": "={{ $now.toISO() }}"
+          }
+        }
+      }
+    },
+    {
+      "id": "typeform-validation-failed",
+      "name": "Validation Failed (Typeform)",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        1200,
+        1080
+      ],
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "name": "error",
+              "value": "Missing required field: name or email"
+            },
+            {
+              "name": "raw_payload",
+              "value": "={{ $json }}"
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "connections": {
+    "Tally Form Webhook": {
+      "main": [
+        [
+          {
+            "node": "Extract Tally Fields",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Extract Tally Fields": {
+      "main": [
+        [
+          {
+            "node": "Validate Required Fields",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Validate Required Fields": {
+      "main": [
+        [
+          {
+            "node": "Send Confirmation Email",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Log Submission",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Validation Failed",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Typeform Webhook": {
+      "main": [
+        [
+          {
+            "node": "Extract Typeform Fields",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Extract Typeform Fields": {
+      "main": [
+        [
+          {
+            "node": "Validate Required Fields (Typeform)",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Validate Required Fields (Typeform)": {
+      "main": [
+        [
+          {
+            "node": "Send Confirmation Email (Typeform)",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Log Submission (Typeform)",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Validation Failed (Typeform)",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {},
+  "pinData": {},
+  "versionId": "1",
+  "id": "day_59_solution"
+}

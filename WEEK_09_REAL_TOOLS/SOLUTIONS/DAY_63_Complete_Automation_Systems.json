@@ -1,0 +1,468 @@
+{
+  "name": "Day 63 Solution: Complete Automation Systems",
+  "description": "End-to-end lead pipeline chaining 6 tools -- webhook, OpenAI enrichment, Airtable storage, Gmail welcome email, Slack sales alert, Notion follow-up task, Telegram notification -- with an explicit success check and system-alerts fallback after the Airtable store step.",
+  "tags": [
+    "week9",
+    "real-tools",
+    "complete-system",
+    "lead-generation",
+    "multi-tool"
+  ],
+  "version": "1.0.0",
+  "nodes": [
+    {
+      "id": "overview-sticky",
+      "name": "Overview",
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        140,
+        20
+      ],
+      "parameters": {
+        "content": "## Day 63 Solution: Complete Automation Systems\n\nThe full lead-generation chain: a form webhook flows through AI enrichment, Airtable storage, a welcome email, a Slack sales alert, a Notion follow-up task, and a Telegram notification -- 6 external tools end to end (Airtable, Gmail, Slack, Notion, Telegram, plus OpenAI for enrichment).\n\n**Credentials needed to run for real:** Airtable Personal Access Token, Gmail OAuth2, Slack OAuth2, Notion API, Telegram Bot Token, OpenAI API key.\n\nSee DAILY_TASKS/DAY_63_Complete_Automation_Systems.md for the full task.",
+        "height": 280,
+        "width": 480
+      }
+    },
+    {
+      "id": "data-flow-sketch",
+      "name": "Data Flow Sketch",
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        660,
+        20
+      ],
+      "parameters": {
+        "content": "## Data flow sketch (written before building)\n\nForm submission --(name,email,company,message)--> AI enrichment --(+score,+industry)--> Airtable storage --(lead record)--> [branch: store OK?]\n  -> yes: welcome email --(name,email)--> Slack sales alert --(lead summary)--> Notion follow-up task --(title,due date)--> Telegram notify --(lead summary)\n  -> no: Slack #system-alerts (\"Airtable store failed for lead X\")\n\nEvery arrow above carries the lead_id so the same lead can be traced across all five destination systems.",
+        "height": 300,
+        "width": 420
+      }
+    },
+    {
+      "id": "error-handling-sticky",
+      "name": "Error Handling Note",
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        1120,
+        20
+      ],
+      "parameters": {
+        "content": "## Error handling approach\n\nIn production you'd set n8n's per-node **On Error** setting (Continue Using Error Output / Retry) on every risky call below -- Airtable, Gmail, Slack, Notion, Telegram -- so one bad API call doesn't kill the whole execution silently. This demo additionally adds ONE explicit IF node after the Airtable store step, checking a simulated success flag, and routes failures to a dedicated Slack #system-alerts channel instead of failing invisibly.",
+        "height": 280,
+        "width": 340
+      }
+    },
+    {
+      "id": "lead-intake-webhook",
+      "name": "Lead Intake Webhook",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2,
+      "position": [
+        160,
+        460
+      ],
+      "parameters": {
+        "path": "lead-intake",
+        "httpMethod": "POST"
+      }
+    },
+    {
+      "id": "clean-lead-fields",
+      "name": "Clean Lead Fields",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        420,
+        460
+      ],
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "name": "lead_id",
+              "value": "={{ $now.format('yyyyMMddHHmmss') }}"
+            },
+            {
+              "name": "name",
+              "value": "={{ $json.name }}"
+            },
+            {
+              "name": "email",
+              "value": "={{ $json.email }}"
+            },
+            {
+              "name": "company",
+              "value": "={{ $json.company }}"
+            },
+            {
+              "name": "message",
+              "value": "={{ $json.message }}"
+            },
+            {
+              "name": "source",
+              "value": "={{ $json.source || 'website' }}"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "score-enrich-lead",
+      "name": "Score & Enrich Lead",
+      "type": "n8n-nodes-base.openAi",
+      "typeVersion": 1.3,
+      "position": [
+        680,
+        460
+      ],
+      "parameters": {
+        "resource": "chat",
+        "operation": "create",
+        "model": "gpt-4o-mini",
+        "messages": {
+          "values": [
+            {
+              "role": "system",
+              "content": "You score and enrich inbound leads. Respond ONLY with strict JSON: {\"lead_score\": number (1-10), \"industry\": string, \"recommended_action\": string}."
+            },
+            {
+              "role": "user",
+              "content": "={{ 'Name: ' + $json.name + '\\nCompany: ' + $json.company + '\\nMessage: ' + $json.message }}"
+            }
+          ]
+        },
+        "options": {
+          "temperature": 0.3,
+          "maxTokens": 250
+        }
+      }
+    },
+    {
+      "id": "parse-lead-enrichment",
+      "name": "Parse Lead Enrichment",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        940,
+        460
+      ],
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "name": "lead_id",
+              "value": "={{ $('Clean Lead Fields').item.json.lead_id }}"
+            },
+            {
+              "name": "name",
+              "value": "={{ $('Clean Lead Fields').item.json.name }}"
+            },
+            {
+              "name": "email",
+              "value": "={{ $('Clean Lead Fields').item.json.email }}"
+            },
+            {
+              "name": "company",
+              "value": "={{ $('Clean Lead Fields').item.json.company }}"
+            },
+            {
+              "name": "lead_score",
+              "value": "={{ JSON.parse($json.choices[0].message.content).lead_score }}"
+            },
+            {
+              "name": "industry",
+              "value": "={{ JSON.parse($json.choices[0].message.content).industry }}"
+            },
+            {
+              "name": "recommended_action",
+              "value": "={{ JSON.parse($json.choices[0].message.content).recommended_action }}"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "store-lead-airtable",
+      "name": "Store Lead in Airtable",
+      "type": "n8n-nodes-base.airtable",
+      "typeVersion": 2.1,
+      "position": [
+        1200,
+        460
+      ],
+      "parameters": {
+        "operation": "create",
+        "base": {
+          "__rl": true,
+          "value": "your_base_id",
+          "mode": "id"
+        },
+        "table": {
+          "__rl": true,
+          "value": "Leads",
+          "mode": "id"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "Lead ID": "={{ $json.lead_id }}",
+            "Name": "={{ $json.name }}",
+            "Email": "={{ $json.email }}",
+            "Company": "={{ $json.company }}",
+            "Lead Score": "={{ $json.lead_score }}",
+            "Industry": "={{ $json.industry }}",
+            "Status": "New"
+          }
+        }
+      }
+    },
+    {
+      "id": "check-store-success",
+      "name": "Check Airtable Store Success",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2,
+      "position": [
+        1460,
+        460
+      ],
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "typeValidation": "strict"
+          },
+          "conditions": [
+            {
+              "id": "store-ok-c1",
+              "leftValue": "={{ $json.id }}",
+              "rightValue": "",
+              "operator": {
+                "type": "string",
+                "operation": "notEmpty",
+                "singleValue": true
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      }
+    },
+    {
+      "id": "system-alert",
+      "name": "System Alert",
+      "type": "n8n-nodes-base.slack",
+      "typeVersion": 2.1,
+      "position": [
+        1720,
+        640
+      ],
+      "parameters": {
+        "resource": "message",
+        "operation": "post",
+        "channel": "#system-alerts",
+        "text": "={{ '\u26a0\ufe0f Airtable store failed for lead ' + $('Parse Lead Enrichment').item.json.lead_id + ' (' + $('Parse Lead Enrichment').item.json.name + '). Investigate the Airtable credential/base before retrying.' }}",
+        "otherOptions": {}
+      }
+    },
+    {
+      "id": "send-welcome-email",
+      "name": "Send Welcome Email",
+      "type": "n8n-nodes-base.gmail",
+      "typeVersion": 2.1,
+      "position": [
+        1720,
+        380
+      ],
+      "parameters": {
+        "resource": "message",
+        "operation": "send",
+        "sendTo": "={{ $('Parse Lead Enrichment').item.json.email }}",
+        "subject": "={{ 'Welcome, ' + $('Parse Lead Enrichment').item.json.name + '!' }}",
+        "message": "={{ 'Hi ' + $('Parse Lead Enrichment').item.json.name + ',\\n\\nThanks for reaching out! We received your message and will follow up within 24 hours.' }}",
+        "options": {}
+      }
+    },
+    {
+      "id": "notify-sales-team",
+      "name": "Notify Sales Team",
+      "type": "n8n-nodes-base.slack",
+      "typeVersion": 2.1,
+      "position": [
+        1980,
+        380
+      ],
+      "parameters": {
+        "resource": "message",
+        "operation": "post",
+        "channel": "#sales-leads",
+        "text": "={{ '\ud83c\udfaf New lead: ' + $('Parse Lead Enrichment').item.json.name + ' (' + $('Parse Lead Enrichment').item.json.company + ')\\nScore: ' + $('Parse Lead Enrichment').item.json.lead_score + '\\nIndustry: ' + $('Parse Lead Enrichment').item.json.industry }}",
+        "otherOptions": {}
+      }
+    },
+    {
+      "id": "create-followup-task",
+      "name": "Create Follow-up Task",
+      "type": "n8n-nodes-base.notion",
+      "typeVersion": 2,
+      "position": [
+        2240,
+        380
+      ],
+      "parameters": {
+        "resource": "databasePage",
+        "operation": "create",
+        "databaseId": {
+          "__rl": true,
+          "value": "your_database_id",
+          "mode": "id"
+        },
+        "title": "={{ 'Follow up with ' + $('Parse Lead Enrichment').item.json.name }}",
+        "propertiesUi": {
+          "propertyValues": [
+            {
+              "key": "Priority|select",
+              "selectValue": "={{ $('Parse Lead Enrichment').item.json.lead_score > 7 ? 'High' : 'Medium' }}"
+            },
+            {
+              "key": "Status|select",
+              "selectValue": "To Do"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "send-team-notification",
+      "name": "Send Team Notification",
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1.2,
+      "position": [
+        2500,
+        380
+      ],
+      "parameters": {
+        "resource": "message",
+        "operation": "sendMessage",
+        "chatId": "your_chat_id",
+        "text": "={{ '\ud83d\udcc8 Lead through full pipeline: ' + $('Parse Lead Enrichment').item.json.name + ' from ' + $('Parse Lead Enrichment').item.json.company + ' (score ' + $('Parse Lead Enrichment').item.json.lead_score + ')' }}"
+      }
+    }
+  ],
+  "connections": {
+    "Lead Intake Webhook": {
+      "main": [
+        [
+          {
+            "node": "Clean Lead Fields",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Clean Lead Fields": {
+      "main": [
+        [
+          {
+            "node": "Score & Enrich Lead",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Score & Enrich Lead": {
+      "main": [
+        [
+          {
+            "node": "Parse Lead Enrichment",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Parse Lead Enrichment": {
+      "main": [
+        [
+          {
+            "node": "Store Lead in Airtable",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Store Lead in Airtable": {
+      "main": [
+        [
+          {
+            "node": "Check Airtable Store Success",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Check Airtable Store Success": {
+      "main": [
+        [
+          {
+            "node": "Send Welcome Email",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "System Alert",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Send Welcome Email": {
+      "main": [
+        [
+          {
+            "node": "Notify Sales Team",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Notify Sales Team": {
+      "main": [
+        [
+          {
+            "node": "Create Follow-up Task",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Create Follow-up Task": {
+      "main": [
+        [
+          {
+            "node": "Send Team Notification",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {},
+  "pinData": {},
+  "versionId": "1",
+  "id": "day_63_solution"
+}

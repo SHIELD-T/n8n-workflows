@@ -1,0 +1,130 @@
+{
+  "name": "Day 83 Solution: Automation-as-a-Service",
+  "description": "Solution workflow for WEEK_12_SCALING Day 83: Automation-as-a-Service.",
+  "tags": [
+    "course-solution",
+    "WEEK_12",
+    "day-83"
+  ],
+  "version": "1.0.0",
+  "nodes": [
+    {
+      "id": "da7d1d12-2e98-4493-bd98-9266c5c89f1e",
+      "name": "Overview",
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        -260,
+        -320
+      ],
+      "parameters": {
+        "content": "## Day 83 Solution: Automation-as-a-Service\n\nThis workflow captures the Day 83 deliverable as structured fields in the **AaaS Tier Fields** node (run it once with Manual Trigger to see the values), plus a fully worked model answer in the sticky note to the right that you can read directly on the canvas.\n\nEvery day in Weeks 11-15 is primarily a business deliverable, so this solution is a lightweight Manual Trigger -> Set pattern that still opens and runs cleanly in n8n.\n\n**Credentials needed:** None needed — every node in this solution runs with no external account.\n\n**Matches:** `DAILY_TASKS/DAY_83_Automation_as_a_Service.md`",
+        "height": 340,
+        "width": 460
+      }
+    },
+    {
+      "id": "71b2bc84-7946-4ee8-a1f9-42eae0025801",
+      "name": "Manual Trigger",
+      "type": "n8n-nodes-base.manualTrigger",
+      "typeVersion": 1,
+      "position": [
+        80,
+        40
+      ],
+      "parameters": {}
+    },
+    {
+      "id": "ead313f0-2fdf-4762-bdca-5cc17300fe66",
+      "name": "AaaS Tier Fields",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        400,
+        40
+      ],
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "09509482-a0bc-4d9d-9019-d722b9d479ca",
+              "name": "tier_basic",
+              "value": "Basic — $297/mo — up to 3 workflows, email support, monthly report",
+              "type": "string"
+            },
+            {
+              "id": "3886c600-f91a-48f5-9e9c-cedafdd01c2c",
+              "name": "tier_professional",
+              "value": "Professional — $697/mo — up to 10 workflows, priority support, weekly report, 99% uptime SLA",
+              "type": "string"
+            },
+            {
+              "id": "408ab4d5-7e53-4b69-8087-dd8963bf17b3",
+              "name": "tier_enterprise",
+              "value": "Enterprise — custom pricing — unlimited workflows, dedicated support, custom SLA",
+              "type": "string"
+            },
+            {
+              "id": "3f7d55fc-d41b-43ac-827f-6a88e15b7cc3",
+              "name": "sla_metric",
+              "value": "99% uptime target; <4hr response time on Professional and above",
+              "type": "string"
+            },
+            {
+              "id": "ec5e8ca0-1a2d-4fe8-84e5-820fc8fd20c4",
+              "name": "billing_cadence",
+              "value": "Monthly recurring, auto-invoiced on the 1st of the month",
+              "type": "string"
+            },
+            {
+              "id": "5e67334d-18a4-46e2-955c-c264d99905be",
+              "name": "onboarding_steps",
+              "value": "Discovery call -> workflow audit -> migration -> 30-day check-in",
+              "type": "string"
+            },
+            {
+              "id": "dbabd9e6-0537-425e-9d15-2555a3e0cbf0",
+              "name": "escalation_procedure",
+              "value": "SLA breach -> immediate client notification -> root-cause note within 24hrs -> credit applied per contract",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      }
+    },
+    {
+      "id": "cf8acc83-2330-42a1-8edc-f8f6eec0134c",
+      "name": "Model Answer",
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        780,
+        -340
+      ],
+      "parameters": {
+        "content": "## Model Answer: Automation-as-a-Service\n\n### Automation-as-a-Service — Recurring Revenue Tiers\n\n| Tier | Price | Includes | SLA |\n|---|---|---|---|\n| **Basic** | $297/mo | Up to 3 active workflows, email support, monthly report | Best-effort |\n| **Professional** | $697/mo | Up to 10 active workflows, priority support, weekly report | 99% uptime, <4hr response |\n| **Enterprise** | Custom (from $1,500/mo) | Unlimited workflows, dedicated support, custom SLA | Negotiated |\n\n**SLA management:** performance monitored weekly (success rate, error count); breach triggers immediate client notification, a root-cause note within 24 hours, and a pro-rated credit per contract terms.\n\n**Billing:** monthly recurring, auto-invoiced on the 1st, net-0 (charged automatically) for Professional/Enterprise; Basic is manually invoiced net-7.\n\n**Onboarding:** discovery call -> workflow audit of the client's current manual processes -> migration of first 1-3 workflows -> 30-day check-in call to review performance and consider tier upgrade.\n\n**Revenue analytics tracked monthly:** MRR by tier, churn rate, upgrade rate Basic->Professional, average workflows-per-client.",
+        "height": 620,
+        "width": 700
+      }
+    }
+  ],
+  "connections": {
+    "Manual Trigger": {
+      "main": [
+        [
+          {
+            "node": "AaaS Tier Fields",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {},
+  "pinData": {},
+  "versionId": "1",
+  "id": "day_83_solution"
+}

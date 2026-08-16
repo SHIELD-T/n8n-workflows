@@ -1,0 +1,136 @@
+{
+  "name": "Day 80 Solution: Hiring Help",
+  "description": "Solution workflow for WEEK_12_SCALING Day 80: Hiring Help.",
+  "tags": [
+    "course-solution",
+    "WEEK_12",
+    "day-80"
+  ],
+  "version": "1.0.0",
+  "nodes": [
+    {
+      "id": "e7aa7cb2-ec3c-4a95-9c27-6a99db0b326c",
+      "name": "Overview",
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        -260,
+        -320
+      ],
+      "parameters": {
+        "content": "## Day 80 Solution: Hiring Help\n\nThis workflow captures the Day 80 deliverable as structured fields in the **Hiring & Team Fields** node (run it once with Manual Trigger to see the values), plus a fully worked model answer in the sticky note to the right that you can read directly on the canvas.\n\nEvery day in Weeks 11-15 is primarily a business deliverable, so this solution is a lightweight Manual Trigger -> Set pattern that still opens and runs cleanly in n8n.\n\n**Credentials needed:** None needed — every node in this solution runs with no external account.\n\n**Matches:** `DAILY_TASKS/DAY_80_Hiring_Help.md`",
+        "height": 340,
+        "width": 460
+      }
+    },
+    {
+      "id": "ec93e941-2c0a-4956-b153-9b7a631837fa",
+      "name": "Manual Trigger",
+      "type": "n8n-nodes-base.manualTrigger",
+      "typeVersion": 1,
+      "position": [
+        80,
+        40
+      ],
+      "parameters": {}
+    },
+    {
+      "id": "071983b7-3aad-4d95-8502-b3bf828895b2",
+      "name": "Hiring & Team Fields",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        400,
+        40
+      ],
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "11a6c78b-ddae-442d-8e5d-6b608817a7ca",
+              "name": "role_1_title",
+              "value": "n8n Workflow Developer (contract)",
+              "type": "string"
+            },
+            {
+              "id": "8c9ea0a5-d8e7-4275-9b4c-2d006d0e795c",
+              "name": "role_1_comp",
+              "value": "$25-50/hr based on experience",
+              "type": "string"
+            },
+            {
+              "id": "b739e818-ed4f-41ca-a661-eed089a55613",
+              "name": "role_1_requirements",
+              "value": "2+ years n8n experience; API integration skills; JavaScript knowledge; problem-solving ability",
+              "type": "string"
+            },
+            {
+              "id": "3c1547c1-1db7-48ef-ab52-87931179ff58",
+              "name": "role_2_title",
+              "value": "Business Automation Specialist",
+              "type": "string"
+            },
+            {
+              "id": "c795d8c9-5c73-4913-93a9-8d665143feb8",
+              "name": "role_2_comp",
+              "value": "$30-60/hr based on experience",
+              "type": "string"
+            },
+            {
+              "id": "c53b97b4-9f6e-4a99-814d-32858d060fbb",
+              "name": "interview_process",
+              "value": "30-min video screen -> n8n workflow challenge -> 1-hr team interview -> reference check",
+              "type": "string"
+            },
+            {
+              "id": "46866256-a674-49ac-a5c0-51c95063ef0f",
+              "name": "onboarding_week1",
+              "value": "Day1 welcome call; Day2 tools setup; Day3 first project; Day4 mentor pairing; Day5 first-week review",
+              "type": "string"
+            },
+            {
+              "id": "718f738e-5c40-4314-83b1-b0432da9d47a",
+              "name": "communication_cadence",
+              "value": "Daily 15-min standup; weekly 1-hr team meeting; monthly 2-hr review",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      }
+    },
+    {
+      "id": "19e5d9b4-6851-46a4-9527-79666a5a1f75",
+      "name": "Model Answer",
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        780,
+        -340
+      ],
+      "parameters": {
+        "content": "## Model Answer: Hiring Help\n\n### Job Posting: n8n Workflow Developer (contract)\n\n\"We're looking for an experienced n8n developer to help build automation workflows for our clients.\"\n**Requirements:** 2+ years n8n experience, API integration skills, JavaScript knowledge, problem-solving ability.\n**Responsibilities:** build custom n8n workflows, integrate third-party APIs, debug/optimize, document technical solutions.\n**Compensation:** $25-50/hr based on experience. **Timeline:** project-based contracts.\n\n### Screening Criteria\n- **Technical:** n8n workflow development, API integration, JavaScript/Node.js, database basics.\n- **Soft skills:** communication, problem-solving, time management, client service.\n- **Experience levels:** Junior (1-2 yrs), Mid (2-5 yrs), Senior (5+ yrs).\n\n### Interview Process\n30-minute video screening -> n8n workflow challenge (build a small workflow live) -> 1-hour team interview -> reference check with a previous client.\n\n### Onboarding — Week 1\nDay 1: welcome call and introductions. Day 2: company overview and tools setup (n8n instance access, Notion, Slack). Day 3: first (low-stakes) project assignment. Day 4: mentor pairing with Jordan. Day 5: first-week review.\n\n### Team Communication & Task Management\nSlack channels: #general, #projects, #technical, #random. Meetings: daily 15-min standup, weekly 1-hr team meeting, monthly 2-hr review. Task tracking: Notion, Projects -> Tasks -> Subtasks, clear ownership and deadlines. Performance metrics: project completion rate, client satisfaction score, technical quality, communication — reviewed monthly.",
+        "height": 620,
+        "width": 700
+      }
+    }
+  ],
+  "connections": {
+    "Manual Trigger": {
+      "main": [
+        [
+          {
+            "node": "Hiring & Team Fields",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {},
+  "pinData": {},
+  "versionId": "1",
+  "id": "day_80_solution"
+}

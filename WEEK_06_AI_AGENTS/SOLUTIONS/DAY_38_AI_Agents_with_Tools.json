@@ -1,0 +1,489 @@
+{
+  "name": "Day 38 Solution: AI Agents with Tools",
+  "description": "Simulates an AI Agent with two tools (Wikipedia Search via a real HTTP call, and a Code-based Word Counter) using OpenAI + Set/If/Code nodes: a planning OpenAI call decides which tools are needed, If nodes gate each simulated tool call, and a final OpenAI call synthesizes the results.",
+  "tags": [
+    "week-06",
+    "ai-agents",
+    "day-38",
+    "openai",
+    "tools",
+    "solution"
+  ],
+  "version": "1.0.0",
+  "nodes": [
+    {
+      "id": "overview-sticky",
+      "name": "Overview Sticky",
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        240,
+        40
+      ],
+      "parameters": {
+        "content": "## Day 38 Solution: AI Agents with Tools\n\nSimulates n8n's LangChain AI Agent node using plain OpenAI + Set/If/Code nodes: an OpenAI node plans which tools are needed, If nodes gate two simulated tools (a real Wikipedia Search HTTP call, a Code-based Word Counter), and a final OpenAI node synthesizes both tool results into one answer.\n\n**Credentials needed to run for real:** OpenAI API key. (Wikipedia's API is public, no credential needed.)\n\n**Reference:** WEEK_06_AI_AGENTS/DAILY_TASKS/DAY_38_AI_Agents_with_Tools.md",
+        "height": 300,
+        "width": 420
+      }
+    },
+    {
+      "id": "ai-agent-trigger",
+      "name": "AI Agent Trigger",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2,
+      "position": [
+        240,
+        380
+      ],
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "ai-agent",
+        "options": {}
+      }
+    },
+    {
+      "id": "prepare-request",
+      "name": "Prepare Request",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        520,
+        380
+      ],
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "name": "user_request",
+              "value": "={{ $json.request }}"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "agent-decide-tools",
+      "name": "Agent: Decide Tools",
+      "type": "n8n-nodes-base.openAi",
+      "typeVersion": 1.3,
+      "position": [
+        800,
+        380
+      ],
+      "parameters": {
+        "resource": "chat",
+        "operation": "create",
+        "model": "gpt-4o-mini",
+        "messages": {
+          "values": [
+            {
+              "role": "system",
+              "content": "You are the planning step of a research assistant AI agent. Given the user's request, decide which of two tools are needed: a Wikipedia Search tool (for looking up unfamiliar topics) and a Word Counter tool (for counting words in a piece of text). Respond with two clear lines: 'NEEDS_WIKIPEDIA: yes' or 'NEEDS_WIKIPEDIA: no', and 'NEEDS_WORD_COUNT: yes' or 'NEEDS_WORD_COUNT: no'. Then briefly explain your reasoning. Always prefer looking things up over guessing."
+            },
+            {
+              "role": "user",
+              "content": "={{ 'User request: ' + $json.user_request }}"
+            }
+          ]
+        },
+        "options": {
+          "temperature": 0.3,
+          "maxTokens": 300
+        }
+      }
+    },
+    {
+      "id": "parse-agent-decision",
+      "name": "Parse Agent Decision",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        1080,
+        380
+      ],
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "name": "agent_decision",
+              "value": "={{ $json.message.content }}"
+            },
+            {
+              "name": "needs_wikipedia",
+              "value": "={{ $json.message.content.toLowerCase().includes('needs_wikipedia: yes') }}"
+            },
+            {
+              "name": "needs_word_count",
+              "value": "={{ $json.message.content.toLowerCase().includes('needs_word_count: yes') }}"
+            },
+            {
+              "name": "search_topic",
+              "value": "={{ $('Prepare Request').item.json.user_request }}"
+            },
+            {
+              "name": "count_text",
+              "value": "={{ $('Prepare Request').item.json.user_request }}"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "wikipedia-tool-needed",
+      "name": "Wikipedia Tool Needed?",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2,
+      "position": [
+        1360,
+        220
+      ],
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "c1",
+              "leftValue": "={{ $json.needs_wikipedia }}",
+              "rightValue": "",
+              "operator": {
+                "type": "boolean",
+                "operation": "true",
+                "singleValue": true
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      }
+    },
+    {
+      "id": "wikipedia-search-tool",
+      "name": "Wikipedia Search Tool",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        1640,
+        100
+      ],
+      "parameters": {
+        "method": "GET",
+        "url": "https://en.wikipedia.org/w/api.php",
+        "sendQuery": true,
+        "queryParameters": {
+          "parameters": [
+            {
+              "name": "action",
+              "value": "query"
+            },
+            {
+              "name": "list",
+              "value": "search"
+            },
+            {
+              "name": "srsearch",
+              "value": "={{ $json.search_topic }}"
+            },
+            {
+              "name": "format",
+              "value": "json"
+            }
+          ]
+        },
+        "options": {
+          "response": {
+            "response": {
+              "responseFormat": "json"
+            }
+          }
+        }
+      }
+    },
+    {
+      "id": "normalize-wikipedia-result",
+      "name": "Normalize Wikipedia Result",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        1920,
+        220
+      ],
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "name": "wikipedia_result",
+              "value": "={{ $json.query ? JSON.stringify($json.query.search.slice(0,3)) : 'Wikipedia lookup was not needed for this request.' }}"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "word-count-tool-needed",
+      "name": "Word Count Tool Needed?",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2,
+      "position": [
+        1360,
+        620
+      ],
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "c1",
+              "leftValue": "={{ $json.needs_word_count }}",
+              "rightValue": "",
+              "operator": {
+                "type": "boolean",
+                "operation": "true",
+                "singleValue": true
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      }
+    },
+    {
+      "id": "word-counter-tool",
+      "name": "Word Counter Tool",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        1640,
+        700
+      ],
+      "parameters": {
+        "jsCode": "const text = $json.count_text || '';\nconst wordCount = text.trim().split(/\\s+/).filter(Boolean).length;\nreturn [{ json: { ...$json, word_count: wordCount, counted_text: text } }];"
+      }
+    },
+    {
+      "id": "normalize-word-count-result",
+      "name": "Normalize Word Count Result",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        1920,
+        620
+      ],
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "name": "word_count_result",
+              "value": "={{ $json.word_count !== undefined ? ($json.word_count + ' words') : 'Word count was not needed for this request.' }}"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "combine-tool-results",
+      "name": "Combine Tool Results",
+      "type": "n8n-nodes-base.merge",
+      "typeVersion": 3,
+      "position": [
+        2200,
+        380
+      ],
+      "parameters": {
+        "mode": "combine",
+        "combineBy": "combineByPosition",
+        "numberInputs": 2,
+        "options": {}
+      }
+    },
+    {
+      "id": "agent-synthesis",
+      "name": "Agent Synthesis",
+      "type": "n8n-nodes-base.openAi",
+      "typeVersion": 1.3,
+      "position": [
+        2480,
+        380
+      ],
+      "parameters": {
+        "resource": "chat",
+        "operation": "create",
+        "model": "gpt-4o-mini",
+        "messages": {
+          "values": [
+            {
+              "role": "system",
+              "content": "You are a research assistant finishing an agent run. Combine the Wikipedia lookup result and the word count result (whichever were actually used) into one helpful answer for the user. Clearly state which tools you used and why."
+            },
+            {
+              "role": "user",
+              "content": "={{ 'User request: ' + $('Prepare Request').item.json.user_request + '\\n\\nWikipedia tool result: ' + $('Normalize Wikipedia Result').item.json.wikipedia_result + '\\n\\nWord count tool result: ' + $('Normalize Word Count Result').item.json.word_count_result + '\\n\\nAgent planning notes: ' + $('Parse Agent Decision').item.json.agent_decision }}"
+            }
+          ]
+        },
+        "options": {
+          "temperature": 0.4,
+          "maxTokens": 600
+        }
+      }
+    }
+  ],
+  "connections": {
+    "AI Agent Trigger": {
+      "main": [
+        [
+          {
+            "node": "Prepare Request",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Prepare Request": {
+      "main": [
+        [
+          {
+            "node": "Agent: Decide Tools",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Agent: Decide Tools": {
+      "main": [
+        [
+          {
+            "node": "Parse Agent Decision",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Parse Agent Decision": {
+      "main": [
+        [
+          {
+            "node": "Wikipedia Tool Needed?",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Word Count Tool Needed?",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Wikipedia Tool Needed?": {
+      "main": [
+        [
+          {
+            "node": "Wikipedia Search Tool",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Normalize Wikipedia Result",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Wikipedia Search Tool": {
+      "main": [
+        [
+          {
+            "node": "Normalize Wikipedia Result",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Word Count Tool Needed?": {
+      "main": [
+        [
+          {
+            "node": "Word Counter Tool",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Normalize Word Count Result",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Word Counter Tool": {
+      "main": [
+        [
+          {
+            "node": "Normalize Word Count Result",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Normalize Wikipedia Result": {
+      "main": [
+        [
+          {
+            "node": "Combine Tool Results",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Normalize Word Count Result": {
+      "main": [
+        [
+          {
+            "node": "Combine Tool Results",
+            "type": "main",
+            "index": 1
+          }
+        ]
+      ]
+    },
+    "Combine Tool Results": {
+      "main": [
+        [
+          {
+            "node": "Agent Synthesis",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {},
+  "pinData": {},
+  "versionId": "1",
+  "id": "day_38_solution"
+}

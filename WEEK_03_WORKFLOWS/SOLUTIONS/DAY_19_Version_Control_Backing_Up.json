@@ -1,0 +1,140 @@
+{
+  "name": "Day 19 Solution: Version Control & Backing Up",
+  "description": "Self-documenting workflow recording the export naming convention, folder structure, and a simulated backup script run.",
+  "tags": [
+    "week-03",
+    "day-19",
+    "solution"
+  ],
+  "version": "1.0.0",
+  "nodes": [
+    {
+      "id": "sticky1",
+      "name": "Sticky Note",
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        40,
+        -320
+      ],
+      "parameters": {
+        "content": "## Day 19 Solution: Version Control & Backing Up\n\nDay 19 is about export/import and backup scripting outside n8n, not a new build. This file is a small self-documenting workflow recording the naming convention and folder structure, plus an HTTP call standing in for a scheduled backup export. Credentials needed: None needed to test the logic in n8n; filesystem/SSH access is needed for the real backup script (outside n8n).\n\nSee DAILY_TASKS/DAY_19_Version_Control_Backing_Up.md.",
+        "height": 300,
+        "width": 500
+      }
+    },
+    {
+      "id": "trigger1",
+      "name": "Manual Trigger",
+      "type": "n8n-nodes-base.manualTrigger",
+      "typeVersion": 1,
+      "position": [
+        80,
+        140
+      ],
+      "parameters": {}
+    },
+    {
+      "id": "set1",
+      "name": "Define Backup Convention",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        320,
+        140
+      ],
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "name": "naming_convention",
+              "value": "[category]-[function]-v1-[date].json"
+            },
+            {
+              "name": "folder_structure",
+              "value": "n8n-backups/YYYYMMDD/"
+            },
+            {
+              "name": "example_filename",
+              "value": "={{ 'week3-triggers-v1-' + $now.format('yyyyMMdd') + '.json' }}"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "code1",
+      "name": "Simulate Backup Script Run",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        560,
+        140
+      ],
+      "parameters": {
+        "mode": "runOnceForAllItems",
+        "jsCode": "const now = new Date();\nconst folder = 'n8n-backups/' + now.toISOString().slice(0,10).replace(/-/g, '');\nreturn [{ json: { backup_folder: folder, files_backed_up: 2, ran_at: now.toISOString() } }];"
+      }
+    },
+    {
+      "id": "set2",
+      "name": "Document Backup Note",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        800,
+        140
+      ],
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "name": "note",
+              "value": "Workflows are exported via menu -> Download, named [category]-[function]-v1-[date].json, and stored under n8n-backups/YYYYMMDD/ so any teammate can find the latest backup by date."
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "connections": {
+    "Manual Trigger": {
+      "main": [
+        [
+          {
+            "node": "Define Backup Convention",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Define Backup Convention": {
+      "main": [
+        [
+          {
+            "node": "Simulate Backup Script Run",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Simulate Backup Script Run": {
+      "main": [
+        [
+          {
+            "node": "Document Backup Note",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {},
+  "pinData": {},
+  "versionId": "1",
+  "id": "day_19_solution"
+}

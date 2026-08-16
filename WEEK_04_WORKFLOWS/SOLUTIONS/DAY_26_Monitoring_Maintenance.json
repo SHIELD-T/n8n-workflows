@@ -1,0 +1,278 @@
+{
+  "name": "Day 26 Solution: Monitoring & Maintenance",
+  "description": "Scheduled health-check workflow computing a health score from an activity ratio and a simulated success rate, alerting when needs_attention.",
+  "tags": [
+    "week-04",
+    "day-26",
+    "solution"
+  ],
+  "version": "1.0.0",
+  "nodes": [
+    {
+      "id": "sticky1",
+      "name": "Sticky Note",
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        40,
+        -340
+      ],
+      "parameters": {
+        "content": "## Day 26 Solution: Monitoring & Maintenance\n\nSchedule (every 5 min) -> Set (init) -> HTTP Request (todos, stand-in for workflow health) -> Set (health_score from completed ratio) -> Set (simulated execution metrics, edit failed_executions to test both paths) -> Set (combine into overall_health) -> IF needs_attention -> Set (alert message). Credentials needed: None to complete as described; a Slack Bot Token only if you wire a real Slack alert.\n\nSee DAILY_TASKS/DAY_26_Monitoring_Maintenance.md.",
+        "height": 320,
+        "width": 520
+      }
+    },
+    {
+      "id": "sched1",
+      "name": "Monitoring Schedule Trigger",
+      "type": "n8n-nodes-base.scheduleTrigger",
+      "typeVersion": 1.2,
+      "position": [
+        80,
+        160
+      ],
+      "parameters": {
+        "rule": {
+          "interval": [
+            {
+              "field": "minutes",
+              "minutesInterval": 5
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "set1",
+      "name": "Initialize Monitoring",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        320,
+        160
+      ],
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "name": "monitoring_id",
+              "value": "={{ $now.format('yyyyMMddHHmmss') }}"
+            },
+            {
+              "name": "check_time",
+              "value": "={{ $now }}"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "http1",
+      "name": "Check Workflow Health",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        560,
+        160
+      ],
+      "parameters": {
+        "method": "GET",
+        "url": "https://jsonplaceholder.typicode.com/todos"
+      }
+    },
+    {
+      "id": "set2",
+      "name": "Analyze Workflow Status",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        800,
+        160
+      ],
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "name": "health_score",
+              "value": "={{ Math.round(($json.filter(t => t.completed).length / $json.length) * 100) }}"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "set3",
+      "name": "Analyze Execution Metrics",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        1040,
+        160
+      ],
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "name": "total_executions",
+              "value": 50
+            },
+            {
+              "name": "failed_executions",
+              "value": 2
+            },
+            {
+              "name": "success_rate",
+              "value": "={{ Math.round((50 - 2) / 50 * 100) }}"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "set4",
+      "name": "Generate Health Report",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        1280,
+        160
+      ],
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "name": "overall_health",
+              "value": "={{ $('Analyze Workflow Status').item.json.health_score > 80 && $json.success_rate > 90 ? 'healthy' : 'needs_attention' }}"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "if1",
+      "name": "Check for Alerts",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2,
+      "position": [
+        1520,
+        160
+      ],
+      "parameters": {
+        "conditions": {
+          "string": [
+            {
+              "value1": "={{ $json.overall_health }}",
+              "operation": "equal",
+              "value2": "needs_attention"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "set5",
+      "name": "Send Alert Notification",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        1760,
+        160
+      ],
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "name": "alert_message",
+              "value": "={{ '⚠️ System needs attention. Health score: ' + $('Analyze Workflow Status').item.json.health_score + ', Success rate: ' + $('Analyze Execution Metrics').item.json.success_rate + '%' }}"
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "connections": {
+    "Monitoring Schedule Trigger": {
+      "main": [
+        [
+          {
+            "node": "Initialize Monitoring",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Initialize Monitoring": {
+      "main": [
+        [
+          {
+            "node": "Check Workflow Health",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Check Workflow Health": {
+      "main": [
+        [
+          {
+            "node": "Analyze Workflow Status",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Analyze Workflow Status": {
+      "main": [
+        [
+          {
+            "node": "Analyze Execution Metrics",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Analyze Execution Metrics": {
+      "main": [
+        [
+          {
+            "node": "Generate Health Report",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Generate Health Report": {
+      "main": [
+        [
+          {
+            "node": "Check for Alerts",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Check for Alerts": {
+      "main": [
+        [
+          {
+            "node": "Send Alert Notification",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {},
+  "pinData": {},
+  "versionId": "1",
+  "id": "day_26_solution"
+}

@@ -1,0 +1,27 @@
+{
+  "name": "Day 100 Solution: Final Capstone Project Runner",
+  "description": "Runs your single best workflow from the whole course end-to-end and records a completion report.",
+  "tags": ["day-100", "solution", "week-15"],
+  "version": "1.0.0",
+  "nodes": [
+    { "id": "note1", "name": "Overview", "type": "n8n-nodes-base.stickyNote", "typeVersion": 1,
+      "position": [-40, -260],
+      "parameters": { "content": "## Day 100 Solution: Final Project Completion\n\nRe-run your chosen capstone workflow via Execute Workflow, then record a completion report — the deliverable for today.\n\n**Credentials needed:** Whatever your capstone workflow needs.\n\nSee `DAILY_TASKS/DAY_100_Final_Project_Completion.md`.", "height": 190, "width": 360 } },
+    { "id": "trig", "name": "Manual Trigger", "type": "n8n-nodes-base.manualTrigger", "typeVersion": 1, "position": [300, 100], "parameters": {} },
+    { "id": "callCapstone", "name": "Run Capstone Workflow", "type": "n8n-nodes-base.executeWorkflow", "typeVersion": 1.2,
+      "position": [550, 100],
+      "parameters": { "workflowId": { "value": "YOUR_CAPSTONE_WORKFLOW_ID", "mode": "list", "cachedResultName": "REPLACE_WITH_YOUR_BEST_WORKFLOW" } } },
+    { "id": "report", "name": "Record Completion Report", "type": "n8n-nodes-base.set", "typeVersion": 3.4,
+      "position": [800, 100],
+      "parameters": { "assignments": { "assignments": [
+        { "name": "capstone_project", "value": "REPLACE_WITH_WORKFLOW_NAME" },
+        { "name": "ran_successfully", "value": true },
+        { "name": "completed_at", "value": "={{ $now }}" }
+      ] } } }
+  ],
+  "connections": {
+    "Manual Trigger": { "main": [[ { "node": "Run Capstone Workflow", "type": "main", "index": 0 } ]] },
+    "Run Capstone Workflow": { "main": [[ { "node": "Record Completion Report", "type": "main", "index": 0 } ]] }
+  },
+  "active": false, "settings": {}, "pinData": {}, "versionId": "1", "id": "day_100_solution"
+}

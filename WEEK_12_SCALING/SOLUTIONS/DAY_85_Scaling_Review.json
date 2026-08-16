@@ -1,0 +1,118 @@
+{
+  "name": "Day 85 Solution: Scaling Review",
+  "description": "Solution workflow for WEEK_12_SCALING Day 85: Scaling Review.",
+  "tags": [
+    "course-solution",
+    "WEEK_12",
+    "day-85"
+  ],
+  "version": "1.0.0",
+  "nodes": [
+    {
+      "id": "51050a5f-a2eb-4607-a4a4-f2023d811876",
+      "name": "Overview",
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        -260,
+        -320
+      ],
+      "parameters": {
+        "content": "## Day 85 Solution: Scaling Review\n\nThis workflow captures the Day 85 deliverable as structured fields in the **Scaling Consolidation Fields** node (run it once with Manual Trigger to see the values), plus a fully worked model answer in the sticky note to the right that you can read directly on the canvas.\n\nEvery day in Weeks 11-15 is primarily a business deliverable, so this solution is a lightweight Manual Trigger -> Set pattern that still opens and runs cleanly in n8n.\n\n**Credentials needed:** None required for the review; whatever the imported EXAMPLES workflows need (check their sticky notes) if you run them beyond a manual test.\n\n**Matches:** `DAILY_TASKS/DAY_85_Scaling_Review.md` References `WEEK_12_SCALING/EXAMPLES/workflow_template_management_system.json`, `team_management_hiring_system.json`, and `aaas_service_management_system.json`.",
+        "height": 340,
+        "width": 460
+      }
+    },
+    {
+      "id": "1f63296c-29ae-4f2f-8ed5-ffa92b866f0a",
+      "name": "Manual Trigger",
+      "type": "n8n-nodes-base.manualTrigger",
+      "typeVersion": 1,
+      "position": [
+        80,
+        40
+      ],
+      "parameters": {}
+    },
+    {
+      "id": "70770fe2-1059-442e-bd9d-22dce2a4b0da",
+      "name": "Scaling Consolidation Fields",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        400,
+        40
+      ],
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "b9b30dd6-11fb-4417-b5ab-3306bba69734",
+              "name": "template_rebuilt",
+              "value": "Missed-Call Text-Back workflow, rebuilt with {{PLACEHOLDER}} variables and a setup Sticky Note",
+              "type": "string"
+            },
+            {
+              "id": "c38d5643-4114-4c0e-a13e-2d28e244b5ab",
+              "name": "examples_compared",
+              "value": "WEEK_12_SCALING/EXAMPLES/workflow_template_management_system.json — compared for naming/documentation conventions",
+              "type": "string"
+            },
+            {
+              "id": "ccc6916e-f183-4c8f-a647-097b37e83cbd",
+              "name": "role_card_hire",
+              "value": "Virtual Assistant — owns: client onboarding forms, status-update emails, scheduling calls. Does NOT own: credentials, billing, workflow-logic changes",
+              "type": "string"
+            },
+            {
+              "id": "d706420c-647c-4d6a-aa9d-6bfc19a43ca7",
+              "name": "examples_run_verified",
+              "value": "team_management_hiring_system.json and aaas_service_management_system.json both imported and run without error",
+              "type": "string"
+            },
+            {
+              "id": "2850450d-cc85-40cd-a09a-955397dad940",
+              "name": "diagram_flow",
+              "value": "Client -> Automation Templates (Day 79) -> Team / VA (Day 80) -> AaaS Pricing Tier (Day 83, Professional $697/mo)",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      }
+    },
+    {
+      "id": "031b35a8-db4d-4d77-b7a2-256eb8e64e5d",
+      "name": "Model Answer",
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        780,
+        -340
+      ],
+      "parameters": {
+        "content": "## Model Answer: Scaling Review\n\n### Week 12 Consolidation\n\n**1. Template rebuilt for real:** the Missed-Call Text-Back workflow from Week 11 was rebuilt with `{{TWILIO_NUMBER}}`, `{{CRM_TABLE}}`, and `{{NOTIFICATION_CHANNEL}}` placeholder variables, plus a top Sticky Note explaining exactly what to change before reuse — re-exported as a genuine template, not just a renamed copy.\n\n**2. Compared against EXAMPLES:** `workflow_template_management_system.json` imported — confirmed the same conventions (clear naming, sticky-note instructions, no hardcoded secrets) were followed.\n\n**3. Role card — first hire (Virtual Assistant):**\n- **Owns:** client onboarding form follow-up, weekly status-update emails, scheduling discovery calls.\n- **Tools/credentials needed:** shared Notion workspace, shared calendar — nothing else.\n- **Explicitly does NOT own:** client billing, any workflow-logic changes, credential management.\n\n**4. EXAMPLES verified runnable:** `team_management_hiring_system.json` and `aaas_service_management_system.json` both imported and executed without error.\n\n**5. One-page diagram:**\n\n`Client -> Automation Templates (Day 79 library) -> Team / VA (Day 80 role card) -> AaaS Pricing Tier (Day 83 Professional, $697/mo)`\n\nThis shows how a new client flows through Jordan's actual scaled business: they get a templated workflow, a VA handles onboarding logistics, and they land on the Professional AaaS tier as the default recurring offer.",
+        "height": 620,
+        "width": 700
+      }
+    }
+  ],
+  "connections": {
+    "Manual Trigger": {
+      "main": [
+        [
+          {
+            "node": "Scaling Consolidation Fields",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {},
+  "pinData": {},
+  "versionId": "1",
+  "id": "day_85_solution"
+}

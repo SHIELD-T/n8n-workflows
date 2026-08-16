@@ -1,0 +1,44 @@
+{
+  "name": "Day 99 Solution: Business Snapshot and Handoff Note",
+  "description": "Compiles Days 93-98 into one honest Business Snapshot and a Handoff Note someone unfamiliar with the systems could follow.",
+  "tags": ["day-99", "solution", "week-14"],
+  "version": "1.0.0",
+  "nodes": [
+    { "id": "note1", "name": "Overview", "type": "n8n-nodes-base.stickyNote", "typeVersion": 1,
+      "position": [-40, -280],
+      "parameters": { "content": "## Day 99 Solution: Final Optimization Review\n\nRuns Days 93-98's solutions, then compiles the Week 14 capstone deliverable: a Business Snapshot + Handoff Note.\n\n**Credentials needed:** None.\n\nSee `DAILY_TASKS/DAY_99_Final_Optimization_Review.md`.", "height": 170, "width": 360 } },
+    { "id": "trig", "name": "Manual Trigger", "type": "n8n-nodes-base.manualTrigger", "typeVersion": 1, "position": [300, 200], "parameters": {} },
+    { "id": "call93", "name": "Call Day 93 - System Optimization", "type": "n8n-nodes-base.executeWorkflow", "typeVersion": 1.2,
+      "position": [550, 100],
+      "parameters": { "workflowId": { "value": "DAY_93_ID", "mode": "list", "cachedResultName": "Day 93 Solution: System Optimization Audit" } } },
+    { "id": "call94", "name": "Call Day 94 - Financial", "type": "n8n-nodes-base.executeWorkflow", "typeVersion": 1.2,
+      "position": [550, 200],
+      "parameters": { "workflowId": { "value": "DAY_94_ID", "mode": "list", "cachedResultName": "Day 94 Solution: Financial Optimization Snapshot" } } },
+    { "id": "call97", "name": "Call Day 97 - Legacy Docs", "type": "n8n-nodes-base.executeWorkflow", "typeVersion": 1.2,
+      "position": [550, 300],
+      "parameters": { "workflowId": { "value": "DAY_97_ID", "mode": "list", "cachedResultName": "Day 97 Solution: Knowledge Base Entry" } } },
+    { "id": "snapshot", "name": "Compile Business Snapshot", "type": "n8n-nodes-base.set", "typeVersion": 3.4,
+      "position": [800, 200],
+      "parameters": { "assignments": { "assignments": [
+        { "name": "monthly_workflow_hours_saved_for_clients", "value": "REPLACE_WITH_REAL_ESTIMATE" },
+        { "name": "current_or_projected_mrr", "value": "REPLACE_WITH_REAL_NUMBER" },
+        { "name": "tracked_operational_metric", "value": "REPLACE: e.g. 99.2% workflow success rate over last 30 days" }
+      ] } } },
+    { "id": "handoff", "name": "Compile Handoff Note", "type": "n8n-nodes-base.set", "typeVersion": 3.4,
+      "position": [1050, 200],
+      "parameters": { "assignments": { "assignments": [
+        { "name": "where_workflows_live", "value": "REPLACE: e.g. n8n instance at automation.yourdomain.com" },
+        { "name": "credential_owner", "value": "REPLACE_WITH_NAME" },
+        { "name": "production_ready_workflows", "value": "={{ ['List the ones that are real'] }}" },
+        { "name": "placeholder_workflows", "value": "={{ ['List anything still a demo/stub'] }}" }
+      ] } } }
+  ],
+  "connections": {
+    "Manual Trigger": { "main": [[ { "node": "Call Day 93 - System Optimization", "type": "main", "index": 0 }, { "node": "Call Day 94 - Financial", "type": "main", "index": 0 }, { "node": "Call Day 97 - Legacy Docs", "type": "main", "index": 0 } ]] },
+    "Call Day 93 - System Optimization": { "main": [[ { "node": "Compile Business Snapshot", "type": "main", "index": 0 } ]] },
+    "Call Day 94 - Financial": { "main": [[ { "node": "Compile Business Snapshot", "type": "main", "index": 0 } ]] },
+    "Call Day 97 - Legacy Docs": { "main": [[ { "node": "Compile Business Snapshot", "type": "main", "index": 0 } ]] },
+    "Compile Business Snapshot": { "main": [[ { "node": "Compile Handoff Note", "type": "main", "index": 0 } ]] }
+  },
+  "active": false, "settings": {}, "pinData": {}, "versionId": "1", "id": "day_99_solution"
+}

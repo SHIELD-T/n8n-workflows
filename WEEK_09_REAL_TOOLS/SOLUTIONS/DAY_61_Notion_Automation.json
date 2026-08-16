@@ -1,0 +1,396 @@
+{
+  "name": "Day 61 Solution: Notion Automation",
+  "description": "Three Notion automations: AI-generated database record creation, update-by-page-ID, and full AI-written page creation, each triggered by its own webhook.",
+  "tags": [
+    "week9",
+    "real-tools",
+    "notion",
+    "webhook",
+    "openai"
+  ],
+  "version": "1.0.0",
+  "nodes": [
+    {
+      "id": "overview-sticky",
+      "name": "Overview",
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        140,
+        20
+      ],
+      "parameters": {
+        "content": "## Day 61 Solution: Notion Automation\n\nThree independent webhook-triggered sections on this canvas: create a database record from raw text (AI-generated fields), update an existing record by page ID, and create a full Notion page with AI-written content.\n\n**Credentials needed to run for real:** Notion API (internal integration token, shared with your target database/page), OpenAI API key.\n\nSee DAILY_TASKS/DAY_61_Notion_Automation.md for the full task.",
+        "height": 260,
+        "width": 460
+      }
+    },
+    {
+      "id": "property-types-sticky",
+      "name": "Notion Property Types",
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        640,
+        20
+      ],
+      "parameters": {
+        "content": "## Watch the property types\n\nNotion's API is picky about property shapes: a `select` property needs `{ \"name\": \"value\" }`, not a bare string; `title`/`rich_text` need Notion's rich-text array shape. The n8n Notion node's field mapper UI handles this for you when you pick property names from the dropdown -- avoid hand-building raw property JSON where you can.\n\nAlso: share the target database/page with your integration first, or every call below 404s.",
+        "height": 260,
+        "width": 380
+      }
+    },
+    {
+      "id": "create-record-sticky",
+      "name": "Section A: Create Record",
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        140,
+        320
+      ],
+      "parameters": {
+        "content": "### Create Record\nRaw text in -> AI structures it -> Notion database row out.",
+        "height": 110,
+        "width": 260
+      }
+    },
+    {
+      "id": "create-record-webhook",
+      "name": "Notion Create Record Webhook",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2,
+      "position": [
+        420,
+        380
+      ],
+      "parameters": {
+        "path": "notion-create-record",
+        "httpMethod": "POST"
+      }
+    },
+    {
+      "id": "generate-record-content",
+      "name": "Generate Record Content",
+      "type": "n8n-nodes-base.openAi",
+      "typeVersion": 1.3,
+      "position": [
+        680,
+        380
+      ],
+      "parameters": {
+        "resource": "chat",
+        "operation": "create",
+        "model": "gpt-4o-mini",
+        "messages": {
+          "values": [
+            {
+              "role": "system",
+              "content": "You turn raw notes into a structured content record. Respond ONLY with strict JSON: {\"title\": string, \"description\": string, \"tags\": string[], \"summary\": string}. No other text."
+            },
+            {
+              "role": "user",
+              "content": "={{ $json.raw_text }}"
+            }
+          ]
+        },
+        "options": {
+          "temperature": 0.4,
+          "maxTokens": 400
+        }
+      }
+    },
+    {
+      "id": "parse-record-content",
+      "name": "Parse Generated Content",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        940,
+        380
+      ],
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "name": "title",
+              "value": "={{ JSON.parse($json.choices[0].message.content).title }}"
+            },
+            {
+              "name": "description",
+              "value": "={{ JSON.parse($json.choices[0].message.content).description }}"
+            },
+            {
+              "name": "tags",
+              "value": "={{ JSON.parse($json.choices[0].message.content).tags }}"
+            },
+            {
+              "name": "summary",
+              "value": "={{ JSON.parse($json.choices[0].message.content).summary }}"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "create-database-record",
+      "name": "Create Database Record",
+      "type": "n8n-nodes-base.notion",
+      "typeVersion": 2,
+      "position": [
+        1200,
+        380
+      ],
+      "parameters": {
+        "resource": "databasePage",
+        "operation": "create",
+        "databaseId": {
+          "__rl": true,
+          "value": "your_database_id",
+          "mode": "id"
+        },
+        "title": "={{ $json.title }}",
+        "propertiesUi": {
+          "propertyValues": [
+            {
+              "key": "Description|rich_text",
+              "textValue": "={{ $json.description }}"
+            },
+            {
+              "key": "Tags|multi_select",
+              "multiSelectValue": "={{ $json.tags }}"
+            },
+            {
+              "key": "Status|select",
+              "selectValue": "New"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "update-record-sticky",
+      "name": "Section B: Update Record",
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        140,
+        620
+      ],
+      "parameters": {
+        "content": "### Update Record\nModify an existing row by its Notion page ID.",
+        "height": 110,
+        "width": 260
+      }
+    },
+    {
+      "id": "update-record-webhook",
+      "name": "Notion Update Record Webhook",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2,
+      "position": [
+        420,
+        680
+      ],
+      "parameters": {
+        "path": "notion-update-record",
+        "httpMethod": "POST"
+      }
+    },
+    {
+      "id": "update-database-record",
+      "name": "Update Database Record",
+      "type": "n8n-nodes-base.notion",
+      "typeVersion": 2,
+      "position": [
+        680,
+        680
+      ],
+      "parameters": {
+        "resource": "databasePage",
+        "operation": "update",
+        "pageId": {
+          "__rl": true,
+          "value": "={{ $json.pageId }}",
+          "mode": "id"
+        },
+        "propertiesUi": {
+          "propertyValues": [
+            {
+              "key": "Status|select",
+              "selectValue": "={{ $json.status || 'Updated' }}"
+            },
+            {
+              "key": "Description|rich_text",
+              "textValue": "={{ $json.description }}"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "create-page-sticky",
+      "name": "Section C: Create Page",
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        140,
+        900
+      ],
+      "parameters": {
+        "content": "### Create Page\nFull AI-written page content, not just a database row.",
+        "height": 110,
+        "width": 260
+      }
+    },
+    {
+      "id": "create-page-webhook",
+      "name": "Notion Create Page Webhook",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2,
+      "position": [
+        420,
+        960
+      ],
+      "parameters": {
+        "path": "notion-create-page",
+        "httpMethod": "POST"
+      }
+    },
+    {
+      "id": "generate-page-content",
+      "name": "Generate Page Content",
+      "type": "n8n-nodes-base.openAi",
+      "typeVersion": 1.3,
+      "position": [
+        680,
+        960
+      ],
+      "parameters": {
+        "resource": "chat",
+        "operation": "create",
+        "model": "gpt-4o-mini",
+        "messages": {
+          "values": [
+            {
+              "role": "system",
+              "content": "You write a full page of well-structured content (heading + several paragraphs) from a short brief. Respond ONLY with strict JSON: {\"page_title\": string, \"page_body\": string}."
+            },
+            {
+              "role": "user",
+              "content": "={{ $json.brief }}"
+            }
+          ]
+        },
+        "options": {
+          "temperature": 0.5,
+          "maxTokens": 800
+        }
+      }
+    },
+    {
+      "id": "create-notion-page",
+      "name": "Create Notion Page",
+      "type": "n8n-nodes-base.notion",
+      "typeVersion": 2,
+      "position": [
+        940,
+        960
+      ],
+      "parameters": {
+        "resource": "page",
+        "operation": "create",
+        "pageId": {
+          "__rl": true,
+          "value": "your_parent_page_id",
+          "mode": "id"
+        },
+        "title": "={{ JSON.parse($json.choices[0].message.content).page_title }}",
+        "propertiesUi": {
+          "propertyValues": []
+        },
+        "blockUi": {
+          "blockValues": [
+            {
+              "type": "paragraph",
+              "text": "={{ JSON.parse($json.choices[0].message.content).page_body }}"
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "connections": {
+    "Notion Create Record Webhook": {
+      "main": [
+        [
+          {
+            "node": "Generate Record Content",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Generate Record Content": {
+      "main": [
+        [
+          {
+            "node": "Parse Generated Content",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Parse Generated Content": {
+      "main": [
+        [
+          {
+            "node": "Create Database Record",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Notion Update Record Webhook": {
+      "main": [
+        [
+          {
+            "node": "Update Database Record",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Notion Create Page Webhook": {
+      "main": [
+        [
+          {
+            "node": "Generate Page Content",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Generate Page Content": {
+      "main": [
+        [
+          {
+            "node": "Create Notion Page",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {},
+  "pinData": {},
+  "versionId": "1",
+  "id": "day_61_solution"
+}

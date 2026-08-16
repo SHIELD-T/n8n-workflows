@@ -31,95 +31,95 @@ Build a complex AI workflow using advanced patterns.
 
 ---
 
-### **DAY 44: TUESDAY - AI Workflow Optimization**
+### **DAY 44: TUESDAY - AI Agent Communication**
 **Time:** 2-3 hours
 
 #### **Morning (1 hour):**
-- Watch: [Build AI Agents & Automate Workflows (Zero to Hero)](https://www.youtube.com/watch?v=DkV7ztrhLh8) - Optimizing AI workflows section
-- Learn: AI performance optimization
-- Practice: Optimization techniques
+- Watch: [Build AI Agents & Automate Workflows (Zero to Hero)](https://www.youtube.com/watch?v=DkV7ztrhLh8) - Agent-to-agent messaging section
+- Learn: Request-response, publish-subscribe, and broadcast messaging patterns
+- Practice: Routing messages between agents by type
 
 #### **Afternoon (1 hour):**
-- Hands-on: Optimize AI workflows
-- Practice: Performance tuning
-- Experiment: Different optimization strategies
+- Hands-on: Build a message validation and routing workflow
+- Practice: Switch-based routing for different message types
+- Experiment: Testing valid and invalid message payloads
 
 #### **Evening (30 minutes):**
-- Share: Your optimization results
-- Get: Feedback on AI performance
-- Document: AI optimization techniques
+- Share: Your agent communication workflow
+- Get: Feedback on your routing logic
+- Document: Message types and routing rules
 
 #### **📝 DAILY TASK:**
-Optimize 3 AI workflows for better performance.
+Build an n8n workflow that validates and routes request, response, and broadcast messages between agents.
 
 ---
 
-### **DAY 45: WEDNESDAY - Intelligent Automation Systems**
+### **DAY 45: WEDNESDAY - AI Agent Learning**
 **Time:** 2-3 hours
 
 #### **Morning (1 hour):**
-- Watch: [N8N Tutorial: Building N8N AI Agents (Beginner to Pro)](https://www.youtube.com/watch?v=lSwMtsm6oDU) - Building intelligent automation systems section
-- Learn: AI-powered system design
-- Practice: Intelligent automation
+- Watch: [N8N Tutorial: Building N8N AI Agents (Beginner to Pro)](https://www.youtube.com/watch?v=lSwMtsm6oDU) - Agent memory and context section
+- Learn: How to feed real performance history back into an agent's next run
+- Practice: Reading and writing a learning history log
 
 #### **Afternoon (1 hour):**
-- Hands-on: Build intelligent automation systems
-- Practice: AI system integration
-- Experiment: Different intelligence approaches
+- Hands-on: Build a workflow that reads past performance data before analyzing trend
+- Practice: Computing a real improvement delta from stored data
+- Experiment: Running the workflow twice to confirm it learns from its own history
 
 #### **Evening (30 minutes):**
-- Share: Your intelligent systems
-- Ask: Questions about AI systems
-- Document: Intelligent automation patterns
+- Share: Your agent learning workflow
+- Ask: Questions about performance tracking
+- Document: What the agent adapted between runs
 
 #### **📝 DAILY TASK:**
-Build an intelligent automation system with AI decision-making.
+Build a learning agent workflow that reads real historical performance data and outputs one concrete behavior change.
 
 ---
 
-### **DAY 46: THURSDAY - AI Workflow Testing**
+### **DAY 46: THURSDAY - AI Agent Decision Making**
 **Time:** 2-3 hours
 
 #### **Morning (1 hour):**
-- Watch: [How to Build AI Automations & Agents (Step-by-Step)](https://www.youtube.com/watch?v=bKX8t3QA04s) - Testing AI workflows section
-- Learn: AI testing strategies
-- Practice: AI workflow testing
+- Watch: [How to Build AI Automations & Agents (Step-by-Step)](https://www.youtube.com/watch?v=bKX8t3QA04s) - Structured decision logic section
+- Learn: Turning risk/reward assessments into a real weighted score
+- Practice: Computing decision scores in a Code node
 
 #### **Afternoon (1 hour):**
-- Hands-on: Test AI workflows
-- Practice: AI testing techniques
-- Experiment: Different testing approaches
+- Hands-on: Build a decision workflow with real weighted scoring
+- Practice: Picking the highest-scoring option from computed data
+- Experiment: Testing with a real multi-option business scenario
 
 #### **Evening (30 minutes):**
-- Share: Your AI testing experience
-- Get: Feedback on AI testing
-- Document: AI testing best practices
+- Share: Your decision-making workflow
+- Get: Feedback on your scoring formula
+- Document: How the weighted score is calculated
 
 #### **📝 DAILY TASK:**
-Create a comprehensive testing strategy for AI workflows.
+Build a decision agent that scores multiple options with a real weighted formula and picks the optimal choice.
 
 ---
 
-### **DAY 47: FRIDAY - AI Workflow Security**
+### **DAY 47: FRIDAY - AI Agent Optimization**
 **Time:** 2-3 hours
 
 #### **Morning (1 hour):**
-- Watch: [n8n Tutorial for Beginners: Complete AI Automation Guide](https://www.youtube.com/watch?v=CfD17vBCPEU) - Securing AI workflows section
-- Learn: AI security best practices
-- Practice: AI security implementation
+- Watch: [n8n Tutorial for Beginners: Complete AI Automation Guide](https://www.youtube.com/watch?v=CfD17vBCPEU) - Workflow performance section
+- Learn: Measuring real execution time and error rate instead of guessing
+- Practice: Reading n8n's Executions API for real performance data
 
 #### **Afternoon (1 hour):**
-- Hands-on: Secure AI workflows
-- Practice: AI security techniques
-- Experiment: Different security approaches
+- Hands-on: Build a workflow that pulls real execution stats and flags slow/error-prone runs
+- Practice: Setting a concrete performance threshold
+- Experiment: Comparing before/after a targeted fix
 
 #### **Evening (30 minutes):**
-- Share: Your AI security implementation
-- Ask: Questions about AI security
-- Document: AI security patterns
+- Share: Your optimization workflow and findings
+- Ask: Questions about performance bottlenecks
+- Document: The concrete fix you applied
 
 #### **📝 DAILY TASK:**
-Implement comprehensive security for AI workflows.
+Build a workflow that measures real execution performance and flags when a workflow needs optimization.
 
 ---
 

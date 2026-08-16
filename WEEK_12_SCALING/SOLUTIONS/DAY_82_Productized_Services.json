@@ -1,0 +1,148 @@
+{
+  "name": "Day 82 Solution: Productized Services",
+  "description": "Solution workflow for WEEK_12_SCALING Day 82: Productized Services.",
+  "tags": [
+    "course-solution",
+    "WEEK_12",
+    "day-82"
+  ],
+  "version": "1.0.0",
+  "nodes": [
+    {
+      "id": "dd04175d-1b2f-4881-86ef-939ea0bc8c5c",
+      "name": "Overview",
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        -260,
+        -320
+      ],
+      "parameters": {
+        "content": "## Day 82 Solution: Productized Services\n\nThis workflow captures the Day 82 deliverable as structured fields in the **Productized Service Fields** node (run it once with Manual Trigger to see the values), plus a fully worked model answer in the sticky note to the right that you can read directly on the canvas.\n\nEvery day in Weeks 11-15 is primarily a business deliverable, so this solution is a lightweight Manual Trigger -> Set pattern that still opens and runs cleanly in n8n.\n\n**Credentials needed:** None needed — every node in this solution runs with no external account.\n\n**Matches:** `DAILY_TASKS/DAY_82_Productized_Services.md`",
+        "height": 340,
+        "width": 460
+      }
+    },
+    {
+      "id": "b32e1cfc-e15c-4c8a-ae8d-15bb7477aa6b",
+      "name": "Manual Trigger",
+      "type": "n8n-nodes-base.manualTrigger",
+      "typeVersion": 1,
+      "position": [
+        80,
+        40
+      ],
+      "parameters": {}
+    },
+    {
+      "id": "af71740f-f4b0-4275-abba-cde5e8a5c465",
+      "name": "Productized Service Fields",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        400,
+        40
+      ],
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "503bc9b1-44a2-4ccf-8d43-3d0caf2c7a72",
+              "name": "service_1_name",
+              "value": "Lead Generation Automation Suite",
+              "type": "string"
+            },
+            {
+              "id": "3a6431c7-5406-45cb-bfdd-a48cb5a42964",
+              "name": "service_1_pricing",
+              "value": "Setup $997 + $197/mo, customization $150/hr",
+              "type": "string"
+            },
+            {
+              "id": "8465f514-1305-4575-ac56-8f64517d10b5",
+              "name": "service_1_features",
+              "value": "Form integration, CRM integration, email automation, Slack/Telegram notifications, lead scoring, follow-up automation",
+              "type": "string"
+            },
+            {
+              "id": "1f1e9372-29b6-4079-9698-4fa4fead5a50",
+              "name": "service_2_name",
+              "value": "Customer Support Automation Suite",
+              "type": "string"
+            },
+            {
+              "id": "6b8a9ba5-0608-408b-92cf-116d37214995",
+              "name": "service_2_pricing",
+              "value": "Setup $1,497 + $297/mo, customization $150/hr",
+              "type": "string"
+            },
+            {
+              "id": "27a3f2cc-386c-4695-b828-19c8b09b76f2",
+              "name": "service_2_features",
+              "value": "Multi-channel support, AI ticket classification, automated responses, escalation management, CSAT surveys",
+              "type": "string"
+            },
+            {
+              "id": "538e27a1-c99e-4a56-8ba6-a13fa9108ee6",
+              "name": "service_3_name",
+              "value": "Content Management Automation Suite",
+              "type": "string"
+            },
+            {
+              "id": "4082dd18-6221-4af2-8a79-0ba885d09113",
+              "name": "service_3_pricing",
+              "value": "Setup $1,197 + $247/mo, customization $150/hr",
+              "type": "string"
+            },
+            {
+              "id": "e9495b46-0924-44d9-9d92-429fca8c3160",
+              "name": "service_3_features",
+              "value": "AI content generation, review/edit workflow, multi-platform publishing, performance analytics",
+              "type": "string"
+            },
+            {
+              "id": "8b1a01ca-0e66-4b73-9b84-170633328d47",
+              "name": "delivery_standard",
+              "value": "1 week setup time, 2 hours training included, 30 days support included",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      }
+    },
+    {
+      "id": "ecba32f2-0c58-497e-9982-2d6c6ee5ecd5",
+      "name": "Model Answer",
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        780,
+        -340
+      ],
+      "parameters": {
+        "content": "## Model Answer: Productized Services\n\n### 3 Productized Services\n\n**1. Lead Generation Automation Suite** — $997 setup + $197/mo (customization $150/hr). Features: form integration (Tally/Typeform/Google Forms), CRM integration (Airtable/HubSpot/Salesforce), email automation, Slack/Telegram notifications, lead scoring, follow-up automation. Target market: small-to-medium home-services businesses. Value prop: save 15+ hrs/week on lead management.\n\n**2. Customer Support Automation Suite** — $1,497 setup + $297/mo. Features: multi-channel support (Email/Slack/Discord), AI-powered ticket classification, automated responses, escalation management, performance tracking, CSAT surveys.\n\n**3. Content Management Automation Suite** — $1,197 setup + $247/mo. Features: AI content generation, review/edit workflow, multi-platform publishing (WordPress/Medium/LinkedIn), social distribution, performance analytics.\n\n**Delivery standard across all three:** 1-week setup time, 2 hours of training included, 30 days of support included.\n\n**Managed-services upsell:** ongoing automation management for clients who want zero hands-on involvement — priced as the suite's monthly fee + 20%.\n\n**Quality assurance:** every productized build is tested against a 5-case checklist before delivery (happy path, empty input, duplicate input, malformed input, high-volume burst) so the \"product\" behaves the same for every client, not a bespoke one-off each time.",
+        "height": 620,
+        "width": 700
+      }
+    }
+  ],
+  "connections": {
+    "Manual Trigger": {
+      "main": [
+        [
+          {
+            "node": "Productized Service Fields",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {},
+  "pinData": {},
+  "versionId": "1",
+  "id": "day_82_solution"
+}

@@ -1,0 +1,124 @@
+{
+  "name": "Day 84 Solution: Keeping Your Stack Updated",
+  "description": "Solution workflow for WEEK_12_SCALING Day 84: Keeping Your Stack Updated.",
+  "tags": [
+    "course-solution",
+    "WEEK_12",
+    "day-84"
+  ],
+  "version": "1.0.0",
+  "nodes": [
+    {
+      "id": "465c9a85-fdcd-498d-8232-5de8fa82daa7",
+      "name": "Overview",
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        -260,
+        -320
+      ],
+      "parameters": {
+        "content": "## Day 84 Solution: Keeping Your Stack Updated\n\nThis workflow captures the Day 84 deliverable as structured fields in the **Continuous Learning Fields** node (run it once with Manual Trigger to see the values), plus a fully worked model answer in the sticky note to the right that you can read directly on the canvas.\n\nEvery day in Weeks 11-15 is primarily a business deliverable, so this solution is a lightweight Manual Trigger -> Set pattern that still opens and runs cleanly in n8n.\n\n**Credentials needed:** None needed — every node in this solution runs with no external account.\n\n**Matches:** `DAILY_TASKS/DAY_84_Keeping_Stack_Updated.md`",
+        "height": 340,
+        "width": 460
+      }
+    },
+    {
+      "id": "6aa88e60-c9e0-4792-ac06-dc8e2b89afe8",
+      "name": "Manual Trigger",
+      "type": "n8n-nodes-base.manualTrigger",
+      "typeVersion": 1,
+      "position": [
+        80,
+        40
+      ],
+      "parameters": {}
+    },
+    {
+      "id": "6cc302c3-4027-43c1-bafc-7602c7b527d9",
+      "name": "Continuous Learning Fields",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        400,
+        40
+      ],
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "847db5f0-b920-4564-ae85-a7bb67473b98",
+              "name": "monitoring_sources",
+              "value": "n8n release notes, r/n8n, automation newsletters — reviewed weekly",
+              "type": "string"
+            },
+            {
+              "id": "b4abc3fd-fef8-45e8-b61b-c235b02771cb",
+              "name": "ai_model_review_cadence",
+              "value": "Quarterly — test new OpenAI/Claude model versions against 2-3 existing workflows before migrating production",
+              "type": "string"
+            },
+            {
+              "id": "a684a643-b5d6-4849-9bd8-69f1abc32c20",
+              "name": "update_procedure",
+              "value": "Test in a staging/duplicate workflow first -> review changelog -> update production in a low-traffic window -> document the change",
+              "type": "string"
+            },
+            {
+              "id": "ead74ba2-3a4e-4700-8333-496fb112f745",
+              "name": "learning_schedule",
+              "value": "2 hrs/week — 1 hr new n8n features, 1 hr industry-specific automation reading",
+              "type": "string"
+            },
+            {
+              "id": "9757494e-bc6b-4d8c-b477-a87c4b6f5e4a",
+              "name": "certification_tracking",
+              "value": "n8n certifications and relevant platform certs logged in a simple tracker with renewal dates",
+              "type": "string"
+            },
+            {
+              "id": "98d1f6a7-d212-4ba4-b6c2-88d6bec80657",
+              "name": "tech_roadmap_next_quarter",
+              "value": "Evaluate AI agent nodes for support triage; pilot with 1 existing client before wider rollout",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      }
+    },
+    {
+      "id": "7ae326a7-8d3c-458f-a58d-4361d58ec409",
+      "name": "Model Answer",
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        780,
+        -340
+      ],
+      "parameters": {
+        "content": "## Model Answer: Keeping Your Stack Updated\n\n### Technology Update System\n\n**Monitoring:** n8n release notes, r/n8n, and 2 automation newsletters reviewed every Friday (30 min). New node types and breaking changes logged in a running Notion doc.\n\n**AI model integration:** quarterly review — test new OpenAI/Claude model versions against 2-3 existing production workflows in a duplicate/staging copy before migrating. Track cost-per-call and output-quality delta before switching.\n\n**Tool update procedure:** 1) test in a staging/duplicate workflow, 2) read the changelog for breaking changes, 3) apply the update to production during a low-traffic window (weekends), 4) document what changed and why.\n\n**Continuous learning schedule:** 2 hrs/week total — 1 hr on new n8n features/nodes, 1 hr on home-services/automation industry reading. Certifications and courses logged in a tracker with renewal dates so nothing lapses silently.\n\n**Knowledge sharing:** one written note per month shared to the course community summarizing what changed in the stack and what Jordan tested.\n\n**Next-quarter roadmap:** evaluate AI agent nodes for support ticket triage; pilot with 1 existing client before rolling out to the full client base.",
+        "height": 620,
+        "width": 700
+      }
+    }
+  ],
+  "connections": {
+    "Manual Trigger": {
+      "main": [
+        [
+          {
+            "node": "Continuous Learning Fields",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {},
+  "pinData": {},
+  "versionId": "1",
+  "id": "day_84_solution"
+}

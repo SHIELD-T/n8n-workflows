@@ -1,0 +1,222 @@
+{
+  "name": "Day 18 Solution: Error Handling and Retry Logic",
+  "description": "HTTP Request with retry + Continue On Fail, followed by an IF check on $json.error routing to distinct success/failure Set nodes.",
+  "tags": [
+    "week-03",
+    "day-18",
+    "solution"
+  ],
+  "version": "1.0.0",
+  "nodes": [
+    {
+      "id": "sticky1",
+      "name": "Sticky Note",
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        40,
+        -320
+      ],
+      "parameters": {
+        "content": "## Day 18 Solution: Error Handling and Retry Logic\n\nManual -> Set (config with an unreachable URL) -> HTTP Request (retry x3, Continue On Fail) -> IF checks $json.error -> failure Set node vs success Set node. Swap the URL in 'Set API Configuration' to jsonplaceholder to exercise the success path. Credentials needed: None — jsonplaceholder.typicode.com is free/no-auth for the success-path test.\n\nSee DAILY_TASKS/DAY_18_Error_Handling_Retry_Logic.md.",
+        "height": 300,
+        "width": 500
+      }
+    },
+    {
+      "id": "trigger1",
+      "name": "Manual Trigger",
+      "type": "n8n-nodes-base.manualTrigger",
+      "typeVersion": 1,
+      "position": [
+        80,
+        140
+      ],
+      "parameters": {}
+    },
+    {
+      "id": "set1",
+      "name": "Set API Configuration",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        320,
+        140
+      ],
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "name": "api_url",
+              "value": "https://api.nonexistent-service.com/data"
+            },
+            {
+              "name": "max_retries",
+              "value": 3
+            },
+            {
+              "name": "retry_delay",
+              "value": 2000
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "sticky2",
+      "name": "Warning: Placeholder Endpoint",
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        320,
+        260
+      ],
+      "parameters": {
+        "content": "⚠️ Placeholder endpoint — replace with a real service when you test this in n8n. It is deliberately unreachable so you can observe retry behavior.",
+        "height": 100,
+        "width": 280
+      }
+    },
+    {
+      "id": "http1",
+      "name": "API Request with Retry",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        560,
+        140
+      ],
+      "parameters": {
+        "method": "GET",
+        "url": "={{ $json.api_url }}",
+        "options": {
+          "timeout": 10000,
+          "retry": {
+            "maxTries": 3,
+            "waitBetweenTries": 2000
+          }
+        },
+        "onError": "continueRegularOutput"
+      }
+    },
+    {
+      "id": "if1",
+      "name": "Check API Response",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2,
+      "position": [
+        800,
+        140
+      ],
+      "parameters": {
+        "conditions": {
+          "string": [
+            {
+              "value1": "={{ $json.error !== undefined }}",
+              "operation": "equal",
+              "value2": "true"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "set2",
+      "name": "Handle Final Error",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        1040,
+        60
+      ],
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "name": "error_notification",
+              "value": "={{ 'API request failed after ' + $json.max_retries + ' retries: ' + ($json.error ? $json.error.message : 'unknown error') }}"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "set3",
+      "name": "Log Success",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        1040,
+        220
+      ],
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "name": "success_log",
+              "value": "={{ '✅ API request successful after ' + $now.diff($('Set API Configuration').item.json.retry_delay, 'milliseconds') + 'ms' }}"
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "connections": {
+    "Manual Trigger": {
+      "main": [
+        [
+          {
+            "node": "Set API Configuration",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Set API Configuration": {
+      "main": [
+        [
+          {
+            "node": "API Request with Retry",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "API Request with Retry": {
+      "main": [
+        [
+          {
+            "node": "Check API Response",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Check API Response": {
+      "main": [
+        [
+          {
+            "node": "Handle Final Error",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Log Success",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {},
+  "pinData": {},
+  "versionId": "1",
+  "id": "day_18_solution"
+}

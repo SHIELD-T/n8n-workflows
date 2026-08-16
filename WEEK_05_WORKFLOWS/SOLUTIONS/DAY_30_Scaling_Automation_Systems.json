@@ -1,0 +1,253 @@
+{
+  "name": "Day 30 Solution: Scaling Automation Systems",
+  "description": "Switch-based scaling decision (scale_up/scale_down/maintain) with a Code node demonstrating real cross-execution state via workflow static data.",
+  "tags": [
+    "week-05",
+    "day-30",
+    "solution"
+  ],
+  "version": "1.0.0",
+  "nodes": [
+    {
+      "id": "sticky1",
+      "name": "Sticky Note",
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        40,
+        -340
+      ],
+      "parameters": {
+        "content": "## Day 30 Solution: Scaling Automation Systems\n\nWebhook -> Set init -> Switch (scale_up / scale_down / maintain via fallback) -> HTTP Request per branch (webhook.site placeholders) -> Code node using $getWorkflowStaticData for a real running counter. Fire 10 concurrent curl requests to test. Credentials needed: None — a free webhook.site URL is optional.\n\nSee DAILY_TASKS/DAY_30_Scaling_Automation_Systems.md.",
+        "height": 320,
+        "width": 540
+      }
+    },
+    {
+      "id": "webhook1",
+      "name": "Load Balancer Trigger",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2,
+      "position": [
+        80,
+        200
+      ],
+      "parameters": {
+        "path": "scalable-processing",
+        "httpMethod": "POST"
+      }
+    },
+    {
+      "id": "set1",
+      "name": "Initialize Scaling System",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        320,
+        200
+      ],
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "name": "request_id",
+              "value": "={{ $now.format('yyyyMMddHHmmss') }}"
+            },
+            {
+              "name": "current_load",
+              "value": "={{ $json.load_percentage }}"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "switch1",
+      "name": "Scaling Decision",
+      "type": "n8n-nodes-base.switch",
+      "typeVersion": 3.2,
+      "position": [
+        560,
+        200
+      ],
+      "parameters": {
+        "mode": "rules",
+        "rules": {
+          "values": [
+            {
+              "conditions": {
+                "number": [
+                  {
+                    "value1": "={{ $json.current_load }}",
+                    "operation": "larger",
+                    "value2": 80
+                  }
+                ]
+              },
+              "outputKey": "scale_up"
+            },
+            {
+              "conditions": {
+                "number": [
+                  {
+                    "value1": "={{ $json.current_load }}",
+                    "operation": "smaller",
+                    "value2": 20
+                  }
+                ]
+              },
+              "outputKey": "scale_down"
+            }
+          ]
+        },
+        "fallbackOutput": "extra"
+      }
+    },
+    {
+      "id": "http1",
+      "name": "Scale Up Instances",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        800,
+        60
+      ],
+      "parameters": {
+        "method": "POST",
+        "url": "https://webhook.site/your-unique-id",
+        "sendBody": true,
+        "bodyContentType": "json",
+        "jsonBody": "={{ { request_id: $json.request_id, action: 'scale_up', target_instances: 5 } }}"
+      }
+    },
+    {
+      "id": "http2",
+      "name": "Scale Down Instances",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        800,
+        220
+      ],
+      "parameters": {
+        "method": "POST",
+        "url": "https://webhook.site/your-unique-id",
+        "sendBody": true,
+        "bodyContentType": "json",
+        "jsonBody": "={{ { request_id: $json.request_id, action: 'scale_down', target_instances: 1 } }}"
+      }
+    },
+    {
+      "id": "noop1",
+      "name": "Maintain Current Scale",
+      "type": "n8n-nodes-base.noOp",
+      "typeVersion": 1,
+      "position": [
+        800,
+        380
+      ],
+      "parameters": {}
+    },
+    {
+      "id": "code1",
+      "name": "Process With Caching",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        1040,
+        200
+      ],
+      "parameters": {
+        "mode": "runOnceForAllItems",
+        "jsCode": "const staticData = $getWorkflowStaticData('global');\nstaticData.requestsServed = (staticData.requestsServed || 0) + 1;\nreturn [{ json: { ...items[0].json, requestsServed: staticData.requestsServed } }];"
+      }
+    }
+  ],
+  "connections": {
+    "Load Balancer Trigger": {
+      "main": [
+        [
+          {
+            "node": "Initialize Scaling System",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Initialize Scaling System": {
+      "main": [
+        [
+          {
+            "node": "Scaling Decision",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Scaling Decision": {
+      "main": [
+        [
+          {
+            "node": "Scale Up Instances",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Scale Down Instances",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Maintain Current Scale",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Scale Up Instances": {
+      "main": [
+        [
+          {
+            "node": "Process With Caching",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Scale Down Instances": {
+      "main": [
+        [
+          {
+            "node": "Process With Caching",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Maintain Current Scale": {
+      "main": [
+        [
+          {
+            "node": "Process With Caching",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {},
+  "pinData": {},
+  "versionId": "1",
+  "id": "day_30_solution"
+}

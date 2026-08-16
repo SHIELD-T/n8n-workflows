@@ -1,0 +1,241 @@
+{
+  "name": "Day 27 Solution: Advanced Workflow Patterns Review",
+  "description": "Smaller demonstration workflow combining exactly 2 patterns (branching + filter/transform) plus a $now.diff() timing measurement, as scoped for a review day.",
+  "tags": [
+    "week-04",
+    "day-27",
+    "solution"
+  ],
+  "version": "1.0.0",
+  "nodes": [
+    {
+      "id": "sticky1",
+      "name": "Sticky Note",
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        40,
+        -320
+      ],
+      "parameters": {
+        "content": "## Day 27 Solution: Advanced Workflow Patterns Review\n\nA smaller demonstration combining exactly 2 patterns per the lesson's scope cap: Webhook -> fan out into 2 parallel branches (Day 22) -> merge/filter/transform with .filter()/.map() (Day 23) -> final Set measuring total_time with $now.diff() (Day 25). Credentials needed: None — jsonplaceholder.typicode.com covers the API branch.\n\nSee DAILY_TASKS/DAY_27_Advanced_Workflow_Patterns_Review.md.",
+        "height": 300,
+        "width": 520
+      }
+    },
+    {
+      "id": "webhook1",
+      "name": "Review Demo Webhook",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2,
+      "position": [
+        80,
+        160
+      ],
+      "parameters": {
+        "path": "review-demo",
+        "httpMethod": "POST"
+      }
+    },
+    {
+      "id": "set1",
+      "name": "Initialize Demo",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        320,
+        160
+      ],
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "name": "start_time",
+              "value": "={{ $now }}"
+            },
+            {
+              "name": "records",
+              "value": "={{ $json.records || [{id:1,name:'Valid A',email:'a@test.com'},{id:2,name:'',email:''},{id:3,name:'Valid B',email:'b@test.com'}] }}"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "http1",
+      "name": "Branch 1: API Data",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        560,
+        60
+      ],
+      "parameters": {
+        "method": "GET",
+        "url": "https://jsonplaceholder.typicode.com/posts/1"
+      }
+    },
+    {
+      "id": "set2",
+      "name": "Branch 2: Local Data",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        560,
+        260
+      ],
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "name": "local_data",
+              "value": "={{ { id: 99, source: 'local' } }}"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "set3",
+      "name": "Combine Branches",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        800,
+        160
+      ],
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "name": "combined",
+              "value": "={{ { api: $('Branch 1: API Data').item.json, local: $('Branch 2: Local Data').item.json, records: $('Initialize Demo').item.json.records } }}"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "set4",
+      "name": "Filter and Transform Records",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        1040,
+        160
+      ],
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "name": "valid_records",
+              "value": "={{ $json.combined.records.filter(r => r.name && r.email).map(r => ({ id: r.id, label: r.name.toUpperCase() })) }}"
+            },
+            {
+              "name": "dropped_count",
+              "value": "={{ $json.combined.records.length - $json.combined.records.filter(r => r.name && r.email).length }}"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "set5",
+      "name": "Measure Total Time",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        1280,
+        160
+      ],
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "name": "total_time",
+              "value": "={{ $now.diff($('Initialize Demo').item.json.start_time, 'milliseconds') }}"
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "connections": {
+    "Review Demo Webhook": {
+      "main": [
+        [
+          {
+            "node": "Initialize Demo",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Initialize Demo": {
+      "main": [
+        [
+          {
+            "node": "Branch 1: API Data",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Branch 2: Local Data",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Branch 1: API Data": {
+      "main": [
+        [
+          {
+            "node": "Combine Branches",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Branch 2: Local Data": {
+      "main": [
+        [
+          {
+            "node": "Combine Branches",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Combine Branches": {
+      "main": [
+        [
+          {
+            "node": "Filter and Transform Records",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Filter and Transform Records": {
+      "main": [
+        [
+          {
+            "node": "Measure Total Time",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {},
+  "pinData": {},
+  "versionId": "1",
+  "id": "day_27_solution"
+}

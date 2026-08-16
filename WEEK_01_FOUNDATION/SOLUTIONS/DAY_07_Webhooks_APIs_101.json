@@ -1,0 +1,241 @@
+{
+  "name": "Day 07 Solution: Webhooks & APIs 101",
+  "description": "Three parallel HTTP Request calls: unauthenticated JSONPlaceholder, query-param API-key auth (OpenWeatherMap), and a deliberate 404 for comparison.",
+  "tags": [
+    "week-01",
+    "day-07",
+    "solution"
+  ],
+  "version": "1.0.0",
+  "nodes": [
+    {
+      "id": "sticky1",
+      "name": "Sticky Note",
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        40,
+        -300
+      ],
+      "parameters": {
+        "content": "## Day 07 Solution: Webhooks & APIs 101\n\nThree HTTP Request chains from one Manual Trigger: (1) unauthenticated JSONPlaceholder GET, (2) query-param API-key auth against OpenWeatherMap, (3) a deliberate 404 against a mistyped URL, so you can compare a real 401/404 side by side. Credentials needed: OpenWeatherMap free API key to get real data back from Call 2 (it will 401 without one, which is also useful to see).\n\nSee DAILY_TASKS/DAY_07_Webhooks_APIs_101.md.",
+        "height": 280,
+        "width": 480
+      }
+    },
+    {
+      "id": "trigger1",
+      "name": "Manual Trigger",
+      "type": "n8n-nodes-base.manualTrigger",
+      "typeVersion": 1,
+      "position": [
+        80,
+        140
+      ],
+      "parameters": {}
+    },
+    {
+      "id": "http1",
+      "name": "Get Public Data",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        320,
+        20
+      ],
+      "parameters": {
+        "method": "GET",
+        "url": "https://jsonplaceholder.typicode.com/posts"
+      }
+    },
+    {
+      "id": "set1",
+      "name": "Extract Post Stats",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        560,
+        20
+      ],
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "name": "total_posts",
+              "value": "={{ $json.length }}"
+            },
+            {
+              "name": "first_post_title",
+              "value": "={{ $json[0].title }}"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "http2",
+      "name": "Get Weather (API Key Auth)",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        320,
+        180
+      ],
+      "parameters": {
+        "method": "GET",
+        "url": "https://api.openweathermap.org/data/2.5/weather",
+        "sendQuery": true,
+        "queryParameters": {
+          "parameters": [
+            {
+              "name": "q",
+              "value": "London"
+            },
+            {
+              "name": "appid",
+              "value": "your_openweathermap_api_key"
+            },
+            {
+              "name": "units",
+              "value": "metric"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "set2",
+      "name": "Format Weather",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        560,
+        180
+      ],
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "name": "city",
+              "value": "={{ $json.name }}"
+            },
+            {
+              "name": "temperature",
+              "value": "={{ $json.main.temp }}°C"
+            },
+            {
+              "name": "description",
+              "value": "={{ $json.weather[0].description }}"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "http3",
+      "name": "Deliberate 404 (Bad URL)",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        320,
+        340
+      ],
+      "parameters": {
+        "method": "GET",
+        "url": "https://jsonplaceholder.typicode.com/nonexistent-path",
+        "options": {
+          "response": {
+            "response": {
+              "neverError": true
+            }
+          }
+        }
+      }
+    },
+    {
+      "id": "set3",
+      "name": "Log 404 Response",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        560,
+        340
+      ],
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "name": "status_code",
+              "value": "={{ $json.statusCode || 404 }}"
+            },
+            {
+              "name": "note",
+              "value": "404 = wrong URL/path, distinct from a 401 auth failure"
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "connections": {
+    "Manual Trigger": {
+      "main": [
+        [
+          {
+            "node": "Get Public Data",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Get Weather (API Key Auth)",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Deliberate 404 (Bad URL)",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get Public Data": {
+      "main": [
+        [
+          {
+            "node": "Extract Post Stats",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get Weather (API Key Auth)": {
+      "main": [
+        [
+          {
+            "node": "Format Weather",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Deliberate 404 (Bad URL)": {
+      "main": [
+        [
+          {
+            "node": "Log 404 Response",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {},
+  "pinData": {},
+  "versionId": "1",
+  "id": "day_07_solution"
+}

@@ -1,0 +1,254 @@
+{
+  "name": "Day 20 Solution: Cloning and Modifying Pre-built Workflows",
+  "description": "Day 16's workflow cloned and modified to call the /users endpoint and remap fields to name/email/company, with an on-canvas changelog.",
+  "tags": [
+    "week-03",
+    "day-20",
+    "solution"
+  ],
+  "version": "1.0.0",
+  "nodes": [
+    {
+      "id": "sticky1",
+      "name": "Sticky Note",
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        40,
+        -340
+      ],
+      "parameters": {
+        "content": "## Day 20 Solution: Cloning and Modifying Pre-built Workflows\n\nThis file demonstrates 'Clone #1' from the lesson: Day 16's HTTP+IF+Set+SplitInBatches workflow, cloned and modified to call /users instead of /posts and remap fields to name/email/company. Duplicate this file in n8n and modify the webhook path + one expression to also produce 'Clone #2' yourself. Credentials needed: None — jsonplaceholder.typicode.com stays free/no-auth.\n\nSee DAILY_TASKS/DAY_20_Cloning_Modifying_Workflows.md.",
+        "height": 320,
+        "width": 520
+      }
+    },
+    {
+      "id": "sticky2",
+      "name": "Changelog",
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        80,
+        20
+      ],
+      "parameters": {
+        "content": "Changelog: Cloned from Day 16's node-mastery workflow. Changed HTTP Request URL from /posts to /users, and remapped the Set node's fields from title/body to name/email/company.name to match the new response shape.",
+        "height": 140,
+        "width": 380
+      }
+    },
+    {
+      "id": "trigger1",
+      "name": "Manual Trigger",
+      "type": "n8n-nodes-base.manualTrigger",
+      "typeVersion": 1,
+      "position": [
+        80,
+        200
+      ],
+      "parameters": {}
+    },
+    {
+      "id": "set1",
+      "name": "Set API Configuration",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        320,
+        200
+      ],
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "name": "api_url",
+              "value": "https://jsonplaceholder.typicode.com/users"
+            },
+            {
+              "name": "batch_size",
+              "value": 5
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "http1",
+      "name": "Custom API Integration",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        560,
+        200
+      ],
+      "parameters": {
+        "method": "GET",
+        "url": "={{ $json.api_url }}"
+      }
+    },
+    {
+      "id": "if1",
+      "name": "Check Data Validity",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2,
+      "position": [
+        800,
+        200
+      ],
+      "parameters": {
+        "conditions": {
+          "string": [
+            {
+              "value1": "={{ $json }}",
+              "operation": "isNotEmpty"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "sib1",
+      "name": "Split Data into Batches",
+      "type": "n8n-nodes-base.splitInBatches",
+      "typeVersion": 3,
+      "position": [
+        1040,
+        140
+      ],
+      "parameters": {
+        "batchSize": 5,
+        "options": {}
+      }
+    },
+    {
+      "id": "set2",
+      "name": "Process Each User",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        1280,
+        140
+      ],
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "name": "name",
+              "value": "={{ $json.name }}"
+            },
+            {
+              "name": "email",
+              "value": "={{ $json.email }}"
+            },
+            {
+              "name": "company_name",
+              "value": "={{ $json.company ? $json.company.name : '' }}"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "set3",
+      "name": "Handle Invalid Response",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        1040,
+        320
+      ],
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "name": "error",
+              "value": "API response was empty or invalid"
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "connections": {
+    "Manual Trigger": {
+      "main": [
+        [
+          {
+            "node": "Set API Configuration",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Set API Configuration": {
+      "main": [
+        [
+          {
+            "node": "Custom API Integration",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Custom API Integration": {
+      "main": [
+        [
+          {
+            "node": "Check Data Validity",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Check Data Validity": {
+      "main": [
+        [
+          {
+            "node": "Split Data into Batches",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Handle Invalid Response",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Split Data into Batches": {
+      "main": [
+        [],
+        [
+          {
+            "node": "Process Each User",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Process Each User": {
+      "main": [
+        [
+          {
+            "node": "Split Data into Batches",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {},
+  "pinData": {},
+  "versionId": "1",
+  "id": "day_20_solution"
+}

@@ -1,0 +1,210 @@
+{
+  "name": "Day 04 Solution: Self-Hosting Setup",
+  "description": "Checklist workflow documenting required Render/Postgres env vars and a simple reachability self-check pattern.",
+  "tags": [
+    "week-01",
+    "day-04",
+    "solution"
+  ],
+  "version": "1.0.0",
+  "nodes": [
+    {
+      "id": "sticky1",
+      "name": "Sticky Note",
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        40,
+        -280
+      ],
+      "parameters": {
+        "content": "## Day 04 Solution: Self-Hosting Setup\n\nDay 4 is infrastructure setup (Render + Docker + Postgres), not an n8n workflow build. This file documents the required env vars and a healthcheck-style self-test workflow you can run once your instance is live, standing in for the manual verification steps.\n\nCredentials needed: None needed to test the logic in n8n itself — Render, GitHub, and a cron/uptime service accounts are needed for the real deployment (outside n8n).\n\nSee DAILY_TASKS/DAY_04_Self_Hosting_Setup.md.",
+        "height": 280,
+        "width": 480
+      }
+    },
+    {
+      "id": "trigger1",
+      "name": "Manual Trigger",
+      "type": "n8n-nodes-base.manualTrigger",
+      "typeVersion": 1,
+      "position": [
+        80,
+        140
+      ],
+      "parameters": {}
+    },
+    {
+      "id": "set1",
+      "name": "Deployment Checklist",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        320,
+        140
+      ],
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "name": "env_vars_required",
+              "value": "={{ ['N8N_BASIC_AUTH_ACTIVE=true', 'N8N_BASIC_AUTH_USER', 'N8N_BASIC_AUTH_PASSWORD', 'WEBHOOK_URL=https://<your-app>.onrender.com', 'DB_TYPE=postgresdb', 'DB_POSTGRESDB_HOST', 'N8N_ENCRYPTION_KEY'] }}"
+            },
+            {
+              "name": "keep_alive_service",
+              "value": "cron-job.org or UptimeRobot, ping every 10 minutes"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "http1",
+      "name": "Check Deployed Instance",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        560,
+        140
+      ],
+      "parameters": {
+        "method": "GET",
+        "url": "https://httpbin.org/status/200",
+        "options": {
+          "response": {
+            "response": {
+              "neverError": true
+            }
+          }
+        }
+      }
+    },
+    {
+      "id": "if1",
+      "name": "Check Reachable",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2,
+      "position": [
+        800,
+        140
+      ],
+      "parameters": {
+        "conditions": {
+          "number": [
+            {
+              "value1": "={{ $json.statusCode }}",
+              "operation": "equal",
+              "value2": 200
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "set2",
+      "name": "Deployment Healthy",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        1040,
+        60
+      ],
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "name": "deployment_status",
+              "value": "reachable"
+            },
+            {
+              "name": "checked_at",
+              "value": "={{ $now }}"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "set3",
+      "name": "Deployment Unreachable",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        1040,
+        220
+      ],
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "name": "deployment_status",
+              "value": "unreachable - check WEBHOOK_URL and DB env vars"
+            },
+            {
+              "name": "checked_at",
+              "value": "={{ $now }}"
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "connections": {
+    "Manual Trigger": {
+      "main": [
+        [
+          {
+            "node": "Deployment Checklist",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Deployment Checklist": {
+      "main": [
+        [
+          {
+            "node": "Check Deployed Instance",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Check Deployed Instance": {
+      "main": [
+        [
+          {
+            "node": "Check Reachable",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Check Reachable": {
+      "main": [
+        [
+          {
+            "node": "Deployment Healthy",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Deployment Unreachable",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {},
+  "pinData": {},
+  "versionId": "1",
+  "id": "day_04_solution"
+}

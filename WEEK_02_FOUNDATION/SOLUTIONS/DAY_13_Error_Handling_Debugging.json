@@ -1,0 +1,342 @@
+{
+  "name": "Day 13 Solution: Error Handling & Debugging",
+  "description": "Severity-branching error webhook (HIGH vs MEDIUM alerts converging to one log) plus a separate retry/status-code error-detection chain.",
+  "tags": [
+    "week-02",
+    "day-13",
+    "solution"
+  ],
+  "version": "1.0.0",
+  "nodes": [
+    {
+      "id": "sticky1",
+      "name": "Sticky Note",
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        40,
+        -320
+      ],
+      "parameters": {
+        "content": "## Day 13 Solution: Error Handling & Debugging\n\nWorkflow A: Webhook -> Set (analyze error fields with fallbacks) -> IF severity=HIGH -> two distinct alert Set nodes -> shared Log Error node. Workflow B: Manual -> HTTP Request (guaranteed 500, retry configured) -> IF statusCode>=400 -> Handle API Error. Credentials needed: None needed to test the logic.\n\nSee DAILY_TASKS/DAY_13_Error_Handling_Debugging.md.",
+        "height": 300,
+        "width": 500
+      }
+    },
+    {
+      "id": "webhook1",
+      "name": "API Error Webhook",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2,
+      "position": [
+        80,
+        100
+      ],
+      "parameters": {
+        "path": "api-error",
+        "httpMethod": "POST"
+      }
+    },
+    {
+      "id": "set1",
+      "name": "Analyze Error",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        320,
+        100
+      ],
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "name": "error_type",
+              "value": "={{ $json.error_type || 'UNKNOWN' }}"
+            },
+            {
+              "name": "error_message",
+              "value": "={{ $json.error_message || 'No error message provided' }}"
+            },
+            {
+              "name": "error_code",
+              "value": "={{ $json.error_code || 'N/A' }}"
+            },
+            {
+              "name": "severity",
+              "value": "={{ $json.severity || 'MEDIUM' }}"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "if1",
+      "name": "Check Severity",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2,
+      "position": [
+        560,
+        100
+      ],
+      "parameters": {
+        "conditions": {
+          "string": [
+            {
+              "value1": "={{ $json.severity }}",
+              "operation": "equal",
+              "value2": "HIGH"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "set2",
+      "name": "High Severity Alert",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        800,
+        40
+      ],
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "name": "alert_message",
+              "value": "=🚨 HIGH SEVERITY ERROR: {{ $json.error_message }}"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "set3",
+      "name": "Medium Severity Alert",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        800,
+        180
+      ],
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "name": "alert_message",
+              "value": "=⚠️ MEDIUM SEVERITY: {{ $json.error_message }}"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "set4",
+      "name": "Log Error",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        1040,
+        100
+      ],
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "name": "logged_at",
+              "value": "={{ $now }}"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "trigger1",
+      "name": "Manual Trigger",
+      "type": "n8n-nodes-base.manualTrigger",
+      "typeVersion": 1,
+      "position": [
+        80,
+        380
+      ],
+      "parameters": {}
+    },
+    {
+      "id": "http1",
+      "name": "Broken API Call",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        320,
+        380
+      ],
+      "parameters": {
+        "method": "GET",
+        "url": "https://httpbin.org/status/500",
+        "options": {
+          "timeout": 5000,
+          "response": {
+            "response": {
+              "neverError": true
+            }
+          },
+          "retry": {
+            "maxTries": 3,
+            "waitBetweenTries": 2000
+          }
+        }
+      }
+    },
+    {
+      "id": "if2",
+      "name": "Check Status Code",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2,
+      "position": [
+        560,
+        380
+      ],
+      "parameters": {
+        "conditions": {
+          "number": [
+            {
+              "value1": "={{ $json.statusCode }}",
+              "operation": "largerEqual",
+              "value2": 400
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "set5",
+      "name": "Handle API Error",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        800,
+        380
+      ],
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "name": "error_type",
+              "value": "API_ERROR"
+            },
+            {
+              "name": "error_code",
+              "value": "={{ $json.statusCode }}"
+            },
+            {
+              "name": "error_time",
+              "value": "={{ $now }}"
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "connections": {
+    "API Error Webhook": {
+      "main": [
+        [
+          {
+            "node": "Analyze Error",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Analyze Error": {
+      "main": [
+        [
+          {
+            "node": "Check Severity",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Check Severity": {
+      "main": [
+        [
+          {
+            "node": "High Severity Alert",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Medium Severity Alert",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "High Severity Alert": {
+      "main": [
+        [
+          {
+            "node": "Log Error",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Medium Severity Alert": {
+      "main": [
+        [
+          {
+            "node": "Log Error",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Manual Trigger": {
+      "main": [
+        [
+          {
+            "node": "Broken API Call",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Broken API Call": {
+      "main": [
+        [
+          {
+            "node": "Check Status Code",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Check Status Code": {
+      "main": [
+        [
+          {
+            "node": "Handle API Error",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {},
+  "pinData": {},
+  "versionId": "1",
+  "id": "day_13_solution"
+}

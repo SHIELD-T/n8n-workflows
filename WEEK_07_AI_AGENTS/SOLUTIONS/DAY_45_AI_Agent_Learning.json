@@ -1,0 +1,456 @@
+{
+  "name": "Day 45 Solution: AI Agent Learning",
+  "description": "Learning agent system that runs reinforcement, supervised, and unsupervised learning passes in parallel, analyzes the results, and generates adaptive behavior updates via an LLM.",
+  "tags": [
+    "week-07",
+    "ai-agents",
+    "day-45",
+    "learning",
+    "solution"
+  ],
+  "version": "1.0.0",
+  "nodes": [
+    {
+      "id": "sticky-overview",
+      "name": "Overview",
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        240,
+        -260
+      ],
+      "parameters": {
+        "content": "## Day 45 Solution: AI Agent Learning\n\nSimulates a learning agent that runs reinforcement, supervised, and unsupervised learning passes in parallel over training data, analyzes the combined results, then asks an LLM to propose adaptive behavior updates.\n\n**Credentials needed:** OpenAI API key for the Adaptive Behavior Update node to run for real. The httpRequest learning/results/log nodes call fake placeholder domains and need no real credential.\n\nSee DAILY_TASKS/DAY_45_AI_Agent_Learning.md for the full lesson this solves.",
+        "height": 300,
+        "width": 480
+      }
+    },
+    {
+      "id": "learning-agent-system",
+      "name": "Learning Agent System",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2,
+      "position": [
+        240,
+        300
+      ],
+      "parameters": {
+        "path": "learning-agent",
+        "httpMethod": "POST"
+      }
+    },
+    {
+      "id": "initialize-learning-system",
+      "name": "Initialize Learning System",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        480,
+        300
+      ],
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "name": "learning_session_id",
+              "value": "={{ $now.format('YYYYMMDDHHmmss') }}"
+            },
+            {
+              "name": "learning_type",
+              "value": "adaptive"
+            },
+            {
+              "name": "start_time",
+              "value": "={{ $now }}"
+            },
+            {
+              "name": "learning_algorithms",
+              "value": "={{ ['reinforcement', 'supervised', 'unsupervised'] }}"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "process-learning-data",
+      "name": "Process Learning Data",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        720,
+        300
+      ],
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "name": "training_data",
+              "value": "={{ $json.training_data || 'Sample training data for learning' }}"
+            },
+            {
+              "name": "performance_metrics",
+              "value": "={{ $json.metrics || { 'accuracy': 75, 'efficiency': 80, 'satisfaction': 4.0 } }}"
+            },
+            {
+              "name": "learning_objectives",
+              "value": "={{ $json.objectives || ['improve_accuracy', 'increase_efficiency', 'enhance_satisfaction'] }}"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "reinforcement-learning",
+      "name": "Reinforcement Learning",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        960,
+        80
+      ],
+      "parameters": {
+        "method": "POST",
+        "url": "https://api.learning-service.com/reinforcement-learning",
+        "bodyContentType": "json",
+        "jsonBody": "={{ { \"learning_session_id\": $json.learning_session_id, \"training_data\": $json.training_data, \"performance_metrics\": $json.performance_metrics, \"learning_type\": \"reinforcement\", \"timestamp\": $now } }}"
+      }
+    },
+    {
+      "id": "supervised-learning",
+      "name": "Supervised Learning",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        960,
+        300
+      ],
+      "parameters": {
+        "method": "POST",
+        "url": "https://api.learning-service.com/supervised-learning",
+        "bodyContentType": "json",
+        "jsonBody": "={{ { \"learning_session_id\": $json.learning_session_id, \"training_data\": $json.training_data, \"performance_metrics\": $json.performance_metrics, \"learning_type\": \"supervised\", \"timestamp\": $now } }}"
+      }
+    },
+    {
+      "id": "unsupervised-learning",
+      "name": "Unsupervised Learning",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        960,
+        520
+      ],
+      "parameters": {
+        "method": "POST",
+        "url": "https://api.learning-service.com/unsupervised-learning",
+        "bodyContentType": "json",
+        "jsonBody": "={{ { \"learning_session_id\": $json.learning_session_id, \"training_data\": $json.training_data, \"performance_metrics\": $json.performance_metrics, \"learning_type\": \"unsupervised\", \"timestamp\": $now } }}"
+      }
+    },
+    {
+      "id": "sticky-learning-services",
+      "name": "Learning Services Placeholder",
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        960,
+        720
+      ],
+      "parameters": {
+        "content": "## ⚠️ Placeholder endpoint\n\nThis node calls a fake domain that does not exist. Replace the URL with a real service endpoint (or mock server) before running this for real — this is a stand-in for teaching purposes.",
+        "height": 160,
+        "width": 460
+      }
+    },
+    {
+      "id": "analyze-learning-results",
+      "name": "Analyze Learning Results",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        1200,
+        300
+      ],
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "name": "reinforcement_results",
+              "value": "={{ $('Reinforcement Learning').item.json.results }}"
+            },
+            {
+              "name": "supervised_results",
+              "value": "={{ $('Supervised Learning').item.json.results }}"
+            },
+            {
+              "name": "unsupervised_results",
+              "value": "={{ $('Unsupervised Learning').item.json.results }}"
+            },
+            {
+              "name": "learning_improvement",
+              "value": "={{ Math.floor(Math.random() * 20) + 10 }}"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "adaptive-behavior-update",
+      "name": "Adaptive Behavior Update",
+      "type": "n8n-nodes-base.openAi",
+      "typeVersion": 1.3,
+      "position": [
+        1440,
+        300
+      ],
+      "parameters": {
+        "resource": "chat",
+        "operation": "create",
+        "model": "gpt-4",
+        "messages": {
+          "values": [
+            {
+              "role": "system",
+              "content": "You are an AI learning system that analyzes learning results and generates adaptive behavior updates."
+            },
+            {
+              "role": "user",
+              "content": "={{ 'Learning Results:\\nReinforcement: ' + $json.reinforcement_results + '\\nSupervised: ' + $json.supervised_results + '\\nUnsupervised: ' + $json.unsupervised_results + '\\n\\nGenerate adaptive behavior updates and optimization recommendations.' }}"
+            }
+          ]
+        },
+        "options": {
+          "temperature": 0.3,
+          "maxTokens": 500
+        }
+      }
+    },
+    {
+      "id": "generate-learning-report",
+      "name": "Generate Learning Report",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        1680,
+        300
+      ],
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "name": "learning_report",
+              "value": "={{ { \"learning_session_id\": $json.learning_session_id, \"learning_type\": $json.learning_type, \"start_time\": $json.start_time, \"training_data\": $json.training_data, \"performance_metrics\": $json.performance_metrics, \"learning_objectives\": $json.learning_objectives, \"reinforcement_results\": $json.reinforcement_results, \"supervised_results\": $json.supervised_results, \"unsupervised_results\": $json.unsupervised_results, \"learning_improvement\": $json.learning_improvement, \"adaptive_updates\": $json.choices[0].message.content, \"processing_time\": $now.diff($json.start_time, 'milliseconds'), \"completed_at\": $now } }}"
+            },
+            {
+              "name": "success_message",
+              "value": "✅ AI agent learning processing completed successfully"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "send-learning-results",
+      "name": "Send Learning Results",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        1920,
+        300
+      ],
+      "parameters": {
+        "method": "POST",
+        "url": "https://api.learning-service.com/results",
+        "bodyContentType": "json",
+        "jsonBody": "={{ { \"results\": $json.learning_report, \"timestamp\": $now } }}"
+      }
+    },
+    {
+      "id": "log-learning-activity",
+      "name": "Log Learning Activity",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        2160,
+        300
+      ],
+      "parameters": {
+        "method": "POST",
+        "url": "https://api.learning-log.com/log",
+        "bodyContentType": "json",
+        "jsonBody": "={{ { \"type\": \"agent_learning\", \"data\": $json.learning_report, \"timestamp\": $now } }}"
+      }
+    },
+    {
+      "id": "sticky-send-log",
+      "name": "Send/Log Placeholder",
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        1920,
+        480
+      ],
+      "parameters": {
+        "content": "## ⚠️ Placeholder endpoint\n\nThis node calls a fake domain that does not exist. Replace the URL with a real service endpoint (or mock server) before running this for real — this is a stand-in for teaching purposes.",
+        "height": 160,
+        "width": 460
+      }
+    },
+    {
+      "id": "handle-learning-error",
+      "name": "Handle Learning Error",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        480,
+        600
+      ],
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "name": "learning_error",
+              "value": "={{ { \"error_type\": \"learning_failed\", \"learning_session_id\": $json.learning_session_id, \"message\": \"AI agent learning failed\", \"timestamp\": $now } }}"
+            },
+            {
+              "name": "error_response",
+              "value": "={{ { \"status\": \"error\", \"learning_session_id\": $json.learning_session_id, \"message\": \"AI agent learning workflow error\" } }}"
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "connections": {
+    "Learning Agent System": {
+      "main": [
+        [
+          {
+            "node": "Initialize Learning System",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Initialize Learning System": {
+      "main": [
+        [
+          {
+            "node": "Process Learning Data",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Handle Learning Error",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Process Learning Data": {
+      "main": [
+        [
+          {
+            "node": "Reinforcement Learning",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Supervised Learning",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Unsupervised Learning",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Reinforcement Learning": {
+      "main": [
+        [
+          {
+            "node": "Analyze Learning Results",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Supervised Learning": {
+      "main": [
+        [
+          {
+            "node": "Analyze Learning Results",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Unsupervised Learning": {
+      "main": [
+        [
+          {
+            "node": "Analyze Learning Results",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Analyze Learning Results": {
+      "main": [
+        [
+          {
+            "node": "Adaptive Behavior Update",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Adaptive Behavior Update": {
+      "main": [
+        [
+          {
+            "node": "Generate Learning Report",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Generate Learning Report": {
+      "main": [
+        [
+          {
+            "node": "Send Learning Results",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Send Learning Results": {
+      "main": [
+        [
+          {
+            "node": "Log Learning Activity",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {},
+  "pinData": {},
+  "versionId": "1",
+  "id": "day_45_solution"
+}

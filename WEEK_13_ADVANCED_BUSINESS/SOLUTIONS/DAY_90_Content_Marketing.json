@@ -1,0 +1,26 @@
+{
+  "name": "Day 90 Solution: Content Calendar and One Real Post",
+  "description": "Records a 4-piece content calendar and stores one fully written piece as a real deliverable.",
+  "tags": ["day-90", "solution", "week-13"],
+  "version": "1.0.0",
+  "nodes": [
+    { "id": "note1", "name": "Overview", "type": "n8n-nodes-base.stickyNote", "typeVersion": 1,
+      "position": [-40, -260],
+      "parameters": { "content": "## Day 90 Solution: Content Marketing\n\nRecords a content calendar and one fully-written piece (not just a title). Sticky note below is a worked example post.\n\n**Credentials needed:** None (add Slack/Notion if you wire up real publishing).\n\nSee `DAILY_TASKS/DAY_90_Content_Marketing.md`.", "height": 190, "width": 360 } },
+    { "id": "model", "name": "Model Written Post", "type": "n8n-nodes-base.stickyNote", "typeVersion": 1,
+      "position": [-40, 240],
+      "parameters": { "content": "## Model LinkedIn Post\n\n\"I spent 3 hours this week rebuilding a client's lead-routing workflow because their old one silently failed for 6 weeks. No alerts, no logs, nothing.\n\nThe fix wasn't clever — it was one Slack alert node on the failure path. That's it.\n\nIf your automation doesn't tell you when it breaks, it's not automation. It's a liability with extra steps.\"", "height": 220, "width": 420 } },
+    { "id": "trig", "name": "Manual Trigger", "type": "n8n-nodes-base.manualTrigger", "typeVersion": 1, "position": [300, 100], "parameters": {} },
+    { "id": "set1", "name": "Content Calendar", "type": "n8n-nodes-base.set", "typeVersion": 3.4,
+      "position": [550, 100],
+      "parameters": { "assignments": { "assignments": [
+        { "name": "piece_1", "value": "Blog: 5 signs your automation needs error handling" },
+        { "name": "piece_2", "value": "LinkedIn: the silent-failure story (written this week)" },
+        { "name": "piece_3", "value": "Video script: screen-recorded workflow walkthrough" },
+        { "name": "piece_4", "value": "Case study: before/after time saved for one real client" },
+        { "name": "piece_written_this_week", "value": "piece_2" }
+      ] } } }
+  ],
+  "connections": { "Manual Trigger": { "main": [[ { "node": "Content Calendar", "type": "main", "index": 0 } ]] } },
+  "active": false, "settings": {}, "pinData": {}, "versionId": "1", "id": "day_90_solution"
+}

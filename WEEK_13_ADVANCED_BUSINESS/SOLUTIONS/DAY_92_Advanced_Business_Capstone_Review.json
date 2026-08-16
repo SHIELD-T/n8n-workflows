@@ -1,0 +1,33 @@
+{
+  "name": "Day 92 Solution: Next Quarter Plan",
+  "description": "Consolidates Days 86-91 into a one-page Next Quarter Plan with real numbers, a named partner, an outreach draft, and one finished content piece.",
+  "tags": ["day-92", "solution", "week-13"],
+  "version": "1.0.0",
+  "nodes": [
+    { "id": "note1", "name": "Overview", "type": "n8n-nodes-base.stickyNote", "typeVersion": 1,
+      "position": [-40, -280],
+      "parameters": { "content": "## Day 92 Solution: Advanced Business Capstone Review\n\nOne workflow producing the Week 13 capstone deliverable: a real one-page Next Quarter Plan.\n\n**Credentials needed:** None.\n\nSee `DAILY_TASKS/DAY_92_Advanced_Business_Capstone_Review.md`.", "height": 170, "width": 340 } },
+    { "id": "model", "name": "Model Next Quarter Plan", "type": "n8n-nodes-base.stickyNote", "typeVersion": 1,
+      "position": [-40, 180],
+      "parameters": { "content": "## Model Next Quarter Plan\n\n**Market:** Healthcare automation (Day 86)\n**Partner:** [Named local healthcare IT consultancy] — outreach sent Week 13\n**Pricing:** Starter $297 / Pro $797 / Enterprise $1,997 (matches Day 12 & Day 88, reconciled)\n**Brand line:** \"Automation you can actually understand and edit yourself.\"\n**Content published:** LinkedIn silent-failure post (Day 90)\n**Outreach draft:** \"I noticed you implement patient-intake systems for clinics — I build the automation layer around them and think there's a referral fit. 15 min this week?\"", "height": 260, "width": 460 } },
+    { "id": "trig", "name": "Manual Trigger", "type": "n8n-nodes-base.manualTrigger", "typeVersion": 1, "position": [350, 100], "parameters": {} },
+    { "id": "call91", "name": "Call Day 91 - Consistency Check", "type": "n8n-nodes-base.executeWorkflow", "typeVersion": 1.2,
+      "position": [600, 100],
+      "parameters": { "workflowId": { "value": "DAY_91_ID", "mode": "list", "cachedResultName": "Day 91 Solution: Strategy Consistency Check" } } },
+    { "id": "set1", "name": "Compile Next Quarter Plan", "type": "n8n-nodes-base.set", "typeVersion": 3.4,
+      "position": [850, 100],
+      "parameters": { "assignments": { "assignments": [
+        { "name": "market", "value": "REPLACE_WITH_REAL_MARKET" },
+        { "name": "named_partner", "value": "REPLACE_WITH_REAL_COMPANY_NAME" },
+        { "name": "pricing_reconciled_with_week_12", "value": true },
+        { "name": "outreach_message_drafted", "value": true },
+        { "name": "content_piece_written", "value": true },
+        { "name": "plan_finalized_at", "value": "={{ $now }}" }
+      ] } } }
+  ],
+  "connections": {
+    "Manual Trigger": { "main": [[ { "node": "Call Day 91 - Consistency Check", "type": "main", "index": 0 } ]] },
+    "Call Day 91 - Consistency Check": { "main": [[ { "node": "Compile Next Quarter Plan", "type": "main", "index": 0 } ]] }
+  },
+  "active": false, "settings": {}, "pinData": {}, "versionId": "1", "id": "day_92_solution"
+}

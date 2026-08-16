@@ -1,0 +1,294 @@
+{
+  "name": "Day 16 Solution: Built-in Nodes Mastery",
+  "description": "HTTP Request + IF validation + Split In Batches loop over jsonplaceholder posts, with an empty-batch handler.",
+  "tags": [
+    "week-03",
+    "day-16",
+    "solution"
+  ],
+  "version": "1.0.0",
+  "nodes": [
+    {
+      "id": "sticky1",
+      "name": "Sticky Note",
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        40,
+        -300
+      ],
+      "parameters": {
+        "content": "## Day 16 Solution: Built-in Nodes Mastery\n\nManual -> Set (config) -> HTTP Request (GET posts) -> IF check array not empty -> Split In Batches (size from config) -> Set (process batch) -> IF batch_size>0 -> Set (handle empty). Credentials needed: None needed to test the logic — jsonplaceholder.typicode.com is free/no-auth.\n\nSee DAILY_TASKS/DAY_16_Built_in_Nodes.md.",
+        "height": 280,
+        "width": 500
+      }
+    },
+    {
+      "id": "trigger1",
+      "name": "Manual Trigger",
+      "type": "n8n-nodes-base.manualTrigger",
+      "typeVersion": 1,
+      "position": [
+        80,
+        140
+      ],
+      "parameters": {}
+    },
+    {
+      "id": "set1",
+      "name": "Set API Configuration",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        320,
+        140
+      ],
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "name": "api_url",
+              "value": "https://jsonplaceholder.typicode.com/posts"
+            },
+            {
+              "name": "batch_size",
+              "value": 5
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "http1",
+      "name": "Fetch Data via HTTP",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        560,
+        140
+      ],
+      "parameters": {
+        "method": "GET",
+        "url": "={{ $json.api_url }}"
+      }
+    },
+    {
+      "id": "if1",
+      "name": "Check Data Validity",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2,
+      "position": [
+        800,
+        140
+      ],
+      "parameters": {
+        "conditions": {
+          "string": [
+            {
+              "value1": "={{ $json }}",
+              "operation": "isNotEmpty"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "sib1",
+      "name": "Split Data into Batches",
+      "type": "n8n-nodes-base.splitInBatches",
+      "typeVersion": 3,
+      "position": [
+        1040,
+        80
+      ],
+      "parameters": {
+        "batchSize": 5,
+        "options": {}
+      }
+    },
+    {
+      "id": "set2",
+      "name": "Process Each Batch",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        1280,
+        80
+      ],
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "name": "batch_size",
+              "value": "={{ $json.length || 1 }}"
+            },
+            {
+              "name": "batch_id",
+              "value": "={{ $now.format('yyyyMMddHHmmss') }}"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "if2",
+      "name": "Check Batch Content",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2,
+      "position": [
+        1520,
+        80
+      ],
+      "parameters": {
+        "conditions": {
+          "number": [
+            {
+              "value1": "={{ $json.batch_size }}",
+              "operation": "larger",
+              "value2": 0
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "set3",
+      "name": "Handle Empty Batch",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        1760,
+        180
+      ],
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "name": "warning_message",
+              "value": "Batch contains no data"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "set4",
+      "name": "Handle Invalid Response",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        1040,
+        260
+      ],
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "name": "error",
+              "value": "API response was empty or invalid"
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "connections": {
+    "Manual Trigger": {
+      "main": [
+        [
+          {
+            "node": "Set API Configuration",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Set API Configuration": {
+      "main": [
+        [
+          {
+            "node": "Fetch Data via HTTP",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Fetch Data via HTTP": {
+      "main": [
+        [
+          {
+            "node": "Check Data Validity",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Check Data Validity": {
+      "main": [
+        [
+          {
+            "node": "Split Data into Batches",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Handle Invalid Response",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Split Data into Batches": {
+      "main": [
+        [
+          {
+            "node": "Check Batch Content",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Process Each Batch",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Process Each Batch": {
+      "main": [
+        [
+          {
+            "node": "Split Data into Batches",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Check Batch Content": {
+      "main": [
+        [],
+        [
+          {
+            "node": "Handle Empty Batch",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {},
+  "pinData": {},
+  "versionId": "1",
+  "id": "day_16_solution"
+}

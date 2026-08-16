@@ -1,0 +1,280 @@
+{
+  "name": "Day 32 Solution: Production System Management",
+  "description": "Aggregates 3 independent health checks (n8n, webhook.site, external dependency) into one overall_health verdict, alerting on any degradation.",
+  "tags": [
+    "week-05",
+    "day-32",
+    "solution"
+  ],
+  "version": "1.0.0",
+  "nodes": [
+    {
+      "id": "sticky1",
+      "name": "Sticky Note",
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        40,
+        -340
+      ],
+      "parameters": {
+        "content": "## Day 32 Solution: Production System Management\n\nSchedule (2 min) -> 3 HTTP health checks (n8n /healthz, webhook.site, httpstat.us/200) each with Never Error -> Code aggregates overall_health (AND across all 3) -> IF degraded -> HTTP incident alert + Set log incident. Credentials needed: None — a free webhook.site URL is optional.\n\nSee DAILY_TASKS/DAY_32_Production_System_Management.md.",
+        "height": 320,
+        "width": 540
+      }
+    },
+    {
+      "id": "sched1",
+      "name": "Health Check Schedule",
+      "type": "n8n-nodes-base.scheduleTrigger",
+      "typeVersion": 1.2,
+      "position": [
+        80,
+        220
+      ],
+      "parameters": {
+        "rule": {
+          "interval": [
+            {
+              "field": "minutes",
+              "minutesInterval": 2
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "http1",
+      "name": "Check n8n Health",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        320,
+        100
+      ],
+      "parameters": {
+        "method": "GET",
+        "url": "http://localhost:5678/healthz",
+        "options": {
+          "response": {
+            "response": {
+              "neverError": true
+            }
+          }
+        }
+      }
+    },
+    {
+      "id": "http2",
+      "name": "Check Webhook Endpoint",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        320,
+        220
+      ],
+      "parameters": {
+        "method": "GET",
+        "url": "https://webhook.site/your-unique-id",
+        "options": {
+          "response": {
+            "response": {
+              "neverError": true
+            }
+          }
+        }
+      }
+    },
+    {
+      "id": "http3",
+      "name": "Check External Dependency",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        320,
+        340
+      ],
+      "parameters": {
+        "method": "GET",
+        "url": "https://httpstat.us/200",
+        "options": {
+          "response": {
+            "response": {
+              "neverError": true
+            }
+          }
+        }
+      }
+    },
+    {
+      "id": "code1",
+      "name": "Aggregate System Status",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        560,
+        220
+      ],
+      "parameters": {
+        "mode": "runOnceForAllItems",
+        "jsCode": "const n8nStatus = $('Check n8n Health').item.json.statusCode || 200;\nconst webhookStatus = $('Check Webhook Endpoint').item.json.statusCode || 200;\nconst depStatus = $('Check External Dependency').item.json.statusCode || 200;\nconst allOk = [n8nStatus, webhookStatus, depStatus].every(s => s >= 200 && s < 300);\nreturn [{ json: { n8n_status: n8nStatus, webhook_status: webhookStatus, dependency_status: depStatus, overall_health: allOk ? 'healthy' : 'degraded' } }];"
+      }
+    },
+    {
+      "id": "if1",
+      "name": "Check for Issues",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2,
+      "position": [
+        800,
+        220
+      ],
+      "parameters": {
+        "conditions": {
+          "string": [
+            {
+              "value1": "={{ $json.overall_health !== 'healthy' }}",
+              "operation": "equal",
+              "value2": "true"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "http4",
+      "name": "Send Incident Alert",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        1040,
+        140
+      ],
+      "parameters": {
+        "method": "POST",
+        "url": "https://webhook.site/your-unique-id",
+        "sendBody": true,
+        "bodyContentType": "json",
+        "jsonBody": "={{ $json }}"
+      }
+    },
+    {
+      "id": "set1",
+      "name": "Log Incident",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        1280,
+        140
+      ],
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "name": "incident_id",
+              "value": "={{ $now.format('yyyyMMddHHmmss') }}"
+            },
+            {
+              "name": "logged_at",
+              "value": "={{ $now }}"
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "connections": {
+    "Health Check Schedule": {
+      "main": [
+        [
+          {
+            "node": "Check n8n Health",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Check Webhook Endpoint",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Check External Dependency",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Check n8n Health": {
+      "main": [
+        [
+          {
+            "node": "Aggregate System Status",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Check Webhook Endpoint": {
+      "main": [
+        [
+          {
+            "node": "Aggregate System Status",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Check External Dependency": {
+      "main": [
+        [
+          {
+            "node": "Aggregate System Status",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Aggregate System Status": {
+      "main": [
+        [
+          {
+            "node": "Check for Issues",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Check for Issues": {
+      "main": [
+        [
+          {
+            "node": "Send Incident Alert",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Send Incident Alert": {
+      "main": [
+        [
+          {
+            "node": "Log Incident",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {},
+  "pinData": {},
+  "versionId": "1",
+  "id": "day_32_solution"
+}

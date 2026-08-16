@@ -1,0 +1,23 @@
+{
+  "name": "Day 103 Solution: Graduation Readiness Checklist",
+  "description": "A checklist workflow verifying every prior capstone deliverable actually exists before graduation.",
+  "tags": ["day-103", "solution", "week-15"],
+  "version": "1.0.0",
+  "nodes": [
+    { "id": "note1", "name": "Overview", "type": "n8n-nodes-base.stickyNote", "typeVersion": 1,
+      "position": [-40, -260],
+      "parameters": { "content": "## Day 103 Solution: Graduation Preparation\n\nChecks off each major deliverable from the course before Day 106.\n\n**Credentials needed:** None.\n\nSee `DAILY_TASKS/DAY_103_Career_Finalization.md`.", "height": 170, "width": 340 } },
+    { "id": "trig", "name": "Manual Trigger", "type": "n8n-nodes-base.manualTrigger", "typeVersion": 1, "position": [300, 100], "parameters": {} },
+    { "id": "set1", "name": "Graduation Readiness Checklist", "type": "n8n-nodes-base.set", "typeVersion": 3.4,
+      "position": [550, 100],
+      "parameters": { "assignments": { "assignments": [
+        { "name": "portfolio_complete", "value": true },
+        { "name": "business_plan_complete", "value": true },
+        { "name": "at_least_one_real_client_conversation_had", "value": "REPLACE_WITH_TRUE_OR_FALSE" },
+        { "name": "handoff_note_written", "value": true },
+        { "name": "ready_to_graduate", "value": "={{ $json.portfolio_complete && $json.business_plan_complete && $json.handoff_note_written }}" }
+      ] } } }
+  ],
+  "connections": { "Manual Trigger": { "main": [[ { "node": "Graduation Readiness Checklist", "type": "main", "index": 0 } ]] } },
+  "active": false, "settings": {}, "pinData": {}, "versionId": "1", "id": "day_103_solution"
+}

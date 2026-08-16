@@ -1,0 +1,91 @@
+{
+  "name": "Day 67 Solution: Airtable <-> Notion Bidirectional Sync",
+  "description": "One-way (Airtable -> Notion) and reverse (Notion -> Airtable) sync workflows, sharing a last-updated-wins conflict rule and logging every run.",
+  "tags": ["day-67", "solution", "week-10"],
+  "version": "1.0.0",
+  "nodes": [
+    { "id": "note1", "name": "Overview", "type": "n8n-nodes-base.stickyNote", "typeVersion": 1,
+      "position": [-40, -300],
+      "parameters": {
+        "content": "## Day 67 Solution: Data Synchronization\n\nTwo scheduled workflows in one file: Airtable->Notion sync and Notion->Airtable sync, both using a 'last updated wins' rule and logging to a Sync Log table.\n\n**Credentials needed:** Airtable, Notion (both from Week 9).\n\nSee `DAILY_TASKS/DAY_67_Data_Synchronization.md`.",
+        "height": 190, "width": 340
+      }
+    },
+    { "id": "sched1", "name": "Schedule - Every 15 Min", "type": "n8n-nodes-base.scheduleTrigger", "typeVersion": 1.2,
+      "position": [250, 100],
+      "parameters": { "rule": { "interval": [ { "field": "minutes", "minutesInterval": 15 } ] } } },
+    { "id": "readAirtable", "name": "Read Changed Airtable Rows", "type": "n8n-nodes-base.airtable", "typeVersion": 2.1,
+      "position": [500, 100],
+      "parameters": { "operation": "search", "base": { "value": "YOUR_BASE_ID" }, "table": { "value": "Contacts" },
+        "filterByFormula": "IS_AFTER({Last Updated}, '{{ $now.minus(15, \"minutes\") }}')" } },
+    { "id": "lookupNotion", "name": "Lookup Existing Notion Page", "type": "n8n-nodes-base.notion", "typeVersion": 2,
+      "position": [750, 100],
+      "parameters": { "resource": "databasePage", "operation": "getAll", "databaseId": { "value": "YOUR_NOTION_DB_ID" } } },
+    { "id": "ifExists1", "name": "Page Already Exists?", "type": "n8n-nodes-base.if", "typeVersion": 2,
+      "position": [1000, 100],
+      "parameters": { "conditions": { "boolean": [ { "value1": "={{ $json.id ? true : false }}", "value2": true } ] } } },
+    { "id": "updateNotion", "name": "Update Notion Page", "type": "n8n-nodes-base.notion", "typeVersion": 2,
+      "position": [1250, 40],
+      "parameters": { "resource": "databasePage", "operation": "update", "pageId": { "value": "={{ $json.id }}" } } },
+    { "id": "createNotion", "name": "Create Notion Page", "type": "n8n-nodes-base.notion", "typeVersion": 2,
+      "position": [1250, 180],
+      "parameters": { "resource": "databasePage", "operation": "create", "databaseId": { "value": "YOUR_NOTION_DB_ID" } } },
+    { "id": "logSync1", "name": "Log Airtable to Notion Run", "type": "n8n-nodes-base.airtable", "typeVersion": 2.1,
+      "position": [1500, 100],
+      "parameters": { "operation": "create", "base": { "value": "YOUR_BASE_ID" }, "table": { "value": "Sync Log" } } },
+
+    { "id": "sched2", "name": "Schedule - Notion to Airtable", "type": "n8n-nodes-base.scheduleTrigger", "typeVersion": 1.2,
+      "position": [250, 420],
+      "parameters": { "rule": { "interval": [ { "field": "minutes", "minutesInterval": 15 } ] } } },
+    { "id": "readNotion", "name": "Read Changed Notion Pages", "type": "n8n-nodes-base.notion", "typeVersion": 2,
+      "position": [500, 420],
+      "parameters": { "resource": "databasePage", "operation": "getAll", "databaseId": { "value": "YOUR_NOTION_DB_ID" } } },
+    { "id": "lookupAirtable", "name": "Lookup Existing Airtable Row", "type": "n8n-nodes-base.airtable", "typeVersion": 2.1,
+      "position": [750, 420],
+      "parameters": { "operation": "search", "base": { "value": "YOUR_BASE_ID" }, "table": { "value": "Contacts" } } },
+    { "id": "conflictCheck", "name": "Conflict Check - Last Updated Wins", "type": "n8n-nodes-base.set", "typeVersion": 3.4,
+      "position": [1000, 420],
+      "parameters": { "assignments": { "assignments": [
+        { "name": "winner", "value": "={{ $json.notion_last_updated > $json.airtable_last_updated ? 'notion' : 'airtable' }}" }
+      ] } } },
+    { "id": "ifExists2", "name": "Row Already Exists?", "type": "n8n-nodes-base.if", "typeVersion": 2,
+      "position": [1250, 420],
+      "parameters": { "conditions": { "boolean": [ { "value1": "={{ $json.id ? true : false }}", "value2": true } ] } } },
+    { "id": "updateAirtable", "name": "Update Airtable Row", "type": "n8n-nodes-base.airtable", "typeVersion": 2.1,
+      "position": [1500, 360],
+      "parameters": { "operation": "update", "base": { "value": "YOUR_BASE_ID" }, "table": { "value": "Contacts" } } },
+    { "id": "createAirtable", "name": "Create Airtable Row", "type": "n8n-nodes-base.airtable", "typeVersion": 2.1,
+      "position": [1500, 500],
+      "parameters": { "operation": "create", "base": { "value": "YOUR_BASE_ID" }, "table": { "value": "Contacts" } } },
+    { "id": "logSync2", "name": "Log Notion to Airtable Run", "type": "n8n-nodes-base.airtable", "typeVersion": 2.1,
+      "position": [1750, 420],
+      "parameters": { "operation": "create", "base": { "value": "YOUR_BASE_ID" }, "table": { "value": "Sync Log" } } }
+  ],
+  "connections": {
+    "Schedule - Every 15 Min": { "main": [[ { "node": "Read Changed Airtable Rows", "type": "main", "index": 0 } ]] },
+    "Read Changed Airtable Rows": { "main": [[ { "node": "Lookup Existing Notion Page", "type": "main", "index": 0 } ]] },
+    "Lookup Existing Notion Page": { "main": [[ { "node": "Page Already Exists?", "type": "main", "index": 0 } ]] },
+    "Page Already Exists?": {
+      "main": [
+        [ { "node": "Update Notion Page", "type": "main", "index": 0 } ],
+        [ { "node": "Create Notion Page", "type": "main", "index": 0 } ]
+      ]
+    },
+    "Update Notion Page": { "main": [[ { "node": "Log Airtable to Notion Run", "type": "main", "index": 0 } ]] },
+    "Create Notion Page": { "main": [[ { "node": "Log Airtable to Notion Run", "type": "main", "index": 0 } ]] },
+
+    "Schedule - Notion to Airtable": { "main": [[ { "node": "Read Changed Notion Pages", "type": "main", "index": 0 } ]] },
+    "Read Changed Notion Pages": { "main": [[ { "node": "Lookup Existing Airtable Row", "type": "main", "index": 0 } ]] },
+    "Lookup Existing Airtable Row": { "main": [[ { "node": "Conflict Check - Last Updated Wins", "type": "main", "index": 0 } ]] },
+    "Conflict Check - Last Updated Wins": { "main": [[ { "node": "Row Already Exists?", "type": "main", "index": 0 } ]] },
+    "Row Already Exists?": {
+      "main": [
+        [ { "node": "Update Airtable Row", "type": "main", "index": 0 } ],
+        [ { "node": "Create Airtable Row", "type": "main", "index": 0 } ]
+      ]
+    },
+    "Update Airtable Row": { "main": [[ { "node": "Log Notion to Airtable Run", "type": "main", "index": 0 } ]] },
+    "Create Airtable Row": { "main": [[ { "node": "Log Notion to Airtable Run", "type": "main", "index": 0 } ]] }
+  },
+  "active": false, "settings": {}, "pinData": {}, "versionId": "1", "id": "day_67_solution"
+}

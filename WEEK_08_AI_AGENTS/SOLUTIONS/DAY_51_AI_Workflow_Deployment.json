@@ -1,0 +1,236 @@
+{
+  "name": "Day 51 Solution: AI Workflow Deployment",
+  "description": "A webhook-triggered AI agent with explicit input validation and separate success (200) / error (500) response paths via Respond to Webhook nodes.",
+  "tags": ["week8", "ai-agents", "deployment"],
+  "version": "1.0.0",
+  "nodes": [
+    {
+      "id": "overview-sticky",
+      "name": "Overview",
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [160, 20],
+      "parameters": {
+        "content": "## Day 51 Solution: AI Workflow Deployment\n\nA production-style deployment pattern: a POST webhook validates a required field before doing any AI work, then returns an explicit 200 success or 500 error response via Respond to Webhook nodes (never the default auto-response).\n\n**Credentials needed to run for real:** OpenAI API key. None needed to test the validation/response logic.\n\nSee DAILY_TASKS/DAY_51_AI_Workflow_Deployment.md for the full task.",
+        "height": 260,
+        "width": 420
+      }
+    },
+    {
+      "id": "webhook-config-sticky",
+      "name": "Webhook Config Note",
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [160, 300],
+      "parameters": {
+        "content": "## Webhook settings\n\nSet **Respond** to \"Using Respond to Webhook Node\" in this node's parameters so nothing auto-responds before the AI call finishes. Method is POST, path is `ai-agent-deploy`.",
+        "height": 160,
+        "width": 300
+      }
+    },
+    {
+      "id": "ai-agent-deploy-webhook",
+      "name": "AI Agent Deploy",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2,
+      "position": [240, 480],
+      "parameters": {
+        "path": "ai-agent-deploy",
+        "httpMethod": "POST",
+        "responseMode": "responseNode"
+      }
+    },
+    {
+      "id": "validate-required-fields",
+      "name": "Validate Required Fields",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2,
+      "position": [490, 480],
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "typeValidation": "strict"
+          },
+          "conditions": [
+            {
+              "id": "cond-scenario-notempty",
+              "leftValue": "={{ $json.scenario }}",
+              "rightValue": "",
+              "operator": {
+                "type": "string",
+                "operation": "notEmpty",
+                "singleValue": true
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      }
+    },
+    {
+      "id": "build-processed-result",
+      "name": "Build Processed Result",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [740, 360],
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "name": "scenario",
+              "value": "={{ $json.scenario }}"
+            },
+            {
+              "name": "processing_status",
+              "value": "processing"
+            },
+            {
+              "name": "received_at",
+              "value": "={{ $now.toISO() }}"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "ai-deployment-analysis",
+      "name": "AI Deployment Analysis",
+      "type": "n8n-nodes-base.openAi",
+      "typeVersion": 1.3,
+      "position": [990, 360],
+      "parameters": {
+        "resource": "chat",
+        "operation": "create",
+        "model": "gpt-4o-mini",
+        "messages": {
+          "values": [
+            {
+              "role": "system",
+              "content": "You are a deployed production AI agent. Respond concisely to the given deployment scenario as if you were live and being tested by a caller."
+            },
+            {
+              "role": "user",
+              "content": "={{ 'Deployment scenario: ' + $json.scenario }}"
+            }
+          ]
+        },
+        "options": {
+          "temperature": 0.3,
+          "maxTokens": 300
+        }
+      }
+    },
+    {
+      "id": "respond-success",
+      "name": "Respond Success",
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.1,
+      "position": [1240, 360],
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "={{ { \"status\": \"deployed\", \"workflow\": \"AI Agent Deploy Demo\", \"scenario\": $json.scenario, \"ai_response\": $json.choices[0].message.content } }}",
+        "options": {
+          "responseCode": 200
+        }
+      }
+    },
+    {
+      "id": "build-error-object",
+      "name": "Build Error Object",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [740, 620],
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "name": "error_type",
+              "value": "missing_required_field"
+            },
+            {
+              "name": "error_message",
+              "value": "Missing required field: scenario"
+            },
+            {
+              "name": "failed_at",
+              "value": "={{ $now.toISO() }}"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "respond-error",
+      "name": "Respond Error",
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.1,
+      "position": [990, 620],
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "={{ { \"status\": \"error\", \"workflow\": \"AI Agent Deploy Demo\", \"message\": $json.error_message } }}",
+        "options": {
+          "responseCode": 500
+        }
+      }
+    },
+    {
+      "id": "deployment-record-sticky",
+      "name": "Deployment Record Template",
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [1240, 620],
+      "parameters": {
+        "content": "## Deployment Record\n\n- **Production URL:** https://<your-n8n-domain>/webhook/ai-agent-deploy (redact before sharing)\n- **Activation date:** fill in when you toggle Active\n- **Rollback plan:** flip the Active toggle off (top-right of the canvas) to immediately stop the production webhook from accepting new requests; the workflow and its history stay intact for later re-activation.",
+        "height": 200,
+        "width": 340
+      }
+    }
+  ],
+  "connections": {
+    "AI Agent Deploy": {
+      "main": [
+        [
+          { "node": "Validate Required Fields", "type": "main", "index": 0 }
+        ]
+      ]
+    },
+    "Validate Required Fields": {
+      "main": [
+        [
+          { "node": "Build Processed Result", "type": "main", "index": 0 }
+        ],
+        [
+          { "node": "Build Error Object", "type": "main", "index": 0 }
+        ]
+      ]
+    },
+    "Build Processed Result": {
+      "main": [
+        [
+          { "node": "AI Deployment Analysis", "type": "main", "index": 0 }
+        ]
+      ]
+    },
+    "AI Deployment Analysis": {
+      "main": [
+        [
+          { "node": "Respond Success", "type": "main", "index": 0 }
+        ]
+      ]
+    },
+    "Build Error Object": {
+      "main": [
+        [
+          { "node": "Respond Error", "type": "main", "index": 0 }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {},
+  "pinData": {},
+  "versionId": "1",
+  "id": "day_51_solution"
+}

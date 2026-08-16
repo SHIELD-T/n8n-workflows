@@ -1,0 +1,40 @@
+{
+  "name": "Day 106 Solution: Graduation Capstone Runner",
+  "description": "The final capstone: runs every week's capstone review workflow in sequence and produces one course-completion certificate record.",
+  "tags": ["day-106", "solution", "week-15", "graduation"],
+  "version": "1.0.0",
+  "nodes": [
+    { "id": "note1", "name": "Overview", "type": "n8n-nodes-base.stickyNote", "typeVersion": 1,
+      "position": [-40, -280],
+      "parameters": { "content": "## Day 106 Solution: GRADUATION DAY\n\nThe final workflow of the course. Chains the Week 5, 8, 13, and 14 capstone solutions and produces a completion record.\n\n**Credentials needed:** None.\n\nSee `DAILY_TASKS/DAY_106_Graduation_Finalization.md`.", "height": 180, "width": 380 } },
+    { "id": "trig", "name": "Manual Trigger", "type": "n8n-nodes-base.manualTrigger", "typeVersion": 1, "position": [350, 200], "parameters": {} },
+    { "id": "callWeek5", "name": "Call Week 5 Capstone", "type": "n8n-nodes-base.executeWorkflow", "typeVersion": 1.2,
+      "position": [600, 60],
+      "parameters": { "workflowId": { "value": "DAY_35_ID", "mode": "list", "cachedResultName": "Day 35 Solution" } } },
+    { "id": "callWeek8", "name": "Call Week 8 Capstone", "type": "n8n-nodes-base.executeWorkflow", "typeVersion": 1.2,
+      "position": [600, 160],
+      "parameters": { "workflowId": { "value": "DAY_57_ID", "mode": "list", "cachedResultName": "Day 57 Solution" } } },
+    { "id": "callWeek13", "name": "Call Week 13 Capstone", "type": "n8n-nodes-base.executeWorkflow", "typeVersion": 1.2,
+      "position": [600, 260],
+      "parameters": { "workflowId": { "value": "DAY_92_ID", "mode": "list", "cachedResultName": "Day 92 Solution: Next Quarter Plan" } } },
+    { "id": "callWeek14", "name": "Call Week 14 Capstone", "type": "n8n-nodes-base.executeWorkflow", "typeVersion": 1.2,
+      "position": [600, 360],
+      "parameters": { "workflowId": { "value": "DAY_99_ID", "mode": "list", "cachedResultName": "Day 99 Solution: Business Snapshot and Handoff Note" } } },
+    { "id": "certificate", "name": "Generate Completion Record", "type": "n8n-nodes-base.set", "typeVersion": 3.4,
+      "position": [900, 210],
+      "parameters": { "assignments": { "assignments": [
+        { "name": "student_name", "value": "REPLACE_WITH_YOUR_NAME" },
+        { "name": "course", "value": "Automator Pro: n8n + AI Automation" },
+        { "name": "days_completed", "value": 106 },
+        { "name": "graduated_at", "value": "={{ $now }}" }
+      ] } } }
+  ],
+  "connections": {
+    "Manual Trigger": { "main": [[ { "node": "Call Week 5 Capstone", "type": "main", "index": 0 }, { "node": "Call Week 8 Capstone", "type": "main", "index": 0 }, { "node": "Call Week 13 Capstone", "type": "main", "index": 0 }, { "node": "Call Week 14 Capstone", "type": "main", "index": 0 } ]] },
+    "Call Week 5 Capstone": { "main": [[ { "node": "Generate Completion Record", "type": "main", "index": 0 } ]] },
+    "Call Week 8 Capstone": { "main": [[ { "node": "Generate Completion Record", "type": "main", "index": 0 } ]] },
+    "Call Week 13 Capstone": { "main": [[ { "node": "Generate Completion Record", "type": "main", "index": 0 } ]] },
+    "Call Week 14 Capstone": { "main": [[ { "node": "Generate Completion Record", "type": "main", "index": 0 } ]] }
+  },
+  "active": false, "settings": {}, "pinData": {}, "versionId": "1", "id": "day_106_solution"
+}

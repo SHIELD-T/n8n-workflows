@@ -1,0 +1,320 @@
+{
+  "name": "Day 10 Solution: Exploring n8n UI",
+  "description": "Three workflows for practicing Execution History, Pin Data, tags, and Table/JSON output views.",
+  "tags": [
+    "week-02",
+    "day-10",
+    "solution"
+  ],
+  "version": "1.0.0",
+  "nodes": [
+    {
+      "id": "sticky1",
+      "name": "Sticky Note",
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        40,
+        -300
+      ],
+      "parameters": {
+        "content": "## Day 10 Solution: Exploring n8n UI\n\nThree workflows for practicing Execution History, Pin Data, and tags: (1) Manual -> IF -> two-step Set chain (pin {\"data\":\"hello world automation\"} on the trigger), (2) Webhook -> IF route by type, (3) Schedule every 1 minute (deactivate after testing).\n\nCredentials needed: None needed to test the logic.\n\nSee DAILY_TASKS/DAY_10_Exploring_UI.md.",
+        "height": 280,
+        "width": 480
+      }
+    },
+    {
+      "id": "trigger1",
+      "name": "Manual Trigger",
+      "type": "n8n-nodes-base.manualTrigger",
+      "typeVersion": 1,
+      "position": [
+        80,
+        100
+      ],
+      "parameters": {}
+    },
+    {
+      "id": "if1",
+      "name": "Input Validation",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2,
+      "position": [
+        320,
+        100
+      ],
+      "parameters": {
+        "conditions": {
+          "string": [
+            {
+              "value1": "={{ $json.data }}",
+              "operation": "isNotEmpty"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "set1",
+      "name": "Step 1: Data Cleaning",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        560,
+        40
+      ],
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "name": "cleaned_data",
+              "value": "={{ $json.data.trim().toLowerCase() }}"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "set2",
+      "name": "Step 2: Data Processing",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        800,
+        40
+      ],
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "name": "processed_data",
+              "value": "={{ $json.cleaned_data.split(' ').length }}"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "set3",
+      "name": "Validation Failed",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        560,
+        200
+      ],
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "name": "error",
+              "value": "data field is empty"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "webhook1",
+      "name": "Conditional Processing Webhook",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2,
+      "position": [
+        80,
+        360
+      ],
+      "parameters": {
+        "path": "conditional-processing",
+        "httpMethod": "POST"
+      }
+    },
+    {
+      "id": "if2",
+      "name": "Route by Type",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2,
+      "position": [
+        320,
+        360
+      ],
+      "parameters": {
+        "conditions": {
+          "string": [
+            {
+              "value1": "={{ $json.type }}",
+              "operation": "equal",
+              "value2": "urgent"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "set4",
+      "name": "Urgent Processing",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        560,
+        300
+      ],
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "name": "priority",
+              "value": "HIGH"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "set5",
+      "name": "Normal Processing",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        560,
+        440
+      ],
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "name": "priority",
+              "value": "NORMAL"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "sched1",
+      "name": "Every Minute Test Schedule",
+      "type": "n8n-nodes-base.scheduleTrigger",
+      "typeVersion": 1.2,
+      "position": [
+        80,
+        580
+      ],
+      "parameters": {
+        "rule": {
+          "interval": [
+            {
+              "field": "minutes",
+              "minutesInterval": 1
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "set6",
+      "name": "Record Timestamp",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        320,
+        580
+      ],
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "name": "recorded_at",
+              "value": "={{ $now }}"
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "connections": {
+    "Manual Trigger": {
+      "main": [
+        [
+          {
+            "node": "Input Validation",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Input Validation": {
+      "main": [
+        [
+          {
+            "node": "Step 1: Data Cleaning",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Validation Failed",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Step 1: Data Cleaning": {
+      "main": [
+        [
+          {
+            "node": "Step 2: Data Processing",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Conditional Processing Webhook": {
+      "main": [
+        [
+          {
+            "node": "Route by Type",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Route by Type": {
+      "main": [
+        [
+          {
+            "node": "Urgent Processing",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Normal Processing",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Every Minute Test Schedule": {
+      "main": [
+        [
+          {
+            "node": "Record Timestamp",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {},
+  "pinData": {},
+  "versionId": "1",
+  "id": "day_10_solution"
+}

@@ -1,0 +1,288 @@
+{
+  "name": "Day 39 Solution: AI Memory, Context & RAG",
+  "description": "Two independent webhook-triggered demos: a conversation-memory demo that builds a per-conversation_id transcript in a Set node before calling OpenAI, and a RAG demo that keyword-matches a question against a hardcoded knowledge base before calling OpenAI with a grounded, citation-required prompt.",
+  "tags": [
+    "week-06",
+    "ai-agents",
+    "day-39",
+    "openai",
+    "memory",
+    "rag",
+    "solution"
+  ],
+  "version": "1.0.0",
+  "nodes": [
+    {
+      "id": "overview-sticky",
+      "name": "Overview Sticky",
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        240,
+        40
+      ],
+      "parameters": {
+        "content": "## Day 39 Solution: AI Memory, Context & RAG\n\nTwo independent demos in one file. (1) Memory: a webhook builds a per-conversation transcript (keyed by conversation_id) in a Set node, then an OpenAI node answers using that transcript as context. (2) RAG: a Set node holds a small hardcoded knowledge base; a second Set node does simple keyword-match 'retrieval' against the incoming question, and an OpenAI node answers only from the matched chunk, citing it.\n\n**Credentials needed to run for real:** OpenAI API key.\n\n**Reference:** WEEK_06_AI_AGENTS/DAILY_TASKS/DAY_39_AI_Memory_and_Context.md",
+        "height": 300,
+        "width": 460
+      }
+    },
+    {
+      "id": "memory-persistence-note",
+      "name": "Memory Persistence Note",
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        740,
+        40
+      ],
+      "parameters": {
+        "content": "## Note: Session Memory\n\nThis Set node simulates per-conversation memory by building a running transcript keyed by conversation_id within a single execution. A real production deployment would persist this transcript in a database or Redis (keyed by conversation_id) and load/save it on every call — a single n8n execution can only demonstrate the shape of that memory record, not true cross-request persistence.",
+        "height": 260,
+        "width": 340
+      }
+    },
+    {
+      "id": "memory-chat-trigger",
+      "name": "Memory Chat Trigger",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2,
+      "position": [
+        240,
+        400
+      ],
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "ai-memory",
+        "options": {}
+      }
+    },
+    {
+      "id": "update-conversation-memory",
+      "name": "Update Conversation Memory",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        520,
+        400
+      ],
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "name": "conversation_id",
+              "value": "={{ $json.conversation_id }}"
+            },
+            {
+              "name": "new_message",
+              "value": "={{ $json.message }}"
+            },
+            {
+              "name": "transcript",
+              "value": "={{ ($json.prior_transcript || 'No prior turns in this execution.') + '\\nUser (' + $json.conversation_id + '): ' + $json.message }}"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "memory-aware-chat-response",
+      "name": "Memory-Aware Chat Response",
+      "type": "n8n-nodes-base.openAi",
+      "typeVersion": 1.3,
+      "position": [
+        800,
+        400
+      ],
+      "parameters": {
+        "resource": "chat",
+        "operation": "create",
+        "model": "gpt-4o-mini",
+        "messages": {
+          "values": [
+            {
+              "role": "system",
+              "content": "You are a helpful assistant. Use the conversation transcript below — which is keyed to this specific conversation_id — to answer the latest message, recalling any facts the user has already told you in this session."
+            },
+            {
+              "role": "user",
+              "content": "={{ 'Conversation transcript so far:\\n' + $json.transcript + '\\n\\nRespond to the latest message: ' + $json.new_message }}"
+            }
+          ]
+        },
+        "options": {
+          "temperature": 0.4,
+          "maxTokens": 400
+        }
+      }
+    },
+    {
+      "id": "rag-query-trigger",
+      "name": "RAG Query Trigger",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2,
+      "position": [
+        240,
+        760
+      ],
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "rag-query",
+        "options": {}
+      }
+    },
+    {
+      "id": "knowledge-base",
+      "name": "Knowledge Base",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        520,
+        760
+      ],
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "name": "question",
+              "value": "={{ $json.question }}"
+            },
+            {
+              "name": "kb_chunk_1",
+              "value": "Refunds: Students may request a full refund within 14 days of purchasing a course, provided less than 25% of the course content has been completed. Refund requests after 14 days are evaluated case-by-case and are not guaranteed."
+            },
+            {
+              "name": "kb_chunk_2",
+              "value": "Course Access: Once enrolled, students have lifetime access to course materials, including any future updates to that course. Access does not expire and is not tied to a subscription."
+            },
+            {
+              "name": "kb_chunk_3",
+              "value": "Certificates: A certificate of completion is issued automatically once a student finishes 100% of a course's required lessons and passes the final assessment with a score of 70% or higher."
+            },
+            {
+              "name": "kb_chunk_4",
+              "value": "Support Hours: Our support team responds to help-desk tickets Monday through Friday, 9am-6pm Eastern Time, with a target first-response time of one business day. Live chat is available during the same hours for enrolled students."
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "keyword-retrieval",
+      "name": "Keyword Retrieval",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        800,
+        760
+      ],
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "name": "matched_chunk",
+              "value": "={{ $json.question.toLowerCase().includes('refund') ? 'kb_chunk_1' : ($json.question.toLowerCase().includes('access') || $json.question.toLowerCase().includes('expire')) ? 'kb_chunk_2' : $json.question.toLowerCase().includes('certificate') ? 'kb_chunk_3' : ($json.question.toLowerCase().includes('support') || $json.question.toLowerCase().includes('help')) ? 'kb_chunk_4' : 'none' }}"
+            },
+            {
+              "name": "retrieved_context",
+              "value": "={{ $json.question.toLowerCase().includes('refund') ? $json.kb_chunk_1 : ($json.question.toLowerCase().includes('access') || $json.question.toLowerCase().includes('expire')) ? $json.kb_chunk_2 : $json.question.toLowerCase().includes('certificate') ? $json.kb_chunk_3 : ($json.question.toLowerCase().includes('support') || $json.question.toLowerCase().includes('help')) ? $json.kb_chunk_4 : 'No matching chunk found in the knowledge base.' }}"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "rag-answer",
+      "name": "RAG Answer",
+      "type": "n8n-nodes-base.openAi",
+      "typeVersion": 1.3,
+      "position": [
+        1080,
+        760
+      ],
+      "parameters": {
+        "resource": "chat",
+        "operation": "create",
+        "model": "gpt-4o-mini",
+        "messages": {
+          "values": [
+            {
+              "role": "system",
+              "content": "Answer using only the retrieved context below. If the answer isn't in the context, say you don't know — do not use outside knowledge. Cite which knowledge-base chunk you used (e.g. 'Source: kb_chunk_2')."
+            },
+            {
+              "role": "user",
+              "content": "={{ 'Retrieved context (' + $json.matched_chunk + '):\\n' + $json.retrieved_context + '\\n\\nQuestion: ' + $json.question }}"
+            }
+          ]
+        },
+        "options": {
+          "temperature": 0.2,
+          "maxTokens": 400
+        }
+      }
+    }
+  ],
+  "connections": {
+    "Memory Chat Trigger": {
+      "main": [
+        [
+          {
+            "node": "Update Conversation Memory",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Update Conversation Memory": {
+      "main": [
+        [
+          {
+            "node": "Memory-Aware Chat Response",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "RAG Query Trigger": {
+      "main": [
+        [
+          {
+            "node": "Knowledge Base",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Knowledge Base": {
+      "main": [
+        [
+          {
+            "node": "Keyword Retrieval",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Keyword Retrieval": {
+      "main": [
+        [
+          {
+            "node": "RAG Answer",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {},
+  "pinData": {},
+  "versionId": "1",
+  "id": "day_39_solution"
+}

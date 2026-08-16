@@ -1,0 +1,29 @@
+{
+  "name": "Day 97 Solution: Knowledge Base Entry",
+  "description": "Creates one real, complete knowledge-base entry documenting a workflow well enough that someone else could maintain it.",
+  "tags": ["day-97", "solution", "week-14"],
+  "version": "1.0.0",
+  "nodes": [
+    { "id": "note1", "name": "Overview", "type": "n8n-nodes-base.stickyNote", "typeVersion": 1,
+      "position": [-40, -260],
+      "parameters": { "content": "## Day 97 Solution: Legacy Building\n\nCompare to `WEEK_14_FINAL_OPTIMIZATION/EXAMPLES/legacy_building_future_planning.json`. Produces one real, complete documentation entry.\n\n**Credentials needed:** Notion (optional, if storing entries there).\n\nSee `DAILY_TASKS/DAY_97_Legacy_Building.md`.", "height": 190, "width": 360 } },
+    { "id": "trig", "name": "Manual Trigger", "type": "n8n-nodes-base.manualTrigger", "typeVersion": 1, "position": [300, 100], "parameters": {} },
+    { "id": "set1", "name": "Compile Documentation Entry", "type": "n8n-nodes-base.set", "typeVersion": 3.4,
+      "position": [550, 100],
+      "parameters": { "assignments": { "assignments": [
+        { "name": "workflow_name", "value": "REPLACE_WITH_REAL_WORKFLOW_NAME" },
+        { "name": "purpose", "value": "One sentence: what business problem this solves" },
+        { "name": "credentials_required", "value": "={{ ['List each credential type by name'] }}" },
+        { "name": "known_failure_modes", "value": "What breaks it, and what the fix is" },
+        { "name": "who_owns_this", "value": "REPLACE_WITH_NAME" }
+      ] } } },
+    { "id": "notion1", "name": "Save to Knowledge Base", "type": "n8n-nodes-base.notion", "typeVersion": 2,
+      "position": [800, 100],
+      "parameters": { "resource": "databasePage", "operation": "create", "databaseId": { "value": "YOUR_KB_DB_ID" } } }
+  ],
+  "connections": {
+    "Manual Trigger": { "main": [[ { "node": "Compile Documentation Entry", "type": "main", "index": 0 } ]] },
+    "Compile Documentation Entry": { "main": [[ { "node": "Save to Knowledge Base", "type": "main", "index": 0 } ]] }
+  },
+  "active": false, "settings": {}, "pinData": {}, "versionId": "1", "id": "day_97_solution"
+}

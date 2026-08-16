@@ -1,0 +1,130 @@
+{
+  "name": "Day 81 Solution: Managing Clients with Automation",
+  "description": "Solution workflow for WEEK_12_SCALING Day 81: Managing Clients with Automation.",
+  "tags": [
+    "course-solution",
+    "WEEK_12",
+    "day-81"
+  ],
+  "version": "1.0.0",
+  "nodes": [
+    {
+      "id": "40b885d8-0b6d-4bd8-84df-46d91d074bb1",
+      "name": "Overview",
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        -260,
+        -320
+      ],
+      "parameters": {
+        "content": "## Day 81 Solution: Managing Clients with Automation\n\nThis workflow captures the Day 81 deliverable as structured fields in the **Client Management Automation Fields** node (run it once with Manual Trigger to see the values), plus a fully worked model answer in the sticky note to the right that you can read directly on the canvas.\n\nEvery day in Weeks 11-15 is primarily a business deliverable, so this solution is a lightweight Manual Trigger -> Set pattern that still opens and runs cleanly in n8n.\n\n**Credentials needed:** None needed — every node in this solution runs with no external account.\n\n**Matches:** `DAILY_TASKS/DAY_81_Managing_Clients_Automation.md`",
+        "height": 340,
+        "width": 460
+      }
+    },
+    {
+      "id": "53e4e9c9-cbea-45db-b369-eb2a2ef8c833",
+      "name": "Manual Trigger",
+      "type": "n8n-nodes-base.manualTrigger",
+      "typeVersion": 1,
+      "position": [
+        80,
+        40
+      ],
+      "parameters": {}
+    },
+    {
+      "id": "5852f2c8-e9c6-464b-ba76-a6520c2108fd",
+      "name": "Client Management Automation Fields",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        400,
+        40
+      ],
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "3375e1ee-4b5c-43de-a157-8466e77b8fa1",
+              "name": "faq_1",
+              "value": "How do I access my dashboard? -> [dashboard_url], sign in with your login credentials",
+              "type": "string"
+            },
+            {
+              "id": "d5a30235-ea48-4f2a-97ec-cbde4d79be86",
+              "name": "faq_2",
+              "value": "How do I modify automation settings? -> Settings -> Automation Configuration -> adjust triggers/actions/schedules",
+              "type": "string"
+            },
+            {
+              "id": "95240f03-ed81-43e8-8cd2-c62dd2d8ba98",
+              "name": "ticket_routing_technical",
+              "value": "Technical issues -> route to technical team",
+              "type": "string"
+            },
+            {
+              "id": "25bd94b2-6504-475c-8e96-121c169c7040",
+              "name": "ticket_routing_billing",
+              "value": "Billing questions -> route to billing team",
+              "type": "string"
+            },
+            {
+              "id": "0154f480-4e88-4753-b51c-76c703e8c50b",
+              "name": "weekly_report_schedule",
+              "value": "Every Monday 9am to client contacts: execution summary, performance metrics, error reports, recommendations",
+              "type": "string"
+            },
+            {
+              "id": "23b6a166-7af8-4ce7-b3f1-566e9ab13abc",
+              "name": "monthly_report_schedule",
+              "value": "First Monday of month to stakeholders: monthly summary, ROI analysis, usage trends, optimization opportunities",
+              "type": "string"
+            },
+            {
+              "id": "b5a5ad3d-6575-4366-aedc-40c48a3ac4a8",
+              "name": "satisfaction_survey_schedule",
+              "value": "Monthly email survey: overall satisfaction, service quality, communication effectiveness, improvement suggestions",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      }
+    },
+    {
+      "id": "25af9919-a2e2-4776-8630-268fb2ffb829",
+      "name": "Model Answer",
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        780,
+        -340
+      ],
+      "parameters": {
+        "content": "## Model Answer: Managing Clients with Automation\n\n### Support Bot FAQ Automation (bot response bank)\n\n| Question | Bot response |\n|---|---|\n| How do I access my dashboard? | You can access your dashboard at [dashboard_url]. Use your login credentials to sign in. |\n| How do I modify settings? | Go to Settings -> Automation Configuration. Adjust triggers, actions, and schedules. |\n| How do I add a team member? | Settings -> Team Management -> Add Member. Enter their email and assign permissions. |\n| How do I view reports? | Dashboard -> Reports. Filter by date range, automation type, performance metrics. |\n| How do I contact support? | Email support@lane-automation.example or use the chat widget. |\n\n**Escalation triggers:** complex technical questions, billing inquiries, feature requests, complaints.\n\n### Ticket Routing Rules\nTechnical issues -> technical team. Billing questions -> billing team. Feature requests -> product/Jordan. General inquiries -> support queue. **Priority:** High = system down/billing issue. Medium = feature request/general question. Low = documentation request.\n\n### Automated Reporting\n- **Weekly performance report** — every Monday 9am, to client contacts: execution summary, performance metrics, error reports, recommendations.\n- **Monthly analytics** — first Monday of month, to stakeholders: ROI analysis, usage trends, optimization opportunities.\n- **Custom reports** — on client request, delivered within 24 hours.\n\n### Feedback Collection\nMonthly satisfaction survey by email: overall satisfaction rating, service quality rating, communication effectiveness, improvement suggestions. Sentiment-analyzed and turned into follow-up tasks automatically, with a personal response from Jordan to any low score.",
+        "height": 620,
+        "width": 700
+      }
+    }
+  ],
+  "connections": {
+    "Manual Trigger": {
+      "main": [
+        [
+          {
+            "node": "Client Management Automation Fields",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {},
+  "pinData": {},
+  "versionId": "1",
+  "id": "day_81_solution"
+}

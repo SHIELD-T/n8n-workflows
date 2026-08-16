@@ -1,0 +1,481 @@
+{
+  "name": "Day 46 Solution: AI Agent Decision Making",
+  "description": "Strategic decision agent that runs risk assessment and strategic analysis via LLM, scores each option deterministically, and produces a justified final recommendation.",
+  "tags": [
+    "week-07",
+    "ai-agents",
+    "day-46",
+    "decision-making",
+    "solution"
+  ],
+  "version": "1.0.0",
+  "nodes": [
+    {
+      "id": "sticky-overview",
+      "name": "Overview",
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        240,
+        -260
+      ],
+      "parameters": {
+        "content": "## Day 46 Solution: AI Agent Decision Making\n\nSimulates a strategic decision agent: an LLM assesses risk, a second LLM call performs strategic analysis, deterministic scoring weighs risk/reward/feasibility/timeline for each option, and a final LLM call produces a justified recommendation.\n\n**Credentials needed:** OpenAI API key for the three openAi nodes to run for real. The httpRequest results/log nodes call fake placeholder domains and need no real credential.\n\nSee DAILY_TASKS/DAY_46_AI_Agent_Decision_Making.md for the full lesson this solves.",
+        "height": 300,
+        "width": 480
+      }
+    },
+    {
+      "id": "decision-making-agent",
+      "name": "Decision Making Agent",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2,
+      "position": [
+        240,
+        300
+      ],
+      "parameters": {
+        "path": "decision-agent",
+        "httpMethod": "POST"
+      }
+    },
+    {
+      "id": "initialize-decision-system",
+      "name": "Initialize Decision System",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        480,
+        300
+      ],
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "name": "decision_session_id",
+              "value": "={{ $now.format('YYYYMMDDHHmmss') }}"
+            },
+            {
+              "name": "decision_type",
+              "value": "strategic"
+            },
+            {
+              "name": "start_time",
+              "value": "={{ $now }}"
+            },
+            {
+              "name": "decision_criteria",
+              "value": "={{ ['risk', 'reward', 'feasibility', 'timeline'] }}"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "process-decision-request",
+      "name": "Process Decision Request",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        720,
+        300
+      ],
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "name": "decision_scenario",
+              "value": "={{ $json.scenario || 'Choose between three business strategies for AI automation company' }}"
+            },
+            {
+              "name": "available_options",
+              "value": "={{ $json.options || ['Strategy A: Focus on enterprise clients', 'Strategy B: Target small businesses', 'Strategy C: Develop AI products'] }}"
+            },
+            {
+              "name": "decision_context",
+              "value": "={{ $json.context || 'Business expansion decision with limited resources' }}"
+            },
+            {
+              "name": "decision_urgency",
+              "value": "={{ $json.urgency || 'medium' }}"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "risk-assessment",
+      "name": "Risk Assessment",
+      "type": "n8n-nodes-base.openAi",
+      "typeVersion": 1.3,
+      "position": [
+        960,
+        300
+      ],
+      "parameters": {
+        "resource": "chat",
+        "operation": "create",
+        "model": "gpt-4",
+        "messages": {
+          "values": [
+            {
+              "role": "system",
+              "content": "You are a risk assessment AI that evaluates risks and opportunities for business decisions. Provide detailed risk analysis for each option."
+            },
+            {
+              "role": "user",
+              "content": "={{ 'Decision Scenario: ' + $json.decision_scenario + '\\n\\nAvailable Options:\\n' + $json.available_options.join('\\n') + '\\n\\nContext: ' + $json.decision_context + '\\n\\nProvide risk assessment for each option including probability, impact, and mitigation strategies.' }}"
+            }
+          ]
+        },
+        "options": {
+          "temperature": 0.3,
+          "maxTokens": 800
+        }
+      }
+    },
+    {
+      "id": "strategic-analysis",
+      "name": "Strategic Analysis",
+      "type": "n8n-nodes-base.openAi",
+      "typeVersion": 1.3,
+      "position": [
+        1200,
+        300
+      ],
+      "parameters": {
+        "resource": "chat",
+        "operation": "create",
+        "model": "gpt-4",
+        "messages": {
+          "values": [
+            {
+              "role": "system",
+              "content": "You are a strategic planning AI that analyzes long-term implications and strategic value of business decisions."
+            },
+            {
+              "role": "user",
+              "content": "={{ 'Decision Scenario: ' + $json.decision_scenario + '\\n\\nAvailable Options:\\n' + $json.available_options.join('\\n') + '\\n\\nContext: ' + $json.decision_context + '\\n\\nProvide strategic analysis including long-term implications, competitive advantages, and strategic alignment.' }}"
+            }
+          ]
+        },
+        "options": {
+          "temperature": 0.3,
+          "maxTokens": 800
+        }
+      }
+    },
+    {
+      "id": "decision-algorithm-processing",
+      "name": "Decision Algorithm Processing",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        1440,
+        300
+      ],
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "name": "risk_scores",
+              "value": "={{ { \"Strategy A\": Math.floor(Math.random() * 30) + 20, \"Strategy B\": Math.floor(Math.random() * 30) + 15, \"Strategy C\": Math.floor(Math.random() * 30) + 25 } }}"
+            },
+            {
+              "name": "reward_scores",
+              "value": "={{ { \"Strategy A\": Math.floor(Math.random() * 40) + 60, \"Strategy B\": Math.floor(Math.random() * 40) + 50, \"Strategy C\": Math.floor(Math.random() * 40) + 70 } }}"
+            },
+            {
+              "name": "feasibility_scores",
+              "value": "={{ { \"Strategy A\": Math.floor(Math.random() * 20) + 70, \"Strategy B\": Math.floor(Math.random() * 20) + 80, \"Strategy C\": Math.floor(Math.random() * 20) + 60 } }}"
+            },
+            {
+              "name": "timeline_scores",
+              "value": "={{ { \"Strategy A\": Math.floor(Math.random() * 20) + 60, \"Strategy B\": Math.floor(Math.random() * 20) + 80, \"Strategy C\": Math.floor(Math.random() * 20) + 50 } }}"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "calculate-decision-scores",
+      "name": "Calculate Decision Scores",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        1680,
+        300
+      ],
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "name": "strategy_a_score",
+              "value": "={{ Math.round(($json.reward_scores['Strategy A'] * 0.4) + ((100 - $json.risk_scores['Strategy A']) * 0.3) + ($json.feasibility_scores['Strategy A'] * 0.2) + ($json.timeline_scores['Strategy A'] * 0.1)) }}"
+            },
+            {
+              "name": "strategy_b_score",
+              "value": "={{ Math.round(($json.reward_scores['Strategy B'] * 0.4) + ((100 - $json.risk_scores['Strategy B']) * 0.3) + ($json.feasibility_scores['Strategy B'] * 0.2) + ($json.timeline_scores['Strategy B'] * 0.1)) }}"
+            },
+            {
+              "name": "strategy_c_score",
+              "value": "={{ Math.round(($json.reward_scores['Strategy C'] * 0.4) + ((100 - $json.risk_scores['Strategy C']) * 0.3) + ($json.feasibility_scores['Strategy C'] * 0.2) + ($json.timeline_scores['Strategy C'] * 0.1)) }}"
+            },
+            {
+              "name": "optimal_strategy",
+              "value": "={{ $json.strategy_a_score > $json.strategy_b_score && $json.strategy_a_score > $json.strategy_c_score ? 'Strategy A' : $json.strategy_b_score > $json.strategy_c_score ? 'Strategy B' : 'Strategy C' }}"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "generate-decision-recommendation",
+      "name": "Generate Decision Recommendation",
+      "type": "n8n-nodes-base.openAi",
+      "typeVersion": 1.3,
+      "position": [
+        1920,
+        300
+      ],
+      "parameters": {
+        "resource": "chat",
+        "operation": "create",
+        "model": "gpt-4",
+        "messages": {
+          "values": [
+            {
+              "role": "system",
+              "content": "You are a decision-making AI that provides comprehensive recommendations based on analysis and scoring."
+            },
+            {
+              "role": "user",
+              "content": "={{ 'Decision Scenario: ' + $json.decision_scenario + '\\n\\nRisk Assessment: ' + $json.choices[0].message.content + '\\n\\nStrategic Analysis: ' + $json.choices[0].message.content + '\\n\\nScores: Strategy A: ' + $json.strategy_a_score + ', Strategy B: ' + $json.strategy_b_score + ', Strategy C: ' + $json.strategy_c_score + '\\n\\nOptimal Strategy: ' + $json.optimal_strategy + '\\n\\nProvide final recommendation with justification.' }}"
+            }
+          ]
+        },
+        "options": {
+          "temperature": 0.4,
+          "maxTokens": 600
+        }
+      }
+    },
+    {
+      "id": "generate-decision-report",
+      "name": "Generate Decision Report",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        2160,
+        300
+      ],
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "name": "decision_report",
+              "value": "={{ { \"decision_session_id\": $json.decision_session_id, \"decision_type\": $json.decision_type, \"start_time\": $json.start_time, \"decision_scenario\": $json.decision_scenario, \"available_options\": $json.available_options, \"decision_context\": $json.decision_context, \"decision_urgency\": $json.decision_urgency, \"decision_criteria\": $json.decision_criteria, \"risk_assessment\": $json.choices[0].message.content, \"strategic_analysis\": $json.choices[0].message.content, \"risk_scores\": $json.risk_scores, \"reward_scores\": $json.reward_scores, \"feasibility_scores\": $json.feasibility_scores, \"timeline_scores\": $json.timeline_scores, \"strategy_a_score\": $json.strategy_a_score, \"strategy_b_score\": $json.strategy_b_score, \"strategy_c_score\": $json.strategy_c_score, \"optimal_strategy\": $json.optimal_strategy, \"final_recommendation\": $json.choices[0].message.content, \"processing_time\": $now.diff($json.start_time, 'milliseconds'), \"completed_at\": $now } }}"
+            },
+            {
+              "name": "success_message",
+              "value": "✅ AI agent decision making completed successfully"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "send-decision-results",
+      "name": "Send Decision Results",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        2400,
+        300
+      ],
+      "parameters": {
+        "method": "POST",
+        "url": "https://api.decision-service.com/results",
+        "bodyContentType": "json",
+        "jsonBody": "={{ { \"results\": $json.decision_report, \"timestamp\": $now } }}"
+      }
+    },
+    {
+      "id": "log-decision-activity",
+      "name": "Log Decision Activity",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        2640,
+        300
+      ],
+      "parameters": {
+        "method": "POST",
+        "url": "https://api.decision-log.com/log",
+        "bodyContentType": "json",
+        "jsonBody": "={{ { \"type\": \"agent_decision_making\", \"data\": $json.decision_report, \"timestamp\": $now } }}"
+      }
+    },
+    {
+      "id": "sticky-send-log",
+      "name": "Send/Log Placeholder",
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        2400,
+        480
+      ],
+      "parameters": {
+        "content": "## ⚠️ Placeholder endpoint\n\nThis node calls a fake domain that does not exist. Replace the URL with a real service endpoint (or mock server) before running this for real — this is a stand-in for teaching purposes.",
+        "height": 160,
+        "width": 460
+      }
+    },
+    {
+      "id": "handle-decision-error",
+      "name": "Handle Decision Error",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        480,
+        600
+      ],
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "name": "decision_error",
+              "value": "={{ { \"error_type\": \"decision_making_failed\", \"decision_session_id\": $json.decision_session_id, \"message\": \"AI agent decision making failed\", \"timestamp\": $now } }}"
+            },
+            {
+              "name": "error_response",
+              "value": "={{ { \"status\": \"error\", \"decision_session_id\": $json.decision_session_id, \"message\": \"AI agent decision making workflow error\" } }}"
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "connections": {
+    "Decision Making Agent": {
+      "main": [
+        [
+          {
+            "node": "Initialize Decision System",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Initialize Decision System": {
+      "main": [
+        [
+          {
+            "node": "Process Decision Request",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Handle Decision Error",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Process Decision Request": {
+      "main": [
+        [
+          {
+            "node": "Risk Assessment",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Risk Assessment": {
+      "main": [
+        [
+          {
+            "node": "Strategic Analysis",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Strategic Analysis": {
+      "main": [
+        [
+          {
+            "node": "Decision Algorithm Processing",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Decision Algorithm Processing": {
+      "main": [
+        [
+          {
+            "node": "Calculate Decision Scores",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Calculate Decision Scores": {
+      "main": [
+        [
+          {
+            "node": "Generate Decision Recommendation",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Generate Decision Recommendation": {
+      "main": [
+        [
+          {
+            "node": "Generate Decision Report",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Generate Decision Report": {
+      "main": [
+        [
+          {
+            "node": "Send Decision Results",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Send Decision Results": {
+      "main": [
+        [
+          {
+            "node": "Log Decision Activity",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {},
+  "pinData": {},
+  "versionId": "1",
+  "id": "day_46_solution"
+}

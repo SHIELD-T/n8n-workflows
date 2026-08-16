@@ -1,0 +1,23 @@
+{
+  "name": "Day 98 Solution: One-Year Plan",
+  "description": "Records a concrete, dated one-year plan with 4 quarterly milestones instead of a vague vision statement.",
+  "tags": ["day-98", "solution", "week-14"],
+  "version": "1.0.0",
+  "nodes": [
+    { "id": "note1", "name": "Overview", "type": "n8n-nodes-base.stickyNote", "typeVersion": 1,
+      "position": [-40, -260],
+      "parameters": { "content": "## Day 98 Solution: Future Planning\n\nRecords 4 dated quarterly milestones rather than an abstract 5-year vision.\n\n**Credentials needed:** None.\n\nSee `DAILY_TASKS/DAY_98_Future_Planning.md`.", "height": 170, "width": 340 } },
+    { "id": "trig", "name": "Manual Trigger", "type": "n8n-nodes-base.manualTrigger", "typeVersion": 1, "position": [300, 100], "parameters": {} },
+    { "id": "set1", "name": "Record Quarterly Milestones", "type": "n8n-nodes-base.set", "typeVersion": 3.4,
+      "position": [550, 100],
+      "parameters": { "assignments": { "assignments": [
+        { "name": "q1_milestone", "value": "REPLACE: e.g. Sign 2 new retainer clients" },
+        { "name": "q2_milestone", "value": "REPLACE: e.g. Hire first part-time VA" },
+        { "name": "q3_milestone", "value": "REPLACE: e.g. Launch productized service tier" },
+        { "name": "q4_milestone", "value": "REPLACE: e.g. Reach target MRR" },
+        { "name": "review_date", "value": "={{ $now.plus(3, 'months') }}" }
+      ] } } }
+  ],
+  "connections": { "Manual Trigger": { "main": [[ { "node": "Record Quarterly Milestones", "type": "main", "index": 0 } ]] } },
+  "active": false, "settings": {}, "pinData": {}, "versionId": "1", "id": "day_98_solution"
+}

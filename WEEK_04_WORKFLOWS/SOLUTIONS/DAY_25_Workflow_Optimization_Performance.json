@@ -1,0 +1,243 @@
+{
+  "name": "Day 25 Solution: Workflow Optimization & Performance",
+  "description": "Measures execution time at each stage with $now.diff(), using a tightened HTTP timeout/retry to trade reliability for speed.",
+  "tags": [
+    "week-04",
+    "day-25",
+    "solution"
+  ],
+  "version": "1.0.0",
+  "nodes": [
+    {
+      "id": "sticky1",
+      "name": "Sticky Note",
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        40,
+        -320
+      ],
+      "parameters": {
+        "content": "## Day 25 Solution: Workflow Optimization & Performance\n\nWebhook -> Set (start timer + execution_id) -> IF validate -> Set (processing_time checkpoint) -> HTTP Request (tight timeout/retry) -> Set (total_execution_time + api_response_time). Fire this 10x via curl to build your baseline. Credentials needed: None — jsonplaceholder.typicode.com stays free/no-auth.\n\nSee DAILY_TASKS/DAY_25_Workflow_Optimization_Performance.md.",
+        "height": 300,
+        "width": 520
+      }
+    },
+    {
+      "id": "webhook1",
+      "name": "Optimized Webhook Trigger",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2,
+      "position": [
+        80,
+        160
+      ],
+      "parameters": {
+        "path": "optimized-processing",
+        "httpMethod": "POST"
+      }
+    },
+    {
+      "id": "set1",
+      "name": "Performance Monitoring Start",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        320,
+        160
+      ],
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "name": "execution_id",
+              "value": "={{ $now.format('yyyyMMddHHmmss') + Math.floor(Math.random() * 10000) }}"
+            },
+            {
+              "name": "start_time",
+              "value": "={{ $now }}"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "if1",
+      "name": "Input Validation",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2,
+      "position": [
+        560,
+        160
+      ],
+      "parameters": {
+        "conditions": {
+          "string": [
+            {
+              "value1": "={{ $json.data }}",
+              "operation": "isNotEmpty"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "set2",
+      "name": "Optimized Data Processing",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        800,
+        100
+      ],
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "name": "processed_data",
+              "value": "={{ $json.data.trim().toLowerCase() }}"
+            },
+            {
+              "name": "processing_time",
+              "value": "={{ $now.diff($json.start_time, 'milliseconds') }}"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "http1",
+      "name": "Optimized HTTP Request",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        1040,
+        100
+      ],
+      "parameters": {
+        "method": "GET",
+        "url": "https://jsonplaceholder.typicode.com/posts",
+        "options": {
+          "timeout": 5000,
+          "retry": {
+            "maxTries": 2,
+            "waitBetweenTries": 1000
+          }
+        }
+      }
+    },
+    {
+      "id": "set3",
+      "name": "Performance Metrics Collection",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        1280,
+        100
+      ],
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "name": "total_execution_time",
+              "value": "={{ $now.diff($('Performance Monitoring Start').item.json.start_time, 'milliseconds') }}"
+            },
+            {
+              "name": "api_response_time",
+              "value": "={{ $now.diff($('Performance Monitoring Start').item.json.start_time, 'milliseconds') - $('Optimized Data Processing').item.json.processing_time }}"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "set4",
+      "name": "Validation Error",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        800,
+        260
+      ],
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "name": "error",
+              "value": "data field is empty"
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "connections": {
+    "Optimized Webhook Trigger": {
+      "main": [
+        [
+          {
+            "node": "Performance Monitoring Start",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Performance Monitoring Start": {
+      "main": [
+        [
+          {
+            "node": "Input Validation",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Input Validation": {
+      "main": [
+        [
+          {
+            "node": "Optimized Data Processing",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Validation Error",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Optimized Data Processing": {
+      "main": [
+        [
+          {
+            "node": "Optimized HTTP Request",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Optimized HTTP Request": {
+      "main": [
+        [
+          {
+            "node": "Performance Metrics Collection",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {},
+  "pinData": {},
+  "versionId": "1",
+  "id": "day_25_solution"
+}

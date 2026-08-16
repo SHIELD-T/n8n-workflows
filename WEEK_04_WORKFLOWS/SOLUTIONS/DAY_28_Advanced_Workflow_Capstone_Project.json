@@ -1,0 +1,517 @@
+{
+  "name": "Day 28 Solution: Advanced Workflow Capstone Project",
+  "description": "Multi-Channel Data Processing System: dual triggers, 3 parallel ingestion branches, validation, transformation, batch processing, monitoring, and end-to-end integration.",
+  "tags": [
+    "week-04",
+    "day-28",
+    "solution"
+  ],
+  "version": "1.0.0",
+  "nodes": [
+    {
+      "id": "sticky1",
+      "name": "Sticky Note",
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        40,
+        -340
+      ],
+      "parameters": {
+        "content": "## Day 28 Solution: Advanced Workflow Capstone Project\n\nMulti-Channel Data Processing System capstone: Webhook + Schedule -> shared init -> 3 parallel ingestion branches -> validate -> transform (data_quality_score) -> Split In Batches (size 3) -> batch performance metrics -> monitoring bundle -> retry-protected integration call -> final system report. Credentials needed: None — jsonplaceholder.typicode.com covers every HTTP call; a Slack Bot Token can replace the mocked notification step if desired.\n\nSee DAILY_TASKS/DAY_28_Advanced_Workflow_Capstone_Project.md.",
+        "height": 320,
+        "width": 560
+      }
+    },
+    {
+      "id": "webhook1",
+      "name": "Multi-Source Data Ingestion",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2,
+      "position": [
+        80,
+        220
+      ],
+      "parameters": {
+        "path": "advanced-data-ingestion",
+        "httpMethod": "POST"
+      }
+    },
+    {
+      "id": "sched1",
+      "name": "Schedule Data Processing",
+      "type": "n8n-nodes-base.scheduleTrigger",
+      "typeVersion": 1.2,
+      "position": [
+        80,
+        380
+      ],
+      "parameters": {
+        "rule": {
+          "interval": [
+            {
+              "field": "hours",
+              "hoursInterval": 1
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "set1",
+      "name": "Initialize Advanced Processing",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        320,
+        300
+      ],
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "name": "processing_id",
+              "value": "={{ $now.format('yyyyMMddHHmmss') }}"
+            },
+            {
+              "name": "data_sources",
+              "value": "={{ ['API', 'Database', 'Files', 'Webhooks'] }}"
+            },
+            {
+              "name": "start_time",
+              "value": "={{ $now }}"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "http1",
+      "name": "Ingestion Branch 1",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        560,
+        100
+      ],
+      "parameters": {
+        "method": "GET",
+        "url": "https://jsonplaceholder.typicode.com/posts/1"
+      }
+    },
+    {
+      "id": "http2",
+      "name": "Ingestion Branch 2",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        560,
+        300
+      ],
+      "parameters": {
+        "method": "GET",
+        "url": "https://jsonplaceholder.typicode.com/posts/2"
+      }
+    },
+    {
+      "id": "set2",
+      "name": "Ingestion Branch 3",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        560,
+        500
+      ],
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "name": "file_data",
+              "value": "={{ { filename: 'nightly_export.csv', rows: 250 } }}"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "set3",
+      "name": "Merge Ingestion Branches",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        800,
+        300
+      ],
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "name": "data",
+              "value": "={{ { branch1: $('Ingestion Branch 1').item.json, branch2: $('Ingestion Branch 2').item.json, file_data: $('Ingestion Branch 3').item.json.file_data } }}"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "if1",
+      "name": "Advanced Data Validation",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2,
+      "position": [
+        1040,
+        300
+      ],
+      "parameters": {
+        "conditions": {
+          "string": [
+            {
+              "value1": "={{ $json.data.branch1 || $json.data.file_data }}",
+              "operation": "isNotEmpty"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "set4",
+      "name": "Complex Data Transformation",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        1280,
+        220
+      ],
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "name": "transformed_data",
+              "value": "={{ { original: $json.data, processed: true, data_quality_score: Math.floor(Math.random() * 100) } }}"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "code1",
+      "name": "Split for Batch Items",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        1520,
+        220
+      ],
+      "parameters": {
+        "mode": "runOnceForAllItems",
+        "jsCode": "return [{json:{item:1}},{json:{item:2}},{json:{item:3}},{json:{item:4}},{json:{item:5}},{json:{item:6}}];"
+      }
+    },
+    {
+      "id": "sib1",
+      "name": "Split for Batch Processing",
+      "type": "n8n-nodes-base.splitInBatches",
+      "typeVersion": 3,
+      "position": [
+        1760,
+        220
+      ],
+      "parameters": {
+        "batchSize": 3,
+        "options": {}
+      }
+    },
+    {
+      "id": "set5",
+      "name": "Optimized Batch Processing",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        2000,
+        220
+      ],
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "name": "batch_id",
+              "value": "={{ $runIndex }}"
+            },
+            {
+              "name": "batch_processing_time",
+              "value": "={{ $now.diff($('Initialize Advanced Processing').item.json.start_time, 'milliseconds') }}"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "set6",
+      "name": "Performance Monitoring",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        2240,
+        220
+      ],
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "name": "performance_metrics",
+              "value": "={{ { processing_id: $('Initialize Advanced Processing').item.json.processing_id, batch_id: $json.batch_id, processing_time: $json.batch_processing_time, data_quality_score: $('Complex Data Transformation').item.json.transformed_data.data_quality_score } }}"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "http3",
+      "name": "End-to-End Integration",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        2480,
+        220
+      ],
+      "parameters": {
+        "method": "POST",
+        "url": "https://jsonplaceholder.typicode.com/posts",
+        "sendBody": true,
+        "bodyContentType": "json",
+        "jsonBody": "={{ { processing_id: $('Initialize Advanced Processing').item.json.processing_id, batch_id: $json.performance_metrics.batch_id, transformed_data: $('Complex Data Transformation').item.json.transformed_data, performance_metrics: $json.performance_metrics } }}",
+        "options": {
+          "retry": {
+            "maxTries": 3,
+            "waitBetweenTries": 2000
+          }
+        }
+      }
+    },
+    {
+      "id": "set7",
+      "name": "Final System Report",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        2720,
+        220
+      ],
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "name": "system_report",
+              "value": "={{ { processing_id: $('Initialize Advanced Processing').item.json.processing_id, sources: $('Initialize Advanced Processing').item.json.data_sources, quality_score: $('Complex Data Transformation').item.json.transformed_data.data_quality_score, integration_status: 'success', completed_at: $now } }}"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "set8",
+      "name": "Handle Validation Error",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        1280,
+        420
+      ],
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "name": "error",
+              "value": "No usable data across the 3 ingestion branches"
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "connections": {
+    "Multi-Source Data Ingestion": {
+      "main": [
+        [
+          {
+            "node": "Initialize Advanced Processing",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Schedule Data Processing": {
+      "main": [
+        [
+          {
+            "node": "Initialize Advanced Processing",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Initialize Advanced Processing": {
+      "main": [
+        [
+          {
+            "node": "Ingestion Branch 1",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Ingestion Branch 2",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Ingestion Branch 3",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Ingestion Branch 1": {
+      "main": [
+        [
+          {
+            "node": "Merge Ingestion Branches",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Ingestion Branch 2": {
+      "main": [
+        [
+          {
+            "node": "Merge Ingestion Branches",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Ingestion Branch 3": {
+      "main": [
+        [
+          {
+            "node": "Merge Ingestion Branches",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Merge Ingestion Branches": {
+      "main": [
+        [
+          {
+            "node": "Advanced Data Validation",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Advanced Data Validation": {
+      "main": [
+        [
+          {
+            "node": "Complex Data Transformation",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Handle Validation Error",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Complex Data Transformation": {
+      "main": [
+        [
+          {
+            "node": "Split for Batch Items",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Split for Batch Items": {
+      "main": [
+        [
+          {
+            "node": "Split for Batch Processing",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Split for Batch Processing": {
+      "main": [
+        [
+          {
+            "node": "Performance Monitoring",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Optimized Batch Processing",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Optimized Batch Processing": {
+      "main": [
+        [
+          {
+            "node": "Split for Batch Processing",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Performance Monitoring": {
+      "main": [
+        [
+          {
+            "node": "End-to-End Integration",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "End-to-End Integration": {
+      "main": [
+        [
+          {
+            "node": "Final System Report",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {},
+  "pinData": {},
+  "versionId": "1",
+  "id": "day_28_solution"
+}

@@ -1,0 +1,161 @@
+{
+  "name": "Day 65 Solution: 3-Service Dependency Chain",
+  "description": "Webhook triggers a real 3-deep API chain (weather -> exchange rate -> quote), computes an integration health score, and branches to Slack success/alert.",
+  "tags": ["day-65", "solution", "week-10"],
+  "version": "1.0.0",
+  "nodes": [
+    {
+      "id": "note1",
+      "name": "Overview",
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [-40, -260],
+      "parameters": {
+        "content": "## Day 65 Solution: Advanced Tool Integrations\n\nChains 3 real, free, keyless public APIs so each call depends on the previous one's output, then scores overall integration health and branches on it.\n\n**Credentials needed:** Slack (from Week 9). No API keys needed for the 3 chained services below.\n\nSee `DAILY_TASKS/DAY_65_Advanced_Tool_Integrations.md` for the full lesson.",
+        "height": 200,
+        "width": 340
+      }
+    },
+    {
+      "id": "trigger1",
+      "name": "Webhook",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2,
+      "position": [250, 100],
+      "parameters": { "path": "integration-chain", "httpMethod": "POST" }
+    },
+    {
+      "id": "svcA",
+      "name": "Service A - Weather",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [500, 100],
+      "parameters": {
+        "method": "GET",
+        "url": "https://api.open-meteo.com/v1/forecast",
+        "sendQuery": true,
+        "queryParameters": {
+          "parameters": [
+            { "name": "latitude", "value": "51.5072" },
+            { "name": "longitude", "value": "-0.1276" },
+            { "name": "current_weather", "value": "true" }
+          ]
+        },
+        "options": { "response": { "response": { "responseFormat": "json" } } }
+      }
+    },
+    {
+      "id": "svcB",
+      "name": "Service B - Exchange Rate",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [750, 100],
+      "parameters": {
+        "method": "GET",
+        "url": "https://api.exchangerate.host/latest",
+        "sendQuery": true,
+        "queryParameters": {
+          "parameters": [
+            { "name": "base", "value": "USD" },
+            { "name": "temp_check", "value": "={{ $('Service A - Weather').item.json.current_weather.temperature }}" }
+          ]
+        },
+        "options": { "response": { "response": { "responseFormat": "json" } } }
+      }
+    },
+    {
+      "id": "svcC",
+      "name": "Service C - Quote",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [1000, 100],
+      "parameters": {
+        "method": "GET",
+        "url": "https://api.quotable.io/random",
+        "sendQuery": true,
+        "queryParameters": {
+          "parameters": [
+            { "name": "rate_check", "value": "={{ $('Service B - Exchange Rate').item.json.rates ? 'ok' : 'missing' }}" }
+          ]
+        },
+        "options": { "response": { "response": { "responseFormat": "json" } } }
+      }
+    },
+    {
+      "id": "score1",
+      "name": "Compute Health Score",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [1250, 100],
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "name": "health_score",
+              "value": "={{ 100 - ($('Service A - Weather').item.json.current_weather ? 0 : 20) - ($('Service B - Exchange Rate').item.json.rates ? 0 : 20) - ($('Service C - Quote').item.json.content ? 0 : 20) }}"
+            },
+            { "name": "weather_temp", "value": "={{ $('Service A - Weather').item.json.current_weather?.temperature }}" },
+            { "name": "usd_to_eur", "value": "={{ $('Service B - Exchange Rate').item.json.rates?.EUR }}" },
+            { "name": "quote", "value": "={{ $('Service C - Quote').item.json.content }}" }
+          ]
+        }
+      }
+    },
+    {
+      "id": "if1",
+      "name": "Health Above Threshold?",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2,
+      "position": [1500, 100],
+      "parameters": {
+        "conditions": {
+          "number": [ { "value1": "={{ $json.health_score }}", "operation": "largerEqual", "value2": 70 } ]
+        }
+      }
+    },
+    {
+      "id": "slackOk",
+      "name": "Slack Success Summary",
+      "type": "n8n-nodes-base.slack",
+      "typeVersion": 2.1,
+      "position": [1750, 20],
+      "parameters": {
+        "resource": "message",
+        "operation": "post",
+        "channel": "#integration-status",
+        "text": "={{ '✅ Integration chain healthy. Score: ' + $json.health_score + '. Weather: ' + $json.weather_temp + '°C, USD/EUR: ' + $json.usd_to_eur }}"
+      }
+    },
+    {
+      "id": "slackAlert",
+      "name": "Slack Alert",
+      "type": "n8n-nodes-base.slack",
+      "typeVersion": 2.1,
+      "position": [1750, 200],
+      "parameters": {
+        "resource": "message",
+        "operation": "post",
+        "channel": "#integration-status",
+        "text": "={{ '🚨 Integration chain degraded. Score: ' + $json.health_score + '. One or more of Service A/B/C failed.' }}"
+      }
+    }
+  ],
+  "connections": {
+    "Webhook": { "main": [[ { "node": "Service A - Weather", "type": "main", "index": 0 } ]] },
+    "Service A - Weather": { "main": [[ { "node": "Service B - Exchange Rate", "type": "main", "index": 0 } ]] },
+    "Service B - Exchange Rate": { "main": [[ { "node": "Service C - Quote", "type": "main", "index": 0 } ]] },
+    "Service C - Quote": { "main": [[ { "node": "Compute Health Score", "type": "main", "index": 0 } ]] },
+    "Compute Health Score": { "main": [[ { "node": "Health Above Threshold?", "type": "main", "index": 0 } ]] },
+    "Health Above Threshold?": {
+      "main": [
+        [ { "node": "Slack Success Summary", "type": "main", "index": 0 } ],
+        [ { "node": "Slack Alert", "type": "main", "index": 0 } ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {},
+  "pinData": {},
+  "versionId": "1",
+  "id": "day_65_solution"
+}

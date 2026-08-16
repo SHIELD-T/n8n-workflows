@@ -1,0 +1,170 @@
+{
+  "name": "Day 36 Solution: AI Integration Fundamentals",
+  "description": "Webhook-triggered workflow that runs input text through a mode-switching OpenAI call (summarize/classify/enhance/analyze) and then a second OpenAI call that produces analyst-style insights on the first call's output.",
+  "tags": [
+    "week-06",
+    "ai-agents",
+    "day-36",
+    "openai",
+    "solution"
+  ],
+  "version": "1.0.0",
+  "nodes": [
+    {
+      "id": "overview-sticky",
+      "name": "Overview Sticky",
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        240,
+        40
+      ],
+      "parameters": {
+        "content": "## Day 36 Solution: AI Integration Fundamentals\n\nDemonstrates a basic two-step OpenAI chain: a mode-switching processor (summarize/classify/enhance/analyze) feeds an analyst node that adds insights and recommendations based on the first call's output.\n\n**Credentials needed to run for real:** OpenAI API key (billing enabled).\n\n**Reference:** WEEK_06_AI_AGENTS/DAILY_TASKS/DAY_36_AI_Integration_Fundamentals.md",
+        "height": 300,
+        "width": 420
+      }
+    },
+    {
+      "id": "ai-workflow-trigger",
+      "name": "AI Workflow Trigger",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2,
+      "position": [
+        240,
+        340
+      ],
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "ai-workflow",
+        "options": {}
+      }
+    },
+    {
+      "id": "prepare-input",
+      "name": "Prepare Input",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        520,
+        340
+      ],
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "name": "input_text",
+              "value": "={{ $json.text }}"
+            },
+            {
+              "name": "processing_mode",
+              "value": "={{ $json.mode || 'summarize' }}"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "process-text-mode-switch",
+      "name": "Process Text (Mode Switch)",
+      "type": "n8n-nodes-base.openAi",
+      "typeVersion": 1.3,
+      "position": [
+        800,
+        340
+      ],
+      "parameters": {
+        "resource": "chat",
+        "operation": "create",
+        "model": "gpt-4o-mini",
+        "messages": {
+          "values": [
+            {
+              "role": "system",
+              "content": "You are a helpful assistant that processes text based on the requested mode. Available modes: summarize, classify, enhance, analyze. Perform the requested processing on the text only — do not repeat the mode label back in your answer."
+            },
+            {
+              "role": "user",
+              "content": "={{ 'Mode: ' + $json.processing_mode + '\\nText: ' + $json.input_text }}"
+            }
+          ]
+        },
+        "options": {
+          "temperature": 0.7,
+          "maxTokens": 500
+        }
+      }
+    },
+    {
+      "id": "generate-insights-analyst",
+      "name": "Generate Insights (Analyst)",
+      "type": "n8n-nodes-base.openAi",
+      "typeVersion": 1.3,
+      "position": [
+        1080,
+        340
+      ],
+      "parameters": {
+        "resource": "chat",
+        "operation": "create",
+        "model": "gpt-4o-mini",
+        "messages": {
+          "values": [
+            {
+              "role": "system",
+              "content": "You are an AI analyst that provides insights and recommendations based on already-processed text."
+            },
+            {
+              "role": "user",
+              "content": "={{ 'Processed output: ' + $json.message.content + '\\n\\nOriginal input: ' + $('Prepare Input').item.json.input_text }}"
+            }
+          ]
+        },
+        "options": {
+          "temperature": 0.5,
+          "maxTokens": 500
+        }
+      }
+    }
+  ],
+  "connections": {
+    "AI Workflow Trigger": {
+      "main": [
+        [
+          {
+            "node": "Prepare Input",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Prepare Input": {
+      "main": [
+        [
+          {
+            "node": "Process Text (Mode Switch)",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Process Text (Mode Switch)": {
+      "main": [
+        [
+          {
+            "node": "Generate Insights (Analyst)",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {},
+  "pinData": {},
+  "versionId": "1",
+  "id": "day_36_solution"
+}

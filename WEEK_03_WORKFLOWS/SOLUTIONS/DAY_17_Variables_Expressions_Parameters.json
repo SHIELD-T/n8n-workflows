@@ -1,0 +1,259 @@
+{
+  "name": "Day 17 Solution: Variables, Expressions, and Parameters",
+  "description": "A 6-stage Set-node expression pipeline covering string, date, math, and ternary conditional logic, ending in one interpolated report.",
+  "tags": [
+    "week-03",
+    "day-17",
+    "solution"
+  ],
+  "version": "1.0.0",
+  "nodes": [
+    {
+      "id": "sticky1",
+      "name": "Sticky Note",
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        40,
+        -260
+      ],
+      "parameters": {
+        "content": "## Day 17 Solution: Variables, Expressions, and Parameters\n\nA 6-stage Set-node chain demonstrating string, date, math, and ternary expressions, ending in one interpolated report string. Credentials needed: None needed — all expressions run inside n8n's own engine.\n\nSee DAILY_TASKS/DAY_17_Variables_Expressions_Parameters.md.",
+        "height": 240,
+        "width": 480
+      }
+    },
+    {
+      "id": "trigger1",
+      "name": "Manual Trigger",
+      "type": "n8n-nodes-base.manualTrigger",
+      "typeVersion": 1,
+      "position": [
+        80,
+        140
+      ],
+      "parameters": {}
+    },
+    {
+      "id": "set1",
+      "name": "Set Dynamic Data",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        320,
+        140
+      ],
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "name": "user_input",
+              "value": "={{ $json.input || 'Sample User Data' }}"
+            },
+            {
+              "name": "start_time",
+              "value": "={{ $now }}"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "set2",
+      "name": "Expression 1: String Processing",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        560,
+        140
+      ],
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "name": "processed_text",
+              "value": "={{ $json.user_input.trim().toUpperCase() }}"
+            },
+            {
+              "name": "text_length",
+              "value": "={{ $json.user_input.length }}"
+            },
+            {
+              "name": "word_count",
+              "value": "={{ $json.user_input.split(' ').length }}"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "set3",
+      "name": "Expression 2: Date Calculations",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        800,
+        140
+      ],
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "name": "current_date",
+              "value": "={{ $now.format('yyyy-MM-dd') }}"
+            },
+            {
+              "name": "processing_duration",
+              "value": "={{ $now.diff($json.start_time, 'milliseconds') }}"
+            },
+            {
+              "name": "future_date",
+              "value": "={{ $now.plus({ days: 7 }).format('yyyy-MM-dd') }}"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "set4",
+      "name": "Expression 3: Math Operations",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        1040,
+        140
+      ],
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "name": "random_number",
+              "value": "={{ Math.floor(Math.random() * 100) }}"
+            },
+            {
+              "name": "percentage",
+              "value": "={{ Math.round(($json.word_count / $json.text_length) * 100) }}"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "set5",
+      "name": "Expression 4: Conditional Logic",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        1280,
+        140
+      ],
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "name": "text_category",
+              "value": "={{ $json.text_length > 50 ? 'long' : 'short' }}"
+            },
+            {
+              "name": "complexity_level",
+              "value": "={{ $json.word_count > 10 ? 'complex' : 'simple' }}"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "set6",
+      "name": "Format Final Results",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        1520,
+        140
+      ],
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "name": "final_report",
+              "value": "=Text Category: {{ $json.text_category }}\\nComplexity: {{ $json.complexity_level }}\\nWord Count: {{ $json.word_count }}\\nText Length: {{ $json.text_length }}\\nRandom Number: {{ $json.random_number }}"
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "connections": {
+    "Manual Trigger": {
+      "main": [
+        [
+          {
+            "node": "Set Dynamic Data",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Set Dynamic Data": {
+      "main": [
+        [
+          {
+            "node": "Expression 1: String Processing",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Expression 1: String Processing": {
+      "main": [
+        [
+          {
+            "node": "Expression 2: Date Calculations",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Expression 2: Date Calculations": {
+      "main": [
+        [
+          {
+            "node": "Expression 3: Math Operations",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Expression 3: Math Operations": {
+      "main": [
+        [
+          {
+            "node": "Expression 4: Conditional Logic",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Expression 4: Conditional Logic": {
+      "main": [
+        [
+          {
+            "node": "Format Final Results",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {},
+  "pinData": {},
+  "versionId": "1",
+  "id": "day_17_solution"
+}

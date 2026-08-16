@@ -1,0 +1,302 @@
+{
+  "name": "Day 24 Solution: End-to-End Automation Systems",
+  "description": "Lead capture pipeline: validate -> enrich -> deterministic duplicate check -> mocked CRM write vs duplicate handler -> sales-team assignment.",
+  "tags": [
+    "week-04",
+    "day-24",
+    "solution"
+  ],
+  "version": "1.0.0",
+  "nodes": [
+    {
+      "id": "sticky1",
+      "name": "Sticky Note",
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        40,
+        -340
+      ],
+      "parameters": {
+        "content": "## Day 24 Solution: End-to-End Automation Systems\n\nWebhook (lead capture) -> IF validate name+email -> Set (enrich with score/priority) -> Set (deterministic duplicate simulation) -> IF is_duplicate -> mocked CRM write (jsonplaceholder) vs Handle Duplicate -> Set assign to sales rep. Credentials needed: None if using the mocked-CRM approach shown here; a Slack Bot Token would be needed only for a real Slack notification.\n\nSee DAILY_TASKS/DAY_24_End_to_End_Automation_Systems.md.",
+        "height": 320,
+        "width": 520
+      }
+    },
+    {
+      "id": "webhook1",
+      "name": "Multi-Source Lead Capture",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2,
+      "position": [
+        80,
+        200
+      ],
+      "parameters": {
+        "path": "lead-capture",
+        "httpMethod": "POST"
+      }
+    },
+    {
+      "id": "if1",
+      "name": "Lead Data Validation",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2,
+      "position": [
+        320,
+        200
+      ],
+      "parameters": {
+        "conditions": {
+          "string": [
+            {
+              "value1": "={{ $json.email }}",
+              "operation": "isNotEmpty"
+            },
+            {
+              "value1": "={{ $json.name }}",
+              "operation": "isNotEmpty"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "set1",
+      "name": "Enrich Lead Data",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        560,
+        120
+      ],
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "name": "lead_id",
+              "value": "={{ $now.format('yyyyMMddHHmmss') + Math.floor(Math.random() * 1000) }}"
+            },
+            {
+              "name": "lead_score",
+              "value": "={{ Math.floor(Math.random() * 100) }}"
+            },
+            {
+              "name": "priority",
+              "value": "={{ $json.lead_score > 70 ? 'high' : ($json.lead_score > 40 ? 'medium' : 'low') }}"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "set2",
+      "name": "Simulate Duplicate Check",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        800,
+        120
+      ],
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "name": "is_duplicate",
+              "value": "={{ $json.email === 'duplicate@test.com' }}"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "if2",
+      "name": "Process New Lead",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2,
+      "position": [
+        1040,
+        120
+      ],
+      "parameters": {
+        "conditions": {
+          "string": [
+            {
+              "value1": "={{ $json.is_duplicate }}",
+              "operation": "equal",
+              "value2": "true"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "set3",
+      "name": "Handle Duplicate Lead",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        1280,
+        40
+      ],
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "name": "outcome",
+              "value": "duplicate_lead_rejected"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "http1",
+      "name": "Create CRM Lead",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        1280,
+        200
+      ],
+      "parameters": {
+        "method": "POST",
+        "url": "https://jsonplaceholder.typicode.com/posts",
+        "sendBody": true,
+        "bodyContentType": "json",
+        "jsonBody": "={{ { name: $json.name, email: $json.email, lead_id: $json.lead_id, priority: $json.priority } }}"
+      }
+    },
+    {
+      "id": "set4",
+      "name": "Assign to Sales Team",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        1520,
+        200
+      ],
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "name": "assigned_rep",
+              "value": "={{ $json.priority === 'high' ? 'senior-sales@company.com' : 'sales-team@company.com' }}"
+            },
+            {
+              "name": "follow_up_time",
+              "value": "={{ $now.plus({ hours: 1 }) }}"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "set5",
+      "name": "Invalid Lead Data",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        560,
+        320
+      ],
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "name": "error",
+              "value": "Missing required name or email"
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "connections": {
+    "Multi-Source Lead Capture": {
+      "main": [
+        [
+          {
+            "node": "Lead Data Validation",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Lead Data Validation": {
+      "main": [
+        [
+          {
+            "node": "Enrich Lead Data",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Invalid Lead Data",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Enrich Lead Data": {
+      "main": [
+        [
+          {
+            "node": "Simulate Duplicate Check",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Simulate Duplicate Check": {
+      "main": [
+        [
+          {
+            "node": "Process New Lead",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Process New Lead": {
+      "main": [
+        [
+          {
+            "node": "Handle Duplicate Lead",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Create CRM Lead",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Create CRM Lead": {
+      "main": [
+        [
+          {
+            "node": "Assign to Sales Team",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {},
+  "pinData": {},
+  "versionId": "1",
+  "id": "day_24_solution"
+}

@@ -1,0 +1,22 @@
+{
+  "name": "Day 94 Solution: Financial Optimization Snapshot",
+  "description": "Records real or realistically-estimated revenue/cost figures and one concrete margin-improving change.",
+  "tags": ["day-94", "solution", "week-14"],
+  "version": "1.0.0",
+  "nodes": [
+    { "id": "note1", "name": "Overview", "type": "n8n-nodes-base.stickyNote", "typeVersion": 1,
+      "position": [-40, -260],
+      "parameters": { "content": "## Day 94 Solution: Financial Optimization\n\nCompare to `WEEK_14_FINAL_OPTIMIZATION/EXAMPLES/financial_optimization_tracking.json`. Records one real financial snapshot, not aspirational numbers.\n\n**Credentials needed:** None.\n\nSee `DAILY_TASKS/DAY_94_Financial_Optimization.md`.", "height": 190, "width": 360 } },
+    { "id": "trig", "name": "Manual Trigger", "type": "n8n-nodes-base.manualTrigger", "typeVersion": 1, "position": [300, 100], "parameters": {} },
+    { "id": "set1", "name": "Record Financial Snapshot", "type": "n8n-nodes-base.set", "typeVersion": 3.4,
+      "position": [550, 100],
+      "parameters": { "assignments": { "assignments": [
+        { "name": "monthly_recurring_revenue", "value": "REPLACE_WITH_REAL_NUMBER" },
+        { "name": "avg_cost_per_client_hour", "value": "REPLACE_WITH_REAL_NUMBER" },
+        { "name": "margin_improving_change", "value": "Moved 2 clients from hourly billing to flat monthly retainer, reducing invoicing overhead" },
+        { "name": "estimated_annual_impact", "value": "REPLACE_WITH_REAL_ESTIMATE" }
+      ] } } }
+  ],
+  "connections": { "Manual Trigger": { "main": [[ { "node": "Record Financial Snapshot", "type": "main", "index": 0 } ]] } },
+  "active": false, "settings": {}, "pinData": {}, "versionId": "1", "id": "day_94_solution"
+}

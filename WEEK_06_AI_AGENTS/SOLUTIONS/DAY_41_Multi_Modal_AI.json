@@ -1,0 +1,282 @@
+{
+  "name": "Day 41 Solution: Multi-Modal AI",
+  "description": "Runs text, image, and audio analysis in parallel via OpenAI nodes (gpt-4o text, gpt-4o vision message content array, whisper-1 transcription), merges the three results by position, and synthesizes them into one cross-modal analysis.",
+  "tags": [
+    "week-06",
+    "ai-agents",
+    "day-41",
+    "openai",
+    "multi-modal",
+    "solution"
+  ],
+  "version": "1.0.0",
+  "nodes": [
+    {
+      "id": "overview-sticky",
+      "name": "Overview Sticky",
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        240,
+        40
+      ],
+      "parameters": {
+        "content": "## Day 41 Solution: Multi-Modal AI\n\nSends the same request's text, image URL, and audio URL to three parallel OpenAI calls (text analysis with gpt-4o, image analysis with a gpt-4o vision message content array, and Whisper transcription), merges the three results by position, and synthesizes them in a final Cross-Modal Analysis call.\n\n**Credentials needed to run for real:** OpenAI API key with access to a vision-capable model and Whisper.\n\n**Note:** In a real n8n instance the Audio Transcription node needs binary audio data, not a bare URL — insert an HTTP Request node (Response Format: File) before it to download input_audio_url first. Simplified here for teaching clarity.\n\n**Reference:** WEEK_06_AI_AGENTS/DAILY_TASKS/DAY_41_Multi_Modal_AI.md",
+        "height": 360,
+        "width": 460
+      }
+    },
+    {
+      "id": "multi-modal-ai-trigger",
+      "name": "Multi-Modal AI Trigger",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2,
+      "position": [
+        240,
+        420
+      ],
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "multi-modal-ai",
+        "options": {}
+      }
+    },
+    {
+      "id": "prepare-multi-modal-input",
+      "name": "Prepare Multi-Modal Input",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        520,
+        420
+      ],
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "name": "input_text",
+              "value": "={{ $json.text }}"
+            },
+            {
+              "name": "input_image_url",
+              "value": "={{ $json.image_url }}"
+            },
+            {
+              "name": "input_audio_url",
+              "value": "={{ $json.audio_url }}"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "text-analysis",
+      "name": "Text Analysis",
+      "type": "n8n-nodes-base.openAi",
+      "typeVersion": 1.3,
+      "position": [
+        800,
+        160
+      ],
+      "parameters": {
+        "resource": "chat",
+        "operation": "create",
+        "model": "gpt-4o",
+        "messages": {
+          "values": [
+            {
+              "role": "system",
+              "content": "Analyze this text for sentiment, key topics, and insights."
+            },
+            {
+              "role": "user",
+              "content": "={{ $json.input_text }}"
+            }
+          ]
+        },
+        "options": {
+          "temperature": 0.3,
+          "maxTokens": 500
+        }
+      }
+    },
+    {
+      "id": "image-analysis",
+      "name": "Image Analysis",
+      "type": "n8n-nodes-base.openAi",
+      "typeVersion": 1.3,
+      "position": [
+        800,
+        420
+      ],
+      "parameters": {
+        "resource": "chat",
+        "operation": "create",
+        "model": "gpt-4o",
+        "messages": {
+          "values": [
+            {
+              "role": "system",
+              "content": "You are an image analysis assistant."
+            },
+            {
+              "role": "user",
+              "content": "={{ [ { \"type\": \"text\", \"text\": \"Describe this image in detail: objects, colors, composition, and any visible text.\" }, { \"type\": \"image_url\", \"image_url\": { \"url\": $json.input_image_url, \"detail\": \"low\" } } ] }}"
+            }
+          ]
+        },
+        "options": {
+          "temperature": 0.4,
+          "maxTokens": 500
+        }
+      }
+    },
+    {
+      "id": "audio-transcription",
+      "name": "Audio Transcription",
+      "type": "n8n-nodes-base.openAi",
+      "typeVersion": 1.3,
+      "position": [
+        800,
+        680
+      ],
+      "parameters": {
+        "resource": "audio",
+        "operation": "transcribe",
+        "model": "whisper-1",
+        "audioUrl": "={{ $json.input_audio_url }}",
+        "options": {}
+      }
+    },
+    {
+      "id": "combine-modalities",
+      "name": "Combine Modalities",
+      "type": "n8n-nodes-base.merge",
+      "typeVersion": 3,
+      "position": [
+        1080,
+        420
+      ],
+      "parameters": {
+        "mode": "combine",
+        "combineBy": "combineByPosition",
+        "numberInputs": 3,
+        "options": {}
+      }
+    },
+    {
+      "id": "cross-modal-analysis",
+      "name": "Cross-Modal Analysis",
+      "type": "n8n-nodes-base.openAi",
+      "typeVersion": 1.3,
+      "position": [
+        1360,
+        420
+      ],
+      "parameters": {
+        "resource": "chat",
+        "operation": "create",
+        "model": "gpt-4o",
+        "messages": {
+          "values": [
+            {
+              "role": "system",
+              "content": "You analyze content across multiple modalities and provide integrated insights."
+            },
+            {
+              "role": "user",
+              "content": "={{ 'Text Analysis: ' + $('Text Analysis').item.json.message.content + '\\n\\nImage Analysis: ' + $('Image Analysis').item.json.message.content + '\\n\\nAudio Transcript: ' + $('Audio Transcription').item.json.text }}"
+            }
+          ]
+        },
+        "options": {
+          "temperature": 0.4,
+          "maxTokens": 800
+        }
+      }
+    }
+  ],
+  "connections": {
+    "Multi-Modal AI Trigger": {
+      "main": [
+        [
+          {
+            "node": "Prepare Multi-Modal Input",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Prepare Multi-Modal Input": {
+      "main": [
+        [
+          {
+            "node": "Text Analysis",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Image Analysis",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Audio Transcription",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Text Analysis": {
+      "main": [
+        [
+          {
+            "node": "Combine Modalities",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Image Analysis": {
+      "main": [
+        [
+          {
+            "node": "Combine Modalities",
+            "type": "main",
+            "index": 1
+          }
+        ]
+      ]
+    },
+    "Audio Transcription": {
+      "main": [
+        [
+          {
+            "node": "Combine Modalities",
+            "type": "main",
+            "index": 2
+          }
+        ]
+      ]
+    },
+    "Combine Modalities": {
+      "main": [
+        [
+          {
+            "node": "Cross-Modal Analysis",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {},
+  "pinData": {},
+  "versionId": "1",
+  "id": "day_41_solution"
+}

@@ -1,0 +1,496 @@
+{
+  "name": "Day 22 Solution: Advanced Workflow Patterns",
+  "description": "Fan-out into 3 parallel branches, reconverge via node references, validate, then loop over sources one at a time with Split In Batches.",
+  "tags": [
+    "week-04",
+    "day-22",
+    "solution"
+  ],
+  "version": "1.0.0",
+  "nodes": [
+    {
+      "id": "sticky1",
+      "name": "Sticky Note",
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        40,
+        -320
+      ],
+      "parameters": {
+        "content": "## Day 22 Solution: Advanced Workflow Patterns\n\nOne trigger fans out into 3 parallel branches (API/DB/Files), each reshaped to a common schema, aggregated via node references, validated by IF, then looped 1-at-a-time with Split In Batches. Credentials needed: None — jsonplaceholder.typicode.com is free/no-auth for Branch 1.\n\nSee DAILY_TASKS/DAY_22_Advanced_Workflow_Patterns.md.",
+        "height": 300,
+        "width": 520
+      }
+    },
+    {
+      "id": "trigger1",
+      "name": "Manual Trigger",
+      "type": "n8n-nodes-base.manualTrigger",
+      "typeVersion": 1,
+      "position": [
+        80,
+        260
+      ],
+      "parameters": {}
+    },
+    {
+      "id": "set1",
+      "name": "Initialize Processing",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        320,
+        260
+      ],
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "name": "processing_id",
+              "value": "={{ $now.format('yyyyMMddHHmmss') }}"
+            },
+            {
+              "name": "data_sources",
+              "value": "={{ ['API', 'Database', 'Files'] }}"
+            },
+            {
+              "name": "start_time",
+              "value": "={{ $now }}"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "http1",
+      "name": "Branch 1: API Call",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        560,
+        60
+      ],
+      "parameters": {
+        "method": "GET",
+        "url": "https://jsonplaceholder.typicode.com/posts/1"
+      }
+    },
+    {
+      "id": "set2",
+      "name": "Branch 2: Database Data",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        560,
+        260
+      ],
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "name": "db_data",
+              "value": "={{ { id: 2, table: 'orders', record_count: 42 } }}"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "set3",
+      "name": "Branch 3: File Data",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        560,
+        460
+      ],
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "name": "file_data",
+              "value": "={{ { id: 3, filename: 'export.csv', size_kb: 128 } }}"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "set4",
+      "name": "Process API Data",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        800,
+        60
+      ],
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "name": "source",
+              "value": "API"
+            },
+            {
+              "name": "record_id",
+              "value": "={{ $json.id }}"
+            },
+            {
+              "name": "content",
+              "value": "={{ $json.title }}"
+            },
+            {
+              "name": "processed_at",
+              "value": "={{ $now }}"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "set5",
+      "name": "Process Database Data",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        800,
+        260
+      ],
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "name": "source",
+              "value": "Database"
+            },
+            {
+              "name": "record_id",
+              "value": "={{ $json.db_data.id }}"
+            },
+            {
+              "name": "content",
+              "value": "={{ $json.db_data.table }}"
+            },
+            {
+              "name": "processed_at",
+              "value": "={{ $now }}"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "set6",
+      "name": "Process File Data",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        800,
+        460
+      ],
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "name": "source",
+              "value": "Files"
+            },
+            {
+              "name": "record_id",
+              "value": "={{ $json.file_data.id }}"
+            },
+            {
+              "name": "content",
+              "value": "={{ $json.file_data.filename }}"
+            },
+            {
+              "name": "processed_at",
+              "value": "={{ $now }}"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "set7",
+      "name": "Aggregate Parallel Results",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        1040,
+        260
+      ],
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "name": "aggregated_data",
+              "value": "={{ { api: $('Process API Data').item.json, database: $('Process Database Data').item.json, files: $('Process File Data').item.json } }}"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "if1",
+      "name": "Conditional Data Validation",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2,
+      "position": [
+        1280,
+        260
+      ],
+      "parameters": {
+        "conditions": {
+          "string": [
+            {
+              "value1": "={{ $json.aggregated_data.api.source }}",
+              "operation": "isNotEmpty"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "code1",
+      "name": "Split Sources to Items",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        1520,
+        200
+      ],
+      "parameters": {
+        "mode": "runOnceForAllItems",
+        "jsCode": "const agg = items[0].json.aggregated_data;\nreturn Object.values(agg).map(v => ({ json: v }));"
+      }
+    },
+    {
+      "id": "sib1",
+      "name": "Loop Through Sources",
+      "type": "n8n-nodes-base.splitInBatches",
+      "typeVersion": 3,
+      "position": [
+        1760,
+        200
+      ],
+      "parameters": {
+        "batchSize": 1,
+        "options": {}
+      }
+    },
+    {
+      "id": "set8",
+      "name": "Process Each Data Source",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        2000,
+        200
+      ],
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "name": "current_source",
+              "value": "={{ $json.source }}"
+            },
+            {
+              "name": "loop_iteration",
+              "value": "={{ $runIndex }}"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "set9",
+      "name": "Handle Validation Error",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        1520,
+        360
+      ],
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "name": "validation_error",
+              "value": "aggregated_data.api.source was empty"
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "connections": {
+    "Manual Trigger": {
+      "main": [
+        [
+          {
+            "node": "Initialize Processing",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Initialize Processing": {
+      "main": [
+        [
+          {
+            "node": "Branch 1: API Call",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Branch 2: Database Data",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Branch 3: File Data",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Branch 1: API Call": {
+      "main": [
+        [
+          {
+            "node": "Process API Data",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Branch 2: Database Data": {
+      "main": [
+        [
+          {
+            "node": "Process Database Data",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Branch 3: File Data": {
+      "main": [
+        [
+          {
+            "node": "Process File Data",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Process API Data": {
+      "main": [
+        [
+          {
+            "node": "Aggregate Parallel Results",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Process Database Data": {
+      "main": [
+        [
+          {
+            "node": "Aggregate Parallel Results",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Process File Data": {
+      "main": [
+        [
+          {
+            "node": "Aggregate Parallel Results",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Aggregate Parallel Results": {
+      "main": [
+        [
+          {
+            "node": "Conditional Data Validation",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Conditional Data Validation": {
+      "main": [
+        [
+          {
+            "node": "Split Sources to Items",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Handle Validation Error",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Split Sources to Items": {
+      "main": [
+        [
+          {
+            "node": "Loop Through Sources",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Loop Through Sources": {
+      "main": [
+        [],
+        [
+          {
+            "node": "Process Each Data Source",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Process Each Data Source": {
+      "main": [
+        [
+          {
+            "node": "Loop Through Sources",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {},
+  "pinData": {},
+  "versionId": "1",
+  "id": "day_22_solution"
+}

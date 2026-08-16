@@ -1,0 +1,370 @@
+{
+  "name": "Day 14 Solution: Foundation Review & Project",
+  "description": "Capstone combining Weeks 1-2: webhook, validation, retry-protected API integration, error/success branching, and notifications.",
+  "tags": [
+    "week-02",
+    "day-14",
+    "solution"
+  ],
+  "version": "1.0.0",
+  "nodes": [
+    {
+      "id": "sticky1",
+      "name": "Sticky Note",
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        40,
+        -320
+      ],
+      "parameters": {
+        "content": "## Day 14 Solution: Foundation Review & Project\n\nCapstone combining Weeks 1-2: Webhook -> IF validate -> Set process -> HTTP Request (retry) -> IF status>=400 -> success path (Set + Slack) vs error path (Set + Slack), with a distinct 400 response on the initial validation failure. Credentials needed: Slack API credential (or Telegram) for success/error notifications; the rest can be tested without credentials.\n\nSee DAILY_TASKS/DAY_14_Foundation_Review_Project.md.",
+        "height": 300,
+        "width": 500
+      }
+    },
+    {
+      "id": "webhook1",
+      "name": "Foundation Project Webhook",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2,
+      "position": [
+        80,
+        160
+      ],
+      "parameters": {
+        "path": "foundation-project",
+        "httpMethod": "POST"
+      }
+    },
+    {
+      "id": "if1",
+      "name": "Data Validation",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2,
+      "position": [
+        320,
+        160
+      ],
+      "parameters": {
+        "conditions": {
+          "string": [
+            {
+              "value1": "={{ $json.data }}",
+              "operation": "isNotEmpty"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "set1",
+      "name": "Process Data",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        560,
+        60
+      ],
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "name": "processed_data",
+              "value": "={{ $json.data.trim().toUpperCase() }}"
+            },
+            {
+              "name": "processed_at",
+              "value": "={{ $now }}"
+            },
+            {
+              "name": "status",
+              "value": "processed"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "http1",
+      "name": "API Integration",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        800,
+        60
+      ],
+      "parameters": {
+        "method": "POST",
+        "url": "https://jsonplaceholder.typicode.com/posts",
+        "sendBody": true,
+        "bodyContentType": "json",
+        "jsonBody": "={{ { \"data\": $json.processed_data, \"timestamp\": $json.processed_at } }}",
+        "options": {
+          "retry": {
+            "maxTries": 3,
+            "waitBetweenTries": 2000
+          },
+          "response": {
+            "response": {
+              "neverError": true
+            }
+          }
+        }
+      }
+    },
+    {
+      "id": "if2",
+      "name": "Handle API Errors",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2,
+      "position": [
+        1040,
+        60
+      ],
+      "parameters": {
+        "conditions": {
+          "number": [
+            {
+              "value1": "={{ $json.statusCode || 201 }}",
+              "operation": "largerEqual",
+              "value2": 400
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "set2",
+      "name": "Log Error",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        1280,
+        -20
+      ],
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "name": "error_type",
+              "value": "API_INTEGRATION_ERROR"
+            },
+            {
+              "name": "error_message",
+              "value": "External API call failed"
+            },
+            {
+              "name": "error_time",
+              "value": "={{ $now }}"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "slack1",
+      "name": "Send Error Notification",
+      "type": "n8n-nodes-base.slack",
+      "typeVersion": 2.1,
+      "position": [
+        1520,
+        -20
+      ],
+      "parameters": {
+        "authentication": "predefinedCredentialType",
+        "nodeCredentialType": "slackApi",
+        "resource": "message",
+        "operation": "post",
+        "channel": "#alerts",
+        "text": "=🚨 API integration failed at {{ $json.error_time }}: {{ $json.error_message }}",
+        "otherOptions": {}
+      }
+    },
+    {
+      "id": "set3",
+      "name": "Log Success",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        1280,
+        140
+      ],
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "name": "success_logged_at",
+              "value": "={{ $now }}"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "slack2",
+      "name": "Send Success Notification",
+      "type": "n8n-nodes-base.slack",
+      "typeVersion": 2.1,
+      "position": [
+        1520,
+        140
+      ],
+      "parameters": {
+        "authentication": "predefinedCredentialType",
+        "nodeCredentialType": "slackApi",
+        "resource": "message",
+        "operation": "post",
+        "channel": "#alerts",
+        "text": "=✅ Foundation project processed successfully at {{ $json.success_logged_at }}",
+        "otherOptions": {}
+      }
+    },
+    {
+      "id": "set4",
+      "name": "Invalid Data",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        560,
+        280
+      ],
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "name": "status",
+              "value": "error"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "resp1",
+      "name": "Respond Missing Data",
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.1,
+      "position": [
+        800,
+        280
+      ],
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "={{ { \"status\": \"error\", \"message\": \"Missing data field\" } }}",
+        "options": {
+          "responseCode": 400
+        }
+      }
+    }
+  ],
+  "connections": {
+    "Foundation Project Webhook": {
+      "main": [
+        [
+          {
+            "node": "Data Validation",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Data Validation": {
+      "main": [
+        [
+          {
+            "node": "Process Data",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Invalid Data",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Process Data": {
+      "main": [
+        [
+          {
+            "node": "API Integration",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "API Integration": {
+      "main": [
+        [
+          {
+            "node": "Handle API Errors",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Handle API Errors": {
+      "main": [
+        [
+          {
+            "node": "Log Error",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Log Success",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Log Error": {
+      "main": [
+        [
+          {
+            "node": "Send Error Notification",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Log Success": {
+      "main": [
+        [
+          {
+            "node": "Send Success Notification",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Invalid Data": {
+      "main": [
+        [
+          {
+            "node": "Respond Missing Data",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {},
+  "pinData": {},
+  "versionId": "1",
+  "id": "day_14_solution"
+}

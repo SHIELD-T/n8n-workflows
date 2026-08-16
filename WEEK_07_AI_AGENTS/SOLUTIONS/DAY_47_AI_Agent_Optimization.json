@@ -1,0 +1,588 @@
+{
+  "name": "Day 47 Solution: AI Agent Optimization",
+  "description": "Agent optimization system that scores performance and resource metrics, and — only when the score falls below threshold — runs parallel performance/resource/efficiency optimization calls before reporting.",
+  "tags": [
+    "week-07",
+    "ai-agents",
+    "day-47",
+    "optimization",
+    "solution"
+  ],
+  "version": "1.0.0",
+  "nodes": [
+    {
+      "id": "sticky-overview",
+      "name": "Overview",
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        240,
+        -280
+      ],
+      "parameters": {
+        "content": "## Day 47 Solution: AI Agent Optimization\n\nCollects performance and resource metrics, scores overall performance, and — only when the score is below 80 — fans out to performance/resource/efficiency optimization calls before checking the results. Otherwise it skips straight to the report.\n\n**Credentials needed:** None — this workflow uses only webhook, set, if, and httpRequest nodes. The httpRequest metric/optimization/results/log nodes call fake placeholder domains and need no real credential.\n\nSee DAILY_TASKS/DAY_47_AI_Agent_Optimization.md for the full lesson this solves.",
+        "height": 300,
+        "width": 500
+      }
+    },
+    {
+      "id": "agent-optimization-system",
+      "name": "Agent Optimization System",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2,
+      "position": [
+        240,
+        300
+      ],
+      "parameters": {
+        "path": "agent-optimization",
+        "httpMethod": "POST"
+      }
+    },
+    {
+      "id": "initialize-optimization-system",
+      "name": "Initialize Optimization System",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        480,
+        300
+      ],
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "name": "optimization_session_id",
+              "value": "={{ $now.format('YYYYMMDDHHmmss') }}"
+            },
+            {
+              "name": "optimization_type",
+              "value": "comprehensive"
+            },
+            {
+              "name": "start_time",
+              "value": "={{ $now }}"
+            },
+            {
+              "name": "optimization_targets",
+              "value": "={{ ['performance', 'resources', 'efficiency', 'accuracy'] }}"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "collect-performance-metrics",
+      "name": "Collect Performance Metrics",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        720,
+        300
+      ],
+      "parameters": {
+        "method": "GET",
+        "url": "https://api.performance-monitor.com/metrics",
+        "qs": {
+          "timeframe": "1h",
+          "metrics": "response_time,throughput,accuracy,error_rate"
+        },
+        "options": {
+          "response": {
+            "response": {
+              "responseFormat": "json"
+            }
+          }
+        }
+      }
+    },
+    {
+      "id": "analyze-performance-data",
+      "name": "Analyze Performance Data",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        960,
+        300
+      ],
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "name": "avg_response_time",
+              "value": "={{ $json.avg_response_time_ms }}"
+            },
+            {
+              "name": "throughput_rate",
+              "value": "={{ $json.throughput_per_minute }}"
+            },
+            {
+              "name": "accuracy_rate",
+              "value": "={{ $json.accuracy_percentage }}"
+            },
+            {
+              "name": "error_rate",
+              "value": "={{ $json.error_percentage }}"
+            },
+            {
+              "name": "performance_score",
+              "value": "={{ Math.round((100 - $json.avg_response_time_ms / 100) * 0.3 + $json.throughput_per_minute * 0.2 + $json.accuracy_percentage * 0.3 + (100 - $json.error_percentage) * 0.2) }}"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "collect-resource-metrics",
+      "name": "Collect Resource Metrics",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        1200,
+        300
+      ],
+      "parameters": {
+        "method": "GET",
+        "url": "https://api.resource-monitor.com/metrics",
+        "qs": {
+          "timeframe": "1h",
+          "metrics": "cpu_usage,memory_usage,disk_usage,network_usage"
+        },
+        "options": {
+          "response": {
+            "response": {
+              "responseFormat": "json"
+            }
+          }
+        }
+      }
+    },
+    {
+      "id": "analyze-resource-data",
+      "name": "Analyze Resource Data",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        1440,
+        300
+      ],
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "name": "cpu_usage",
+              "value": "={{ $json.cpu_percentage }}"
+            },
+            {
+              "name": "memory_usage",
+              "value": "={{ $json.memory_percentage }}"
+            },
+            {
+              "name": "disk_usage",
+              "value": "={{ $json.disk_percentage }}"
+            },
+            {
+              "name": "network_usage",
+              "value": "={{ $json.network_percentage }}"
+            },
+            {
+              "name": "resource_efficiency_score",
+              "value": "={{ Math.round((100 - $json.cpu_percentage) * 0.3 + (100 - $json.memory_percentage) * 0.3 + (100 - $json.disk_percentage) * 0.2 + (100 - $json.network_percentage) * 0.2) }}"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "sticky-metrics-collectors",
+      "name": "Metrics Collectors Placeholder",
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        720,
+        500
+      ],
+      "parameters": {
+        "content": "## ⚠️ Placeholder endpoint\n\nThis node calls a fake domain that does not exist. Replace the URL with a real service endpoint (or mock server) before running this for real — this is a stand-in for teaching purposes.",
+        "height": 150,
+        "width": 920
+      }
+    },
+    {
+      "id": "determine-optimization-needs",
+      "name": "Determine Optimization Needs",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2,
+      "position": [
+        1680,
+        300
+      ],
+      "parameters": {
+        "conditions": {
+          "number": [
+            {
+              "value1": "={{ $json.performance_score }}",
+              "operation": "smaller",
+              "value2": 80
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "execute-performance-optimization",
+      "name": "Execute Performance Optimization",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        1920,
+        80
+      ],
+      "parameters": {
+        "method": "POST",
+        "url": "https://api.optimization-engine.com/optimize-performance",
+        "bodyContentType": "json",
+        "jsonBody": "={{ { \"optimization_session_id\": $json.optimization_session_id, \"performance_score\": $json.performance_score, \"avg_response_time\": $json.avg_response_time, \"throughput_rate\": $json.throughput_rate, \"accuracy_rate\": $json.accuracy_rate, \"error_rate\": $json.error_rate, \"optimization_type\": \"performance\", \"timestamp\": $now } }}"
+      }
+    },
+    {
+      "id": "execute-resource-optimization",
+      "name": "Execute Resource Optimization",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        1920,
+        300
+      ],
+      "parameters": {
+        "method": "POST",
+        "url": "https://api.optimization-engine.com/optimize-resources",
+        "bodyContentType": "json",
+        "jsonBody": "={{ { \"optimization_session_id\": $json.optimization_session_id, \"resource_efficiency_score\": $json.resource_efficiency_score, \"cpu_usage\": $json.cpu_usage, \"memory_usage\": $json.memory_usage, \"disk_usage\": $json.disk_usage, \"network_usage\": $json.network_usage, \"optimization_type\": \"resources\", \"timestamp\": $now } }}"
+      }
+    },
+    {
+      "id": "execute-efficiency-optimization",
+      "name": "Execute Efficiency Optimization",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        1920,
+        520
+      ],
+      "parameters": {
+        "method": "POST",
+        "url": "https://api.optimization-engine.com/optimize-efficiency",
+        "bodyContentType": "json",
+        "jsonBody": "={{ { \"optimization_session_id\": $json.optimization_session_id, \"performance_score\": $json.performance_score, \"resource_efficiency_score\": $json.resource_efficiency_score, \"optimization_type\": \"efficiency\", \"timestamp\": $now } }}"
+      }
+    },
+    {
+      "id": "monitor-optimization-results",
+      "name": "Monitor Optimization Results",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        2160,
+        300
+      ],
+      "parameters": {
+        "method": "GET",
+        "url": "https://api.optimization-monitor.com/results",
+        "qs": {
+          "optimization_session_id": "={{ $json.optimization_session_id }}",
+          "timeframe": "5m"
+        },
+        "options": {
+          "response": {
+            "response": {
+              "responseFormat": "json"
+            }
+          }
+        }
+      }
+    },
+    {
+      "id": "sticky-optimization-engine",
+      "name": "Optimization Engine Placeholder",
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        1920,
+        720
+      ],
+      "parameters": {
+        "content": "## ⚠️ Placeholder endpoint\n\nThis node calls a fake domain that does not exist. Replace the URL with a real service endpoint (or mock server) before running this for real — this is a stand-in for teaching purposes.",
+        "height": 150,
+        "width": 700
+      }
+    },
+    {
+      "id": "generate-optimization-report",
+      "name": "Generate Optimization Report",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        2400,
+        300
+      ],
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "name": "optimization_report",
+              "value": "={{ { \"optimization_session_id\": $json.optimization_session_id, \"optimization_type\": $json.optimization_type, \"start_time\": $json.start_time, \"optimization_targets\": $json.optimization_targets, \"performance_score\": $json.performance_score, \"resource_efficiency_score\": $json.resource_efficiency_score, \"performance_metrics\": { \"avg_response_time\": $json.avg_response_time, \"throughput_rate\": $json.throughput_rate, \"accuracy_rate\": $json.accuracy_rate, \"error_rate\": $json.error_rate }, \"resource_metrics\": { \"cpu_usage\": $json.cpu_usage, \"memory_usage\": $json.memory_usage, \"disk_usage\": $json.disk_usage, \"network_usage\": $json.network_usage }, \"optimization_results\": $json, \"processing_time\": $now.diff($json.start_time, 'milliseconds'), \"completed_at\": $now } }}"
+            },
+            {
+              "name": "success_message",
+              "value": "✅ AI agent optimization completed successfully"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "send-optimization-results",
+      "name": "Send Optimization Results",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        2640,
+        300
+      ],
+      "parameters": {
+        "method": "POST",
+        "url": "https://api.optimization-service.com/results",
+        "bodyContentType": "json",
+        "jsonBody": "={{ { \"results\": $json.optimization_report, \"timestamp\": $now } }}"
+      }
+    },
+    {
+      "id": "log-optimization-activity",
+      "name": "Log Optimization Activity",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        2880,
+        300
+      ],
+      "parameters": {
+        "method": "POST",
+        "url": "https://api.optimization-log.com/log",
+        "bodyContentType": "json",
+        "jsonBody": "={{ { \"type\": \"agent_optimization\", \"data\": $json.optimization_report, \"timestamp\": $now } }}"
+      }
+    },
+    {
+      "id": "sticky-send-log",
+      "name": "Send/Log Placeholder",
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        2640,
+        480
+      ],
+      "parameters": {
+        "content": "## ⚠️ Placeholder endpoint\n\nThis node calls a fake domain that does not exist. Replace the URL with a real service endpoint (or mock server) before running this for real — this is a stand-in for teaching purposes.",
+        "height": 160,
+        "width": 460
+      }
+    },
+    {
+      "id": "handle-optimization-error",
+      "name": "Handle Optimization Error",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        480,
+        600
+      ],
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "name": "optimization_error",
+              "value": "={{ { \"error_type\": \"optimization_failed\", \"optimization_session_id\": $json.optimization_session_id, \"message\": \"AI agent optimization failed\", \"timestamp\": $now } }}"
+            },
+            {
+              "name": "error_response",
+              "value": "={{ { \"status\": \"error\", \"optimization_session_id\": $json.optimization_session_id, \"message\": \"AI agent optimization workflow error\" } }}"
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "connections": {
+    "Agent Optimization System": {
+      "main": [
+        [
+          {
+            "node": "Initialize Optimization System",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Initialize Optimization System": {
+      "main": [
+        [
+          {
+            "node": "Collect Performance Metrics",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Handle Optimization Error",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Collect Performance Metrics": {
+      "main": [
+        [
+          {
+            "node": "Analyze Performance Data",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Analyze Performance Data": {
+      "main": [
+        [
+          {
+            "node": "Collect Resource Metrics",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Collect Resource Metrics": {
+      "main": [
+        [
+          {
+            "node": "Analyze Resource Data",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Analyze Resource Data": {
+      "main": [
+        [
+          {
+            "node": "Determine Optimization Needs",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Execute Performance Optimization": {
+      "main": [
+        [
+          {
+            "node": "Monitor Optimization Results",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Execute Resource Optimization": {
+      "main": [
+        [
+          {
+            "node": "Monitor Optimization Results",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Execute Efficiency Optimization": {
+      "main": [
+        [
+          {
+            "node": "Monitor Optimization Results",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Monitor Optimization Results": {
+      "main": [
+        [
+          {
+            "node": "Generate Optimization Report",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Generate Optimization Report": {
+      "main": [
+        [
+          {
+            "node": "Send Optimization Results",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Send Optimization Results": {
+      "main": [
+        [
+          {
+            "node": "Log Optimization Activity",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Determine Optimization Needs": {
+      "main": [
+        [
+          {
+            "node": "Execute Performance Optimization",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Execute Resource Optimization",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Execute Efficiency Optimization",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Generate Optimization Report",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {},
+  "pinData": {},
+  "versionId": "1",
+  "id": "day_47_solution"
+}

@@ -1,0 +1,142 @@
+{
+  "name": "Day 76 Solution: Closing Clients",
+  "description": "Solution workflow for WEEK_11_CLIENT_ACQUISITION Day 76: Closing Clients.",
+  "tags": [
+    "course-solution",
+    "WEEK_11",
+    "day-76"
+  ],
+  "version": "1.0.0",
+  "nodes": [
+    {
+      "id": "47321cb9-6af4-41b1-87d5-1c169df805dc",
+      "name": "Overview",
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        -260,
+        -320
+      ],
+      "parameters": {
+        "content": "## Day 76 Solution: Closing Clients\n\nThis workflow captures the Day 76 deliverable as structured fields in the **Sales Script Fields** node (run it once with Manual Trigger to see the values), plus a fully worked model answer in the sticky note to the right that you can read directly on the canvas.\n\nEvery day in Weeks 11-15 is primarily a business deliverable, so this solution is a lightweight Manual Trigger -> Set pattern that still opens and runs cleanly in n8n.\n\n**Credentials needed:** None — this is a documents/scripts and practice day.\n\n**Matches:** `DAILY_TASKS/DAY_76_Closing_Clients.md`",
+        "height": 340,
+        "width": 460
+      }
+    },
+    {
+      "id": "f33238ba-439d-4373-82f3-4eb55ddca9d4",
+      "name": "Manual Trigger",
+      "type": "n8n-nodes-base.manualTrigger",
+      "typeVersion": 1,
+      "position": [
+        80,
+        40
+      ],
+      "parameters": {}
+    },
+    {
+      "id": "2928eeac-e850-44c7-9772-d7f82fb9c79d",
+      "name": "Sales Script Fields",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        400,
+        40
+      ],
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "d699f863-86f3-4749-a45e-0e996d7970bb",
+              "name": "discovery_script_sections",
+              "value": "Opening/rapport; 5 discovery questions; budget/timeline qualification; next steps",
+              "type": "string"
+            },
+            {
+              "id": "7819deb3-99e7-4adf-ad54-c2cc2353cd29",
+              "name": "discovery_question_1",
+              "value": "Walk me through what happens today when a lead comes in after hours.",
+              "type": "string"
+            },
+            {
+              "id": "eb975b19-065b-4f4f-bbe7-36eba86aaefd",
+              "name": "discovery_question_2",
+              "value": "How many missed calls would you guess you get in a week?",
+              "type": "string"
+            },
+            {
+              "id": "09252b38-f386-42d0-a557-0701d50b56ad",
+              "name": "discovery_question_3",
+              "value": "What's your current review-collection process, if any?",
+              "type": "string"
+            },
+            {
+              "id": "a0f091b6-7c43-41bf-925d-91bab4d7c39f",
+              "name": "proposal_sections",
+              "value": "Executive summary; current-state problem; proposed solution; pricing breakdown (Day 73 tiers); timeline; terms",
+              "type": "string"
+            },
+            {
+              "id": "d8d6b139-80ce-4880-b49b-25d4c71c2ca5",
+              "name": "contract_sections",
+              "value": "Parties; scope of work; payment terms; timeline/deliverables; termination clause",
+              "type": "string"
+            },
+            {
+              "id": "60dd6cbb-cecb-44ee-bc89-4e7fea4e7f92",
+              "name": "objection_too_expensive",
+              "value": "Most clients make the fee back in the first month from recovered jobs alone — want me to walk through the math for your call volume?",
+              "type": "string"
+            },
+            {
+              "id": "530f36a4-3bfd-4628-9b6b-60a4af7fc4f8",
+              "name": "objection_need_to_think",
+              "value": "Totally fair, it's your business. What's the one thing that would make this a clear yes for you?",
+              "type": "string"
+            },
+            {
+              "id": "6186a6c5-aad9-4999-8fa5-e78e0fb54ba3",
+              "name": "objection_faster_cheaper",
+              "value": "I could cut scope to hit that price — here's exactly what would drop off the Starter tier if we did.",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      }
+    },
+    {
+      "id": "22d18013-8ae6-44eb-97b5-7a8edcfa270a",
+      "name": "Model Answer",
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        780,
+        -340
+      ],
+      "parameters": {
+        "content": "## Model Answer: Closing Clients\n\n### Discovery Call Script\n\n**Opening/rapport:** \"Thanks for making time — before I pitch anything, I want to understand how leads and calls actually flow through your business today.\"\n\n**Discovery questions (5):**\n1. Walk me through what happens today when a lead comes in after hours.\n2. How many missed calls would you guess you get in a week?\n3. What's your current review-collection process, if any?\n4. Who currently handles this manually, and how much of their time does it eat?\n5. What's stopped you from automating this before now?\n\n**Qualification:** Budget range confirmed against Day 73's Starter/Growth/Pro tiers; timeline — \"how soon would you want this live?\"\n\n**Next steps:** \"I'll send a one-page proposal by tomorrow with pricing and timeline — sound good?\"\n\n### Proposal Template (using Day 73 pricing)\nExecutive summary -> Current-state problem (missed calls, slow follow-up) -> Proposed solution (Growth tier: missed-call text-back + review automation) -> Pricing: $1,800-2,800 setup + $350-500/mo -> Timeline: 2-3 weeks -> Terms: first month upfront, net-15 after.\n\n### One-Page Contract Template\nParties (Lane Automation Co. and Client) — Scope of work (per proposal) — Payment terms (50/50 or first-month-upfront) — Timeline/deliverables — Termination clause (either party may terminate with 14 days' written notice; work completed to date is billable).\n\n### Objection Responses\n- **\"Too expensive\"** — \"Most clients make this back in the first month from recovered jobs alone — want me to walk through the math for your call volume?\"\n- **\"I need to think about it\"** — \"Totally fair, it's your business. What's the one thing that would make this a clear yes for you?\"\n- **\"Can you do it faster/cheaper?\"** — \"I could cut scope to hit that price — here's exactly what would drop off the Starter tier if we did.\"\n\n**Practiced:** ran the full discovery -> proposal -> close sequence out loud once against the Coastal Air HVAC mock scenario.",
+        "height": 620,
+        "width": 700
+      }
+    }
+  ],
+  "connections": {
+    "Manual Trigger": {
+      "main": [
+        [
+          {
+            "node": "Sales Script Fields",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {},
+  "pinData": {},
+  "versionId": "1",
+  "id": "day_76_solution"
+}

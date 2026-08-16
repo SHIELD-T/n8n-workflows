@@ -1,0 +1,25 @@
+{
+  "name": "Day 89 Solution: Brand Positioning Statement",
+  "description": "Captures a one-sentence brand positioning statement plus supporting identity fields, with a worked example.",
+  "tags": ["day-89", "solution", "week-13"],
+  "version": "1.0.0",
+  "nodes": [
+    { "id": "note1", "name": "Overview", "type": "n8n-nodes-base.stickyNote", "typeVersion": 1,
+      "position": [-40, -260],
+      "parameters": { "content": "## Day 89 Solution: Brand Building\n\nCaptures brand positioning as structured fields. Sticky note below is a worked model.\n\n**Credentials needed:** None.\n\nSee `DAILY_TASKS/DAY_89_Brand_Building.md`.", "height": 170, "width": 340 } },
+    { "id": "model", "name": "Model Positioning Statement", "type": "n8n-nodes-base.stickyNote", "typeVersion": 1,
+      "position": [-40, 200],
+      "parameters": { "content": "## Model Brand Positioning\n\n\"For small e-commerce brands drowning in manual order/inventory work, [Your Name] Automation is the automation partner that builds workflows you can actually understand and edit yourself — unlike agencies that hand you a black box you can't touch without calling them back.\"\n\n**Tone:** Plain-spoken, technical but not jargon-heavy\n**Differentiator:** Transparency and hand-off, not lock-in", "height": 220, "width": 420 } },
+    { "id": "trig", "name": "Manual Trigger", "type": "n8n-nodes-base.manualTrigger", "typeVersion": 1, "position": [300, 100], "parameters": {} },
+    { "id": "set1", "name": "Record Brand Identity", "type": "n8n-nodes-base.set", "typeVersion": 3.4,
+      "position": [550, 100],
+      "parameters": { "assignments": { "assignments": [
+        { "name": "positioning_statement", "value": "REPLACE: For [target], [your brand] is the [category] that [differentiator] — unlike [alternative]." },
+        { "name": "target_audience", "value": "Small e-commerce brands" },
+        { "name": "brand_tone", "value": "Plain-spoken, technical but accessible" },
+        { "name": "differentiator", "value": "Transparent, editable workflows vs. black-box agencies" }
+      ] } } }
+  ],
+  "connections": { "Manual Trigger": { "main": [[ { "node": "Record Brand Identity", "type": "main", "index": 0 } ]] } },
+  "active": false, "settings": {}, "pinData": {}, "versionId": "1", "id": "day_89_solution"
+}

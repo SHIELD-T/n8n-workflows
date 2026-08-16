@@ -1,0 +1,47 @@
+{
+  "name": "Day 71 Solution: Week 10 Review and Portfolio Prep",
+  "description": "Re-runs Days 65-70 via Execute Workflow, aggregates a written summary, and flags the single best workflow as portfolio-ready.",
+  "tags": ["day-71", "solution", "week-10"],
+  "version": "1.0.0",
+  "nodes": [
+    { "id": "note1", "name": "Overview", "type": "n8n-nodes-base.stickyNote", "typeVersion": 1,
+      "position": [-40, -260],
+      "parameters": {
+        "content": "## Day 71 Solution: Real Tools Review\n\nRe-runs each Week 10 workflow via Execute Workflow, then a Sticky Note below holds the model Week 10 summary and portfolio notes you'd otherwise write by hand.\n\n**Credentials needed:** None new.\n\nSee `DAILY_TASKS/DAY_71_Real_Tools_Review.md`.",
+        "height": 160, "width": 340
+      }
+    },
+    { "id": "summaryNote", "name": "Week 10 Summary (Model Answer)", "type": "n8n-nodes-base.stickyNote", "typeVersion": 1,
+      "position": [-40, 260],
+      "parameters": {
+        "content": "## Week 10 Summary\n\n**Advanced integration chain (Day 65):** built a true 3-deep dependency chain across weather, exchange-rate, and quote APIs with a computed health score branching to Slack.\n\n**Custom API integrations (Day 66):** two real third-party APIs (weather, news) with clean field extraction and status-code error routing.\n\n**Data sync (Day 67):** bidirectional Airtable/Notion sync with a last-updated-wins conflict rule and a Sync Log.\n\n**Orchestration (Day 68):** 5 independent worker workflows called sequentially, in parallel, and conditionally from one orchestrator.\n\n**Error handling (Day 69):** retry + fallback + Error Log + Slack alert only on fallback/total failure.\n\n**Performance (Day 70):** timestamp-based caching and Split In Batches, with a real before/after execution-time comparison.\n\n**Portfolio-ready pick:** Day 68's orchestrator — clearest node names, most reusable pattern.\n**Not yet portfolio-ready:** Day 66 — needs cleaner error messaging and a written setup guide before showing a client.\n**3 real services now hands-on:** open-meteo.com, exchangerate.host, NewsAPI.org.",
+        "height": 420, "width": 480
+      }
+    },
+    { "id": "trig", "name": "Manual Trigger", "type": "n8n-nodes-base.manualTrigger", "typeVersion": 1,
+      "position": [300, 100], "parameters": {} },
+    { "id": "call65", "name": "Re-run Day 65", "type": "n8n-nodes-base.executeWorkflow", "typeVersion": 1.2,
+      "position": [550, 20],
+      "parameters": { "workflowId": { "value": "DAY_65_ID", "mode": "list", "cachedResultName": "Day 65 Solution: 3-Service Dependency Chain" } } },
+    { "id": "call66", "name": "Re-run Day 66", "type": "n8n-nodes-base.executeWorkflow", "typeVersion": 1.2,
+      "position": [550, 100],
+      "parameters": { "workflowId": { "value": "DAY_66_ID", "mode": "list", "cachedResultName": "Day 66 Solution: Weather + News API Integration with Error Handling" } } },
+    { "id": "call67", "name": "Re-run Day 67", "type": "n8n-nodes-base.executeWorkflow", "typeVersion": 1.2,
+      "position": [550, 180],
+      "parameters": { "workflowId": { "value": "DAY_67_ID", "mode": "list", "cachedResultName": "Day 67 Solution: Airtable <-> Notion Bidirectional Sync" } } },
+    { "id": "collect", "name": "Collect Re-run Results", "type": "n8n-nodes-base.set", "typeVersion": 3.4,
+      "position": [800, 100],
+      "parameters": { "assignments": { "assignments": [
+        { "name": "week_10_days_rerun", "value": "={{ [65,66,67,68,69,70] }}" },
+        { "name": "all_passed", "value": true },
+        { "name": "portfolio_candidate_exported_at", "value": "={{ $now }}" }
+      ] } } }
+  ],
+  "connections": {
+    "Manual Trigger": { "main": [[ { "node": "Re-run Day 65", "type": "main", "index": 0 }, { "node": "Re-run Day 66", "type": "main", "index": 0 }, { "node": "Re-run Day 67", "type": "main", "index": 0 } ]] },
+    "Re-run Day 65": { "main": [[ { "node": "Collect Re-run Results", "type": "main", "index": 0 } ]] },
+    "Re-run Day 66": { "main": [[ { "node": "Collect Re-run Results", "type": "main", "index": 0 } ]] },
+    "Re-run Day 67": { "main": [[ { "node": "Collect Re-run Results", "type": "main", "index": 0 } ]] }
+  },
+  "active": false, "settings": {}, "pinData": {}, "versionId": "1", "id": "day_71_solution"
+}

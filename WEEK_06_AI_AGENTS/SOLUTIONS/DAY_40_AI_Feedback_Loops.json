@@ -1,0 +1,308 @@
+{
+  "name": "Day 40 Solution: AI Feedback Loops",
+  "description": "Captures a user rating and routes it with an If node: ratings >= 4 mark 'excellent', lower ratings are logged to Google Sheets and turned into a specific improvement note via OpenAI.",
+  "tags": [
+    "week-06",
+    "ai-agents",
+    "day-40",
+    "openai",
+    "feedback",
+    "solution"
+  ],
+  "version": "1.0.0",
+  "nodes": [
+    {
+      "id": "overview-sticky",
+      "name": "Overview Sticky",
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        240,
+        40
+      ],
+      "parameters": {
+        "content": "## Day 40 Solution: AI Feedback Loops\n\nCaptures a user rating and turns it into structured feedback: an If node routes ratings >= 4 straight to an 'excellent' status, while lower ratings are appended to a Google Sheets log and fed to an OpenAI node that generates one specific, actionable improvement note.\n\n**Credentials needed to run for real:** OpenAI API key; Google Sheets OAuth2 credential (replace the placeholder spreadsheet ID on the Google Sheets node), or swap it for a local CSV write per the Day 40 fallback.\n\n**Reference:** WEEK_06_AI_AGENTS/DAILY_TASKS/DAY_40_AI_Feedback_Loops.md",
+        "height": 300,
+        "width": 420
+      }
+    },
+    {
+      "id": "ai-feedback-trigger",
+      "name": "AI Feedback Trigger",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2,
+      "position": [
+        240,
+        380
+      ],
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "ai-feedback",
+        "options": {}
+      }
+    },
+    {
+      "id": "capture-feedback",
+      "name": "Capture Feedback",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        520,
+        380
+      ],
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "name": "user_rating",
+              "value": "={{ Number($json.rating) }}"
+            },
+            {
+              "name": "response_time_ms",
+              "value": "={{ $json.response_time_ms }}"
+            },
+            {
+              "name": "had_error",
+              "value": "={{ $json.had_error || false }}"
+            },
+            {
+              "name": "original_prompt",
+              "value": "={{ $json.original_prompt || $json.text || 'N/A' }}"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "rating-good",
+      "name": "Rating Good?",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2,
+      "position": [
+        800,
+        380
+      ],
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "c1",
+              "leftValue": "={{ $json.user_rating }}",
+              "rightValue": 4,
+              "operator": {
+                "type": "number",
+                "operation": "gte"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      }
+    },
+    {
+      "id": "mark-excellent",
+      "name": "Mark Excellent",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        1080,
+        220
+      ],
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "name": "overall_status",
+              "value": "excellent"
+            },
+            {
+              "name": "improvement_plan",
+              "value": "No action needed — response was rated highly."
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "log-feedback-row",
+      "name": "Log Feedback Row",
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.5,
+      "position": [
+        1080,
+        540
+      ],
+      "parameters": {
+        "resource": "sheet",
+        "operation": "append",
+        "documentId": {
+          "mode": "list",
+          "value": "REPLACE_WITH_YOUR_GOOGLE_SHEET_ID"
+        },
+        "sheetName": {
+          "mode": "list",
+          "value": "Feedback Log"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": [
+            {
+              "column": "timestamp",
+              "value": "={{ $now.toISO() }}"
+            },
+            {
+              "column": "rating",
+              "value": "={{ $json.user_rating }}"
+            },
+            {
+              "column": "response_time_ms",
+              "value": "={{ $json.response_time_ms }}"
+            },
+            {
+              "column": "had_error",
+              "value": "={{ $json.had_error }}"
+            },
+            {
+              "column": "original_prompt",
+              "value": "={{ $json.original_prompt }}"
+            }
+          ],
+          "matchingColumns": [],
+          "schema": []
+        },
+        "options": {}
+      }
+    },
+    {
+      "id": "generate-improvement-note",
+      "name": "Generate Improvement Note",
+      "type": "n8n-nodes-base.openAi",
+      "typeVersion": 1.3,
+      "position": [
+        1360,
+        540
+      ],
+      "parameters": {
+        "resource": "chat",
+        "operation": "create",
+        "model": "gpt-4o-mini",
+        "messages": {
+          "values": [
+            {
+              "role": "system",
+              "content": "You analyze a poor AI response's feedback and produce one specific, actionable instruction to add to the system prompt next time. Reference the actual rating, response time, and error flag in your answer — do not give generic advice."
+            },
+            {
+              "role": "user",
+              "content": "={{ 'Rating: ' + $('Capture Feedback').item.json.user_rating + '/5\\nResponse time: ' + $('Capture Feedback').item.json.response_time_ms + 'ms\\nHad error: ' + $('Capture Feedback').item.json.had_error + '\\nOriginal prompt: ' + $('Capture Feedback').item.json.original_prompt }}"
+            }
+          ]
+        },
+        "options": {
+          "temperature": 0.4,
+          "maxTokens": 300
+        }
+      }
+    },
+    {
+      "id": "build-improvement-plan",
+      "name": "Build Improvement Plan",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        1640,
+        540
+      ],
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "name": "improvement_plan",
+              "value": "={{ $json.message.content }}"
+            },
+            {
+              "name": "overall_status",
+              "value": "needs_improvement"
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "connections": {
+    "AI Feedback Trigger": {
+      "main": [
+        [
+          {
+            "node": "Capture Feedback",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Capture Feedback": {
+      "main": [
+        [
+          {
+            "node": "Rating Good?",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Rating Good?": {
+      "main": [
+        [
+          {
+            "node": "Mark Excellent",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Log Feedback Row",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Log Feedback Row": {
+      "main": [
+        [
+          {
+            "node": "Generate Improvement Note",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Generate Improvement Note": {
+      "main": [
+        [
+          {
+            "node": "Build Improvement Plan",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {},
+  "pinData": {},
+  "versionId": "1",
+  "id": "day_40_solution"
+}

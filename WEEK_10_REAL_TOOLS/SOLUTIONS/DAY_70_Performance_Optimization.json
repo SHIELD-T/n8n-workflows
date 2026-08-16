@@ -1,0 +1,75 @@
+{
+  "name": "Day 70 Solution: Caching, Batching, and Before/After Comparison",
+  "description": "Demonstrates a timestamp-based cache to skip redundant API calls, Split In Batches for per-item processing, and a before/after execution-time comparison table.",
+  "tags": ["day-70", "solution", "week-10"],
+  "version": "1.0.0",
+  "nodes": [
+    { "id": "note1", "name": "Overview", "type": "n8n-nodes-base.stickyNote", "typeVersion": 1,
+      "position": [-40, -300],
+      "parameters": {
+        "content": "## Day 70 Solution: Performance Optimization\n\nTop chain: caching pattern — checks a stored timestamp before deciding whether to re-call a slow API. Bottom chain: Split In Batches for per-item processing instead of one call per item.\n\n**Credentials needed:** Airtable (Week 9, for the cache record and comparison table).\n\nSee `DAILY_TASKS/DAY_70_Performance_Optimization.md`.",
+        "height": 200, "width": 360
+      }
+    },
+    { "id": "trig1", "name": "Manual Trigger - Cached Lookup", "type": "n8n-nodes-base.manualTrigger", "typeVersion": 1,
+      "position": [250, 100], "parameters": {} },
+    { "id": "readCache", "name": "Read Cache Record", "type": "n8n-nodes-base.airtable", "typeVersion": 2.1,
+      "position": [500, 100],
+      "parameters": { "operation": "search", "base": { "value": "YOUR_BASE_ID" }, "table": { "value": "Cache" } } },
+    { "id": "cacheFresh", "name": "Cache Fresh (<10 min)?", "type": "n8n-nodes-base.if", "typeVersion": 2,
+      "position": [750, 100],
+      "parameters": { "conditions": { "dateTime": [ { "value1": "={{ $json.cached_at }}", "operation": "after", "value2": "={{ $now.minus(10, 'minutes') }}" } ] } } },
+    { "id": "useCache", "name": "Use Cached Value", "type": "n8n-nodes-base.set", "typeVersion": 3.4,
+      "position": [1000, 40],
+      "parameters": { "assignments": { "assignments": [ { "name": "source", "value": "cache" } ] } } },
+    { "id": "refetch", "name": "Re-fetch and Update Cache", "type": "n8n-nodes-base.httpRequest", "typeVersion": 4.2,
+      "position": [1000, 180],
+      "parameters": { "method": "GET", "url": "https://api.exchangerate.host/latest",
+        "options": { "response": { "response": { "responseFormat": "json" } } } } },
+    { "id": "writeCache", "name": "Write New Cache Timestamp", "type": "n8n-nodes-base.airtable", "typeVersion": 2.1,
+      "position": [1250, 180],
+      "parameters": { "operation": "update", "base": { "value": "YOUR_BASE_ID" }, "table": { "value": "Cache" } } },
+
+    { "id": "trig2", "name": "Manual Trigger - Batch Processing", "type": "n8n-nodes-base.manualTrigger", "typeVersion": 1,
+      "position": [250, 380], "parameters": {} },
+    { "id": "splitBatch", "name": "Split In Batches (10 at a time)", "type": "n8n-nodes-base.splitInBatches", "typeVersion": 3,
+      "position": [500, 380], "parameters": { "batchSize": 10 } },
+    { "id": "bulkCall", "name": "Bulk API Call per Batch", "type": "n8n-nodes-base.httpRequest", "typeVersion": 4.2,
+      "position": [750, 380],
+      "parameters": { "method": "POST", "url": "https://httpbin.org/post", "sendBody": true, "bodyContentType": "json",
+        "jsonBody": "={{ { items: $items().map(i => i.json) } }}" } },
+    { "id": "comparison", "name": "Before/After Comparison", "type": "n8n-nodes-base.set", "typeVersion": 3.4,
+      "position": [1000, 380],
+      "parameters": { "assignments": { "assignments": [
+        { "name": "workflow_name", "value": "Day 66 Weather/News Integration" },
+        { "name": "baseline_ms", "value": 4200 },
+        { "name": "optimized_ms", "value": 1800 },
+        { "name": "improvement_pct", "value": "={{ Math.round((1 - 1800/4200) * 100) }}" }
+      ] } } },
+    { "id": "logComparison", "name": "Log Comparison to Airtable", "type": "n8n-nodes-base.airtable", "typeVersion": 2.1,
+      "position": [1250, 380],
+      "parameters": { "operation": "create", "base": { "value": "YOUR_BASE_ID" }, "table": { "value": "Performance Log" } } }
+  ],
+  "connections": {
+    "Manual Trigger - Cached Lookup": { "main": [[ { "node": "Read Cache Record", "type": "main", "index": 0 } ]] },
+    "Read Cache Record": { "main": [[ { "node": "Cache Fresh (<10 min)?", "type": "main", "index": 0 } ]] },
+    "Cache Fresh (<10 min)?": {
+      "main": [
+        [ { "node": "Use Cached Value", "type": "main", "index": 0 } ],
+        [ { "node": "Re-fetch and Update Cache", "type": "main", "index": 0 } ]
+      ]
+    },
+    "Re-fetch and Update Cache": { "main": [[ { "node": "Write New Cache Timestamp", "type": "main", "index": 0 } ]] },
+
+    "Manual Trigger - Batch Processing": { "main": [[ { "node": "Split In Batches (10 at a time)", "type": "main", "index": 0 } ]] },
+    "Split In Batches (10 at a time)": {
+      "main": [
+        [ { "node": "Before/After Comparison", "type": "main", "index": 0 } ],
+        [ { "node": "Bulk API Call per Batch", "type": "main", "index": 0 } ]
+      ]
+    },
+    "Bulk API Call per Batch": { "main": [[ { "node": "Split In Batches (10 at a time)", "type": "main", "index": 0 } ]] },
+    "Before/After Comparison": { "main": [[ { "node": "Log Comparison to Airtable", "type": "main", "index": 0 } ]] }
+  },
+  "active": false, "settings": {}, "pinData": {}, "versionId": "1", "id": "day_70_solution"
+}

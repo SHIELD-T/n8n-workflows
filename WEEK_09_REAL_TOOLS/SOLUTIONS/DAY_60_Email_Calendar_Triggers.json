@@ -1,0 +1,478 @@
+{
+  "name": "Day 60 Solution: Email & Calendar Triggers",
+  "description": "Gmail Trigger flow that classifies email urgency with AI and logs every message, plus a Google Calendar Trigger flow that reminds attendees of upcoming meetings.",
+  "tags": [
+    "week9",
+    "real-tools",
+    "gmail",
+    "calendar",
+    "triggers"
+  ],
+  "version": "1.0.0",
+  "nodes": [
+    {
+      "id": "overview-sticky",
+      "name": "Overview",
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        140,
+        20
+      ],
+      "parameters": {
+        "content": "## Day 60 Solution: Email & Calendar Triggers\n\nTwo independent trigger-based flows: a Gmail Trigger flow that classifies and logs every incoming email (top), and a Google Calendar Trigger flow that sends meeting reminders to attendees (bottom).\n\n**Credentials needed to run for real:** Gmail OAuth2, Google Calendar OAuth2 (same Google Cloud project as Gmail), Slack OAuth2, Airtable Personal Access Token, OpenAI API key.\n\nSee DAILY_TASKS/DAY_60_Email_Calendar_Triggers.md for the full task.",
+        "height": 260,
+        "width": 460
+      }
+    },
+    {
+      "id": "polling-note-sticky",
+      "name": "Polling vs Push",
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        640,
+        20
+      ],
+      "parameters": {
+        "content": "## Polling vs push\n\nBoth trigger nodes below use n8n's default **polling** mode (checks Gmail/Calendar on an interval, e.g. every 1-5 minutes). True push delivery needs Gmail push notifications via Google Cloud Pub/Sub -- lower latency, but more setup and its own failure modes to monitor. Polling is simpler and fine for most internal automations.",
+        "height": 220,
+        "width": 340
+      }
+    },
+    {
+      "id": "gmail-flow-sticky",
+      "name": "Flow 1: Gmail Trigger",
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        140,
+        300
+      ],
+      "parameters": {
+        "content": "### Email classification flow\nFires on new mail, classifies urgency with AI, alerts Slack for urgent mail, and logs every email either way.",
+        "height": 140,
+        "width": 280
+      }
+    },
+    {
+      "id": "calendar-flow-sticky",
+      "name": "Flow 2: Calendar Trigger",
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        140,
+        820
+      ],
+      "parameters": {
+        "content": "### Meeting reminder flow\nFires on event created/updated, checks for attendees, and reminds them by email.",
+        "height": 140,
+        "width": 280
+      }
+    },
+    {
+      "id": "gmail-trigger",
+      "name": "Gmail Trigger - New Email",
+      "type": "n8n-nodes-base.gmailTrigger",
+      "typeVersion": 1,
+      "position": [
+        460,
+        380
+      ],
+      "parameters": {
+        "pollTimes": {
+          "item": [
+            {
+              "mode": "everyMinute"
+            }
+          ]
+        },
+        "simple": false,
+        "filters": {}
+      }
+    },
+    {
+      "id": "gmail-extract",
+      "name": "Extract Email Fields",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        720,
+        380
+      ],
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "name": "email_from",
+              "value": "={{ $json.from?.value?.[0]?.address || $json.from }}"
+            },
+            {
+              "name": "email_subject",
+              "value": "={{ $json.subject || '(no subject)' }}"
+            },
+            {
+              "name": "email_body",
+              "value": "={{ $json.text || $json.snippet }}"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "classify-email",
+      "name": "Classify Email Urgency",
+      "type": "n8n-nodes-base.openAi",
+      "typeVersion": 1.3,
+      "position": [
+        980,
+        380
+      ],
+      "parameters": {
+        "resource": "chat",
+        "operation": "create",
+        "model": "gpt-4o-mini",
+        "messages": {
+          "values": [
+            {
+              "role": "system",
+              "content": "You classify inbound email urgency. Respond ONLY with strict JSON: {\"urgency\": \"urgent\"|\"normal\", \"summary\": \"one line summary\"}. No other text."
+            },
+            {
+              "role": "user",
+              "content": "={{ 'Subject: ' + $json.email_subject + '\\nFrom: ' + $json.email_from + '\\nBody: ' + $json.email_body }}"
+            }
+          ]
+        },
+        "options": {
+          "temperature": 0.2,
+          "maxTokens": 150
+        }
+      }
+    },
+    {
+      "id": "parse-classification",
+      "name": "Parse AI Classification",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        1240,
+        380
+      ],
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "name": "urgency",
+              "value": "={{ JSON.parse($json.choices[0].message.content).urgency }}"
+            },
+            {
+              "name": "ai_summary",
+              "value": "={{ JSON.parse($json.choices[0].message.content).summary }}"
+            },
+            {
+              "name": "email_from",
+              "value": "={{ $('Extract Email Fields').item.json.email_from }}"
+            },
+            {
+              "name": "email_subject",
+              "value": "={{ $('Extract Email Fields').item.json.email_subject }}"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "is-urgent",
+      "name": "Is Urgent",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2,
+      "position": [
+        1500,
+        380
+      ],
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "typeValidation": "strict"
+          },
+          "conditions": [
+            {
+              "id": "is-urgent-c1",
+              "leftValue": "={{ $json.urgency }}",
+              "rightValue": "urgent",
+              "operator": {
+                "type": "string",
+                "operation": "equals"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      }
+    },
+    {
+      "id": "post-urgent-alert",
+      "name": "Post Urgent Alert",
+      "type": "n8n-nodes-base.slack",
+      "typeVersion": 2.1,
+      "position": [
+        1760,
+        260
+      ],
+      "parameters": {
+        "resource": "message",
+        "operation": "post",
+        "channel": "#urgent-inbox",
+        "text": "={{ '\ud83d\udea8 Urgent email from ' + $json.email_from + '\\nSubject: ' + $json.email_subject + '\\nSummary: ' + $json.ai_summary }}",
+        "otherOptions": {}
+      }
+    },
+    {
+      "id": "log-email",
+      "name": "Log Email",
+      "type": "n8n-nodes-base.airtable",
+      "typeVersion": 2.1,
+      "position": [
+        2020,
+        380
+      ],
+      "parameters": {
+        "operation": "create",
+        "base": {
+          "__rl": true,
+          "value": "your_base_id",
+          "mode": "id"
+        },
+        "table": {
+          "__rl": true,
+          "value": "Email Log",
+          "mode": "id"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "From": "={{ $json.email_from }}",
+            "Subject": "={{ $json.email_subject }}",
+            "Urgency": "={{ $json.urgency }}",
+            "Summary": "={{ $json.ai_summary }}",
+            "Logged At": "={{ $now.toISO() }}"
+          }
+        }
+      }
+    },
+    {
+      "id": "calendar-trigger",
+      "name": "Google Calendar Trigger - Event Created/Updated",
+      "type": "n8n-nodes-base.googleCalendarTrigger",
+      "typeVersion": 1,
+      "position": [
+        460,
+        900
+      ],
+      "parameters": {
+        "calendarId": {
+          "__rl": true,
+          "value": "your_calendar_id@group.calendar.google.com",
+          "mode": "id"
+        },
+        "triggerOn": "eventUpdated",
+        "options": {}
+      }
+    },
+    {
+      "id": "check-attendees",
+      "name": "Has Attendees And Is Meeting",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2,
+      "position": [
+        720,
+        900
+      ],
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "typeValidation": "strict"
+          },
+          "conditions": [
+            {
+              "id": "attendees-c1",
+              "leftValue": "={{ $json.attendees?.length || 0 }}",
+              "rightValue": 0,
+              "operator": {
+                "type": "number",
+                "operation": "gt"
+              }
+            },
+            {
+              "id": "attendees-c2",
+              "leftValue": "={{ $json.summary }}",
+              "rightValue": "",
+              "operator": {
+                "type": "string",
+                "operation": "notEmpty",
+                "singleValue": true
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      }
+    },
+    {
+      "id": "send-reminder",
+      "name": "Send Reminder to Attendees",
+      "type": "n8n-nodes-base.gmail",
+      "typeVersion": 2.1,
+      "position": [
+        980,
+        800
+      ],
+      "parameters": {
+        "resource": "message",
+        "operation": "send",
+        "sendTo": "={{ ($json.attendees || []).map(a => a.email).join(',') }}",
+        "subject": "={{ 'Reminder: ' + $json.summary }}",
+        "message": "={{ 'This is a reminder for \\'' + $json.summary + '\\'.\\nStart: ' + $json.start.dateTime + '\\nEnd: ' + $json.end.dateTime }}",
+        "options": {}
+      }
+    },
+    {
+      "id": "skip-no-attendees",
+      "name": "Skip - No Attendees",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        980,
+        1000
+      ],
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "name": "skipped_reason",
+              "value": "No attendees on this event -- treated as a personal reminder, not a meeting."
+            },
+            {
+              "name": "event_summary",
+              "value": "={{ $json.summary }}"
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "connections": {
+    "Gmail Trigger - New Email": {
+      "main": [
+        [
+          {
+            "node": "Extract Email Fields",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Extract Email Fields": {
+      "main": [
+        [
+          {
+            "node": "Classify Email Urgency",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Classify Email Urgency": {
+      "main": [
+        [
+          {
+            "node": "Parse AI Classification",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Parse AI Classification": {
+      "main": [
+        [
+          {
+            "node": "Is Urgent",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Is Urgent": {
+      "main": [
+        [
+          {
+            "node": "Post Urgent Alert",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Log Email",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Post Urgent Alert": {
+      "main": [
+        [
+          {
+            "node": "Log Email",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Google Calendar Trigger - Event Created/Updated": {
+      "main": [
+        [
+          {
+            "node": "Has Attendees And Is Meeting",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Has Attendees And Is Meeting": {
+      "main": [
+        [
+          {
+            "node": "Send Reminder to Attendees",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Skip - No Attendees",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {},
+  "pinData": {},
+  "versionId": "1",
+  "id": "day_60_solution"
+}

@@ -1,0 +1,310 @@
+{
+  "name": "Day 21 Solution: Workflow Building Review",
+  "description": "Week 3 capstone combining dual triggers, shared validation, retry-protected HTTP call, batch processing, and a final report vs error branch.",
+  "tags": [
+    "week-03",
+    "day-21",
+    "solution"
+  ],
+  "version": "1.0.0",
+  "nodes": [
+    {
+      "id": "sticky1",
+      "name": "Sticky Note",
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        40,
+        -340
+      ],
+      "parameters": {
+        "content": "## Day 21 Solution: Workflow Building Review\n\nWeek 3 capstone: Webhook + Schedule both feed a shared normalization Set node -> IF complex validation (2 conditions AND) -> HTTP Request (retry) -> Split In Batches -> Set (complexity_score + processing_time expressions) -> Final Report. False branch reuses Day 18's error-notification pattern. Credentials needed: None — jsonplaceholder.typicode.com stays free/no-auth.\n\nSee DAILY_TASKS/DAY_21_Workflow_Building_Review.md.",
+        "height": 320,
+        "width": 520
+      }
+    },
+    {
+      "id": "webhook1",
+      "name": "Advanced Workflow Webhook",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2,
+      "position": [
+        80,
+        140
+      ],
+      "parameters": {
+        "path": "advanced-workflow",
+        "httpMethod": "POST"
+      }
+    },
+    {
+      "id": "sched1",
+      "name": "Schedule Every 12 Hours",
+      "type": "n8n-nodes-base.scheduleTrigger",
+      "typeVersion": 1.2,
+      "position": [
+        80,
+        300
+      ],
+      "parameters": {
+        "rule": {
+          "interval": [
+            {
+              "field": "hours",
+              "hoursInterval": 12
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "set1",
+      "name": "Advanced Data Processing",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        320,
+        220
+      ],
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "name": "input_data",
+              "value": "={{ $json.data || 'scheduled-run' }}"
+            },
+            {
+              "name": "processing_type",
+              "value": "advanced_workflow"
+            },
+            {
+              "name": "start_time",
+              "value": "={{ $now }}"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "if1",
+      "name": "Complex Data Validation",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2,
+      "position": [
+        560,
+        220
+      ],
+      "parameters": {
+        "conditions": {
+          "string": [
+            {
+              "value1": "={{ $json.input_data }}",
+              "operation": "isNotEmpty"
+            },
+            {
+              "value1": "={{ $json.processing_type }}",
+              "operation": "equal",
+              "value2": "advanced_workflow"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "http1",
+      "name": "Fetch Posts",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        800,
+        140
+      ],
+      "parameters": {
+        "method": "GET",
+        "url": "https://jsonplaceholder.typicode.com/posts",
+        "options": {
+          "retry": {
+            "maxTries": 3,
+            "waitBetweenTries": 2000
+          }
+        }
+      }
+    },
+    {
+      "id": "sib1",
+      "name": "Split for Batch Processing",
+      "type": "n8n-nodes-base.splitInBatches",
+      "typeVersion": 3,
+      "position": [
+        1040,
+        140
+      ],
+      "parameters": {
+        "batchSize": 5,
+        "options": {}
+      }
+    },
+    {
+      "id": "set2",
+      "name": "Compute Batch Expressions",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        1280,
+        140
+      ],
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "name": "complexity_score",
+              "value": "={{ Math.round(($json.length || 1) * 1.5) }}"
+            },
+            {
+              "name": "processing_time",
+              "value": "={{ $now.diff($('Advanced Data Processing').item.json.start_time, 'milliseconds') }}"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "set3",
+      "name": "Final Report Generation",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        1520,
+        140
+      ],
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "name": "report",
+              "value": "=Processing Type: {{ $('Advanced Data Processing').item.json.processing_type }}\\nComplexity Score: {{ $json.complexity_score }}\\nProcessing Time: {{ $json.processing_time }}ms\\nGenerated At: {{ $now }}"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "set4",
+      "name": "Validation Error",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        800,
+        320
+      ],
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "name": "error_notification",
+              "value": "=Complex Data Validation failed: input_data empty or processing_type mismatch at {{ $now }}"
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "connections": {
+    "Advanced Workflow Webhook": {
+      "main": [
+        [
+          {
+            "node": "Advanced Data Processing",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Schedule Every 12 Hours": {
+      "main": [
+        [
+          {
+            "node": "Advanced Data Processing",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Advanced Data Processing": {
+      "main": [
+        [
+          {
+            "node": "Complex Data Validation",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Complex Data Validation": {
+      "main": [
+        [
+          {
+            "node": "Fetch Posts",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Validation Error",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Fetch Posts": {
+      "main": [
+        [
+          {
+            "node": "Split for Batch Processing",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Split for Batch Processing": {
+      "main": [
+        [
+          {
+            "node": "Final Report Generation",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Compute Batch Expressions",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Compute Batch Expressions": {
+      "main": [
+        [
+          {
+            "node": "Split for Batch Processing",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {},
+  "pinData": {},
+  "versionId": "1",
+  "id": "day_21_solution"
+}

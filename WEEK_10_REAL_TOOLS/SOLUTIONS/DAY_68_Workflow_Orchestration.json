@@ -1,0 +1,103 @@
+{
+  "name": "Day 68 Solution: Worker Workflows + Orchestrator",
+  "description": "Five independently-triggerable worker workflows plus one orchestrator demonstrating sequential, parallel, and conditional Execute Workflow calls with result aggregation.",
+  "tags": ["day-68", "solution", "week-10"],
+  "version": "1.0.0",
+  "nodes": [
+    { "id": "note1", "name": "Overview", "type": "n8n-nodes-base.stickyNote", "typeVersion": 1,
+      "position": [-40, -320],
+      "parameters": {
+        "content": "## Day 68 Solution: Workflow Orchestration\n\nThis one file contains 5 worker chains (each starting with 'When Executed by Another Workflow') plus one Orchestrator chain that calls them sequentially, in parallel, and conditionally via Execute Workflow nodes.\n\n**Important:** after importing, each Execute Workflow node's workflow reference must be reselected from the dropdown in your instance (workflow IDs aren't portable between instances).\n\n**Credentials needed:** Airtable, Slack, OpenAI (all from Week 9).\n\nTo test the failure-handling requirement: point 'Worker - Log to Airtable' at an invalid base ID and re-run the Orchestrator.\n\nSee `DAILY_TASKS/DAY_68_Workflow_Orchestration.md`.",
+        "height": 260, "width": 380
+      }
+    },
+
+    { "id": "wt1", "name": "Worker - Validate Lead Trigger", "type": "n8n-nodes-base.executeWorkflowTrigger", "typeVersion": 1.1,
+      "position": [250, 100], "parameters": {} },
+    { "id": "w1set", "name": "Validate Lead Fields", "type": "n8n-nodes-base.set", "typeVersion": 3.4,
+      "position": [500, 100],
+      "parameters": { "assignments": { "assignments": [
+        { "name": "is_valid", "value": "={{ !!$json.email && !!$json.name }}" },
+        { "name": "lead_score", "value": "={{ $json.company ? 80 : 40 }}" }
+      ] } } },
+
+    { "id": "wt2", "name": "Worker - Enrich Lead Trigger", "type": "n8n-nodes-base.executeWorkflowTrigger", "typeVersion": 1.1,
+      "position": [250, 260], "parameters": {} },
+    { "id": "w2ai", "name": "Enrich Lead via AI", "type": "n8n-nodes-base.openAi", "typeVersion": 1.3,
+      "position": [500, 260],
+      "parameters": { "resource": "chat", "operation": "create", "model": "gpt-4",
+        "messages": { "values": [ { "role": "user", "content": "={{ 'Summarize this lead in one sentence: ' + JSON.stringify($json) }}" } ] } } },
+
+    { "id": "wt3", "name": "Worker - Log to Airtable Trigger", "type": "n8n-nodes-base.executeWorkflowTrigger", "typeVersion": 1.1,
+      "position": [250, 420], "parameters": {} },
+    { "id": "w3airtable", "name": "Log Interaction", "type": "n8n-nodes-base.airtable", "typeVersion": 2.1,
+      "position": [500, 420],
+      "parameters": { "operation": "create", "base": { "value": "YOUR_BASE_ID" }, "table": { "value": "Lead Interactions" } } },
+
+    { "id": "wt4", "name": "Worker - Post Slack Update Trigger", "type": "n8n-nodes-base.executeWorkflowTrigger", "typeVersion": 1.1,
+      "position": [250, 580], "parameters": {} },
+    { "id": "w4slack", "name": "Post Slack Update", "type": "n8n-nodes-base.slack", "typeVersion": 2.1,
+      "position": [500, 580],
+      "parameters": { "resource": "message", "operation": "post", "channel": "#leads",
+        "text": "={{ 'New lead processed: ' + $json.name }}" } },
+
+    { "id": "wt5", "name": "Worker - Notify Sales Trigger", "type": "n8n-nodes-base.executeWorkflowTrigger", "typeVersion": 1.1,
+      "position": [250, 740], "parameters": {} },
+    { "id": "w5slack", "name": "Notify Sales Team", "type": "n8n-nodes-base.slack", "typeVersion": 2.1,
+      "position": [500, 740],
+      "parameters": { "resource": "message", "operation": "post", "channel": "#sales",
+        "text": "={{ '🔥 High-score lead ready for follow-up: ' + $json.name + ' (score ' + $json.lead_score + ')' }}" } },
+
+    { "id": "orchTrigger", "name": "Manual Trigger", "type": "n8n-nodes-base.manualTrigger", "typeVersion": 1,
+      "position": [900, 400], "parameters": {} },
+    { "id": "orchW1", "name": "Call Validate Lead", "type": "n8n-nodes-base.executeWorkflow", "typeVersion": 1.2,
+      "position": [1150, 400],
+      "parameters": { "workflowId": { "value": "WORKER_VALIDATE_LEAD_ID", "mode": "list", "cachedResultName": "Worker - Validate Lead Trigger" } } },
+    { "id": "orchW2", "name": "Call Enrich Lead", "type": "n8n-nodes-base.executeWorkflow", "typeVersion": 1.2,
+      "position": [1400, 400],
+      "parameters": { "workflowId": { "value": "WORKER_ENRICH_LEAD_ID", "mode": "list", "cachedResultName": "Worker - Enrich Lead Trigger" } } },
+    { "id": "orchW3", "name": "Call Log to Airtable", "type": "n8n-nodes-base.executeWorkflow", "typeVersion": 1.2,
+      "position": [1650, 300],
+      "parameters": { "workflowId": { "value": "WORKER_LOG_AIRTABLE_ID", "mode": "list", "cachedResultName": "Worker - Log to Airtable Trigger" } } },
+    { "id": "orchW4", "name": "Call Post Slack Update", "type": "n8n-nodes-base.executeWorkflow", "typeVersion": 1.2,
+      "position": [1650, 500],
+      "parameters": { "workflowId": { "value": "WORKER_SLACK_UPDATE_ID", "mode": "list", "cachedResultName": "Worker - Post Slack Update Trigger" } } },
+    { "id": "orchIf", "name": "Lead Score Above Threshold?", "type": "n8n-nodes-base.if", "typeVersion": 2,
+      "position": [1900, 400],
+      "parameters": { "conditions": { "number": [ { "value1": "={{ $('Call Validate Lead').item.json.lead_score }}", "operation": "largerEqual", "value2": 70 } ] } } },
+    { "id": "orchW5", "name": "Call Notify Sales (Conditional)", "type": "n8n-nodes-base.executeWorkflow", "typeVersion": 1.2,
+      "position": [2150, 320],
+      "parameters": { "workflowId": { "value": "WORKER_NOTIFY_SALES_ID", "mode": "list", "cachedResultName": "Worker - Notify Sales Trigger" } } },
+    { "id": "orchSkip", "name": "Skip - Score Too Low", "type": "n8n-nodes-base.noOp", "typeVersion": 1,
+      "position": [2150, 480], "parameters": {} },
+    { "id": "orchSummary", "name": "Aggregate Run Summary", "type": "n8n-nodes-base.set", "typeVersion": 3.4,
+      "position": [2400, 400],
+      "parameters": { "assignments": { "assignments": [
+        { "name": "workers_run", "value": "={{ ['Validate Lead','Enrich Lead','Log to Airtable','Post Slack Update'] }}" },
+        { "name": "sales_notified", "value": "={{ $('Lead Score Above Threshold?').item.json !== undefined }}" },
+        { "name": "run_completed_at", "value": "={{ $now }}" }
+      ] } } }
+  ],
+  "connections": {
+    "Worker - Validate Lead Trigger": { "main": [[ { "node": "Validate Lead Fields", "type": "main", "index": 0 } ]] },
+    "Worker - Enrich Lead Trigger": { "main": [[ { "node": "Enrich Lead via AI", "type": "main", "index": 0 } ]] },
+    "Worker - Log to Airtable Trigger": { "main": [[ { "node": "Log Interaction", "type": "main", "index": 0 } ]] },
+    "Worker - Post Slack Update Trigger": { "main": [[ { "node": "Post Slack Update", "type": "main", "index": 0 } ]] },
+    "Worker - Notify Sales Trigger": { "main": [[ { "node": "Notify Sales Team", "type": "main", "index": 0 } ]] },
+
+    "Manual Trigger": { "main": [[ { "node": "Call Validate Lead", "type": "main", "index": 0 } ]] },
+    "Call Validate Lead": { "main": [[ { "node": "Call Enrich Lead", "type": "main", "index": 0 } ]] },
+    "Call Enrich Lead": { "main": [[ { "node": "Call Log to Airtable", "type": "main", "index": 0 }, { "node": "Call Post Slack Update", "type": "main", "index": 0 } ]] },
+    "Call Log to Airtable": { "main": [[ { "node": "Lead Score Above Threshold?", "type": "main", "index": 0 } ]] },
+    "Call Post Slack Update": { "main": [[ { "node": "Lead Score Above Threshold?", "type": "main", "index": 0 } ]] },
+    "Lead Score Above Threshold?": {
+      "main": [
+        [ { "node": "Call Notify Sales (Conditional)", "type": "main", "index": 0 } ],
+        [ { "node": "Skip - Score Too Low", "type": "main", "index": 0 } ]
+      ]
+    },
+    "Call Notify Sales (Conditional)": { "main": [[ { "node": "Aggregate Run Summary", "type": "main", "index": 0 } ]] },
+    "Skip - Score Too Low": { "main": [[ { "node": "Aggregate Run Summary", "type": "main", "index": 0 } ]] }
+  },
+  "active": false, "settings": {}, "pinData": {}, "versionId": "1", "id": "day_68_solution"
+}

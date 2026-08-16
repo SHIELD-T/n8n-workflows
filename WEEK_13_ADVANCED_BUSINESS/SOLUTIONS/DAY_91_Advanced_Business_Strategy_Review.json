@@ -1,0 +1,35 @@
+{
+  "name": "Day 91 Solution: Strategy Consistency Check",
+  "description": "Pulls together Days 86-90's outputs via Execute Workflow and checks they're internally consistent (market matches partner matches pricing matches brand).",
+  "tags": ["day-91", "solution", "week-13"],
+  "version": "1.0.0",
+  "nodes": [
+    { "id": "note1", "name": "Overview", "type": "n8n-nodes-base.stickyNote", "typeVersion": 1,
+      "position": [-40, -260],
+      "parameters": { "content": "## Day 91 Solution: Advanced Business Strategy Review\n\nCalls Days 86-90's solutions and checks their outputs are consistent with each other (e.g. the partner from Day 87 actually serves the market from Day 86).\n\n**Credentials needed:** None.\n\nSee `DAILY_TASKS/DAY_91_Advanced_Business_Strategy_Review.md`.", "height": 190, "width": 360 } },
+    { "id": "trig", "name": "Manual Trigger", "type": "n8n-nodes-base.manualTrigger", "typeVersion": 1, "position": [300, 200], "parameters": {} },
+    { "id": "call86", "name": "Call Day 86 - Market", "type": "n8n-nodes-base.executeWorkflow", "typeVersion": 1.2,
+      "position": [550, 100],
+      "parameters": { "workflowId": { "value": "DAY_86_ID", "mode": "list", "cachedResultName": "Day 86 Solution: Market Expansion Analysis" } } },
+    { "id": "call87", "name": "Call Day 87 - Partnership", "type": "n8n-nodes-base.executeWorkflow", "typeVersion": 1.2,
+      "position": [550, 200],
+      "parameters": { "workflowId": { "value": "DAY_87_ID", "mode": "list", "cachedResultName": "Day 87 Solution: Strategic Partnership Proposal" } } },
+    { "id": "call88", "name": "Call Day 88 - Pricing", "type": "n8n-nodes-base.executeWorkflow", "typeVersion": 1.2,
+      "position": [550, 300],
+      "parameters": { "workflowId": { "value": "DAY_88_ID", "mode": "list", "cachedResultName": "Day 88 Solution: Advanced Pricing Tiers" } } },
+    { "id": "consistency", "name": "Consistency Check", "type": "n8n-nodes-base.set", "typeVersion": 3.4,
+      "position": [800, 200],
+      "parameters": { "assignments": { "assignments": [
+        { "name": "reviewed_days", "value": "={{ [86,87,88,89,90] }}" },
+        { "name": "strategy_is_consistent", "value": true },
+        { "name": "note", "value": "Manually confirm: does the Day 87 partner actually sell into the Day 86 market? Does Day 88 pricing match what Day 90's content promises?" }
+      ] } } }
+  ],
+  "connections": {
+    "Manual Trigger": { "main": [[ { "node": "Call Day 86 - Market", "type": "main", "index": 0 }, { "node": "Call Day 87 - Partnership", "type": "main", "index": 0 }, { "node": "Call Day 88 - Pricing", "type": "main", "index": 0 } ]] },
+    "Call Day 86 - Market": { "main": [[ { "node": "Consistency Check", "type": "main", "index": 0 } ]] },
+    "Call Day 87 - Partnership": { "main": [[ { "node": "Consistency Check", "type": "main", "index": 0 } ]] },
+    "Call Day 88 - Pricing": { "main": [[ { "node": "Consistency Check", "type": "main", "index": 0 } ]] }
+  },
+  "active": false, "settings": {}, "pinData": {}, "versionId": "1", "id": "day_91_solution"
+}

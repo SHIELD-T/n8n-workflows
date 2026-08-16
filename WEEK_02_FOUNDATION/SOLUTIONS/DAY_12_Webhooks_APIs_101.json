@@ -1,0 +1,334 @@
+{
+  "name": "Day 12 Solution: Webhooks & APIs 101",
+  "description": "HTTP Request patterns: no-auth call, retry-on-fail against a 500 endpoint, header/query API-key auth, 429 detection, and Split In Batches processing.",
+  "tags": [
+    "week-02",
+    "day-12",
+    "solution"
+  ],
+  "version": "1.0.0",
+  "nodes": [
+    {
+      "id": "sticky1",
+      "name": "Sticky Note",
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        40,
+        -320
+      ],
+      "parameters": {
+        "content": "## Day 12 Solution: Webhooks & APIs 101\n\nManual Trigger fans out to: a no-auth GET, a retry-configured GET against a guaranteed-500 endpoint, a header-auth GET (OpenWeatherMap), a status-code IF check for 429, and a Split In Batches loop over manually-set items. Credentials needed: One free-tier API key (e.g. OpenWeatherMap) for the header-auth call; everything else needs no auth.\n\nSee DAILY_TASKS/DAY_12_Webhooks_APIs_101.md.",
+        "height": 300,
+        "width": 500
+      }
+    },
+    {
+      "id": "trigger1",
+      "name": "Manual Trigger",
+      "type": "n8n-nodes-base.manualTrigger",
+      "typeVersion": 1,
+      "position": [
+        80,
+        200
+      ],
+      "parameters": {}
+    },
+    {
+      "id": "http1",
+      "name": "Get Public Data",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        320,
+        40
+      ],
+      "parameters": {
+        "method": "GET",
+        "url": "https://jsonplaceholder.typicode.com/users/1"
+      }
+    },
+    {
+      "id": "http2",
+      "name": "Get With Retry",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        320,
+        200
+      ],
+      "parameters": {
+        "method": "GET",
+        "url": "https://httpbin.org/status/500",
+        "options": {
+          "timeout": 10000,
+          "response": {
+            "response": {
+              "neverError": true
+            }
+          },
+          "retry": {
+            "maxTries": 3,
+            "waitBetweenTries": 2000
+          }
+        }
+      }
+    },
+    {
+      "id": "http3",
+      "name": "Get With API Key",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        320,
+        360
+      ],
+      "parameters": {
+        "method": "GET",
+        "url": "https://api.openweathermap.org/data/2.5/weather",
+        "sendQuery": true,
+        "queryParameters": {
+          "parameters": [
+            {
+              "name": "q",
+              "value": "London"
+            },
+            {
+              "name": "appid",
+              "value": "your_openweathermap_api_key"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "if1",
+      "name": "Handle Rate Limit",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2,
+      "position": [
+        560,
+        360
+      ],
+      "parameters": {
+        "conditions": {
+          "number": [
+            {
+              "value1": "={{ $json.statusCode }}",
+              "operation": "equal",
+              "value2": 429
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "set1",
+      "name": "Log Rate Limit",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        800,
+        320
+      ],
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "name": "note",
+              "value": "rate limited, would retry"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "set2",
+      "name": "Set Batch Items",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        320,
+        520
+      ],
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "name": "items",
+              "value": "={{ [{id:1},{id:2},{id:3},{id:4},{id:5}] }}"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "code1",
+      "name": "Split Items to List",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        560,
+        520
+      ],
+      "parameters": {
+        "mode": "runOnceForAllItems",
+        "jsCode": "return items[0].json.items.map(i => ({ json: i }));"
+      }
+    },
+    {
+      "id": "sib1",
+      "name": "Batch Items",
+      "type": "n8n-nodes-base.splitInBatches",
+      "typeVersion": 3,
+      "position": [
+        800,
+        520
+      ],
+      "parameters": {
+        "batchSize": 2,
+        "options": {}
+      }
+    },
+    {
+      "id": "http4",
+      "name": "Fetch Item Detail",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        1040,
+        520
+      ],
+      "parameters": {
+        "method": "GET",
+        "url": "https://jsonplaceholder.typicode.com/posts/{{ $json.id }}"
+      }
+    },
+    {
+      "id": "http5",
+      "name": "Deliberate Typo URL",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        320,
+        700
+      ],
+      "parameters": {
+        "method": "GET",
+        "url": "https://jsonplaceholder.typicode.com/postsxyz",
+        "options": {
+          "response": {
+            "response": {
+              "neverError": true
+            }
+          }
+        }
+      }
+    }
+  ],
+  "connections": {
+    "Manual Trigger": {
+      "main": [
+        [
+          {
+            "node": "Get Public Data",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Get With Retry",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Get With API Key",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Set Batch Items",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Deliberate Typo URL",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get With API Key": {
+      "main": [
+        [
+          {
+            "node": "Handle Rate Limit",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Handle Rate Limit": {
+      "main": [
+        [
+          {
+            "node": "Log Rate Limit",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Set Batch Items": {
+      "main": [
+        [
+          {
+            "node": "Split Items to List",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Split Items to List": {
+      "main": [
+        [
+          {
+            "node": "Batch Items",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Batch Items": {
+      "main": [
+        [],
+        [
+          {
+            "node": "Fetch Item Detail",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Fetch Item Detail": {
+      "main": [
+        [
+          {
+            "node": "Batch Items",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {},
+  "pinData": {},
+  "versionId": "1",
+  "id": "day_12_solution"
+}

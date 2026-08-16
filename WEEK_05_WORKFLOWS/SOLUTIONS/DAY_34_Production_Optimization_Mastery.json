@@ -1,0 +1,271 @@
+{
+  "name": "Day 34 Solution: Production Optimization Mastery",
+  "description": "Weighted 0-100 optimization score (divide-by-zero guarded) branching into 4 real optimization actions only when below threshold, converging to one report.",
+  "tags": [
+    "week-05",
+    "day-34",
+    "solution"
+  ],
+  "version": "1.0.0",
+  "nodes": [
+    {
+      "id": "sticky1",
+      "name": "Sticky Note",
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        40,
+        -340
+      ],
+      "parameters": {
+        "content": "## Day 34 Solution: Production Optimization Mastery\n\nWebhook -> Code (weighted 0-100 optimization score, guarded against divide-by-zero) -> IF score<80 -> 4 real Set-node fixes (trim/dedupe/round/flag) -> both branches converge on Generate Optimization Report. Test with a bad-metrics and a good-metrics payload to see the 4 nodes execute vs skip. Credentials needed: None.\n\nSee DAILY_TASKS/DAY_34_Production_Optimization_Mastery.md.",
+        "height": 320,
+        "width": 540
+      }
+    },
+    {
+      "id": "webhook1",
+      "name": "Optimization Trigger",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2,
+      "position": [
+        80,
+        200
+      ],
+      "parameters": {
+        "path": "advanced-optimization",
+        "httpMethod": "POST"
+      }
+    },
+    {
+      "id": "code1",
+      "name": "Compute Optimization Score",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        320,
+        200
+      ],
+      "parameters": {
+        "mode": "runOnceForAllItems",
+        "jsCode": "const j = items[0].json;\nconst cpu = j.cpu_percentage || 0;\nconst mem = j.memory_percentage || 0;\nconst disk = j.disk_percentage || 0;\nconst latency = Math.max(1, j.network_latency_ms || 1);\nconst respTime = Math.max(1, j.avg_response_time_ms || 1);\nconst score = Math.round(100 - (cpu * 0.3 + mem * 0.25 + disk * 0.15 + Math.min(latency / 10, 15) + Math.min(respTime / 20, 15)));\nreturn [{ json: { ...j, optimization_score: Math.max(0, Math.min(100, score)) } }];"
+      }
+    },
+    {
+      "id": "if1",
+      "name": "Below Threshold?",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2,
+      "position": [
+        560,
+        200
+      ],
+      "parameters": {
+        "conditions": {
+          "number": [
+            {
+              "value1": "={{ Number($json.optimization_score) }}",
+              "operation": "smaller",
+              "value2": 80
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "set1",
+      "name": "Trim Payload",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        800,
+        20
+      ],
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "name": "trim_action",
+              "value": "={{ 'trimmed ' + JSON.stringify($json).slice(0, 50) + '...' }}"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "set2",
+      "name": "Dedupe Fields",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        800,
+        120
+      ],
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "name": "dedupe_action",
+              "value": "={{ [...new Set(Object.keys($json))].join(',') }}"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "set3",
+      "name": "Round Numbers",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        800,
+        220
+      ],
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "name": "rounded_score",
+              "value": "={{ Math.round($json.optimization_score) }}"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "set4",
+      "name": "Flag for Scale Review",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        800,
+        320
+      ],
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "name": "scale_review_flagged",
+              "value": true
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "set5",
+      "name": "Generate Optimization Report",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        1040,
+        200
+      ],
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "name": "optimization_ran",
+              "value": "={{ $('Below Threshold?').item.json.optimization_score < 80 }}"
+            },
+            {
+              "name": "final_score",
+              "value": "={{ $('Compute Optimization Score').item.json.optimization_score }}"
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "connections": {
+    "Optimization Trigger": {
+      "main": [
+        [
+          {
+            "node": "Compute Optimization Score",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Compute Optimization Score": {
+      "main": [
+        [
+          {
+            "node": "Below Threshold?",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Below Threshold?": {
+      "main": [
+        [
+          {
+            "node": "Trim Payload",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Generate Optimization Report",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Trim Payload": {
+      "main": [
+        [
+          {
+            "node": "Dedupe Fields",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Dedupe Fields": {
+      "main": [
+        [
+          {
+            "node": "Round Numbers",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Round Numbers": {
+      "main": [
+        [
+          {
+            "node": "Flag for Scale Review",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Flag for Scale Review": {
+      "main": [
+        [
+          {
+            "node": "Generate Optimization Report",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {},
+  "pinData": {},
+  "versionId": "1",
+  "id": "day_34_solution"
+}

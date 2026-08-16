@@ -1,0 +1,476 @@
+{
+  "name": "Day 57 Solution: AI Agents Capstone Review",
+  "description": "A 3-workflow capstone system (intake, decision, reporting) chained via HTTP calls to each workflow's own production webhook, plus a maintenance health-check layer and a Day 53-style batching/throttling scaling layer, all represented in one importable file.",
+  "tags": ["week8", "ai-agents", "capstone"],
+  "version": "1.0.0",
+  "nodes": [
+    {
+      "id": "overview-sticky",
+      "name": "Overview",
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [140, 20],
+      "parameters": {
+        "content": "## Day 57 Solution: AI Agents Capstone Review\n\nThis single importable file represents a 3-workflow production system: Intake → Process/Decision → Reporting, chained the way 3 separately-deployed n8n workflows would call each other's production webhooks, plus a maintenance health-check layer (Day 52) and a batched/throttled scaling layer (Day 53) on the intake side.\n\n**Credentials needed to run for real:** OpenAI API key. None needed to inspect the structure.\n\nSee DAILY_TASKS/DAY_57_AI_Agents_Capstone_Review.md for the full task.",
+        "height": 280,
+        "width": 460
+      }
+    },
+    {
+      "id": "section-intake-sticky",
+      "name": "Section: Workflow 1 Intake",
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [180, 560],
+      "parameters": {
+        "content": "## Workflow 1: Intake (+ Scaling Layer)\n\nAccepts `{\"items\":[...]}`, validates it's a non-empty array, then batches items 5-at-a-time through Split In Batches with a throttling Wait before each call to Workflow 2 — the same pattern as the Day 53 solution, applied here to the capstone's entry point so a 10+ item payload doesn't overwhelm the chain.",
+        "height": 200,
+        "width": 340
+      }
+    },
+    {
+      "id": "capstone-intake-webhook",
+      "name": "Capstone Intake",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2,
+      "position": [240, 400],
+      "parameters": {
+        "path": "capstone-intake",
+        "httpMethod": "POST"
+      }
+    },
+    {
+      "id": "validate-intake-input",
+      "name": "Validate Intake Input",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2,
+      "position": [490, 400],
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "typeValidation": "loose"
+          },
+          "conditions": [
+            {
+              "id": "cond-items-nonempty-array",
+              "leftValue": "={{ Array.isArray($json.items) && $json.items.length > 0 }}",
+              "rightValue": true,
+              "operator": {
+                "type": "boolean",
+                "operation": "true",
+                "singleValue": true
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      }
+    },
+    {
+      "id": "intake-validation-error",
+      "name": "Intake Validation Error",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [740, 620],
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "name": "status",
+              "value": "error"
+            },
+            {
+              "name": "message",
+              "value": "Request must include a non-empty 'items' array."
+            },
+            {
+              "name": "workflow",
+              "value": "AI Capstone System - Intake"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "init-intake-batch",
+      "name": "Init Intake Batch",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [740, 400],
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "name": "intake_id",
+              "value": "={{ $now.format('yyyyLLddHHmmss') }}"
+            },
+            {
+              "name": "items",
+              "value": "={{ $json.items }}"
+            },
+            {
+              "name": "total_item_count",
+              "value": "={{ $json.items.length }}"
+            },
+            {
+              "name": "batch_start_time",
+              "value": "={{ $now }}"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "intake-split-in-batches",
+      "name": "Intake Split In Batches",
+      "type": "n8n-nodes-base.splitInBatches",
+      "typeVersion": 3,
+      "position": [990, 400],
+      "parameters": {
+        "batchSize": 5,
+        "options": {}
+      }
+    },
+    {
+      "id": "intake-throttle-wait",
+      "name": "Intake Throttle Wait",
+      "type": "n8n-nodes-base.wait",
+      "typeVersion": 1.1,
+      "position": [1240, 560],
+      "parameters": {
+        "amount": 2,
+        "unit": "seconds"
+      }
+    },
+    {
+      "id": "call-workflow2-process",
+      "name": "Call Workflow 2: Process (placeholder)",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [1490, 560],
+      "parameters": {
+        "method": "POST",
+        "url": "https://your-n8n-instance.example.com/webhook/capstone-process",
+        "sendBody": true,
+        "bodyContentType": "json",
+        "jsonBody": "={{ { \"intake_id\": $('Init Intake Batch').item.json.intake_id, \"batch_item\": $json } }}"
+      }
+    },
+    {
+      "id": "synthesize-decision",
+      "name": "Synthesize Decision",
+      "type": "n8n-nodes-base.openAi",
+      "typeVersion": 1.3,
+      "position": [1240, 240],
+      "parameters": {
+        "resource": "chat",
+        "operation": "create",
+        "model": "gpt-4o-mini",
+        "messages": {
+          "values": [
+            {
+              "role": "system",
+              "content": "You are Workflow 2's decision-making agent. All batches have been sent on to processing. Produce one short overall decision/recommendation for the whole intake batch."
+            },
+            {
+              "role": "user",
+              "content": "={{ 'Intake ID: ' + $json.intake_id + '\\nTotal items processed: ' + $json.total_item_count }}"
+            }
+          ]
+        },
+        "options": {
+          "temperature": 0.3,
+          "maxTokens": 400
+        }
+      }
+    },
+    {
+      "id": "section-process-sticky",
+      "name": "Section: Workflows 2 & 3 (placeholder)",
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [1490, 20],
+      "parameters": {
+        "content": "## ⚠️ Workflow 2 & 3: Chained Webhooks (placeholder)\n\nIn real use, Workflow 2 (Process/Decision) and Workflow 3 (Reporting) would be two **separately deployed, separately Active** n8n workflows, each with its own production webhook. This file simulates that chain with HTTP Request calls to placeholder URLs (`.../webhook/capstone-process`, `.../webhook/capstone-report`) — replace them with your real Day 51-style production URLs once all 3 workflows are actually deployed.\n\nThe **Synthesize Decision** OpenAI node stands in for the AI logic that would live inside Workflow 2.",
+        "height": 260,
+        "width": 400
+      }
+    },
+    {
+      "id": "call-workflow3-report",
+      "name": "Call Workflow 3: Report (placeholder)",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [1490, 240],
+      "parameters": {
+        "method": "POST",
+        "url": "https://your-n8n-instance.example.com/webhook/capstone-report",
+        "sendBody": true,
+        "bodyContentType": "json",
+        "jsonBody": "={{ { \"intake_id\": $('Init Intake Batch').item.json.intake_id, \"decision\": $json.choices[0].message.content, \"total_item_count\": $('Init Intake Batch').item.json.total_item_count } }}"
+      }
+    },
+    {
+      "id": "final-system-report",
+      "name": "Final System Report",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [1740, 240],
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "name": "intake_id",
+              "value": "={{ $('Init Intake Batch').item.json.intake_id }}"
+            },
+            {
+              "name": "total_items",
+              "value": "={{ $('Init Intake Batch').item.json.total_item_count }}"
+            },
+            {
+              "name": "ai_decision",
+              "value": "={{ $('Synthesize Decision').item.json.choices[0].message.content }}"
+            },
+            {
+              "name": "reporting_status",
+              "value": "sent_to_workflow_3"
+            },
+            {
+              "name": "completed_at",
+              "value": "={{ $now.toISO() }}"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "section-maintenance-sticky",
+      "name": "Section: Maintenance Layer",
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [180, 780],
+      "parameters": {
+        "content": "## Maintenance Layer (Day 52 pattern)\n\nA separate Schedule Trigger health-checks all 3 chained production webhooks (Intake, Process, Report) and aggregates one combined health report — the same pattern as the Day 52 solution, extended to 3 targets instead of 1.",
+        "height": 160,
+        "width": 340
+      }
+    },
+    {
+      "id": "capstone-health-schedule",
+      "name": "Capstone Health Check Schedule",
+      "type": "n8n-nodes-base.scheduleTrigger",
+      "typeVersion": 1.2,
+      "position": [240, 980],
+      "parameters": {
+        "rule": {
+          "interval": [
+            {
+              "field": "hours",
+              "hoursInterval": 1
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "health-check-intake",
+      "name": "Health Check: Intake",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [520, 880],
+      "parameters": {
+        "method": "POST",
+        "url": "https://your-n8n-instance.example.com/webhook/capstone-intake",
+        "sendBody": true,
+        "bodyContentType": "json",
+        "jsonBody": "={{ { \"items\": [ { \"text\": \"health-check ping\" } ] } }}",
+        "options": {
+          "response": {
+            "response": {
+              "responseFormat": "json"
+            }
+          },
+          "timeout": 10000
+        }
+      }
+    },
+    {
+      "id": "health-check-process",
+      "name": "Health Check: Process",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [520, 980],
+      "parameters": {
+        "method": "POST",
+        "url": "https://your-n8n-instance.example.com/webhook/capstone-process",
+        "sendBody": true,
+        "bodyContentType": "json",
+        "jsonBody": "={{ { \"ping\": true } }}",
+        "options": {
+          "response": {
+            "response": {
+              "responseFormat": "json"
+            }
+          },
+          "timeout": 10000
+        }
+      }
+    },
+    {
+      "id": "health-check-report",
+      "name": "Health Check: Report",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [520, 1080],
+      "parameters": {
+        "method": "POST",
+        "url": "https://your-n8n-instance.example.com/webhook/capstone-report",
+        "sendBody": true,
+        "bodyContentType": "json",
+        "jsonBody": "={{ { \"ping\": true } }}",
+        "options": {
+          "response": {
+            "response": {
+              "responseFormat": "json"
+            }
+          },
+          "timeout": 10000
+        }
+      }
+    },
+    {
+      "id": "aggregate-health-report",
+      "name": "Aggregate Health Report",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [780, 980],
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "name": "combined_health_report",
+              "value": "={{ { \"intake\": $('Health Check: Intake').item.json, \"process\": $('Health Check: Process').item.json, \"report\": $('Health Check: Report').item.json } }}"
+            },
+            {
+              "name": "checked_at",
+              "value": "={{ $now.toISO() }}"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "system-status-sticky",
+      "name": "System Status",
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [990, 780],
+      "parameters": {
+        "content": "## System Status\n\n**Deployed:** 3 chained workflows (Intake, Process/Decision, Reporting), each intended to run Active with its own production webhook, called via HTTP Request the way separately-deployed n8n workflows chain together.\n\n**Monitored:** A Schedule Trigger health-checks all 3 production webhooks hourly and aggregates one combined health report (maintenance layer, Day 52 pattern).\n\n**Documented:** Every section carries a Sticky Note explaining its role; the input/output contracts follow the same shape established in the Day 51/54/56 solutions.\n\n**Real gaps before client handoff:**\n1. **No real authentication on the chained webhooks** — anyone who guesses/finds the URLs can call them; production would need header-based auth or n8n's built-in webhook authentication.\n2. **No persistent logging store** — the audit trail relies on n8n's own execution history rather than an external log (Google Sheets/Airtable/DB), so history is lost if executions are pruned.",
+        "height": 300,
+        "width": 460
+      }
+    }
+  ],
+  "connections": {
+    "Capstone Intake": {
+      "main": [
+        [
+          { "node": "Validate Intake Input", "type": "main", "index": 0 }
+        ]
+      ]
+    },
+    "Validate Intake Input": {
+      "main": [
+        [
+          { "node": "Init Intake Batch", "type": "main", "index": 0 }
+        ],
+        [
+          { "node": "Intake Validation Error", "type": "main", "index": 0 }
+        ]
+      ]
+    },
+    "Init Intake Batch": {
+      "main": [
+        [
+          { "node": "Intake Split In Batches", "type": "main", "index": 0 }
+        ]
+      ]
+    },
+    "Intake Split In Batches": {
+      "main": [
+        [
+          { "node": "Synthesize Decision", "type": "main", "index": 0 }
+        ],
+        [
+          { "node": "Intake Throttle Wait", "type": "main", "index": 0 }
+        ]
+      ]
+    },
+    "Intake Throttle Wait": {
+      "main": [
+        [
+          { "node": "Call Workflow 2: Process (placeholder)", "type": "main", "index": 0 }
+        ]
+      ]
+    },
+    "Call Workflow 2: Process (placeholder)": {
+      "main": [
+        [
+          { "node": "Intake Split In Batches", "type": "main", "index": 0 }
+        ]
+      ]
+    },
+    "Synthesize Decision": {
+      "main": [
+        [
+          { "node": "Call Workflow 3: Report (placeholder)", "type": "main", "index": 0 }
+        ]
+      ]
+    },
+    "Call Workflow 3: Report (placeholder)": {
+      "main": [
+        [
+          { "node": "Final System Report", "type": "main", "index": 0 }
+        ]
+      ]
+    },
+    "Capstone Health Check Schedule": {
+      "main": [
+        [
+          { "node": "Health Check: Intake", "type": "main", "index": 0 },
+          { "node": "Health Check: Process", "type": "main", "index": 0 },
+          { "node": "Health Check: Report", "type": "main", "index": 0 }
+        ]
+      ]
+    },
+    "Health Check: Intake": {
+      "main": [
+        [
+          { "node": "Aggregate Health Report", "type": "main", "index": 0 }
+        ]
+      ]
+    },
+    "Health Check: Process": {
+      "main": [
+        [
+          { "node": "Aggregate Health Report", "type": "main", "index": 0 }
+        ]
+      ]
+    },
+    "Health Check: Report": {
+      "main": [
+        [
+          { "node": "Aggregate Health Report", "type": "main", "index": 0 }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {},
+  "pinData": {},
+  "versionId": "1",
+  "id": "day_57_solution"
+}

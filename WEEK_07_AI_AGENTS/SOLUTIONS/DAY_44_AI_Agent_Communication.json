@@ -1,0 +1,454 @@
+{
+  "name": "Day 44 Solution: AI Agent Communication",
+  "description": "Agent-to-agent communication hub: validates message envelopes and routes request/response/broadcast messages to their handlers before reporting on the exchange.",
+  "tags": [
+    "week-07",
+    "ai-agents",
+    "day-44",
+    "communication",
+    "solution"
+  ],
+  "version": "1.0.0",
+  "nodes": [
+    {
+      "id": "sticky-overview",
+      "name": "Overview",
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        240,
+        -260
+      ],
+      "parameters": {
+        "content": "## Day 44 Solution: AI Agent Communication\n\nSimulates inter-agent messaging: validates a message envelope, then routes it to request/response/broadcast handlers based on message_type before generating a communication report.\n\n**Credentials needed:** None for this workflow — it uses only webhook, set, if, and httpRequest nodes. The httpRequest nodes call fake placeholder domains and need no real credential.\n\nSee DAILY_TASKS/DAY_44_AI_Agent_Communication.md for the full lesson this solves.",
+        "height": 280,
+        "width": 480
+      }
+    },
+    {
+      "id": "agent-communication-hub",
+      "name": "Agent Communication Hub",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2,
+      "position": [
+        240,
+        300
+      ],
+      "parameters": {
+        "path": "agent-communication",
+        "httpMethod": "POST"
+      }
+    },
+    {
+      "id": "initialize-communication-system",
+      "name": "Initialize Communication System",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        480,
+        300
+      ],
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "name": "communication_session_id",
+              "value": "={{ $now.format('YYYYMMDDHHmmss') }}"
+            },
+            {
+              "name": "communication_protocol",
+              "value": "agent_messaging_v1"
+            },
+            {
+              "name": "start_time",
+              "value": "={{ $now }}"
+            },
+            {
+              "name": "participating_agents",
+              "value": "={{ ['agent_1', 'agent_2', 'agent_3', 'agent_4'] }}"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "process-communication-message",
+      "name": "Process Communication Message",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        720,
+        300
+      ],
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "name": "sender_agent",
+              "value": "={{ $json.sender || 'agent_1' }}"
+            },
+            {
+              "name": "receiver_agent",
+              "value": "={{ $json.receiver || 'agent_2' }}"
+            },
+            {
+              "name": "message_type",
+              "value": "={{ $json.message_type || 'request' }}"
+            },
+            {
+              "name": "message_content",
+              "value": "={{ $json.content || 'Please process this data and provide analysis.' }}"
+            },
+            {
+              "name": "message_priority",
+              "value": "={{ $json.priority || 'normal' }}"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "validate-communication-protocol",
+      "name": "Validate Communication Protocol",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2,
+      "position": [
+        960,
+        300
+      ],
+      "parameters": {
+        "conditions": {
+          "string": [
+            {
+              "value1": "={{ $json.sender_agent }}",
+              "operation": "isNotEmpty"
+            },
+            {
+              "value1": "={{ $json.receiver_agent }}",
+              "operation": "isNotEmpty"
+            },
+            {
+              "value1": "={{ $json.message_content }}",
+              "operation": "isNotEmpty"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "route-message",
+      "name": "Route Message",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2,
+      "position": [
+        1200,
+        220
+      ],
+      "parameters": {
+        "conditions": {
+          "string": [
+            {
+              "value1": "={{ $json.message_type }}",
+              "operation": "equal",
+              "value2": "request"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "process-request-message",
+      "name": "Process Request Message",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        1440,
+        80
+      ],
+      "parameters": {
+        "method": "POST",
+        "url": "https://api.agent-communication.com/process-request",
+        "bodyContentType": "json",
+        "jsonBody": "={{ { \"communication_session_id\": $json.communication_session_id, \"sender_agent\": $json.sender_agent, \"receiver_agent\": $json.receiver_agent, \"message_type\": $json.message_type, \"message_content\": $json.message_content, \"message_priority\": $json.message_priority, \"timestamp\": $now } }}"
+      }
+    },
+    {
+      "id": "process-response-message",
+      "name": "Process Response Message",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        1440,
+        320
+      ],
+      "parameters": {
+        "method": "POST",
+        "url": "https://api.agent-communication.com/process-response",
+        "bodyContentType": "json",
+        "jsonBody": "={{ { \"communication_session_id\": $json.communication_session_id, \"sender_agent\": $json.sender_agent, \"receiver_agent\": $json.receiver_agent, \"message_type\": $json.message_type, \"message_content\": $json.message_content, \"message_priority\": $json.message_priority, \"timestamp\": $now } }}"
+      }
+    },
+    {
+      "id": "process-broadcast-message",
+      "name": "Process Broadcast Message",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        1440,
+        560
+      ],
+      "parameters": {
+        "method": "POST",
+        "url": "https://api.agent-communication.com/process-broadcast",
+        "bodyContentType": "json",
+        "jsonBody": "={{ { \"communication_session_id\": $json.communication_session_id, \"sender_agent\": $json.sender_agent, \"receiver_agent\": \"all\", \"message_type\": $json.message_type, \"message_content\": $json.message_content, \"message_priority\": $json.message_priority, \"timestamp\": $now } }}"
+      }
+    },
+    {
+      "id": "sticky-message-handlers",
+      "name": "Message Handlers Placeholder",
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        1440,
+        760
+      ],
+      "parameters": {
+        "content": "## ⚠️ Placeholder endpoint\n\nThis node calls a fake domain that does not exist. Replace the URL with a real service endpoint (or mock server) before running this for real — this is a stand-in for teaching purposes.",
+        "height": 160,
+        "width": 460
+      }
+    },
+    {
+      "id": "generate-communication-report",
+      "name": "Generate Communication Report",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        1680,
+        300
+      ],
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "name": "communication_report",
+              "value": "={{ { \"communication_session_id\": $json.communication_session_id, \"communication_protocol\": $json.communication_protocol, \"start_time\": $json.start_time, \"sender_agent\": $json.sender_agent, \"receiver_agent\": $json.receiver_agent, \"message_type\": $json.message_type, \"message_content\": $json.message_content, \"message_priority\": $json.message_priority, \"participating_agents\": $json.participating_agents, \"processing_time\": $now.diff($json.start_time, 'milliseconds'), \"completed_at\": $now } }}"
+            },
+            {
+              "name": "success_message",
+              "value": "✅ Agent communication processing completed successfully"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "send-communication-results",
+      "name": "Send Communication Results",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        1920,
+        300
+      ],
+      "parameters": {
+        "method": "POST",
+        "url": "https://api.communication-service.com/results",
+        "bodyContentType": "json",
+        "jsonBody": "={{ { \"results\": $json.communication_report, \"timestamp\": $now } }}"
+      }
+    },
+    {
+      "id": "log-communication-activity",
+      "name": "Log Communication Activity",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        2160,
+        300
+      ],
+      "parameters": {
+        "method": "POST",
+        "url": "https://api.communication-log.com/log",
+        "bodyContentType": "json",
+        "jsonBody": "={{ { \"type\": \"agent_communication\", \"data\": $json.communication_report, \"timestamp\": $now } }}"
+      }
+    },
+    {
+      "id": "sticky-send-log",
+      "name": "Send/Log Placeholder",
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        1920,
+        480
+      ],
+      "parameters": {
+        "content": "## ⚠️ Placeholder endpoint\n\nThis node calls a fake domain that does not exist. Replace the URL with a real service endpoint (or mock server) before running this for real — this is a stand-in for teaching purposes.",
+        "height": 160,
+        "width": 460
+      }
+    },
+    {
+      "id": "handle-communication-error",
+      "name": "Handle Communication Error",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        1200,
+        500
+      ],
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "name": "communication_error",
+              "value": "={{ { \"error_type\": \"communication_failed\", \"communication_session_id\": $json.communication_session_id, \"message\": \"Agent communication failed\", \"timestamp\": $now } }}"
+            },
+            {
+              "name": "error_response",
+              "value": "={{ { \"status\": \"error\", \"communication_session_id\": $json.communication_session_id, \"message\": \"Agent communication workflow error\" } }}"
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "connections": {
+    "Agent Communication Hub": {
+      "main": [
+        [
+          {
+            "node": "Initialize Communication System",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Initialize Communication System": {
+      "main": [
+        [
+          {
+            "node": "Process Communication Message",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Process Communication Message": {
+      "main": [
+        [
+          {
+            "node": "Validate Communication Protocol",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Process Request Message": {
+      "main": [
+        [
+          {
+            "node": "Generate Communication Report",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Process Response Message": {
+      "main": [
+        [
+          {
+            "node": "Generate Communication Report",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Process Broadcast Message": {
+      "main": [
+        [
+          {
+            "node": "Generate Communication Report",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Generate Communication Report": {
+      "main": [
+        [
+          {
+            "node": "Send Communication Results",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Send Communication Results": {
+      "main": [
+        [
+          {
+            "node": "Log Communication Activity",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Validate Communication Protocol": {
+      "main": [
+        [
+          {
+            "node": "Route Message",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Handle Communication Error",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Route Message": {
+      "main": [
+        [
+          {
+            "node": "Process Request Message",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Process Response Message",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Process Broadcast Message",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {},
+  "pinData": {},
+  "versionId": "1",
+  "id": "day_44_solution"
+}

@@ -1,0 +1,82 @@
+{
+  "name": "Day 66 Solution: Weather + News API Integration with Error Handling",
+  "description": "Two real third-party API integrations (weather, news) with extracted clean fields, status-code error handling routed to Slack, and results persisted in Airtable.",
+  "tags": ["day-66", "solution", "week-10"],
+  "version": "1.0.0",
+  "nodes": [
+    {
+      "id": "note1", "name": "Overview", "type": "n8n-nodes-base.stickyNote", "typeVersion": 1,
+      "position": [-40, -280],
+      "parameters": {
+        "content": "## Day 66 Solution: Custom API Services\n\nCalls a real keyless weather API and a real news API, extracts clean fields, handles bad-request errors by alerting Slack instead of crashing, and stores results in Airtable.\n\n**Credentials needed:** NewsAPI.org key (free tier), Slack (Week 9), Airtable (Week 9). Weather API (open-meteo.com) needs no key.\n\nSee `DAILY_TASKS/DAY_66_Custom_API_Services.md`.",
+        "height": 210, "width": 340
+      }
+    },
+    { "id": "trig", "name": "Webhook - City Name", "type": "n8n-nodes-base.webhook", "typeVersion": 2,
+      "position": [250, 200], "parameters": { "path": "weather-news", "httpMethod": "POST" } },
+    { "id": "weather", "name": "Get Weather", "type": "n8n-nodes-base.httpRequest", "typeVersion": 4.2,
+      "position": [500, 100],
+      "parameters": {
+        "method": "GET", "url": "https://geocoding-api.open-meteo.com/v1/search",
+        "sendQuery": true,
+        "queryParameters": { "parameters": [ { "name": "name", "value": "={{ $json.body.city || 'London' }}" } ] },
+        "options": { "response": { "response": { "responseFormat": "json" } } }
+      }
+    },
+    { "id": "weatherSet", "name": "Extract Weather Fields", "type": "n8n-nodes-base.set", "typeVersion": 3.4,
+      "position": [750, 100],
+      "parameters": {
+        "assignments": { "assignments": [
+          { "name": "city", "value": "={{ $json.results ? $json.results[0].name : 'unknown' }}" },
+          { "name": "http_status", "value": "={{ $json.results ? 200 : 404 }}" }
+        ] }
+      }
+    },
+    { "id": "news", "name": "Get News", "type": "n8n-nodes-base.httpRequest", "typeVersion": 4.2,
+      "position": [500, 320],
+      "parameters": {
+        "method": "GET", "url": "https://newsapi.org/v2/top-headlines",
+        "sendQuery": true,
+        "queryParameters": { "parameters": [ { "name": "country", "value": "us" }, { "name": "apiKey", "value": "YOUR_NEWSAPI_KEY" } ] },
+        "options": { "response": { "response": { "responseFormat": "json" } } }
+      }
+    },
+    { "id": "newsSet", "name": "Extract Article Titles", "type": "n8n-nodes-base.set", "typeVersion": 3.4,
+      "position": [750, 320],
+      "parameters": {
+        "assignments": { "assignments": [
+          { "name": "article_title", "value": "={{ $json.articles ? $json.articles[0].title : 'no articles' }}" },
+          { "name": "article_url", "value": "={{ $json.articles ? $json.articles[0].url : '' }}" },
+          { "name": "http_status", "value": "={{ $json.status === 'ok' ? 200 : 401 }}" }
+        ] }
+      }
+    },
+    { "id": "if1", "name": "Status OK?", "type": "n8n-nodes-base.if", "typeVersion": 2,
+      "position": [1000, 200],
+      "parameters": { "conditions": { "number": [ { "value1": "={{ $json.http_status }}", "operation": "equal", "value2": 200 } ] } }
+    },
+    { "id": "airtable1", "name": "Store in Airtable", "type": "n8n-nodes-base.airtable", "typeVersion": 2.1,
+      "position": [1250, 120],
+      "parameters": { "operation": "create", "base": { "value": "YOUR_BASE_ID" }, "table": { "value": "API Results" } }
+    },
+    { "id": "slackAlert", "name": "Slack Error Alert", "type": "n8n-nodes-base.slack", "typeVersion": 2.1,
+      "position": [1250, 300],
+      "parameters": { "resource": "message", "operation": "post", "channel": "#api-errors",
+        "text": "={{ '🚨 API call failed with status ' + $json.http_status + '. Check credentials/params before retrying.' }}" }
+    }
+  ],
+  "connections": {
+    "Webhook - City Name": { "main": [[ { "node": "Get Weather", "type": "main", "index": 0 }, { "node": "Get News", "type": "main", "index": 0 } ]] },
+    "Get Weather": { "main": [[ { "node": "Extract Weather Fields", "type": "main", "index": 0 } ]] },
+    "Extract Weather Fields": { "main": [[ { "node": "Status OK?", "type": "main", "index": 0 } ]] },
+    "Get News": { "main": [[ { "node": "Extract Article Titles", "type": "main", "index": 0 } ]] },
+    "Extract Article Titles": { "main": [[ { "node": "Status OK?", "type": "main", "index": 0 } ]] },
+    "Status OK?": {
+      "main": [
+        [ { "node": "Store in Airtable", "type": "main", "index": 0 } ],
+        [ { "node": "Slack Error Alert", "type": "main", "index": 0 } ]
+      ]
+    }
+  },
+  "active": false, "settings": {}, "pinData": {}, "versionId": "1", "id": "day_66_solution"
+}

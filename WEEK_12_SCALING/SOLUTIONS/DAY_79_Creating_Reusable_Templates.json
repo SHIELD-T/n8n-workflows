@@ -1,0 +1,124 @@
+{
+  "name": "Day 79 Solution: Creating Reusable Workflow Templates",
+  "description": "Solution workflow for WEEK_12_SCALING Day 79: Creating Reusable Workflow Templates.",
+  "tags": [
+    "course-solution",
+    "WEEK_12",
+    "day-79"
+  ],
+  "version": "1.0.0",
+  "nodes": [
+    {
+      "id": "49d17374-8ef1-4fcb-a0a0-c07523cb334b",
+      "name": "Overview",
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        -260,
+        -320
+      ],
+      "parameters": {
+        "content": "## Day 79 Solution: Creating Reusable Workflow Templates\n\nThis workflow captures the Day 79 deliverable as structured fields in the **Template Library Fields** node (run it once with Manual Trigger to see the values), plus a fully worked model answer in the sticky note to the right that you can read directly on the canvas.\n\nEvery day in Weeks 11-15 is primarily a business deliverable, so this solution is a lightweight Manual Trigger -> Set pattern that still opens and runs cleanly in n8n.\n\n**Credentials needed:** None needed — every node in this solution runs with no external account.\n\n**Matches:** `DAILY_TASKS/DAY_79_Creating_Reusable_Templates.md`",
+        "height": 340,
+        "width": 460
+      }
+    },
+    {
+      "id": "ad61b93c-3111-422e-9c28-7566bf442712",
+      "name": "Manual Trigger",
+      "type": "n8n-nodes-base.manualTrigger",
+      "typeVersion": 1,
+      "position": [
+        80,
+        40
+      ],
+      "parameters": {}
+    },
+    {
+      "id": "66875a7d-2b8b-47c7-8eb9-279419e4c41b",
+      "name": "Template Library Fields",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        400,
+        40
+      ],
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "1d1cd351-c80b-4d96-a0aa-ff4f870bd406",
+              "name": "template_1_lead_gen",
+              "value": "Lead Generation Template — vars: {{FORM_SOURCE}}, {{CRM_SYSTEM}}, {{EMAIL_SERVICE}}, {{NOTIFICATION_CHANNEL}}",
+              "type": "string"
+            },
+            {
+              "id": "029eeca1-debc-4845-87b8-418c17fc29be",
+              "name": "template_2_customer_support",
+              "value": "Customer Support Template — vars: {{SUPPORT_CHANNEL}}, {{TICKET_SYSTEM}}, {{AI_MODEL}}, {{ESCALATION_RULES}}",
+              "type": "string"
+            },
+            {
+              "id": "a334434f-1008-428f-afd5-0c5e6d9e2c6f",
+              "name": "template_3_content_mgmt",
+              "value": "Content Management Template — vars: {{CONTENT_TYPE}}, {{AI_MODEL}}, {{PUBLISHING_PLATFORMS}}, {{SOCIAL_CHANNELS}}",
+              "type": "string"
+            },
+            {
+              "id": "41af1396-99d8-472d-bb1c-00cec8f4d917",
+              "name": "template_4_inventory",
+              "value": "Inventory Management Template — vars: {{INVENTORY_SYSTEM}}, {{SUPPLIER_SYSTEM}}, {{ALERT_THRESHOLDS}}, {{NOTIFICATION_CHANNELS}}",
+              "type": "string"
+            },
+            {
+              "id": "017621b3-3a15-4df2-ab88-e47c2169702b",
+              "name": "template_5_sales_pipeline",
+              "value": "Sales Pipeline Template — vars: {{CRM_SYSTEM}}, {{LEAD_SOURCES}}, {{FOLLOWUP_SCHEDULE}}, {{PROPOSAL_TOOLS}}",
+              "type": "string"
+            },
+            {
+              "id": "35abdb9e-896d-4e9a-ac82-6bcef1e8663e",
+              "name": "documentation_sections",
+              "value": "Setup guide; customization guide; troubleshooting; usage examples",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      }
+    },
+    {
+      "id": "06029ab1-def1-4ba4-862b-61002fa2bb38",
+      "name": "Model Answer",
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        780,
+        -340
+      ],
+      "parameters": {
+        "content": "## Model Answer: Creating Reusable Workflow Templates\n\n### Template 1 fully worked: Lead Generation Automation Template\n\n**Template name:** Lead Generation Automation\n**Description:** Complete lead capture and nurturing system, rebuilt as a reusable template.\n\n**Customization variables (renamed to placeholders before re-export):**\n- `{{FORM_SOURCE}}` — Tally, Typeform, or Google Forms\n- `{{CRM_SYSTEM}}` — Airtable, HubSpot, or Salesforce\n- `{{EMAIL_SERVICE}}` — Gmail, Mailchimp, or SendGrid\n- `{{NOTIFICATION_CHANNEL}}` — Slack, Telegram, or Discord\n\n**Components:** form webhook trigger -> data validation/cleaning -> CRM integration -> email automation -> notification.\n\n**Documentation (Sticky Note on the actual template workflow):**\n- *Setup guide:* step-by-step — connect `{{FORM_SOURCE}}` webhook, connect `{{CRM_SYSTEM}}` credential, set `{{NOTIFICATION_CHANNEL}}` webhook URL.\n- *Customization guide:* swap any `{{PLACEHOLDER}}` node for the equivalent tool without touching the rest of the logic.\n- *Troubleshooting:* most common issue is a mismatched field name between the form and CRM mapping.\n- *Examples:* pre-filled with the Coastal Air HVAC lead-capture use case from Week 11.\n\n**Remaining 4 templates (same documentation pattern, condensed):**\n- **Customer Support** — ticket trigger -> AI classification -> automated response -> escalation -> performance tracking.\n- **Content Management** — content trigger -> AI generation -> review/edit -> multi-platform publish -> analytics.\n- **Inventory Management** — stock monitoring -> reorder automation -> supplier communication -> reporting.\n- **Sales Pipeline** — lead capture -> qualification -> follow-up sequence -> proposal generation -> deal tracking.\n\nEach of the 5 templates has all client-specific values replaced with `{{PLACEHOLDER}}` variables and a setup Sticky Note, so any of them can be handed to a new client or a hire without asking Jordan five questions first.",
+        "height": 620,
+        "width": 700
+      }
+    }
+  ],
+  "connections": {
+    "Manual Trigger": {
+      "main": [
+        [
+          {
+            "node": "Template Library Fields",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {},
+  "pinData": {},
+  "versionId": "1",
+  "id": "day_79_solution"
+}

@@ -1,0 +1,22 @@
+{
+  "name": "Day 104 Solution: Ongoing Success Plan",
+  "description": "Records a concrete plan for the first 90 days after graduation, not just goals.",
+  "tags": ["day-104", "solution", "week-15"],
+  "version": "1.0.0",
+  "nodes": [
+    { "id": "note1", "name": "Overview", "type": "n8n-nodes-base.stickyNote", "typeVersion": 1,
+      "position": [-40, -260],
+      "parameters": { "content": "## Day 104 Solution: Ongoing Success Planning\n\nRecords a real 90-day post-graduation plan.\n\n**Credentials needed:** None.\n\nSee `DAILY_TASKS/DAY_104_Legacy_Finalization.md`.", "height": 170, "width": 340 } },
+    { "id": "trig", "name": "Manual Trigger", "type": "n8n-nodes-base.manualTrigger", "typeVersion": 1, "position": [300, 100], "parameters": {} },
+    { "id": "set1", "name": "Record 90-Day Plan", "type": "n8n-nodes-base.set", "typeVersion": 3.4,
+      "position": [550, 100],
+      "parameters": { "assignments": { "assignments": [
+        { "name": "days_1_30", "value": "REPLACE: e.g. Send 20 outreach messages using Day 78's kit" },
+        { "name": "days_31_60", "value": "REPLACE: e.g. Close first paid client" },
+        { "name": "days_61_90", "value": "REPLACE: e.g. Deliver first project, request testimonial" },
+        { "name": "accountability_check_in_date", "value": "={{ $now.plus(30, 'days') }}" }
+      ] } } }
+  ],
+  "connections": { "Manual Trigger": { "main": [[ { "node": "Record 90-Day Plan", "type": "main", "index": 0 } ]] } },
+  "active": false, "settings": {}, "pinData": {}, "versionId": "1", "id": "day_104_solution"
+}

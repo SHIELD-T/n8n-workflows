@@ -61,11 +61,12 @@ Each imported workflow includes sticky notes on the canvas listing exactly which
 
 ### **4. Follow the structure**
 - **Start with [Week 1](WEEK_01_FOUNDATION/README.md)** and move sequentially — later weeks build on earlier ones.
-- Each week folder has three parts that work together:
+- Each week folder has four parts that work together:
   - **`README.md`** — the week's objectives, daily breakdown, and project goal
-  - **`DAILY_TASKS/*.md`** — one file per day with concrete, step-by-step instructions and video links
+  - **`DAILY_TASKS/*.md`** — one file per day with concrete, step-by-step "Build It" instructions and video links
   - **`EXAMPLES/*.json`** — importable n8n workflows referenced by that week's lessons
-- Work through `DAILY_TASKS` in order, importing the matching `EXAMPLES` workflow when a lesson points you to one.
+  - **`SOLUTIONS/*.json`** — one working answer-key workflow per daily task, matching that day's filename (e.g. `DAILY_TASKS/DAY_05_*.md` → `SOLUTIONS/DAY_05_*.json`). Attempt the day's "Build It" steps yourself first, then import the matching solution to check your work. A few nodes call clearly-labeled placeholder endpoints (⚠️ sticky notes flag these) where a real external service isn't available for a course context — swap in your own when you connect real accounts.
+- Work through `DAILY_TASKS` in order, importing the matching `EXAMPLES` workflow when a lesson points you to one, and using `SOLUTIONS` to check your work.
 
 ---
 
@@ -77,6 +78,7 @@ Each imported workflow includes sticky notes on the canvas listing exactly which
 | **Daily Tasks** | 106 | Detailed daily instructions (Week 8 runs 8 days; every other week runs 7) |
 | **YouTube Videos** | 18 curated videos | Linked throughout the 106 daily lessons (17 videos + 1 playlist) |
 | **Example Workflows** | 60 | Ready-to-use n8n workflows (4 per week) |
+| **Solution Workflows** | 106 | One answer-key workflow per daily task |
 | **README Files** | 15 | Weekly overviews and objectives |
 | **Course Duration** | 15 weeks | 3+ months of comprehensive learning |
 
@@ -124,24 +126,28 @@ n8n-workflows/
 ├── 🏗️ WEEK_01_FOUNDATION/
 │   ├── README.md                           # Week overview
 │   ├── DAILY_TASKS/                        # 7 daily task files
-│   └── EXAMPLES/                           # 4 example workflows
+│   ├── EXAMPLES/                           # 4 example workflows
+│   └── SOLUTIONS/                          # 7 answer-key workflows (one per daily task)
 │
 ├── 🔧 WEEK_02_FOUNDATION/
 │   ├── README.md
 │   ├── DAILY_TASKS/                        # 7 daily task files
-│   └── EXAMPLES/                           # 4 example workflows
+│   ├── EXAMPLES/                           # 4 example workflows
+│   └── SOLUTIONS/                          # 7 answer-key workflows
 │
 ├── 🤖 WEEK_03_WORKFLOWS/
 │   ├── README.md
 │   ├── DAILY_TASKS/                        # 7 daily task files
-│   └── EXAMPLES/                           # 4 example workflows
+│   ├── EXAMPLES/                           # 4 example workflows
+│   └── SOLUTIONS/                          # 7 answer-key workflows
 │
-├── ... (Weeks 4-14 follow same structure)
+├── ... (Weeks 4-14 follow same structure — Week 8 has 8 of each instead of 7)
 │
 └── 🎓 WEEK_15_GRADUATION/
     ├── README.md
     ├── DAILY_TASKS/                        # 7 daily task files
-    └── EXAMPLES/                           # 4 example workflows
+    ├── EXAMPLES/                           # 4 example workflows
+    └── SOLUTIONS/                          # 7 answer-key workflows
 ```
 
 ---

@@ -1,0 +1,332 @@
+{
+  "name": "Day 29 Solution: Production Workflow Deployment Strategies",
+  "description": "Blue-green deployment pipeline with backup, health check, traffic switch, and automated rollback on failed health check.",
+  "tags": [
+    "week-05",
+    "day-29",
+    "solution"
+  ],
+  "version": "1.0.0",
+  "nodes": [
+    {
+      "id": "sticky1",
+      "name": "Sticky Note",
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        40,
+        -340
+      ],
+      "parameters": {
+        "content": "## Day 29 Solution: Production Workflow Deployment Strategies\n\nBlue-green deployment pipeline: Webhook -> Set (deployment metadata) -> IF validate -> HTTP backup -> HTTP health check -> IF status 200 -> HTTP switch traffic -> Set success, else Set rollback. Replace the webhook.site URL placeholder with your own free capture URL from webhook.site. Credentials needed: None — webhook.site requires no signup.\n\nSee DAILY_TASKS/DAY_29_Production_Deployment_Strategies.md.",
+        "height": 320,
+        "width": 540
+      }
+    },
+    {
+      "id": "webhook1",
+      "name": "Deployment Trigger",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2,
+      "position": [
+        80,
+        200
+      ],
+      "parameters": {
+        "path": "deploy-production",
+        "httpMethod": "POST"
+      }
+    },
+    {
+      "id": "set1",
+      "name": "Initialize Deployment",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        320,
+        200
+      ],
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "name": "deployment_id",
+              "value": "={{ $now.format('yyyyMMddHHmmss') }}"
+            },
+            {
+              "name": "deployment_type",
+              "value": "blue_green"
+            },
+            {
+              "name": "workflow_version",
+              "value": "={{ $json.version }}"
+            },
+            {
+              "name": "start_time",
+              "value": "={{ $now }}"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "if1",
+      "name": "Validate Deployment Request",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2,
+      "position": [
+        560,
+        200
+      ],
+      "parameters": {
+        "conditions": {
+          "string": [
+            {
+              "value1": "={{ $json.deployment_type }}",
+              "operation": "equal",
+              "value2": "blue_green"
+            },
+            {
+              "value1": "={{ $json.workflow_version }}",
+              "operation": "isNotEmpty"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "http1",
+      "name": "Backup Current Production",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        800,
+        120
+      ],
+      "parameters": {
+        "method": "POST",
+        "url": "https://webhook.site/your-unique-id",
+        "sendBody": true,
+        "bodyContentType": "json",
+        "jsonBody": "={{ { deployment_id: $json.deployment_id, backup_type: 'pre_deployment' } }}"
+      }
+    },
+    {
+      "id": "http2",
+      "name": "Health Check Green Environment",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        1040,
+        120
+      ],
+      "parameters": {
+        "method": "GET",
+        "url": "https://webhook.site/your-unique-id",
+        "options": {
+          "response": {
+            "response": {
+              "neverError": true
+            }
+          }
+        }
+      }
+    },
+    {
+      "id": "if2",
+      "name": "Check Health Status 200",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2,
+      "position": [
+        1280,
+        120
+      ],
+      "parameters": {
+        "conditions": {
+          "number": [
+            {
+              "value1": "={{ $json.statusCode || 200 }}",
+              "operation": "equal",
+              "value2": 200
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "http3",
+      "name": "Switch Traffic to Green",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        1520,
+        40
+      ],
+      "parameters": {
+        "method": "POST",
+        "url": "https://webhook.site/your-unique-id",
+        "sendBody": true,
+        "bodyContentType": "json",
+        "jsonBody": "={{ { deployment_id: $json.deployment_id, action: 'switch_traffic' } }}"
+      }
+    },
+    {
+      "id": "set2",
+      "name": "Deployment Success",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        1760,
+        40
+      ],
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "name": "deployment_duration",
+              "value": "={{ $now.diff($('Initialize Deployment').item.json.start_time, 'milliseconds') }}"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "set3",
+      "name": "Execute Rollback",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        1520,
+        220
+      ],
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "name": "rollback_reason",
+              "value": "Green environment health check did not return 200"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "set4",
+      "name": "Invalid Deployment Request",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        800,
+        300
+      ],
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "name": "error",
+              "value": "deployment_type must be blue_green and workflow_version must be present"
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "connections": {
+    "Deployment Trigger": {
+      "main": [
+        [
+          {
+            "node": "Initialize Deployment",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Initialize Deployment": {
+      "main": [
+        [
+          {
+            "node": "Validate Deployment Request",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Validate Deployment Request": {
+      "main": [
+        [
+          {
+            "node": "Backup Current Production",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Invalid Deployment Request",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Backup Current Production": {
+      "main": [
+        [
+          {
+            "node": "Health Check Green Environment",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Health Check Green Environment": {
+      "main": [
+        [
+          {
+            "node": "Check Health Status 200",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Check Health Status 200": {
+      "main": [
+        [
+          {
+            "node": "Switch Traffic to Green",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Execute Rollback",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Switch Traffic to Green": {
+      "main": [
+        [
+          {
+            "node": "Deployment Success",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {},
+  "pinData": {},
+  "versionId": "1",
+  "id": "day_29_solution"
+}
