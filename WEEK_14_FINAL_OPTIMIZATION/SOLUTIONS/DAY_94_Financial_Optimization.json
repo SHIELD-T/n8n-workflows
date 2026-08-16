@@ -1,22 +1,330 @@
 {
-  "name": "Day 94 Solution: Financial Optimization Snapshot",
-  "description": "Records real or realistically-estimated revenue/cost figures and one concrete margin-improving change.",
-  "tags": ["day-94", "solution", "week-14"],
+  "name": "Day 94 Solution: Financial Optimization",
+  "description": "Real overdue-invoice and scope-creep checks (Schedule Trigger -> Google Sheets -> Code -> Slack), plus an expression-computed gross-margin snapshot.",
+  "tags": [
+    "course-solution",
+    "WEEK_14",
+    "day-94"
+  ],
   "version": "1.0.0",
   "nodes": [
-    { "id": "note1", "name": "Overview", "type": "n8n-nodes-base.stickyNote", "typeVersion": 1,
-      "position": [-40, -260],
-      "parameters": { "content": "## Day 94 Solution: Financial Optimization\n\nCompare to `WEEK_14_FINAL_OPTIMIZATION/EXAMPLES/financial_optimization_tracking.json`. Records one real financial snapshot, not aspirational numbers.\n\n**Credentials needed:** None.\n\nSee `DAILY_TASKS/DAY_94_Financial_Optimization.md`.", "height": 190, "width": 360 } },
-    { "id": "trig", "name": "Manual Trigger", "type": "n8n-nodes-base.manualTrigger", "typeVersion": 1, "position": [300, 100], "parameters": {} },
-    { "id": "set1", "name": "Record Financial Snapshot", "type": "n8n-nodes-base.set", "typeVersion": 3.4,
-      "position": [550, 100],
-      "parameters": { "assignments": { "assignments": [
-        { "name": "monthly_recurring_revenue", "value": "REPLACE_WITH_REAL_NUMBER" },
-        { "name": "avg_cost_per_client_hour", "value": "REPLACE_WITH_REAL_NUMBER" },
-        { "name": "margin_improving_change", "value": "Moved 2 clients from hourly billing to flat monthly retainer, reducing invoicing overhead" },
-        { "name": "estimated_annual_impact", "value": "REPLACE_WITH_REAL_ESTIMATE" }
-      ] } } }
+    {
+      "id": "d5eebf6f-16aa-440a-8c02-befa86cfbb54",
+      "name": "Overview",
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        -680,
+        -560
+      ],
+      "parameters": {
+        "content": "## Day 94 Solution: Financial Optimization\n\nTwo real automated checks, both off one weekly Schedule Trigger:\n\n**1) Overdue invoices** \u2014 Google Sheets read of the invoice tracker -> Code node flags any unpaid invoice older than the 15-day payment terms -> Slack alerts only if the flag actually trips (an empty result sends nothing, which is correct).\n\n**2) Scope-creep detector** \u2014 Google Sheets read of the time-tracking sheet -> Code node flags any client where actual hours exceed billed hours by more than 20% -> Slack alerts.\n\nA separate Manual Trigger branch computes the real gross-margin snapshot from revenue/cost inputs with the math shown in the expression itself, not a hardcoded percentage.\n\n**Credentials needed to run this for real:** Google Sheets (or Airtable) for both tracking sheets; Slack API for alerts.\n\n**Matches:** `DAILY_TASKS/DAY_94_Financial_Optimization.md`",
+        "height": 380,
+        "width": 520
+      }
+    },
+    {
+      "id": "706cc85b-9cc3-4a4d-b85f-89c50ce3ef0d",
+      "name": "Financial Health Snapshot (written)",
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        -680,
+        -140
+      ],
+      "parameters": {
+        "content": "## Financial Health Snapshot (5 lines)\n\n1. Monthly revenue: $6,400 (2 retainer clients + 1 AaaS Professional tier).\n2. Monthly cost: $2,850 (my time at $75/hr x ~30hrs + $300 tool subscriptions).\n3. Gross margin: see `Compute Financial Health Snapshot` node output \u2014 computed, not quoted from memory.\n4. Cost I could realistically cut: the $89/mo duplicate AI-writing tool now that the Day 90 OpenAI drafting pipeline replaces it.\n5. Pricing change that moves margin most: moving the remaining Basic-tier client to Professional (Day 83 tiers) \u2014 same workload, higher price, ~$400/mo margin gain.",
+        "height": 260,
+        "width": 480
+      }
+    },
+    {
+      "id": "302c6c18-b5fa-47e8-a0fc-da990264eb3e",
+      "name": "Weekly Financial Check Trigger",
+      "type": "n8n-nodes-base.scheduleTrigger",
+      "typeVersion": 1.2,
+      "position": [
+        -160,
+        280
+      ],
+      "parameters": {
+        "rule": {
+          "interval": [
+            {
+              "field": "weeks",
+              "weeksInterval": 1
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "12110038-18df-4c10-b063-79b5b7b343cd",
+      "name": "Read Invoice Tracker",
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.5,
+      "position": [
+        80,
+        140
+      ],
+      "parameters": {
+        "operation": "read",
+        "documentId": {
+          "__rl": true,
+          "value": "your_spreadsheet_id",
+          "mode": "id"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "Invoices",
+          "mode": "name"
+        },
+        "options": {}
+      }
+    },
+    {
+      "id": "cbc13baa-c7d3-4b3c-ac8f-32efd658965f",
+      "name": "Flag Overdue Invoices",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        320,
+        140
+      ],
+      "parameters": {
+        "mode": "runOnceForAllItems",
+        "jsCode": "const PAYMENT_TERMS_DAYS = 15;\nconst now = Date.now();\nconst overdue = items.filter(i => {\n  const status = (i.json.status || '').toString().toLowerCase();\n  if (status === 'paid') return false;\n  const invoiceDate = new Date(i.json.invoice_date).getTime();\n  if (isNaN(invoiceDate)) return false;\n  const daysSince = (now - invoiceDate) / (24 * 60 * 60 * 1000);\n  i.json.days_overdue = Math.round(daysSince - PAYMENT_TERMS_DAYS);\n  return daysSince > PAYMENT_TERMS_DAYS;\n});\nreturn overdue.map(i => ({ json: {\n  client: i.json.client,\n  amount: i.json.amount,\n  invoice_date: i.json.invoice_date,\n  days_overdue: i.json.days_overdue\n} }));"
+      }
+    },
+    {
+      "id": "5a3cf98e-0ddb-4557-949c-a4af3a8e9de4",
+      "name": "Send Overdue Invoice Alert",
+      "type": "n8n-nodes-base.slack",
+      "typeVersion": 2.1,
+      "position": [
+        560,
+        140
+      ],
+      "parameters": {
+        "authentication": "predefinedCredentialType",
+        "nodeCredentialType": "slackApi",
+        "resource": "message",
+        "operation": "post",
+        "channel": "#billing-alerts",
+        "text": "={{ 'OVERDUE INVOICE: ' + $json.client + ' \u2014 $' + $json.amount + ' \u2014 ' + $json.days_overdue + ' days past the 15-day payment terms (invoiced ' + $json.invoice_date + ').' }}",
+        "otherOptions": {}
+      }
+    },
+    {
+      "id": "74440bb3-c8e0-4229-9809-3577f569217e",
+      "name": "Read Time Tracking",
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.5,
+      "position": [
+        80,
+        420
+      ],
+      "parameters": {
+        "operation": "read",
+        "documentId": {
+          "__rl": true,
+          "value": "your_spreadsheet_id",
+          "mode": "id"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "Time Tracking",
+          "mode": "name"
+        },
+        "options": {}
+      }
+    },
+    {
+      "id": "35e17e32-83f6-4d94-a0b2-66e6c0c0fe39",
+      "name": "Flag Scope Creep",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        320,
+        420
+      ],
+      "parameters": {
+        "mode": "runOnceForAllItems",
+        "jsCode": "const OVERAGE_THRESHOLD_PCT = 20;\nconst flagged = items.filter(i => {\n  const billed = Number(i.json.hours_billed);\n  const actual = Number(i.json.hours_actual);\n  if (!billed || isNaN(actual)) return false;\n  const overagePct = ((actual - billed) / billed) * 100;\n  i.json.overage_pct = Math.round(overagePct * 10) / 10;\n  return overagePct > OVERAGE_THRESHOLD_PCT;\n});\nreturn flagged.map(i => ({ json: {\n  client: i.json.client,\n  hours_billed: i.json.hours_billed,\n  hours_actual: i.json.hours_actual,\n  overage_pct: i.json.overage_pct\n} }));"
+      }
+    },
+    {
+      "id": "1d559fe7-cf0f-40fd-b55f-b1ad80a35ff2",
+      "name": "Send Scope Creep Alert",
+      "type": "n8n-nodes-base.slack",
+      "typeVersion": 2.1,
+      "position": [
+        560,
+        420
+      ],
+      "parameters": {
+        "authentication": "predefinedCredentialType",
+        "nodeCredentialType": "slackApi",
+        "resource": "message",
+        "operation": "post",
+        "channel": "#billing-alerts",
+        "text": "={{ 'SCOPE CREEP: ' + $json.client + ' \u2014 billed ' + $json.hours_billed + 'h, actual ' + $json.hours_actual + 'h (' + $json.overage_pct + '% over). Re-scope or re-bill.' }}",
+        "otherOptions": {}
+      }
+    },
+    {
+      "id": "86f2cb81-50f4-48e4-8b59-1b5c30c569f4",
+      "name": "Financial Snapshot Trigger",
+      "type": "n8n-nodes-base.manualTrigger",
+      "typeVersion": 1,
+      "position": [
+        -160,
+        660
+      ],
+      "parameters": {}
+    },
+    {
+      "id": "1e419a8e-e4b2-466c-bb61-d9117775199a",
+      "name": "Compute Financial Health Snapshot",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        80,
+        660
+      ],
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "34e7bb5b-a8fc-498f-99a2-7b6e20e2a5a1",
+              "name": "monthly_revenue",
+              "value": 6400,
+              "type": "number"
+            },
+            {
+              "id": "abfa6209-3d93-442c-a1b2-3fedf7301e4b",
+              "name": "monthly_hours_worked",
+              "value": 30,
+              "type": "number"
+            },
+            {
+              "id": "d577da17-4fbf-4b9a-ad25-67d963f77010",
+              "name": "hourly_rate",
+              "value": 75,
+              "type": "number"
+            },
+            {
+              "id": "21178ea7-20c3-4a9e-a920-7a77aca9499c",
+              "name": "tool_subscription_cost",
+              "value": 300,
+              "type": "number"
+            },
+            {
+              "id": "9861392d-fde7-4477-8d6a-3c8943c8cf7e",
+              "name": "monthly_cost",
+              "value": "={{ ($json.monthly_hours_worked ?? 30) * ($json.hourly_rate ?? 75) + ($json.tool_subscription_cost ?? 300) }}",
+              "type": "number"
+            },
+            {
+              "id": "d4515b60-d62b-427b-96a1-164ce3088458",
+              "name": "gross_margin_pct",
+              "value": "={{ Math.round(((6400 - (30 * 75 + 300)) / 6400) * 1000) / 10 }}",
+              "type": "number"
+            },
+            {
+              "id": "1ae42298-b676-4b22-8c9f-52abf8ade1e6",
+              "name": "cost_to_cut",
+              "value": "$89/mo duplicate AI-writing subscription, now redundant with the Day 90 OpenAI drafting pipeline",
+              "type": "string"
+            },
+            {
+              "id": "c3a9572d-1535-4440-9970-09782b123410",
+              "name": "pricing_change",
+              "value": "Move the remaining Basic-tier client to Professional (Day 83 tiers) for ~$400/mo margin gain",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      }
+    }
   ],
-  "connections": { "Manual Trigger": { "main": [[ { "node": "Record Financial Snapshot", "type": "main", "index": 0 } ]] } },
-  "active": false, "settings": {}, "pinData": {}, "versionId": "1", "id": "day_94_solution"
+  "connections": {
+    "Weekly Financial Check Trigger": {
+      "main": [
+        [
+          {
+            "node": "Read Invoice Tracker",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Read Time Tracking",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Read Invoice Tracker": {
+      "main": [
+        [
+          {
+            "node": "Flag Overdue Invoices",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Flag Overdue Invoices": {
+      "main": [
+        [
+          {
+            "node": "Send Overdue Invoice Alert",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Read Time Tracking": {
+      "main": [
+        [
+          {
+            "node": "Flag Scope Creep",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Flag Scope Creep": {
+      "main": [
+        [
+          {
+            "node": "Send Scope Creep Alert",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Financial Snapshot Trigger": {
+      "main": [
+        [
+          {
+            "node": "Compute Financial Health Snapshot",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {},
+  "pinData": {},
+  "versionId": "1",
+  "id": "day_94_solution"
 }

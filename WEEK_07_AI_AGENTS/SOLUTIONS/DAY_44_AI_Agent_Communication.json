@@ -1,6 +1,6 @@
 {
   "name": "Day 44 Solution: AI Agent Communication",
-  "description": "Agent-to-agent communication hub: validates message envelopes and routes request/response/broadcast messages to their handlers before reporting on the exchange.",
+  "description": "Agent-to-agent communication hub: validates a message envelope, routes it by message_type, drafts real OpenAI replies for requests, sends real Telegram/Slack messages for responses/broadcasts, then logs the exchange for real to Airtable.",
   "tags": [
     "week-07",
     "ai-agents",
@@ -20,9 +20,9 @@
         -260
       ],
       "parameters": {
-        "content": "## Day 44 Solution: AI Agent Communication\n\nSimulates inter-agent messaging: validates a message envelope, then routes it to request/response/broadcast handlers based on message_type before generating a communication report.\n\n**Credentials needed:** None for this workflow — it uses only webhook, set, if, and httpRequest nodes. The httpRequest nodes call fake placeholder domains and need no real credential.\n\nSee DAILY_TASKS/DAY_44_AI_Agent_Communication.md for the full lesson this solves.",
-        "height": 280,
-        "width": 480
+        "content": "## Day 44 Solution: AI Agent Communication\n\nValidates a message envelope, then routes it to request/response/broadcast handling based on message_type: request messages get a real OpenAI-drafted reply, response messages are actually sent over Telegram, broadcast messages are actually posted to a Slack channel. The exchange is then logged for real to Airtable.\n\n**What changed from the audited version:** the three fake \"process request/response/broadcast\" HTTP calls to `api.agent-communication.com` and the two fake \"send/log\" calls to `api.communication-service.com` / `api.communication-log.com` are gone, replaced with a real OpenAI node, a real Telegram node, a real Slack node, and a real Airtable node.\n\n**Credentials needed to run for real:** OpenAI API key (request branch); Telegram Bot token (response branch); Slack OAuth2 (broadcast branch); Airtable Personal Access Token (final log).\n\nSee DAILY_TASKS/DAY_44_AI_Agent_Communication.md for the full lesson this solves.",
+        "height": 360,
+        "width": 520
       }
     },
     {
@@ -53,7 +53,7 @@
           "assignments": [
             {
               "name": "communication_session_id",
-              "value": "={{ $now.format('YYYYMMDDHHmmss') }}"
+              "value": "={{ $now.format('yyyyMMddHHmmss') }}"
             },
             {
               "name": "communication_protocol",
@@ -157,56 +157,78 @@
       }
     },
     {
-      "id": "process-request-message",
-      "name": "Process Request Message",
-      "type": "n8n-nodes-base.httpRequest",
-      "typeVersion": 4.2,
+      "id": "draft-agent-reply",
+      "name": "Draft Agent Reply (OpenAI)",
+      "type": "n8n-nodes-base.openAi",
+      "typeVersion": 1.3,
       "position": [
         1440,
         80
       ],
       "parameters": {
-        "method": "POST",
-        "url": "https://api.agent-communication.com/process-request",
-        "bodyContentType": "json",
-        "jsonBody": "={{ { \"communication_session_id\": $json.communication_session_id, \"sender_agent\": $json.sender_agent, \"receiver_agent\": $json.receiver_agent, \"message_type\": $json.message_type, \"message_content\": $json.message_content, \"message_priority\": $json.message_priority, \"timestamp\": $now } }}"
+        "resource": "chat",
+        "operation": "create",
+        "model": "gpt-4o-mini",
+        "messages": {
+          "values": [
+            {
+              "role": "system",
+              "content": "You are an AI agent responding to a request message from another agent. Treat the message content as a task to complete, and produce a concise, useful reply that the sending agent can act on."
+            },
+            {
+              "role": "user",
+              "content": "={{ 'Message from ' + $json.sender_agent + ' to ' + $json.receiver_agent + ' (priority: ' + $json.message_priority + '):\\n\\n' + $json.message_content }}"
+            }
+          ]
+        },
+        "options": {
+          "temperature": 0.4,
+          "maxTokens": 400
+        }
       }
     },
     {
-      "id": "process-response-message",
-      "name": "Process Response Message",
-      "type": "n8n-nodes-base.httpRequest",
-      "typeVersion": 4.2,
+      "id": "send-response-via-telegram",
+      "name": "Send Response via Telegram",
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1.2,
       "position": [
         1440,
         320
       ],
       "parameters": {
-        "method": "POST",
-        "url": "https://api.agent-communication.com/process-response",
-        "bodyContentType": "json",
-        "jsonBody": "={{ { \"communication_session_id\": $json.communication_session_id, \"sender_agent\": $json.sender_agent, \"receiver_agent\": $json.receiver_agent, \"message_type\": $json.message_type, \"message_content\": $json.message_content, \"message_priority\": $json.message_priority, \"timestamp\": $now } }}"
+        "resource": "message",
+        "operation": "sendMessage",
+        "chatId": "your_chat_id",
+        "text": "={{ 'Response from ' + $json.sender_agent + ' to ' + $json.receiver_agent + ':\\n\\n' + $json.message_content }}",
+        "additionalFields": {}
       }
     },
     {
-      "id": "process-broadcast-message",
-      "name": "Process Broadcast Message",
-      "type": "n8n-nodes-base.httpRequest",
-      "typeVersion": 4.2,
+      "id": "broadcast-to-slack",
+      "name": "Broadcast to Slack",
+      "type": "n8n-nodes-base.slack",
+      "typeVersion": 2.1,
       "position": [
         1440,
         560
       ],
       "parameters": {
-        "method": "POST",
-        "url": "https://api.agent-communication.com/process-broadcast",
-        "bodyContentType": "json",
-        "jsonBody": "={{ { \"communication_session_id\": $json.communication_session_id, \"sender_agent\": $json.sender_agent, \"receiver_agent\": \"all\", \"message_type\": $json.message_type, \"message_content\": $json.message_content, \"message_priority\": $json.message_priority, \"timestamp\": $now } }}"
+        "resource": "message",
+        "operation": "post",
+        "select": "channel",
+        "channelId": {
+          "__rl": true,
+          "value": "your_channel_id",
+          "mode": "id"
+        },
+        "text": "={{ '📢 Broadcast from ' + $json.sender_agent + ' to ' + $('Initialize Communication System').item.json.participating_agents.join(', ') + ':\\n\\n' + $json.message_content }}",
+        "otherOptions": {}
       }
     },
     {
       "id": "sticky-message-handlers",
-      "name": "Message Handlers Placeholder",
+      "name": "Real Message Handlers Note",
       "type": "n8n-nodes-base.stickyNote",
       "typeVersion": 1,
       "position": [
@@ -214,8 +236,8 @@
         760
       ],
       "parameters": {
-        "content": "## ⚠️ Placeholder endpoint\n\nThis node calls a fake domain that does not exist. Replace the URL with a real service endpoint (or mock server) before running this for real — this is a stand-in for teaching purposes.",
-        "height": 160,
+        "content": "## ✅ Real, testable handlers\n\nThese three nodes replace the fake \"process request/response/broadcast\" calls to `api.agent-communication.com`. Request messages get a real OpenAI-drafted reply; response messages actually send over Telegram; broadcasts actually post to Slack.",
+        "height": 170,
         "width": 460
       }
     },
@@ -233,7 +255,7 @@
           "assignments": [
             {
               "name": "communication_report",
-              "value": "={{ { \"communication_session_id\": $json.communication_session_id, \"communication_protocol\": $json.communication_protocol, \"start_time\": $json.start_time, \"sender_agent\": $json.sender_agent, \"receiver_agent\": $json.receiver_agent, \"message_type\": $json.message_type, \"message_content\": $json.message_content, \"message_priority\": $json.message_priority, \"participating_agents\": $json.participating_agents, \"processing_time\": $now.diff($json.start_time, 'milliseconds'), \"completed_at\": $now } }}"
+              "value": "={{ { \"communication_session_id\": $('Initialize Communication System').item.json.communication_session_id, \"communication_protocol\": $('Initialize Communication System').item.json.communication_protocol, \"start_time\": $('Initialize Communication System').item.json.start_time, \"sender_agent\": $('Process Communication Message').item.json.sender_agent, \"receiver_agent\": $('Process Communication Message').item.json.receiver_agent, \"message_type\": $('Process Communication Message').item.json.message_type, \"message_content\": $('Process Communication Message').item.json.message_content, \"message_priority\": $('Process Communication Message').item.json.message_priority, \"participating_agents\": $('Initialize Communication System').item.json.participating_agents, \"processing_time\": $now.diff($('Initialize Communication System').item.json.start_time, 'milliseconds'), \"completed_at\": $now } }}"
             },
             {
               "name": "success_message",
@@ -244,40 +266,43 @@
       }
     },
     {
-      "id": "send-communication-results",
-      "name": "Send Communication Results",
-      "type": "n8n-nodes-base.httpRequest",
-      "typeVersion": 4.2,
+      "id": "log-communication-to-airtable",
+      "name": "Log Communication to Airtable",
+      "type": "n8n-nodes-base.airtable",
+      "typeVersion": 2.1,
       "position": [
         1920,
         300
       ],
       "parameters": {
-        "method": "POST",
-        "url": "https://api.communication-service.com/results",
-        "bodyContentType": "json",
-        "jsonBody": "={{ { \"results\": $json.communication_report, \"timestamp\": $now } }}"
-      }
-    },
-    {
-      "id": "log-communication-activity",
-      "name": "Log Communication Activity",
-      "type": "n8n-nodes-base.httpRequest",
-      "typeVersion": 4.2,
-      "position": [
-        2160,
-        300
-      ],
-      "parameters": {
-        "method": "POST",
-        "url": "https://api.communication-log.com/log",
-        "bodyContentType": "json",
-        "jsonBody": "={{ { \"type\": \"agent_communication\", \"data\": $json.communication_report, \"timestamp\": $now } }}"
+        "operation": "create",
+        "base": {
+          "__rl": true,
+          "value": "your_base_id",
+          "mode": "id"
+        },
+        "table": {
+          "__rl": true,
+          "value": "communication_log",
+          "mode": "id"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "communication_session_id": "={{ $json.communication_report.communication_session_id }}",
+            "sender_agent": "={{ $json.communication_report.sender_agent }}",
+            "receiver_agent": "={{ $json.communication_report.receiver_agent }}",
+            "message_type": "={{ $json.communication_report.message_type }}",
+            "message_content": "={{ $json.communication_report.message_content }}",
+            "completed_at": "={{ $json.communication_report.completed_at }}"
+          }
+        },
+        "options": {}
       }
     },
     {
       "id": "sticky-send-log",
-      "name": "Send/Log Placeholder",
+      "name": "Real Log Note",
       "type": "n8n-nodes-base.stickyNote",
       "typeVersion": 1,
       "position": [
@@ -285,8 +310,8 @@
         480
       ],
       "parameters": {
-        "content": "## ⚠️ Placeholder endpoint\n\nThis node calls a fake domain that does not exist. Replace the URL with a real service endpoint (or mock server) before running this for real — this is a stand-in for teaching purposes.",
-        "height": 160,
+        "content": "## ✅ Real, testable logging\n\nThis node replaces the fake \"Send Communication Results\" and \"Log Communication Activity\" calls to `api.communication-service.com` / `api.communication-log.com` with one real Airtable record.",
+        "height": 150,
         "width": 460
       }
     },
@@ -304,11 +329,11 @@
           "assignments": [
             {
               "name": "communication_error",
-              "value": "={{ { \"error_type\": \"communication_failed\", \"communication_session_id\": $json.communication_session_id, \"message\": \"Agent communication failed\", \"timestamp\": $now } }}"
+              "value": "={{ { \"error_type\": \"communication_failed\", \"communication_session_id\": $('Initialize Communication System').item.json.communication_session_id, \"message\": \"Agent communication failed\", \"timestamp\": $now } }}"
             },
             {
               "name": "error_response",
-              "value": "={{ { \"status\": \"error\", \"communication_session_id\": $json.communication_session_id, \"message\": \"Agent communication workflow error\" } }}"
+              "value": "={{ { \"status\": \"error\", \"communication_session_id\": $('Initialize Communication System').item.json.communication_session_id, \"message\": \"Agent communication workflow error\" } }}"
             }
           ]
         }
@@ -349,61 +374,6 @@
         ]
       ]
     },
-    "Process Request Message": {
-      "main": [
-        [
-          {
-            "node": "Generate Communication Report",
-            "type": "main",
-            "index": 0
-          }
-        ]
-      ]
-    },
-    "Process Response Message": {
-      "main": [
-        [
-          {
-            "node": "Generate Communication Report",
-            "type": "main",
-            "index": 0
-          }
-        ]
-      ]
-    },
-    "Process Broadcast Message": {
-      "main": [
-        [
-          {
-            "node": "Generate Communication Report",
-            "type": "main",
-            "index": 0
-          }
-        ]
-      ]
-    },
-    "Generate Communication Report": {
-      "main": [
-        [
-          {
-            "node": "Send Communication Results",
-            "type": "main",
-            "index": 0
-          }
-        ]
-      ]
-    },
-    "Send Communication Results": {
-      "main": [
-        [
-          {
-            "node": "Log Communication Activity",
-            "type": "main",
-            "index": 0
-          }
-        ]
-      ]
-    },
     "Validate Communication Protocol": {
       "main": [
         [
@@ -426,19 +396,63 @@
       "main": [
         [
           {
-            "node": "Process Request Message",
+            "node": "Draft Agent Reply (OpenAI)",
             "type": "main",
             "index": 0
           }
         ],
         [
           {
-            "node": "Process Response Message",
+            "node": "Send Response via Telegram",
             "type": "main",
             "index": 0
           },
           {
-            "node": "Process Broadcast Message",
+            "node": "Broadcast to Slack",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Draft Agent Reply (OpenAI)": {
+      "main": [
+        [
+          {
+            "node": "Generate Communication Report",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Send Response via Telegram": {
+      "main": [
+        [
+          {
+            "node": "Generate Communication Report",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Broadcast to Slack": {
+      "main": [
+        [
+          {
+            "node": "Generate Communication Report",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Generate Communication Report": {
+      "main": [
+        [
+          {
+            "node": "Log Communication to Airtable",
             "type": "main",
             "index": 0
           }
@@ -449,6 +463,6 @@
   "active": false,
   "settings": {},
   "pinData": {},
-  "versionId": "1",
+  "versionId": "2",
   "id": "day_44_solution"
 }

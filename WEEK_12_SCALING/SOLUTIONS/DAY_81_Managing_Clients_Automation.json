@@ -1,6 +1,6 @@
 {
   "name": "Day 81 Solution: Managing Clients with Automation",
-  "description": "Solution workflow for WEEK_12_SCALING Day 81: Managing Clients with Automation.",
+  "description": "Real support-triage (Webhook -> OpenAI classify -> Switch -> FAQ auto-reply or Slack escalation) plus a weekly client report pulled from the n8n Executions API.",
   "tags": [
     "course-solution",
     "WEEK_12",
@@ -9,83 +9,391 @@
   "version": "1.0.0",
   "nodes": [
     {
-      "id": "40b885d8-0b6d-4bd8-84df-46d91d074bb1",
+      "id": "5e87feff-d1a1-47f1-aa35-eb9dc3dee7f3",
       "name": "Overview",
       "type": "n8n-nodes-base.stickyNote",
       "typeVersion": 1,
       "position": [
-        -260,
-        -320
+        -680,
+        -520
       ],
       "parameters": {
-        "content": "## Day 81 Solution: Managing Clients with Automation\n\nThis workflow captures the Day 81 deliverable as structured fields in the **Client Management Automation Fields** node (run it once with Manual Trigger to see the values), plus a fully worked model answer in the sticky note to the right that you can read directly on the canvas.\n\nEvery day in Weeks 11-15 is primarily a business deliverable, so this solution is a lightweight Manual Trigger -> Set pattern that still opens and runs cleanly in n8n.\n\n**Credentials needed:** None needed — every node in this solution runs with no external account.\n\n**Matches:** `DAILY_TASKS/DAY_81_Managing_Clients_Automation.md`",
-        "height": 340,
-        "width": 460
+        "content": "## Day 81 Solution: Managing Clients with Automation\n\nTwo real workflows on this canvas:\n\n**1) Support Triage** (Webhook trigger, left column) \u2014 classifies an inbound client message with OpenAI, routes FAQ questions to an automated reply, and escalates billing/technical/feature-request/uncertain messages to Slack for a human.\n\n**2) Weekly Client Report** (Schedule Trigger, right column) \u2014 pulls real execution data from the n8n Executions API, computes success rate with a Code node, asks OpenAI for one written observation, and sends the report over Slack.\n\n**Credentials needed to run this for real:** OpenAI API key; Gmail (or Slack) for the FAQ auto-reply; Slack API for escalations and the weekly report; an n8n API key for the Executions API call (replace the placeholder base URL/header value with your own).\n\n**Matches:** `DAILY_TASKS/DAY_81_Managing_Clients_Automation.md`",
+        "height": 420,
+        "width": 480
       }
     },
     {
-      "id": "53e4e9c9-cbea-45db-b369-eb2a2ef8c833",
-      "name": "Manual Trigger",
-      "type": "n8n-nodes-base.manualTrigger",
+      "id": "d58362e0-4c83-4a4c-a4eb-5556d272e107",
+      "name": "FAQ Content Reference",
+      "type": "n8n-nodes-base.stickyNote",
       "typeVersion": 1,
       "position": [
-        80,
-        40
+        -680,
+        -60
       ],
-      "parameters": {}
+      "parameters": {
+        "content": "## Real FAQ Content (used verbatim in the Draft FAQ Reply system prompt)\n\n**Q: How do I access my dashboard?**\nA: Go to app.lane-automation.example, sign in with your account email, and your dashboard loads on the Overview tab.\n\n**Q: How do I pause or resume a workflow?**\nA: Open the workflow, use the Active toggle in the top-right corner. Pausing does not delete history or executions.\n\n**Q: How do I change which email/Slack channel gets my alerts?**\nA: Settings -> Notifications -> update the destination, then Save. Changes apply to the next run.\n\n**Q: How do I read my weekly report?**\nA: 'Success rate' is the % of runs that completed without error; 'executions' is total runs; the note at the bottom flags anything unusual that week.",
+        "height": 360,
+        "width": 480
+      }
     },
     {
-      "id": "5852f2c8-e9c6-464b-ba76-a6520c2108fd",
-      "name": "Client Management Automation Fields",
+      "id": "f31d23b4-4e73-4c7f-a23c-e3b301d22e15",
+      "name": "Client Support Webhook",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2,
+      "position": [
+        -200,
+        40
+      ],
+      "parameters": {
+        "path": "client-support",
+        "httpMethod": "POST",
+        "options": {}
+      }
+    },
+    {
+      "id": "7879aba5-bc19-45cd-8e9e-2de46f757061",
+      "name": "Classify Message",
+      "type": "n8n-nodes-base.openAi",
+      "typeVersion": 1.3,
+      "position": [
+        40,
+        40
+      ],
+      "parameters": {
+        "resource": "chat",
+        "operation": "create",
+        "model": "gpt-4o-mini",
+        "messages": {
+          "values": [
+            {
+              "role": "system",
+              "content": "You classify inbound client support messages for an automation agency. Reply with exactly one word, lowercase, no punctuation: faq, billing, technical_issue, or feature_request. Use 'faq' only for questions matching these known topics: accessing the dashboard, pausing/resuming a workflow, changing notification destinations, or reading the weekly report. Anything about invoices, charges, or payment is 'billing'. Anything about a workflow erroring, failing, or behaving unexpectedly is 'technical_issue'. Requests for new capabilities are 'feature_request'. If truly unsure, reply 'uncertain'."
+            },
+            {
+              "role": "user",
+              "content": "={{ 'Subject: ' + $json.subject + '\\n\\nBody: ' + $json.body }}"
+            }
+          ]
+        },
+        "options": {
+          "temperature": 0.1,
+          "maxTokens": 10
+        }
+      }
+    },
+    {
+      "id": "82a8380a-3ecb-49a8-8b41-fe3f81b35a7d",
+      "name": "Parse Category",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        280,
+        40
+      ],
+      "parameters": {
+        "mode": "runOnceForEachItem",
+        "jsCode": "const valid = ['faq', 'billing', 'technical_issue', 'feature_request'];\nconst raw = (item.json.message && item.json.message.content ? item.json.message.content : '')\n  .toString().trim().toLowerCase().replace(/[^a-z_]/g, '');\nconst category = valid.includes(raw) ? raw : 'uncertain';\nreturn { json: { ...($('Client Support Webhook').item.json), category } };"
+      }
+    },
+    {
+      "id": "41b57e6e-918b-4f0b-8bbf-92f3b5af7c3c",
+      "name": "Route by Category",
+      "type": "n8n-nodes-base.switch",
+      "typeVersion": 3.2,
+      "position": [
+        520,
+        40
+      ],
+      "parameters": {
+        "mode": "rules",
+        "rules": {
+          "values": [
+            {
+              "conditions": {
+                "string": [
+                  {
+                    "value1": "={{ $json.category }}",
+                    "operation": "equals",
+                    "value2": "faq"
+                  }
+                ]
+              },
+              "outputKey": "faq"
+            },
+            {
+              "conditions": {
+                "string": [
+                  {
+                    "value1": "={{ $json.category }}",
+                    "operation": "equals",
+                    "value2": "billing"
+                  }
+                ]
+              },
+              "outputKey": "billing"
+            },
+            {
+              "conditions": {
+                "string": [
+                  {
+                    "value1": "={{ $json.category }}",
+                    "operation": "equals",
+                    "value2": "technical_issue"
+                  }
+                ]
+              },
+              "outputKey": "technical_issue"
+            },
+            {
+              "conditions": {
+                "string": [
+                  {
+                    "value1": "={{ $json.category }}",
+                    "operation": "equals",
+                    "value2": "feature_request"
+                  }
+                ]
+              },
+              "outputKey": "feature_request"
+            }
+          ]
+        },
+        "fallbackOutput": "extra"
+      }
+    },
+    {
+      "id": "14ccc2db-75b6-4b7f-964d-29ee9589d7a2",
+      "name": "Draft FAQ Reply",
+      "type": "n8n-nodes-base.openAi",
+      "typeVersion": 1.3,
+      "position": [
+        800,
+        -220
+      ],
+      "parameters": {
+        "resource": "chat",
+        "operation": "create",
+        "model": "gpt-4o-mini",
+        "messages": {
+          "values": [
+            {
+              "role": "system",
+              "content": "You are the support auto-reply for an automation agency. Answer ONLY using this real FAQ content, in a friendly 2-4 sentence reply. Dashboard access: go to app.lane-automation.example, sign in with your account email, dashboard loads on the Overview tab. Pause/resume a workflow: open the workflow, use the Active toggle top-right; pausing keeps history. Change alert destination: Settings -> Notifications -> update destination -> Save. Reading the weekly report: success rate is % of error-free runs, executions is total runs, the bottom note flags anything unusual. If the question doesn't match these topics, say you'll have a teammate follow up instead of guessing."
+            },
+            {
+              "role": "user",
+              "content": "={{ $json.subject + ': ' + $json.body }}"
+            }
+          ]
+        },
+        "options": {
+          "temperature": 0.3,
+          "maxTokens": 300
+        }
+      }
+    },
+    {
+      "id": "90deda8c-ddbb-4bc5-aef2-7dfc670a1056",
+      "name": "Send FAQ Reply",
+      "type": "n8n-nodes-base.gmail",
+      "typeVersion": 2.1,
+      "position": [
+        1040,
+        -220
+      ],
+      "parameters": {
+        "resource": "message",
+        "operation": "send",
+        "sendTo": "={{ $('Route by Category').item.json.from }}",
+        "subject": "={{ 'Re: ' + $('Route by Category').item.json.subject }}",
+        "message": "={{ $json.message.content }}",
+        "options": {}
+      }
+    },
+    {
+      "id": "1cb5eaf4-c1bb-4688-95cf-3773766e23a0",
+      "name": "Escalate Billing",
+      "type": "n8n-nodes-base.slack",
+      "typeVersion": 2.1,
+      "position": [
+        800,
+        -60
+      ],
+      "parameters": {
+        "authentication": "predefinedCredentialType",
+        "nodeCredentialType": "slackApi",
+        "resource": "message",
+        "operation": "post",
+        "channel": "#billing-escalations",
+        "text": "={{ 'Billing message needs a human -> ' + $json.from + ': ' + $json.subject + ' - ' + $json.body }}",
+        "otherOptions": {}
+      }
+    },
+    {
+      "id": "9e3b205b-5042-4ffc-b14a-1a289132ebc1",
+      "name": "Escalate Technical",
+      "type": "n8n-nodes-base.slack",
+      "typeVersion": 2.1,
+      "position": [
+        800,
+        100
+      ],
+      "parameters": {
+        "authentication": "predefinedCredentialType",
+        "nodeCredentialType": "slackApi",
+        "resource": "message",
+        "operation": "post",
+        "channel": "#technical-escalations",
+        "text": "={{ 'Technical issue needs a human -> ' + $json.from + ': ' + $json.subject + ' - ' + $json.body }}",
+        "otherOptions": {}
+      }
+    },
+    {
+      "id": "a2df5228-e4d8-4fcc-964e-ce672ab9f67b",
+      "name": "Escalate Feature Request",
+      "type": "n8n-nodes-base.slack",
+      "typeVersion": 2.1,
+      "position": [
+        800,
+        260
+      ],
+      "parameters": {
+        "authentication": "predefinedCredentialType",
+        "nodeCredentialType": "slackApi",
+        "resource": "message",
+        "operation": "post",
+        "channel": "#product-feature-requests",
+        "text": "={{ 'Feature request logged -> ' + $json.from + ': ' + $json.subject + ' - ' + $json.body }}",
+        "otherOptions": {}
+      }
+    },
+    {
+      "id": "698b1072-5a2a-4c93-a5e3-96008fafa414",
+      "name": "Escalate Uncertain",
+      "type": "n8n-nodes-base.slack",
+      "typeVersion": 2.1,
+      "position": [
+        800,
+        420
+      ],
+      "parameters": {
+        "authentication": "predefinedCredentialType",
+        "nodeCredentialType": "slackApi",
+        "resource": "message",
+        "operation": "post",
+        "channel": "#support-escalations",
+        "text": "={{ 'Classification uncertain, needs human review -> ' + $json.from + ': ' + $json.subject + ' - ' + $json.body }}",
+        "otherOptions": {}
+      }
+    },
+    {
+      "id": "fedf2e6c-4e02-44f9-8e07-5ffdc669eab7",
+      "name": "Weekly Report Trigger",
+      "type": "n8n-nodes-base.scheduleTrigger",
+      "typeVersion": 1.2,
+      "position": [
+        -200,
+        700
+      ],
+      "parameters": {
+        "rule": {
+          "interval": [
+            {
+              "field": "weeks",
+              "weeksInterval": 1
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "0bfe6b24-498e-4b3d-8b7f-541a53fc737c",
+      "name": "Fetch n8n Executions",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        40,
+        700
+      ],
+      "parameters": {
+        "method": "GET",
+        "url": "https://YOUR-N8N-INSTANCE.example/api/v1/executions?limit=250",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "X-N8N-API-KEY",
+              "value": "YOUR_N8N_API_KEY"
+            }
+          ]
+        },
+        "options": {}
+      }
+    },
+    {
+      "id": "a3b09f1d-ecb4-40ae-962d-d51f3707ecc8",
+      "name": "Compute Report Metrics",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        280,
+        700
+      ],
+      "parameters": {
+        "mode": "runOnceForAllItems",
+        "jsCode": "const body = items[0].json;\nconst executions = Array.isArray(body.data) ? body.data : (Array.isArray(body) ? body : []);\nconst weekAgo = Date.now() - 7 * 24 * 60 * 60 * 1000;\nconst thisWeek = executions.filter(e => new Date(e.startedAt).getTime() >= weekAgo);\nconst total = thisWeek.length;\nconst success = thisWeek.filter(e => e.status === 'success' || e.finished === true).length;\nconst failed = total - success;\nconst successRate = total > 0 ? Math.round((success / total) * 1000) / 10 : 0;\nreturn [{ json: { total_executions: total, successful: success, failed, success_rate_pct: successRate } }];"
+      }
+    },
+    {
+      "id": "6bdba50d-ebf2-4485-a6bf-b9c43bded229",
+      "name": "Generate Observation",
+      "type": "n8n-nodes-base.openAi",
+      "typeVersion": 1.3,
+      "position": [
+        520,
+        700
+      ],
+      "parameters": {
+        "resource": "chat",
+        "operation": "create",
+        "model": "gpt-4o-mini",
+        "messages": {
+          "values": [
+            {
+              "role": "system",
+              "content": "You write one plain-English sentence observing a client's weekly automation performance from real numbers. No filler, no generic praise, cite the actual numbers given."
+            },
+            {
+              "role": "user",
+              "content": "={{ 'Total executions: ' + $json.total_executions + ', successful: ' + $json.successful + ', failed: ' + $json.failed + ', success rate: ' + $json.success_rate_pct + '%' }}"
+            }
+          ]
+        },
+        "options": {
+          "temperature": 0.4,
+          "maxTokens": 120
+        }
+      }
+    },
+    {
+      "id": "0fdf4d42-0fdc-45b9-a3f1-711a908a2b7b",
+      "name": "Build Client Report",
       "type": "n8n-nodes-base.set",
       "typeVersion": 3.4,
       "position": [
-        400,
-        40
+        760,
+        700
       ],
       "parameters": {
         "assignments": {
           "assignments": [
             {
-              "id": "3375e1ee-4b5c-43de-a157-8466e77b8fa1",
-              "name": "faq_1",
-              "value": "How do I access my dashboard? -> [dashboard_url], sign in with your login credentials",
-              "type": "string"
-            },
-            {
-              "id": "d5a30235-ea48-4f2a-97ec-cbde4d79be86",
-              "name": "faq_2",
-              "value": "How do I modify automation settings? -> Settings -> Automation Configuration -> adjust triggers/actions/schedules",
-              "type": "string"
-            },
-            {
-              "id": "95240f03-ed81-43e8-8cd2-c62dd2d8ba98",
-              "name": "ticket_routing_technical",
-              "value": "Technical issues -> route to technical team",
-              "type": "string"
-            },
-            {
-              "id": "25bd94b2-6504-475c-8e96-121c169c7040",
-              "name": "ticket_routing_billing",
-              "value": "Billing questions -> route to billing team",
-              "type": "string"
-            },
-            {
-              "id": "0154f480-4e88-4753-b51c-76c703e8c50b",
-              "name": "weekly_report_schedule",
-              "value": "Every Monday 9am to client contacts: execution summary, performance metrics, error reports, recommendations",
-              "type": "string"
-            },
-            {
-              "id": "23b6a166-7af8-4ce7-b3f1-566e9ab13abc",
-              "name": "monthly_report_schedule",
-              "value": "First Monday of month to stakeholders: monthly summary, ROI analysis, usage trends, optimization opportunities",
-              "type": "string"
-            },
-            {
-              "id": "b5a5ad3d-6575-4366-aedc-40c48a3ac4a8",
-              "name": "satisfaction_survey_schedule",
-              "value": "Monthly email survey: overall satisfaction, service quality, communication effectiveness, improvement suggestions",
+              "id": "737b9c5c-2028-4bc5-9793-4df8b782894b",
+              "name": "report_text",
+              "value": "={{ 'Weekly Automation Report\\n\\nExecutions run: ' + $('Compute Report Metrics').item.json.total_executions + '\\nSuccessful: ' + $('Compute Report Metrics').item.json.successful + '\\nFailed: ' + $('Compute Report Metrics').item.json.failed + '\\nSuccess rate: ' + $('Compute Report Metrics').item.json.success_rate_pct + '%\\n\\nObservation: ' + $json.message.content }}",
               "type": "string"
             }
           ]
@@ -94,27 +402,158 @@
       }
     },
     {
-      "id": "25af9919-a2e2-4776-8630-268fb2ffb829",
-      "name": "Model Answer",
-      "type": "n8n-nodes-base.stickyNote",
-      "typeVersion": 1,
+      "id": "5d72ea94-8152-4f64-bb0b-4b7f4be61f9d",
+      "name": "Send Weekly Report",
+      "type": "n8n-nodes-base.slack",
+      "typeVersion": 2.1,
       "position": [
-        780,
-        -340
+        1000,
+        700
       ],
       "parameters": {
-        "content": "## Model Answer: Managing Clients with Automation\n\n### Support Bot FAQ Automation (bot response bank)\n\n| Question | Bot response |\n|---|---|\n| How do I access my dashboard? | You can access your dashboard at [dashboard_url]. Use your login credentials to sign in. |\n| How do I modify settings? | Go to Settings -> Automation Configuration. Adjust triggers, actions, and schedules. |\n| How do I add a team member? | Settings -> Team Management -> Add Member. Enter their email and assign permissions. |\n| How do I view reports? | Dashboard -> Reports. Filter by date range, automation type, performance metrics. |\n| How do I contact support? | Email support@lane-automation.example or use the chat widget. |\n\n**Escalation triggers:** complex technical questions, billing inquiries, feature requests, complaints.\n\n### Ticket Routing Rules\nTechnical issues -> technical team. Billing questions -> billing team. Feature requests -> product/Jordan. General inquiries -> support queue. **Priority:** High = system down/billing issue. Medium = feature request/general question. Low = documentation request.\n\n### Automated Reporting\n- **Weekly performance report** — every Monday 9am, to client contacts: execution summary, performance metrics, error reports, recommendations.\n- **Monthly analytics** — first Monday of month, to stakeholders: ROI analysis, usage trends, optimization opportunities.\n- **Custom reports** — on client request, delivered within 24 hours.\n\n### Feedback Collection\nMonthly satisfaction survey by email: overall satisfaction rating, service quality rating, communication effectiveness, improvement suggestions. Sentiment-analyzed and turned into follow-up tasks automatically, with a personal response from Jordan to any low score.",
-        "height": 620,
-        "width": 700
+        "authentication": "predefinedCredentialType",
+        "nodeCredentialType": "slackApi",
+        "resource": "message",
+        "operation": "post",
+        "channel": "#client-reports-test",
+        "text": "={{ $json.report_text }}",
+        "otherOptions": {}
       }
     }
   ],
   "connections": {
-    "Manual Trigger": {
+    "Client Support Webhook": {
       "main": [
         [
           {
-            "node": "Client Management Automation Fields",
+            "node": "Classify Message",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Classify Message": {
+      "main": [
+        [
+          {
+            "node": "Parse Category",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Parse Category": {
+      "main": [
+        [
+          {
+            "node": "Route by Category",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Route by Category": {
+      "main": [
+        [
+          {
+            "node": "Draft FAQ Reply",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Escalate Billing",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Escalate Technical",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Escalate Feature Request",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Escalate Uncertain",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Draft FAQ Reply": {
+      "main": [
+        [
+          {
+            "node": "Send FAQ Reply",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Weekly Report Trigger": {
+      "main": [
+        [
+          {
+            "node": "Fetch n8n Executions",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Fetch n8n Executions": {
+      "main": [
+        [
+          {
+            "node": "Compute Report Metrics",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Compute Report Metrics": {
+      "main": [
+        [
+          {
+            "node": "Generate Observation",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Generate Observation": {
+      "main": [
+        [
+          {
+            "node": "Build Client Report",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Build Client Report": {
+      "main": [
+        [
+          {
+            "node": "Send Weekly Report",
             "type": "main",
             "index": 0
           }

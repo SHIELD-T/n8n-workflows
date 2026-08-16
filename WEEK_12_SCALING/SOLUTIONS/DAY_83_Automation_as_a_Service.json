@@ -1,6 +1,6 @@
 {
   "name": "Day 83 Solution: Automation-as-a-Service",
-  "description": "Solution workflow for WEEK_12_SCALING Day 83: Automation-as-a-Service.",
+  "description": "Real SLA monitoring workflow: Schedule Trigger -> HTTP Request (n8n Executions API) -> Code (success rate) -> Airtable log -> IF (SLA threshold) -> Slack breach alert.",
   "tags": [
     "course-solution",
     "WEEK_12",
@@ -9,84 +9,73 @@
   "version": "1.0.0",
   "nodes": [
     {
-      "id": "da7d1d12-2e98-4493-bd98-9266c5c89f1e",
+      "id": "efa638a0-7e58-4a39-b35e-d9a1b7e9975d",
       "name": "Overview",
       "type": "n8n-nodes-base.stickyNote",
       "typeVersion": 1,
       "position": [
-        -260,
-        -320
+        -680,
+        -520
       ],
       "parameters": {
-        "content": "## Day 83 Solution: Automation-as-a-Service\n\nThis workflow captures the Day 83 deliverable as structured fields in the **AaaS Tier Fields** node (run it once with Manual Trigger to see the values), plus a fully worked model answer in the sticky note to the right that you can read directly on the canvas.\n\nEvery day in Weeks 11-15 is primarily a business deliverable, so this solution is a lightweight Manual Trigger -> Set pattern that still opens and runs cleanly in n8n.\n\n**Credentials needed:** None needed — every node in this solution runs with no external account.\n\n**Matches:** `DAILY_TASKS/DAY_83_Automation_as_a_Service.md`",
-        "height": 340,
-        "width": 460
+        "content": "## Day 83 Solution: Automation-as-a-Service\n\nA real SLA monitoring workflow: **Schedule Trigger** (every 15 min) -> **HTTP Request** to the n8n Executions API -> **Code** node computing the real success rate over the window -> **Airtable** logs every check (so a month-end compliance number is real, not guessed) -> **IF** compares against the stated SLA threshold -> **Slack** alert fires only on an actual breach.\n\n**Credentials needed to run this for real:** n8n API key for the Executions call; Airtable (or Google Sheets) for the compliance log; Slack API for the breach alert.\n\n**Matches:** `DAILY_TASKS/DAY_83_Automation_as_a_Service.md`",
+        "height": 360,
+        "width": 480
       }
     },
     {
-      "id": "71b2bc84-7946-4ee8-a1f9-42eae0025801",
-      "name": "Manual Trigger",
-      "type": "n8n-nodes-base.manualTrigger",
+      "id": "63abc4dd-84f2-4777-91eb-1cece885f3bd",
+      "name": "Tiers and SLA (written)",
+      "type": "n8n-nodes-base.stickyNote",
       "typeVersion": 1,
       "position": [
-        80,
-        40
-      ],
-      "parameters": {}
-    },
-    {
-      "id": "ead313f0-2fdf-4762-bdca-5cc17300fe66",
-      "name": "AaaS Tier Fields",
-      "type": "n8n-nodes-base.set",
-      "typeVersion": 3.4,
-      "position": [
-        400,
-        40
+        -680,
+        -120
       ],
       "parameters": {
-        "assignments": {
-          "assignments": [
+        "content": "## Real Tiers (solo operator, honest capacity)\n\n**Basic** \u2014 $297/mo \u2014 up to 3 workflows, email support, 24h response, 99% uptime (monitored, best-effort fix).\n\n**Professional** \u2014 $697/mo \u2014 up to 10 workflows, Slack support channel, 4h response business hours, 99% uptime with this monitoring workflow live.\n\n**Enterprise** \u2014 custom (from $1,500/mo) \u2014 unlimited workflows, 1h response, 99.9% uptime target \u2014 **not committed solo** until a second responder is hired (Day 80).\n\n**Billing:** monthly recurring, auto-invoiced on the 1st. Missed payment -> 3-day grace -> automation paused, client notified -> reinstated on payment. Upgrade: prorated charge same day, new tier limits active immediately.\n\nThis tab's threshold below is set to the **Basic/Professional** number (99%) so the workflow reflects what's actually promised today.",
+        "height": 380,
+        "width": 480
+      }
+    },
+    {
+      "id": "3dcd5189-f889-4362-be38-08e610646161",
+      "name": "SLA Monitor Trigger",
+      "type": "n8n-nodes-base.scheduleTrigger",
+      "typeVersion": 1.2,
+      "position": [
+        -200,
+        200
+      ],
+      "parameters": {
+        "rule": {
+          "interval": [
             {
-              "id": "09509482-a0bc-4d9d-9019-d722b9d479ca",
-              "name": "tier_basic",
-              "value": "Basic — $297/mo — up to 3 workflows, email support, monthly report",
-              "type": "string"
-            },
+              "field": "minutes",
+              "minutesInterval": 15
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "c03e1cc7-03fd-4a8c-af3d-6aaa208ce816",
+      "name": "Fetch Recent Executions",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        40,
+        200
+      ],
+      "parameters": {
+        "method": "GET",
+        "url": "https://YOUR-N8N-INSTANCE.example/api/v1/executions?limit=100",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
             {
-              "id": "3886c600-f91a-48f5-9e9c-cedafdd01c2c",
-              "name": "tier_professional",
-              "value": "Professional — $697/mo — up to 10 workflows, priority support, weekly report, 99% uptime SLA",
-              "type": "string"
-            },
-            {
-              "id": "408ab4d5-7e53-4b69-8087-dd8963bf17b3",
-              "name": "tier_enterprise",
-              "value": "Enterprise — custom pricing — unlimited workflows, dedicated support, custom SLA",
-              "type": "string"
-            },
-            {
-              "id": "3f7d55fc-d41b-43ac-827f-6a88e15b7cc3",
-              "name": "sla_metric",
-              "value": "99% uptime target; <4hr response time on Professional and above",
-              "type": "string"
-            },
-            {
-              "id": "ec5e8ca0-1a2d-4fe8-84e5-820fc8fd20c4",
-              "name": "billing_cadence",
-              "value": "Monthly recurring, auto-invoiced on the 1st of the month",
-              "type": "string"
-            },
-            {
-              "id": "5e67334d-18a4-46e2-955c-c264d99905be",
-              "name": "onboarding_steps",
-              "value": "Discovery call -> workflow audit -> migration -> 30-day check-in",
-              "type": "string"
-            },
-            {
-              "id": "dbabd9e6-0537-425e-9d15-2555a3e0cbf0",
-              "name": "escalation_procedure",
-              "value": "SLA breach -> immediate client notification -> root-cause note within 24hrs -> credit applied per contract",
-              "type": "string"
+              "name": "X-N8N-API-KEY",
+              "value": "YOUR_N8N_API_KEY"
             }
           ]
         },
@@ -94,27 +83,161 @@
       }
     },
     {
-      "id": "cf8acc83-2330-42a1-8edc-f8f6eec0134c",
-      "name": "Model Answer",
-      "type": "n8n-nodes-base.stickyNote",
-      "typeVersion": 1,
+      "id": "39e1339a-6dbd-499d-b2b6-6ea5c706b307",
+      "name": "Compute Success Rate",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
       "position": [
-        780,
-        -340
+        280,
+        200
       ],
       "parameters": {
-        "content": "## Model Answer: Automation-as-a-Service\n\n### Automation-as-a-Service — Recurring Revenue Tiers\n\n| Tier | Price | Includes | SLA |\n|---|---|---|---|\n| **Basic** | $297/mo | Up to 3 active workflows, email support, monthly report | Best-effort |\n| **Professional** | $697/mo | Up to 10 active workflows, priority support, weekly report | 99% uptime, <4hr response |\n| **Enterprise** | Custom (from $1,500/mo) | Unlimited workflows, dedicated support, custom SLA | Negotiated |\n\n**SLA management:** performance monitored weekly (success rate, error count); breach triggers immediate client notification, a root-cause note within 24 hours, and a pro-rated credit per contract terms.\n\n**Billing:** monthly recurring, auto-invoiced on the 1st, net-0 (charged automatically) for Professional/Enterprise; Basic is manually invoiced net-7.\n\n**Onboarding:** discovery call -> workflow audit of the client's current manual processes -> migration of first 1-3 workflows -> 30-day check-in call to review performance and consider tier upgrade.\n\n**Revenue analytics tracked monthly:** MRR by tier, churn rate, upgrade rate Basic->Professional, average workflows-per-client.",
-        "height": 620,
-        "width": 700
+        "mode": "runOnceForAllItems",
+        "jsCode": "const SLA_THRESHOLD_PCT = 99;\nconst WINDOW_MINUTES = 30;\nconst body = items[0].json;\nconst executions = Array.isArray(body.data) ? body.data : (Array.isArray(body) ? body : []);\nconst cutoff = Date.now() - WINDOW_MINUTES * 60 * 1000;\nconst windowRuns = executions.filter(e => new Date(e.startedAt).getTime() >= cutoff);\nconst total = windowRuns.length;\nconst success = windowRuns.filter(e => e.status === 'success' || e.finished === true).length;\nconst successRate = total > 0 ? Math.round((success / total) * 1000) / 10 : 100;\nreturn [{ json: {\n  checked_at: new Date().toISOString(),\n  window_minutes: WINDOW_MINUTES,\n  total_runs: total,\n  successful_runs: success,\n  success_rate_pct: successRate,\n  sla_threshold_pct: SLA_THRESHOLD_PCT,\n  breached: successRate < SLA_THRESHOLD_PCT && total > 0\n} }];"
       }
+    },
+    {
+      "id": "4f83adfa-dd3b-4444-9676-f94b865fbf68",
+      "name": "Log SLA Check",
+      "type": "n8n-nodes-base.airtable",
+      "typeVersion": 2.1,
+      "position": [
+        520,
+        200
+      ],
+      "parameters": {
+        "operation": "create",
+        "base": {
+          "__rl": true,
+          "value": "your_base_id",
+          "mode": "id"
+        },
+        "table": {
+          "__rl": true,
+          "value": "SLA Checks",
+          "mode": "id"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "Checked At": "={{ $json.checked_at }}",
+            "Total Runs": "={{ $json.total_runs }}",
+            "Successful Runs": "={{ $json.successful_runs }}",
+            "Success Rate %": "={{ $json.success_rate_pct }}",
+            "SLA Threshold %": "={{ $json.sla_threshold_pct }}",
+            "Breached": "={{ $json.breached }}"
+          }
+        }
+      }
+    },
+    {
+      "id": "5ff85e44-175a-4550-a3cd-2e1128fa3d19",
+      "name": "SLA Breached?",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2,
+      "position": [
+        760,
+        200
+      ],
+      "parameters": {
+        "conditions": {
+          "boolean": [
+            {
+              "value1": "={{ $json.breached }}",
+              "value2": true
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "552c0ed7-341e-4613-a805-3010483e13c5",
+      "name": "Send SLA Breach Alert",
+      "type": "n8n-nodes-base.slack",
+      "typeVersion": 2.1,
+      "position": [
+        1000,
+        80
+      ],
+      "parameters": {
+        "authentication": "predefinedCredentialType",
+        "nodeCredentialType": "slackApi",
+        "resource": "message",
+        "operation": "post",
+        "channel": "#sla-alerts",
+        "text": "={{ 'SLA BREACH: success rate ' + $json.success_rate_pct + '% over last ' + $json.window_minutes + ' min (threshold ' + $json.sla_threshold_pct + '%). ' + $json.successful_runs + '/' + $json.total_runs + ' runs succeeded.' }}",
+        "otherOptions": {}
+      }
+    },
+    {
+      "id": "1e88f15c-ff6d-4120-b146-247215ea0c4b",
+      "name": "Within SLA",
+      "type": "n8n-nodes-base.noOp",
+      "typeVersion": 1,
+      "position": [
+        1000,
+        320
+      ],
+      "parameters": {}
     }
   ],
   "connections": {
-    "Manual Trigger": {
+    "SLA Monitor Trigger": {
       "main": [
         [
           {
-            "node": "AaaS Tier Fields",
+            "node": "Fetch Recent Executions",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Fetch Recent Executions": {
+      "main": [
+        [
+          {
+            "node": "Compute Success Rate",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Compute Success Rate": {
+      "main": [
+        [
+          {
+            "node": "Log SLA Check",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Log SLA Check": {
+      "main": [
+        [
+          {
+            "node": "SLA Breached?",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "SLA Breached?": {
+      "main": [
+        [
+          {
+            "node": "Send SLA Breach Alert",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Within SLA",
             "type": "main",
             "index": 0
           }

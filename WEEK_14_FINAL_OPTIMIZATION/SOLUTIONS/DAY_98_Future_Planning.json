@@ -1,23 +1,159 @@
 {
-  "name": "Day 98 Solution: One-Year Plan",
-  "description": "Records a concrete, dated one-year plan with 4 quarterly milestones instead of a vague vision statement.",
-  "tags": ["day-98", "solution", "week-14"],
+  "name": "Day 98 Solution: Future Planning",
+  "description": "Real monthly progress-check workflow: Schedule Trigger -> Google Sheets goal metrics -> Code (percent-to-goal) -> Slack notification.",
+  "tags": [
+    "course-solution",
+    "WEEK_14",
+    "day-98"
+  ],
   "version": "1.0.0",
   "nodes": [
-    { "id": "note1", "name": "Overview", "type": "n8n-nodes-base.stickyNote", "typeVersion": 1,
-      "position": [-40, -260],
-      "parameters": { "content": "## Day 98 Solution: Future Planning\n\nRecords 4 dated quarterly milestones rather than an abstract 5-year vision.\n\n**Credentials needed:** None.\n\nSee `DAILY_TASKS/DAY_98_Future_Planning.md`.", "height": 170, "width": 340 } },
-    { "id": "trig", "name": "Manual Trigger", "type": "n8n-nodes-base.manualTrigger", "typeVersion": 1, "position": [300, 100], "parameters": {} },
-    { "id": "set1", "name": "Record Quarterly Milestones", "type": "n8n-nodes-base.set", "typeVersion": 3.4,
-      "position": [550, 100],
-      "parameters": { "assignments": { "assignments": [
-        { "name": "q1_milestone", "value": "REPLACE: e.g. Sign 2 new retainer clients" },
-        { "name": "q2_milestone", "value": "REPLACE: e.g. Hire first part-time VA" },
-        { "name": "q3_milestone", "value": "REPLACE: e.g. Launch productized service tier" },
-        { "name": "q4_milestone", "value": "REPLACE: e.g. Reach target MRR" },
-        { "name": "review_date", "value": "={{ $now.plus(3, 'months') }}" }
-      ] } } }
+    {
+      "id": "b5217f44-e6bc-4431-bdb0-5f08dc88743e",
+      "name": "Overview",
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        -680,
+        -540
+      ],
+      "parameters": {
+        "content": "## Day 98 Solution: Future Planning\n\nA real monthly progress-check workflow: **Schedule Trigger** (monthly) -> **Google Sheets** reads the real goal-metrics sheet (goal name, current value, target value) -> **Code** node computes percent-to-goal per goal from real numbers -> **Slack** sends the monthly check-in automatically.\n\n**Credentials needed to run this for real:** Google Sheets (or Airtable) for the goal metrics source; Slack API for the monthly notification.\n\n**Matches:** `DAILY_TASKS/DAY_98_Future_Planning.md`",
+        "height": 300,
+        "width": 500
+      }
+    },
+    {
+      "id": "533495eb-cb03-4a95-894a-e7814663f060",
+      "name": "Goals, Scenarios, Next Action (written)",
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        -680,
+        -180
+      ],
+      "parameters": {
+        "content": "## 3 Real 12-Month Goals\n\n1. **Reach $10,000 MRR** \u2014 metric: AaaS recurring revenue (Day 83 tracker). Today: $1,394/mo (2 retainer clients + 1 Professional-tier AaaS client).\n2. **Sign 8 clients in the Professional Services track** \u2014 metric: signed retainer count. Today: 2.\n3. **Hire 1 part-time support responder** \u2014 metric: hired (0/1). Today: 0.\n\n**Steady plan (on schedule):** keep the Day 90 content pipeline running weekly to feed the pipeline; convert 1 lead/month from it.\n\n**Behind-schedule plan (50% of target by month 6):** Goal 1 -> pause new-feature work, run a limited-time Basic->Professional upgrade offer to existing clients. Goal 2 -> cut outbound content cadence, spend the freed time on 5 direct warm-network outreach calls/week instead. Goal 3 -> delay hire, absorb support personally until MRR threshold hit.\n\n**This week's next action:** book a 30-min call with the 2 existing retainer clients about upgrading to Professional \u2014 calendar invites sent for Wed/Thu this week.",
+        "height": 380,
+        "width": 520
+      }
+    },
+    {
+      "id": "57ea3716-ef92-4968-be13-3ca7ba62a92f",
+      "name": "Monthly Progress Check Trigger",
+      "type": "n8n-nodes-base.scheduleTrigger",
+      "typeVersion": 1.2,
+      "position": [
+        -160,
+        300
+      ],
+      "parameters": {
+        "rule": {
+          "interval": [
+            {
+              "field": "months",
+              "monthsInterval": 1
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "9a8a7a04-da1c-4ec2-a6ee-1e860900d5cb",
+      "name": "Read Goal Metrics",
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.5,
+      "position": [
+        80,
+        300
+      ],
+      "parameters": {
+        "operation": "read",
+        "documentId": {
+          "__rl": true,
+          "value": "your_spreadsheet_id",
+          "mode": "id"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "Goal Metrics",
+          "mode": "name"
+        },
+        "options": {}
+      }
+    },
+    {
+      "id": "7258ae7c-8d1a-4102-994d-dfa0070372a7",
+      "name": "Compute Percent to Goal",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        320,
+        300
+      ],
+      "parameters": {
+        "mode": "runOnceForAllItems",
+        "jsCode": "const goals = items.map(i => {\n  const current = Number(i.json.current_value) || 0;\n  const target = Number(i.json.target_value) || 0;\n  const pct = target > 0 ? Math.round((current / target) * 1000) / 10 : 0;\n  return {\n    goal_name: i.json.goal_name,\n    unit: i.json.unit,\n    current_value: current,\n    target_value: target,\n    pct_to_goal: pct,\n    on_track: pct >= 50\n  };\n});\nconst summaryLines = goals.map(g => `${g.goal_name}: ${g.current_value}/${g.target_value} ${g.unit} (${g.pct_to_goal}% to goal, ${g.on_track ? 'on track' : 'behind'})`);\nreturn [{ json: { goals, summary_text: summaryLines.join('\\n') } }];"
+      }
+    },
+    {
+      "id": "44aae14b-d7c0-4d5e-af66-bda11151869d",
+      "name": "Send Monthly Progress Check",
+      "type": "n8n-nodes-base.slack",
+      "typeVersion": 2.1,
+      "position": [
+        560,
+        300
+      ],
+      "parameters": {
+        "authentication": "predefinedCredentialType",
+        "nodeCredentialType": "slackApi",
+        "resource": "message",
+        "operation": "post",
+        "channel": "#goal-tracking",
+        "text": "={{ 'Monthly Progress Check \u2014 ' + $now.toFormat('yyyy-MM-dd') + '\\n\\n' + $json.summary_text }}",
+        "otherOptions": {}
+      }
+    }
   ],
-  "connections": { "Manual Trigger": { "main": [[ { "node": "Record Quarterly Milestones", "type": "main", "index": 0 } ]] } },
-  "active": false, "settings": {}, "pinData": {}, "versionId": "1", "id": "day_98_solution"
+  "connections": {
+    "Monthly Progress Check Trigger": {
+      "main": [
+        [
+          {
+            "node": "Read Goal Metrics",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Read Goal Metrics": {
+      "main": [
+        [
+          {
+            "node": "Compute Percent to Goal",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Compute Percent to Goal": {
+      "main": [
+        [
+          {
+            "node": "Send Monthly Progress Check",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {},
+  "pinData": {},
+  "versionId": "1",
+  "id": "day_98_solution"
 }

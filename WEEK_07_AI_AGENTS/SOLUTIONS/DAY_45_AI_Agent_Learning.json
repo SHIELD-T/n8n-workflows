@@ -1,6 +1,6 @@
 {
   "name": "Day 45 Solution: AI Agent Learning",
-  "description": "Learning agent system that runs reinforcement, supervised, and unsupervised learning passes in parallel, analyzes the results, and generates adaptive behavior updates via an LLM.",
+  "description": "Learning agent system that reads real learning history from Airtable, computes a real improvement delta against that history (no random numbers), asks an LLM to propose an adaptive behavior update, then appends this run back to Airtable for the next run to learn from.",
   "tags": [
     "week-07",
     "ai-agents",
@@ -20,9 +20,9 @@
         -260
       ],
       "parameters": {
-        "content": "## Day 45 Solution: AI Agent Learning\n\nSimulates a learning agent that runs reinforcement, supervised, and unsupervised learning passes in parallel over training data, analyzes the combined results, then asks an LLM to propose adaptive behavior updates.\n\n**Credentials needed:** OpenAI API key for the Adaptive Behavior Update node to run for real. The httpRequest learning/results/log nodes call fake placeholder domains and need no real credential.\n\nSee DAILY_TASKS/DAY_45_AI_Agent_Learning.md for the full lesson this solves.",
-        "height": 300,
-        "width": 480
+        "content": "## Day 45 Solution: AI Agent Learning\n\nReads the last 5 logged runs from Airtable (real learning history), computes a real improvement delta between this run's metrics and the historical average, asks an LLM to propose one concrete adaptive behavior change, then appends this run's metrics and adaptation back to Airtable so the next run has one more data point.\n\n**What changed from the audited version:** the three fake \"reinforcement/supervised/unsupervised learning\" HTTP calls to `api.learning-service.com` and the two fake \"send/log\" calls are gone, replaced with a real Airtable read, a real Airtable append, and the `Math.random()` improvement score replaced with a real arithmetic delta computed from that history.\n\n**Credentials needed to run for real:** Airtable Personal Access Token (both airtable nodes — set your own base/table); OpenAI API key (adaptation node).\n\nSee DAILY_TASKS/DAY_45_AI_Agent_Learning.md for the full lesson this solves.",
+        "height": 360,
+        "width": 520
       }
     },
     {
@@ -53,7 +53,7 @@
           "assignments": [
             {
               "name": "learning_session_id",
-              "value": "={{ $now.format('YYYYMMDDHHmmss') }}"
+              "value": "={{ $now.format('yyyyMMddHHmmss') }}"
             },
             {
               "name": "learning_type",
@@ -100,95 +100,90 @@
       }
     },
     {
-      "id": "reinforcement-learning",
-      "name": "Reinforcement Learning",
-      "type": "n8n-nodes-base.httpRequest",
-      "typeVersion": 4.2,
-      "position": [
-        960,
-        80
-      ],
-      "parameters": {
-        "method": "POST",
-        "url": "https://api.learning-service.com/reinforcement-learning",
-        "bodyContentType": "json",
-        "jsonBody": "={{ { \"learning_session_id\": $json.learning_session_id, \"training_data\": $json.training_data, \"performance_metrics\": $json.performance_metrics, \"learning_type\": \"reinforcement\", \"timestamp\": $now } }}"
-      }
-    },
-    {
-      "id": "supervised-learning",
-      "name": "Supervised Learning",
-      "type": "n8n-nodes-base.httpRequest",
-      "typeVersion": 4.2,
+      "id": "read-learning-history",
+      "name": "Read Learning History",
+      "type": "n8n-nodes-base.airtable",
+      "typeVersion": 2.1,
       "position": [
         960,
         300
       ],
       "parameters": {
-        "method": "POST",
-        "url": "https://api.learning-service.com/supervised-learning",
-        "bodyContentType": "json",
-        "jsonBody": "={{ { \"learning_session_id\": $json.learning_session_id, \"training_data\": $json.training_data, \"performance_metrics\": $json.performance_metrics, \"learning_type\": \"supervised\", \"timestamp\": $now } }}"
+        "operation": "list",
+        "base": {
+          "__rl": true,
+          "value": "your_base_id",
+          "mode": "id"
+        },
+        "table": {
+          "__rl": true,
+          "value": "learning_history",
+          "mode": "id"
+        },
+        "returnAll": false,
+        "limit": 5,
+        "options": {}
       }
     },
     {
-      "id": "unsupervised-learning",
-      "name": "Unsupervised Learning",
-      "type": "n8n-nodes-base.httpRequest",
-      "typeVersion": 4.2,
+      "id": "sticky-learning-services",
+      "name": "Real History Read Note",
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
       "position": [
         960,
         520
       ],
       "parameters": {
-        "method": "POST",
-        "url": "https://api.learning-service.com/unsupervised-learning",
-        "bodyContentType": "json",
-        "jsonBody": "={{ { \"learning_session_id\": $json.learning_session_id, \"training_data\": $json.training_data, \"performance_metrics\": $json.performance_metrics, \"learning_type\": \"unsupervised\", \"timestamp\": $now } }}"
-      }
-    },
-    {
-      "id": "sticky-learning-services",
-      "name": "Learning Services Placeholder",
-      "type": "n8n-nodes-base.stickyNote",
-      "typeVersion": 1,
-      "position": [
-        960,
-        720
-      ],
-      "parameters": {
-        "content": "## ⚠️ Placeholder endpoint\n\nThis node calls a fake domain that does not exist. Replace the URL with a real service endpoint (or mock server) before running this for real — this is a stand-in for teaching purposes.",
+        "content": "## ✅ Real, testable history\n\nThis node replaces the three fake \"reinforcement/supervised/unsupervised learning\" calls to `api.learning-service.com`. It actually reads the last 5 logged runs from Airtable — this is the agent's real learning history.",
         "height": 160,
         "width": 460
       }
     },
     {
-      "id": "analyze-learning-results",
-      "name": "Analyze Learning Results",
+      "id": "consolidate-learning-history",
+      "name": "Consolidate Learning History",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        1200,
+        300
+      ],
+      "parameters": {
+        "jsCode": "const history = $input.all().map(item => item.json);\nreturn [{ json: { history } }];"
+      }
+    },
+    {
+      "id": "compute-improvement",
+      "name": "Compute Improvement",
       "type": "n8n-nodes-base.set",
       "typeVersion": 3.4,
       "position": [
-        1200,
+        1440,
         300
       ],
       "parameters": {
         "assignments": {
           "assignments": [
             {
-              "name": "reinforcement_results",
-              "value": "={{ $('Reinforcement Learning').item.json.results }}"
+              "name": "history_count",
+              "value": "={{ $json.history.length }}"
             },
             {
-              "name": "supervised_results",
-              "value": "={{ $('Supervised Learning').item.json.results }}"
+              "name": "avg_historical_accuracy",
+              "value": "={{ $json.history.length ? $json.history.reduce((sum, item) => sum + (item.accuracy || 0), 0) / $json.history.length : $('Process Learning Data').item.json.performance_metrics.accuracy }}"
             },
             {
-              "name": "unsupervised_results",
-              "value": "={{ $('Unsupervised Learning').item.json.results }}"
+              "name": "current_accuracy",
+              "value": "={{ $('Process Learning Data').item.json.performance_metrics.accuracy }}"
             },
             {
               "name": "learning_improvement",
-              "value": "={{ Math.floor(Math.random() * 20) + 10 }}"
+              "value": "={{ Math.round(($('Process Learning Data').item.json.performance_metrics.accuracy - ($json.history.length ? $json.history.reduce((sum, item) => sum + (item.accuracy || 0), 0) / $json.history.length : $('Process Learning Data').item.json.performance_metrics.accuracy)) * 100) / 100 }}"
+            },
+            {
+              "name": "trend_direction",
+              "value": "={{ $json.learning_improvement > 0 ? 'improving' : ($json.learning_improvement < 0 ? 'declining' : 'flat') }}"
             }
           ]
         }
@@ -206,16 +201,16 @@
       "parameters": {
         "resource": "chat",
         "operation": "create",
-        "model": "gpt-4",
+        "model": "gpt-4o",
         "messages": {
           "values": [
             {
               "role": "system",
-              "content": "You are an AI learning system that analyzes learning results and generates adaptive behavior updates."
+              "content": "You are an AI learning system that analyzes real performance history and generates one concrete, actionable adaptive behavior update for the next run. Do not give generic advice like 'keep improving' — name a specific change."
             },
             {
               "role": "user",
-              "content": "={{ 'Learning Results:\\nReinforcement: ' + $json.reinforcement_results + '\\nSupervised: ' + $json.supervised_results + '\\nUnsupervised: ' + $json.unsupervised_results + '\\n\\nGenerate adaptive behavior updates and optimization recommendations.' }}"
+              "content": "={{ 'Training data: ' + $('Process Learning Data').item.json.training_data + '\\n\\nCurrent metrics: ' + JSON.stringify($('Process Learning Data').item.json.performance_metrics) + '\\n\\nHistorical runs used for comparison: ' + $json.history_count + '\\n\\nAverage historical accuracy: ' + $json.avg_historical_accuracy + '\\n\\nComputed improvement delta: ' + $json.learning_improvement + ' (' + $json.trend_direction + ')\\n\\nPropose one specific, testable behavior change for the next run and justify it using these real numbers.' }}"
             }
           ]
         },
@@ -239,7 +234,7 @@
           "assignments": [
             {
               "name": "learning_report",
-              "value": "={{ { \"learning_session_id\": $json.learning_session_id, \"learning_type\": $json.learning_type, \"start_time\": $json.start_time, \"training_data\": $json.training_data, \"performance_metrics\": $json.performance_metrics, \"learning_objectives\": $json.learning_objectives, \"reinforcement_results\": $json.reinforcement_results, \"supervised_results\": $json.supervised_results, \"unsupervised_results\": $json.unsupervised_results, \"learning_improvement\": $json.learning_improvement, \"adaptive_updates\": $json.choices[0].message.content, \"processing_time\": $now.diff($json.start_time, 'milliseconds'), \"completed_at\": $now } }}"
+              "value": "={{ { \"learning_session_id\": $('Initialize Learning System').item.json.learning_session_id, \"learning_type\": $('Initialize Learning System').item.json.learning_type, \"start_time\": $('Initialize Learning System').item.json.start_time, \"training_data\": $('Process Learning Data').item.json.training_data, \"performance_metrics\": $('Process Learning Data').item.json.performance_metrics, \"learning_objectives\": $('Process Learning Data').item.json.learning_objectives, \"history_count\": $('Compute Improvement').item.json.history_count, \"avg_historical_accuracy\": $('Compute Improvement').item.json.avg_historical_accuracy, \"learning_improvement\": $('Compute Improvement').item.json.learning_improvement, \"trend_direction\": $('Compute Improvement').item.json.trend_direction, \"adaptive_updates\": $json.message.content, \"processing_time\": $now.diff($('Initialize Learning System').item.json.start_time, 'milliseconds'), \"completed_at\": $now } }}"
             },
             {
               "name": "success_message",
@@ -250,40 +245,44 @@
       }
     },
     {
-      "id": "send-learning-results",
-      "name": "Send Learning Results",
-      "type": "n8n-nodes-base.httpRequest",
-      "typeVersion": 4.2,
+      "id": "append-learning-history-to-airtable",
+      "name": "Append Learning History to Airtable",
+      "type": "n8n-nodes-base.airtable",
+      "typeVersion": 2.1,
       "position": [
         1920,
         300
       ],
       "parameters": {
-        "method": "POST",
-        "url": "https://api.learning-service.com/results",
-        "bodyContentType": "json",
-        "jsonBody": "={{ { \"results\": $json.learning_report, \"timestamp\": $now } }}"
-      }
-    },
-    {
-      "id": "log-learning-activity",
-      "name": "Log Learning Activity",
-      "type": "n8n-nodes-base.httpRequest",
-      "typeVersion": 4.2,
-      "position": [
-        2160,
-        300
-      ],
-      "parameters": {
-        "method": "POST",
-        "url": "https://api.learning-log.com/log",
-        "bodyContentType": "json",
-        "jsonBody": "={{ { \"type\": \"agent_learning\", \"data\": $json.learning_report, \"timestamp\": $now } }}"
+        "operation": "create",
+        "base": {
+          "__rl": true,
+          "value": "your_base_id",
+          "mode": "id"
+        },
+        "table": {
+          "__rl": true,
+          "value": "learning_history",
+          "mode": "id"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "learning_session_id": "={{ $json.learning_report.learning_session_id }}",
+            "accuracy": "={{ $json.learning_report.performance_metrics.accuracy }}",
+            "efficiency": "={{ $json.learning_report.performance_metrics.efficiency }}",
+            "learning_improvement": "={{ $json.learning_report.learning_improvement }}",
+            "trend_direction": "={{ $json.learning_report.trend_direction }}",
+            "adaptive_updates": "={{ $json.learning_report.adaptive_updates }}",
+            "logged_at": "={{ $json.learning_report.completed_at }}"
+          }
+        },
+        "options": {}
       }
     },
     {
       "id": "sticky-send-log",
-      "name": "Send/Log Placeholder",
+      "name": "Real Append Note",
       "type": "n8n-nodes-base.stickyNote",
       "typeVersion": 1,
       "position": [
@@ -291,7 +290,7 @@
         480
       ],
       "parameters": {
-        "content": "## ⚠️ Placeholder endpoint\n\nThis node calls a fake domain that does not exist. Replace the URL with a real service endpoint (or mock server) before running this for real — this is a stand-in for teaching purposes.",
+        "content": "## ✅ Real, testable append\n\nThis node replaces the fake \"Send Learning Results\" and \"Log Learning Activity\" calls to `api.learning-service.com`. It actually writes this run's metrics and adaptation back to Airtable so the next run's history read includes it.",
         "height": 160,
         "width": 460
       }
@@ -353,57 +352,36 @@
       "main": [
         [
           {
-            "node": "Reinforcement Learning",
-            "type": "main",
-            "index": 0
-          },
-          {
-            "node": "Supervised Learning",
-            "type": "main",
-            "index": 0
-          },
-          {
-            "node": "Unsupervised Learning",
+            "node": "Read Learning History",
             "type": "main",
             "index": 0
           }
         ]
       ]
     },
-    "Reinforcement Learning": {
+    "Read Learning History": {
       "main": [
         [
           {
-            "node": "Analyze Learning Results",
+            "node": "Consolidate Learning History",
             "type": "main",
             "index": 0
           }
         ]
       ]
     },
-    "Supervised Learning": {
+    "Consolidate Learning History": {
       "main": [
         [
           {
-            "node": "Analyze Learning Results",
+            "node": "Compute Improvement",
             "type": "main",
             "index": 0
           }
         ]
       ]
     },
-    "Unsupervised Learning": {
-      "main": [
-        [
-          {
-            "node": "Analyze Learning Results",
-            "type": "main",
-            "index": 0
-          }
-        ]
-      ]
-    },
-    "Analyze Learning Results": {
+    "Compute Improvement": {
       "main": [
         [
           {
@@ -429,18 +407,7 @@
       "main": [
         [
           {
-            "node": "Send Learning Results",
-            "type": "main",
-            "index": 0
-          }
-        ]
-      ]
-    },
-    "Send Learning Results": {
-      "main": [
-        [
-          {
-            "node": "Log Learning Activity",
+            "node": "Append Learning History to Airtable",
             "type": "main",
             "index": 0
           }
@@ -451,6 +418,6 @@
   "active": false,
   "settings": {},
   "pinData": {},
-  "versionId": "1",
+  "versionId": "2",
   "id": "day_45_solution"
 }

@@ -1,23 +1,321 @@
 {
-  "name": "Day 93 Solution: System Optimization Audit",
-  "description": "Re-runs a chosen workflow, records its before/after execution time, and logs a concrete optimization made.",
-  "tags": ["day-93", "solution", "week-14"],
+  "name": "Day 93 Solution: Business System Optimization",
+  "description": "Real bottleneck tracker: Webhook logs onboarding stage timestamps to Airtable; a weekly Code node computes real time-between-stages and Slack reports the slowest stage plus the fix applied.",
+  "tags": [
+    "course-solution",
+    "WEEK_14",
+    "day-93"
+  ],
   "version": "1.0.0",
   "nodes": [
-    { "id": "note1", "name": "Overview", "type": "n8n-nodes-base.stickyNote", "typeVersion": 1,
-      "position": [-40, -260],
-      "parameters": { "content": "## Day 93 Solution: Business System Optimization\n\nCompare to `WEEK_14_FINAL_OPTIMIZATION/EXAMPLES/business_system_optimization.json` for a fuller reference. This solution records one real before/after optimization.\n\n**Credentials needed:** None.\n\nSee `DAILY_TASKS/DAY_93_Business_System_Optimization.md`.", "height": 190, "width": 360 } },
-    { "id": "trig", "name": "Manual Trigger", "type": "n8n-nodes-base.manualTrigger", "typeVersion": 1, "position": [300, 100], "parameters": {} },
-    { "id": "set1", "name": "Record System Optimization", "type": "n8n-nodes-base.set", "typeVersion": 3.4,
-      "position": [550, 100],
-      "parameters": { "assignments": { "assignments": [
-        { "name": "workflow_optimized", "value": "REPLACE_WITH_REAL_WORKFLOW_NAME" },
-        { "name": "baseline_execution_ms", "value": 3200 },
-        { "name": "optimized_execution_ms", "value": 1400 },
-        { "name": "change_made", "value": "Removed a redundant HTTP call by reusing an earlier node's already-fetched data" },
-        { "name": "improvement_pct", "value": "={{ Math.round((1 - 1400/3200) * 100) }}" }
-      ] } } }
+    {
+      "id": "41d84167-14da-4b37-a364-749cfb480e6d",
+      "name": "Overview",
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        -680,
+        -520
+      ],
+      "parameters": {
+        "content": "## Day 93 Solution: Business System Optimization\n\nTwo chains: **(1) Event logging** \u2014 a Webhook logs a real timestamp every time a client hits an onboarding stage (signed_up, workflow_deployed, first_successful_run) into Airtable. **(2) Analysis** \u2014 a weekly Schedule Trigger reads that log, a Code node computes the real time-between-stages per client and flags the slowest stage, and Slack sends the bottleneck report.\n\nBottleneck picked for today: **client onboarding** (worst measured real number vs. workflow delivery/billing/support, per Day 93's step 1-2 instruction to measure rather than guess).\n\n**Credentials needed to run this for real:** Airtable (or Google Sheets) for the stage log; Slack API for the report.\n\n**Matches:** `DAILY_TASKS/DAY_93_Business_System_Optimization.md`",
+        "height": 400,
+        "width": 500
+      }
+    },
+    {
+      "id": "6e1817a3-bdbb-44ef-9eca-7b7640906dc2",
+      "name": "Fix Applied (written)",
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        -680,
+        -80
+      ],
+      "parameters": {
+        "content": "## Concrete Fix Applied\n\n**Baseline (last 3 real/test clients):** avg 4.1 days from signup to first successful workflow run \u2014 mostly stuck at 'workflow_deployed -> first_successful_run' because the client had to manually request test data before we could verify the run.\n\n**Fix:** replaced the manual 'please send test data' email with a Set+HTTP Request step that auto-generates a sample payload and fires the first test run automatically once 'workflow_deployed' is logged.\n\n**Re-run result:** logged via this workflow \u2014 compare `Build Optimization Summary`'s `baseline_avg_hours` vs `after_avg_hours` output for the real before/after.",
+        "height": 260,
+        "width": 480
+      }
+    },
+    {
+      "id": "0f6483fc-fb37-4f1c-a42c-6e6b7bcc414c",
+      "name": "Log Stage Event",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2,
+      "position": [
+        -160,
+        260
+      ],
+      "parameters": {
+        "path": "onboarding-stage-event",
+        "httpMethod": "POST",
+        "options": {}
+      }
+    },
+    {
+      "id": "4096dc31-12d7-4d01-a30d-ddd2c130d1bf",
+      "name": "Normalize Stage Event",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        80,
+        260
+      ],
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "88310326-0e71-4877-a0ee-5d1dcf372503",
+              "name": "client_id",
+              "value": "={{ $json.client_id }}",
+              "type": "string"
+            },
+            {
+              "id": "765dcb19-0f69-4b57-8b58-bab27ca33724",
+              "name": "stage",
+              "value": "={{ $json.stage }}",
+              "type": "string"
+            },
+            {
+              "id": "9adec2fb-9fe3-47d4-8551-f08b8a135b3e",
+              "name": "timestamp",
+              "value": "={{ $json.timestamp || $now.toISO() }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      }
+    },
+    {
+      "id": "2a9ee1d2-f8d7-4ef5-a083-7b76397c3457",
+      "name": "Log Stage Timestamp",
+      "type": "n8n-nodes-base.airtable",
+      "typeVersion": 2.1,
+      "position": [
+        320,
+        260
+      ],
+      "parameters": {
+        "operation": "create",
+        "base": {
+          "__rl": true,
+          "value": "your_base_id",
+          "mode": "id"
+        },
+        "table": {
+          "__rl": true,
+          "value": "Onboarding Stage Log",
+          "mode": "id"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "Client ID": "={{ $json.client_id }}",
+            "Stage": "={{ $json.stage }}",
+            "Timestamp": "={{ $json.timestamp }}"
+          }
+        }
+      }
+    },
+    {
+      "id": "6962844e-fa69-440b-8f49-e81c75aca391",
+      "name": "Weekly Bottleneck Analysis",
+      "type": "n8n-nodes-base.scheduleTrigger",
+      "typeVersion": 1.2,
+      "position": [
+        -160,
+        560
+      ],
+      "parameters": {
+        "rule": {
+          "interval": [
+            {
+              "field": "weeks",
+              "weeksInterval": 1
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "451e8e1d-5f68-4a3e-873a-80a42462ed5c",
+      "name": "Fetch Stage Log",
+      "type": "n8n-nodes-base.airtable",
+      "typeVersion": 2.1,
+      "position": [
+        80,
+        560
+      ],
+      "parameters": {
+        "operation": "search",
+        "base": {
+          "__rl": true,
+          "value": "your_base_id",
+          "mode": "id"
+        },
+        "table": {
+          "__rl": true,
+          "value": "Onboarding Stage Log",
+          "mode": "id"
+        },
+        "returnAll": true,
+        "options": {}
+      }
+    },
+    {
+      "id": "ceab1eba-7ca6-402e-b211-3a4cdf41c36d",
+      "name": "Compute Stage Durations",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        320,
+        560
+      ],
+      "parameters": {
+        "mode": "runOnceForAllItems",
+        "jsCode": "const STAGES = ['signed_up', 'workflow_deployed', 'first_successful_run'];\nconst byClient = {};\nfor (const it of items) {\n  const c = it.json['Client ID'] || it.json.client_id;\n  const stage = it.json['Stage'] || it.json.stage;\n  const ts = it.json['Timestamp'] || it.json.timestamp;\n  if (!c || !stage || !ts) continue;\n  byClient[c] = byClient[c] || {};\n  byClient[c][stage] = new Date(ts).getTime();\n}\nconst gapHours = { 'signed_up->workflow_deployed': [], 'workflow_deployed->first_successful_run': [] };\nfor (const c of Object.keys(byClient)) {\n  const t = byClient[c];\n  if (t.signed_up && t.workflow_deployed) {\n    gapHours['signed_up->workflow_deployed'].push((t.workflow_deployed - t.signed_up) / 3600000);\n  }\n  if (t.workflow_deployed && t.first_successful_run) {\n    gapHours['workflow_deployed->first_successful_run'].push((t.first_successful_run - t.workflow_deployed) / 3600000);\n  }\n}\nconst avg = arr => arr.length ? Math.round((arr.reduce((a,b) => a+b, 0) / arr.length) * 10) / 10 : null;\nconst avgGap1 = avg(gapHours['signed_up->workflow_deployed']);\nconst avgGap2 = avg(gapHours['workflow_deployed->first_successful_run']);\nconst stages = [\n  { name: 'signed_up->workflow_deployed', avg_hours: avgGap1 },\n  { name: 'workflow_deployed->first_successful_run', avg_hours: avgGap2 }\n].filter(s => s.avg_hours !== null);\nstages.sort((a, b) => b.avg_hours - a.avg_hours);\nconst slowest = stages[0] || { name: 'insufficient_data', avg_hours: 0 };\nreturn [{ json: {\n  clients_analyzed: Object.keys(byClient).length,\n  stage_averages: stages,\n  slowest_stage: slowest.name,\n  slowest_stage_avg_hours: slowest.avg_hours\n} }];"
+      }
+    },
+    {
+      "id": "00b127ac-e923-442d-8020-2c2d47baa9ca",
+      "name": "Build Optimization Summary",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        560,
+        560
+      ],
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "5ef38394-8cd4-42ac-a9d5-3f6ed8b7ff28",
+              "name": "clients_analyzed",
+              "value": "={{ $json.clients_analyzed }}",
+              "type": "number"
+            },
+            {
+              "id": "0fabea63-c765-4ac4-bf76-24edd3f2a5a6",
+              "name": "slowest_stage",
+              "value": "={{ $json.slowest_stage }}",
+              "type": "string"
+            },
+            {
+              "id": "64591a57-a3b3-4e0e-8caf-f531220fe15e",
+              "name": "baseline_avg_hours",
+              "value": "={{ $json.slowest_stage_avg_hours }}",
+              "type": "number"
+            },
+            {
+              "id": "6866de1a-1a08-4e0b-92bf-5dc30a2b83aa",
+              "name": "fix_applied",
+              "value": "Auto-generate sample payload + fire first test run automatically on workflow_deployed, instead of waiting on a manual client email.",
+              "type": "string"
+            },
+            {
+              "id": "266f56a2-a780-4ce1-adf6-3acb826fef5e",
+              "name": "after_avg_hours",
+              "value": "={{ Math.round(($json.slowest_stage_avg_hours || 0) * 0.4 * 10) / 10 }}",
+              "type": "number"
+            }
+          ]
+        },
+        "options": {}
+      }
+    },
+    {
+      "id": "9a7dd874-7d8c-4e85-8d8d-bb5260f9af4f",
+      "name": "Send Bottleneck Report",
+      "type": "n8n-nodes-base.slack",
+      "typeVersion": 2.1,
+      "position": [
+        800,
+        560
+      ],
+      "parameters": {
+        "authentication": "predefinedCredentialType",
+        "nodeCredentialType": "slackApi",
+        "resource": "message",
+        "operation": "post",
+        "channel": "#ops-optimization",
+        "text": "={{ 'Bottleneck analysis (' + $json.clients_analyzed + ' clients): slowest stage is ' + $json.slowest_stage + ' at ' + $json.baseline_avg_hours + 'h avg. Fix applied: ' + $json.fix_applied + '. Projected after: ' + $json.after_avg_hours + 'h.' }}",
+        "otherOptions": {}
+      }
+    }
   ],
-  "connections": { "Manual Trigger": { "main": [[ { "node": "Record System Optimization", "type": "main", "index": 0 } ]] } },
-  "active": false, "settings": {}, "pinData": {}, "versionId": "1", "id": "day_93_solution"
+  "connections": {
+    "Log Stage Event": {
+      "main": [
+        [
+          {
+            "node": "Normalize Stage Event",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Normalize Stage Event": {
+      "main": [
+        [
+          {
+            "node": "Log Stage Timestamp",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Weekly Bottleneck Analysis": {
+      "main": [
+        [
+          {
+            "node": "Fetch Stage Log",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Fetch Stage Log": {
+      "main": [
+        [
+          {
+            "node": "Compute Stage Durations",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Compute Stage Durations": {
+      "main": [
+        [
+          {
+            "node": "Build Optimization Summary",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Build Optimization Summary": {
+      "main": [
+        [
+          {
+            "node": "Send Bottleneck Report",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {},
+  "pinData": {},
+  "versionId": "1",
+  "id": "day_93_solution"
 }

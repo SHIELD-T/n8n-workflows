@@ -1,6 +1,6 @@
 {
   "name": "Day 48 Solution: AI Agent Monitoring",
-  "description": "Agent monitoring system that collects performance, health, availability, and error metrics in parallel, analyzes each, and rolls them up into a single weighted health score and report.",
+  "description": "Agent monitoring system that pulls real recent executions from n8n's own REST API, computes a real weighted health score in a Code node, and — only when the score is below threshold — sends a real Slack alert with the failing detail; either way the check is logged to Airtable for trend history.",
   "tags": [
     "week-07",
     "ai-agents",
@@ -17,12 +17,12 @@
       "typeVersion": 1,
       "position": [
         240,
-        -260
+        -280
       ],
       "parameters": {
-        "content": "## Day 48 Solution: AI Agent Monitoring\n\nCollects performance, health, availability, and error metrics in parallel, analyzes each stream, then rolls everything up into a single weighted health score and report.\n\n**Credentials needed:** None — this workflow uses only webhook, set, and httpRequest nodes. The httpRequest metric/results/log nodes call fake placeholder domains and need no real credential.\n\nSee DAILY_TASKS/DAY_48_AI_Agent_Monitoring.md for the full lesson this solves.",
-        "height": 280,
-        "width": 480
+        "content": "## Day 48 Solution: AI Agent Monitoring\n\nCalls n8n's own REST API for recent executions, computes a real weighted 0-100 health score in a Code node (successRate*0.6 + durationScore*0.4), then an IF node gates the result: below threshold sends a real Slack alert naming the failing execution and its error; at/above threshold just records \"healthy\". Either branch logs the check to Airtable so you can see trend over time.\n\n**What changed from the audited version:** the six fake HTTP calls to `api.performance-monitor.com`, `api.health-monitor.com`, `api.availability-monitor.com`, `api.error-monitor.com`, `api.monitoring-service.com`, and `api.monitoring-log.com` are gone. In their place: one real HTTP Request node calling `https://n8n-takumi.onrender.com/api/v1/executions`, a real Code node computing the health score, a real IF node gating on that score (added — the audited version computed a score but never branched on it), a real Slack alert node, and a real Airtable logging node.\n\n**Credentials needed to run for real:** an n8n API key credential — create a **Header Auth** credential named e.g. \"n8n API Key\" with header name `X-N8N-API-KEY` and your key as the value (n8n Settings → API), then attach it to the \"Get Recent Executions\" node's Authentication field. Slack OAuth2 for the alert node. Airtable Personal Access Token for the history log.\n\nSee DAILY_TASKS/DAY_48_AI_Agent_Monitoring.md for the full lesson this solves.",
+        "height": 440,
+        "width": 560
       }
     },
     {
@@ -53,7 +53,7 @@
           "assignments": [
             {
               "name": "monitoring_session_id",
-              "value": "={{ $now.format('YYYYMMDDHHmmss') }}"
+              "value": "={{ $now.format('yyyyMMddHHmmss') }}"
             },
             {
               "name": "monitoring_type",
@@ -65,27 +65,38 @@
             },
             {
               "name": "monitoring_metrics",
-              "value": "={{ ['performance', 'health', 'availability', 'errors'] }}"
+              "value": "={{ ['success_rate', 'avg_duration', 'error_types'] }}"
             }
           ]
         }
       }
     },
     {
-      "id": "collect-performance-metrics",
-      "name": "Collect Performance Metrics",
+      "id": "get-recent-executions",
+      "name": "Get Recent Executions (n8n API)",
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 4.2,
       "position": [
         720,
-        80
+        300
       ],
       "parameters": {
         "method": "GET",
-        "url": "https://api.performance-monitor.com/metrics",
-        "qs": {
-          "timeframe": "1h",
-          "metrics": "response_time,throughput,accuracy,success_rate"
+        "url": "https://n8n-takumi.onrender.com/api/v1/executions",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpHeaderAuth",
+        "sendQuery": true,
+        "queryParameters": {
+          "parameters": [
+            {
+              "name": "limit",
+              "value": "20"
+            },
+            {
+              "name": "includeData",
+              "value": "false"
+            }
+          ]
         },
         "options": {
           "response": {
@@ -97,250 +108,98 @@
       }
     },
     {
-      "id": "collect-health-metrics",
-      "name": "Collect Health Metrics",
-      "type": "n8n-nodes-base.httpRequest",
-      "typeVersion": 4.2,
-      "position": [
-        720,
-        280
-      ],
-      "parameters": {
-        "method": "GET",
-        "url": "https://api.health-monitor.com/metrics",
-        "qs": {
-          "timeframe": "1h",
-          "metrics": "cpu_usage,memory_usage,disk_usage,network_status"
-        },
-        "options": {
-          "response": {
-            "response": {
-              "responseFormat": "json"
-            }
-          }
-        }
-      }
-    },
-    {
-      "id": "collect-availability-metrics",
-      "name": "Collect Availability Metrics",
-      "type": "n8n-nodes-base.httpRequest",
-      "typeVersion": 4.2,
-      "position": [
-        720,
-        480
-      ],
-      "parameters": {
-        "method": "GET",
-        "url": "https://api.availability-monitor.com/metrics",
-        "qs": {
-          "timeframe": "1h",
-          "metrics": "uptime,downtime,availability_percentage"
-        },
-        "options": {
-          "response": {
-            "response": {
-              "responseFormat": "json"
-            }
-          }
-        }
-      }
-    },
-    {
-      "id": "collect-error-metrics",
-      "name": "Collect Error Metrics",
-      "type": "n8n-nodes-base.httpRequest",
-      "typeVersion": 4.2,
-      "position": [
-        720,
-        680
-      ],
-      "parameters": {
-        "method": "GET",
-        "url": "https://api.error-monitor.com/metrics",
-        "qs": {
-          "timeframe": "1h",
-          "metrics": "error_count,error_rate,error_types"
-        },
-        "options": {
-          "response": {
-            "response": {
-              "responseFormat": "json"
-            }
-          }
-        }
-      }
-    },
-    {
-      "id": "sticky-metrics-collectors",
-      "name": "Metrics Collectors Placeholder",
+      "id": "sticky-n8n-api-credential",
+      "name": "n8n API Credential Needed",
       "type": "n8n-nodes-base.stickyNote",
       "typeVersion": 1,
       "position": [
         720,
-        900
+        520
       ],
       "parameters": {
-        "content": "## ⚠️ Placeholder endpoint\n\nThis node calls a fake domain that does not exist. Replace the URL with a real service endpoint (or mock server) before running this for real — this is a stand-in for teaching purposes.",
-        "height": 150,
+        "content": "## ✅ Real, testable metrics source\n\nThis node replaces the four fake \"Collect * Metrics\" calls to `api.performance-monitor.com` / `api.health-monitor.com` / `api.availability-monitor.com` / `api.error-monitor.com` with one real call to n8n's own Executions API.\n\n**Setup required:** create a **Header Auth** credential (Credentials → New → Header Auth) named `X-N8N-API-KEY`, value = your n8n API key from Settings → API, then attach it to this node's Authentication (Generic Credential Type → Header Auth) field after import.",
+        "height": 190,
         "width": 700
       }
     },
     {
-      "id": "analyze-performance-data",
-      "name": "Analyze Performance Data",
-      "type": "n8n-nodes-base.set",
-      "typeVersion": 3.4,
+      "id": "compute-health-stats",
+      "name": "Compute Health Stats",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
       "position": [
         960,
-        80
+        300
       ],
       "parameters": {
-        "assignments": {
-          "assignments": [
-            {
-              "name": "avg_response_time",
-              "value": "={{ $json.avg_response_time_ms }}"
-            },
-            {
-              "name": "throughput_rate",
-              "value": "={{ $json.throughput_per_minute }}"
-            },
-            {
-              "name": "accuracy_rate",
-              "value": "={{ $json.accuracy_percentage }}"
-            },
-            {
-              "name": "success_rate",
-              "value": "={{ $json.success_percentage }}"
-            },
-            {
-              "name": "performance_status",
-              "value": "={{ $json.avg_response_time_ms < 1000 && $json.success_percentage > 95 ? 'excellent' : $json.avg_response_time_ms < 2000 && $json.success_percentage > 90 ? 'good' : 'needs_attention' }}"
-            }
-          ]
-        }
+        "jsCode": "const body = $json;\nconst executions = body.data || [];\n\nconst total = executions.length;\nconst failed = executions.filter(e => e.status === 'error' || e.status === 'failed');\nconst success_rate = total ? Math.round(((total - failed.length) / total) * 1000) / 10 : 100;\n\nconst durations = executions\n  .filter(e => e.startedAt && e.stoppedAt)\n  .map(e => (new Date(e.stoppedAt).getTime() - new Date(e.startedAt).getTime()));\nconst avg_duration_ms = durations.length ? Math.round(durations.reduce((a, b) => a + b, 0) / durations.length) : 0;\n\nconst errorTypes = [...new Set(failed.map(e => e.status))];\nconst latestFailure = failed[0] || null;\n\n// Health score formula: successRate weighted 60%, duration weighted 40% (penalty above 3s)\nconst duration_score = Math.max(0, 100 - Math.max(0, avg_duration_ms - 3000) / 100);\nconst overall_health_score = Math.round((success_rate * 0.6) + (duration_score * 0.4));\n\nreturn [{\n  json: {\n    total_executions: total,\n    success_rate,\n    avg_duration_ms,\n    error_count: failed.length,\n    error_types: errorTypes,\n    latest_failure_id: latestFailure ? latestFailure.id : null,\n    latest_failure_workflow: latestFailure ? (latestFailure.workflowId || 'unknown') : null,\n    overall_health_score\n  }\n}];"
       }
     },
     {
-      "id": "analyze-health-data",
-      "name": "Analyze Health Data",
-      "type": "n8n-nodes-base.set",
-      "typeVersion": 3.4,
-      "position": [
-        960,
-        280
-      ],
-      "parameters": {
-        "assignments": {
-          "assignments": [
-            {
-              "name": "cpu_usage",
-              "value": "={{ $json.cpu_percentage }}"
-            },
-            {
-              "name": "memory_usage",
-              "value": "={{ $json.memory_percentage }}"
-            },
-            {
-              "name": "disk_usage",
-              "value": "={{ $json.disk_percentage }}"
-            },
-            {
-              "name": "network_status",
-              "value": "={{ $json.network_status }}"
-            },
-            {
-              "name": "health_status",
-              "value": "={{ $json.cpu_percentage < 80 && $json.memory_percentage < 80 && $json.disk_percentage < 90 ? 'healthy' : 'warning' }}"
-            }
-          ]
-        }
-      }
-    },
-    {
-      "id": "analyze-availability-data",
-      "name": "Analyze Availability Data",
-      "type": "n8n-nodes-base.set",
-      "typeVersion": 3.4,
-      "position": [
-        960,
-        480
-      ],
-      "parameters": {
-        "assignments": {
-          "assignments": [
-            {
-              "name": "uptime_percentage",
-              "value": "={{ $json.availability_percentage }}"
-            },
-            {
-              "name": "downtime_minutes",
-              "value": "={{ $json.downtime_minutes }}"
-            },
-            {
-              "name": "availability_status",
-              "value": "={{ $json.availability_percentage > 99 ? 'excellent' : $json.availability_percentage > 95 ? 'good' : 'needs_attention' }}"
-            }
-          ]
-        }
-      }
-    },
-    {
-      "id": "analyze-error-data",
-      "name": "Analyze Error Data",
-      "type": "n8n-nodes-base.set",
-      "typeVersion": 3.4,
-      "position": [
-        960,
-        680
-      ],
-      "parameters": {
-        "assignments": {
-          "assignments": [
-            {
-              "name": "error_count",
-              "value": "={{ $json.error_count }}"
-            },
-            {
-              "name": "error_rate",
-              "value": "={{ $json.error_rate_percentage }}"
-            },
-            {
-              "name": "error_types",
-              "value": "={{ $json.error_types }}"
-            },
-            {
-              "name": "error_status",
-              "value": "={{ $json.error_rate_percentage < 1 ? 'excellent' : $json.error_rate_percentage < 5 ? 'good' : 'needs_attention' }}"
-            }
-          ]
-        }
-      }
-    },
-    {
-      "id": "generate-health-score",
-      "name": "Generate Health Score",
-      "type": "n8n-nodes-base.set",
-      "typeVersion": 3.4,
+      "id": "health-score-below-threshold",
+      "name": "Health Score Below Threshold?",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2,
       "position": [
         1200,
         300
       ],
       "parameters": {
-        "assignments": {
-          "assignments": [
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 2
+          },
+          "conditions": [
             {
-              "name": "overall_health_score",
-              "value": "={{ Math.round(($json.performance_status === 'excellent' ? 100 : $json.performance_status === 'good' ? 80 : 60) * 0.3 + ($json.health_status === 'healthy' ? 100 : 70) * 0.3 + ($json.availability_status === 'excellent' ? 100 : $json.availability_status === 'good' ? 80 : 60) * 0.2 + ($json.error_status === 'excellent' ? 100 : $json.error_status === 'good' ? 80 : 60) * 0.2) }}"
-            },
-            {
-              "name": "health_summary",
-              "value": "={{ $json.overall_health_score >= 90 ? 'System is operating optimally' : $json.overall_health_score >= 70 ? 'System is operating well with minor issues' : 'System requires attention' }}"
+              "id": "c1",
+              "leftValue": "={{ $json.overall_health_score }}",
+              "rightValue": 80,
+              "operator": {
+                "type": "number",
+                "operation": "lt"
+              }
             }
-          ]
-        }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
       }
+    },
+    {
+      "id": "send-health-alert",
+      "name": "Send Health Alert (Slack)",
+      "type": "n8n-nodes-base.slack",
+      "typeVersion": 2.1,
+      "position": [
+        1440,
+        160
+      ],
+      "parameters": {
+        "resource": "message",
+        "operation": "post",
+        "select": "channel",
+        "channelId": {
+          "__rl": true,
+          "value": "your_channel_id",
+          "mode": "id"
+        },
+        "text": "={{ '🚨 Health score ' + $json.overall_health_score + '/100 (below threshold 80)\\n\\nSuccess rate: ' + $json.success_rate + '%\\nAvg duration: ' + $json.avg_duration_ms + 'ms\\nErrors seen: ' + $json.error_count + ' (' + $json.error_types.join(', ') + ')\\nMost recent failing execution: ' + $json.latest_failure_id + ' (workflow ' + $json.latest_failure_workflow + ')' }}",
+        "otherOptions": {}
+      }
+    },
+    {
+      "id": "log-healthy-status",
+      "name": "Log Healthy Status",
+      "type": "n8n-nodes-base.noOp",
+      "typeVersion": 1,
+      "position": [
+        1440,
+        440
+      ],
+      "parameters": {}
     },
     {
       "id": "generate-monitoring-report",
@@ -348,7 +207,7 @@
       "type": "n8n-nodes-base.set",
       "typeVersion": 3.4,
       "position": [
-        1440,
+        1680,
         300
       ],
       "parameters": {
@@ -356,7 +215,7 @@
           "assignments": [
             {
               "name": "monitoring_report",
-              "value": "={{ { \"monitoring_session_id\": $json.monitoring_session_id, \"monitoring_type\": $json.monitoring_type, \"start_time\": $json.start_time, \"monitoring_metrics\": $json.monitoring_metrics, \"performance_metrics\": { \"avg_response_time\": $json.avg_response_time, \"throughput_rate\": $json.throughput_rate, \"accuracy_rate\": $json.accuracy_rate, \"success_rate\": $json.success_rate, \"status\": $json.performance_status }, \"health_metrics\": { \"cpu_usage\": $json.cpu_usage, \"memory_usage\": $json.memory_usage, \"disk_usage\": $json.disk_usage, \"network_status\": $json.network_status, \"status\": $json.health_status }, \"availability_metrics\": { \"uptime_percentage\": $json.uptime_percentage, \"downtime_minutes\": $json.downtime_minutes, \"status\": $json.availability_status }, \"error_metrics\": { \"error_count\": $json.error_count, \"error_rate\": $json.error_rate, \"error_types\": $json.error_types, \"status\": $json.error_status }, \"overall_health_score\": $json.overall_health_score, \"health_summary\": $json.health_summary, \"processing_time\": $now.diff($json.start_time, 'milliseconds'), \"completed_at\": $now } }}"
+              "value": "={{ { \"monitoring_session_id\": $('Initialize Monitoring System').item.json.monitoring_session_id, \"monitoring_type\": $('Initialize Monitoring System').item.json.monitoring_type, \"start_time\": $('Initialize Monitoring System').item.json.start_time, \"total_executions\": $('Compute Health Stats').item.json.total_executions, \"success_rate\": $('Compute Health Stats').item.json.success_rate, \"avg_duration_ms\": $('Compute Health Stats').item.json.avg_duration_ms, \"error_count\": $('Compute Health Stats').item.json.error_count, \"error_types\": $('Compute Health Stats').item.json.error_types, \"overall_health_score\": $('Compute Health Stats').item.json.overall_health_score, \"alert_fired\": $('Compute Health Stats').item.json.overall_health_score < 80, \"processing_time\": $now.diff($('Initialize Monitoring System').item.json.start_time, 'milliseconds'), \"completed_at\": $now } }}"
             },
             {
               "name": "success_message",
@@ -367,50 +226,52 @@
       }
     },
     {
-      "id": "send-monitoring-results",
-      "name": "Send Monitoring Results",
-      "type": "n8n-nodes-base.httpRequest",
-      "typeVersion": 4.2,
-      "position": [
-        1680,
-        300
-      ],
-      "parameters": {
-        "method": "POST",
-        "url": "https://api.monitoring-service.com/results",
-        "bodyContentType": "json",
-        "jsonBody": "={{ { \"results\": $json.monitoring_report, \"timestamp\": $now } }}"
-      }
-    },
-    {
-      "id": "log-monitoring-activity",
-      "name": "Log Monitoring Activity",
-      "type": "n8n-nodes-base.httpRequest",
-      "typeVersion": 4.2,
+      "id": "log-monitoring-history-to-airtable",
+      "name": "Log Monitoring History to Airtable",
+      "type": "n8n-nodes-base.airtable",
+      "typeVersion": 2.1,
       "position": [
         1920,
         300
       ],
       "parameters": {
-        "method": "POST",
-        "url": "https://api.monitoring-log.com/log",
-        "bodyContentType": "json",
-        "jsonBody": "={{ { \"type\": \"agent_monitoring\", \"data\": $json.monitoring_report, \"timestamp\": $now } }}"
+        "operation": "create",
+        "base": {
+          "__rl": true,
+          "value": "your_base_id",
+          "mode": "id"
+        },
+        "table": {
+          "__rl": true,
+          "value": "monitoring_history",
+          "mode": "id"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "monitoring_session_id": "={{ $json.monitoring_report.monitoring_session_id }}",
+            "overall_health_score": "={{ $json.monitoring_report.overall_health_score }}",
+            "success_rate": "={{ $json.monitoring_report.success_rate }}",
+            "alert_fired": "={{ $json.monitoring_report.alert_fired }}",
+            "completed_at": "={{ $json.monitoring_report.completed_at }}"
+          }
+        },
+        "options": {}
       }
     },
     {
       "id": "sticky-send-log",
-      "name": "Send/Log Placeholder",
+      "name": "Real Alert and Log Note",
       "type": "n8n-nodes-base.stickyNote",
       "typeVersion": 1,
       "position": [
-        1680,
-        480
+        1440,
+        620
       ],
       "parameters": {
-        "content": "## ⚠️ Placeholder endpoint\n\nThis node calls a fake domain that does not exist. Replace the URL with a real service endpoint (or mock server) before running this for real — this is a stand-in for teaching purposes.",
+        "content": "## ✅ Real, testable alert + logging\n\nThe Slack node replaces the fake \"Send Monitoring Results\" call; the Airtable node replaces the fake \"Log Monitoring Activity\" call (both used to hit `api.monitoring-service.com` / `api.monitoring-log.com`). The IF node gating the alert is new — the audited version computed a health score but never branched on it.",
         "height": 160,
-        "width": 460
+        "width": 480
       }
     },
     {
@@ -420,7 +281,7 @@
       "typeVersion": 3.4,
       "position": [
         480,
-        900
+        600
       ],
       "parameters": {
         "assignments": {
@@ -454,22 +315,7 @@
       "main": [
         [
           {
-            "node": "Collect Performance Metrics",
-            "type": "main",
-            "index": 0
-          },
-          {
-            "node": "Collect Health Metrics",
-            "type": "main",
-            "index": 0
-          },
-          {
-            "node": "Collect Availability Metrics",
-            "type": "main",
-            "index": 0
-          },
-          {
-            "node": "Collect Error Metrics",
+            "node": "Get Recent Executions (n8n API)",
             "type": "main",
             "index": 0
           },
@@ -481,95 +327,58 @@
         ]
       ]
     },
-    "Collect Performance Metrics": {
+    "Get Recent Executions (n8n API)": {
       "main": [
         [
           {
-            "node": "Analyze Performance Data",
+            "node": "Compute Health Stats",
             "type": "main",
             "index": 0
           }
         ]
       ]
     },
-    "Collect Health Metrics": {
+    "Compute Health Stats": {
       "main": [
         [
           {
-            "node": "Analyze Health Data",
+            "node": "Health Score Below Threshold?",
             "type": "main",
             "index": 0
           }
         ]
       ]
     },
-    "Collect Availability Metrics": {
+    "Health Score Below Threshold?": {
       "main": [
         [
           {
-            "node": "Analyze Availability Data",
+            "node": "Send Health Alert (Slack)",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Log Healthy Status",
             "type": "main",
             "index": 0
           }
         ]
       ]
     },
-    "Collect Error Metrics": {
+    "Send Health Alert (Slack)": {
       "main": [
         [
           {
-            "node": "Analyze Error Data",
+            "node": "Generate Monitoring Report",
             "type": "main",
             "index": 0
           }
         ]
       ]
     },
-    "Analyze Performance Data": {
-      "main": [
-        [
-          {
-            "node": "Generate Health Score",
-            "type": "main",
-            "index": 0
-          }
-        ]
-      ]
-    },
-    "Analyze Health Data": {
-      "main": [
-        [
-          {
-            "node": "Generate Health Score",
-            "type": "main",
-            "index": 0
-          }
-        ]
-      ]
-    },
-    "Analyze Availability Data": {
-      "main": [
-        [
-          {
-            "node": "Generate Health Score",
-            "type": "main",
-            "index": 0
-          }
-        ]
-      ]
-    },
-    "Analyze Error Data": {
-      "main": [
-        [
-          {
-            "node": "Generate Health Score",
-            "type": "main",
-            "index": 0
-          }
-        ]
-      ]
-    },
-    "Generate Health Score": {
+    "Log Healthy Status": {
       "main": [
         [
           {
@@ -584,18 +393,7 @@
       "main": [
         [
           {
-            "node": "Send Monitoring Results",
-            "type": "main",
-            "index": 0
-          }
-        ]
-      ]
-    },
-    "Send Monitoring Results": {
-      "main": [
-        [
-          {
-            "node": "Log Monitoring Activity",
+            "node": "Log Monitoring History to Airtable",
             "type": "main",
             "index": 0
           }
@@ -606,6 +404,6 @@
   "active": false,
   "settings": {},
   "pinData": {},
-  "versionId": "1",
+  "versionId": "2",
   "id": "day_48_solution"
 }

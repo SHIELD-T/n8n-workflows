@@ -1,6 +1,6 @@
 {
   "name": "Day 46 Solution: AI Agent Decision Making",
-  "description": "Strategic decision agent that runs risk assessment and strategic analysis via LLM, scores each option deterministically, and produces a justified final recommendation.",
+  "description": "Strategic decision agent that gets real structured risk/reward/feasibility/timeline scores from two OpenAI calls (no Math.random()), scores each option deterministically with a weighted formula, produces a justified final recommendation, and logs it for real to Airtable and Slack.",
   "tags": [
     "week-07",
     "ai-agents",
@@ -20,9 +20,9 @@
         -260
       ],
       "parameters": {
-        "content": "## Day 46 Solution: AI Agent Decision Making\n\nSimulates a strategic decision agent: an LLM assesses risk, a second LLM call performs strategic analysis, deterministic scoring weighs risk/reward/feasibility/timeline for each option, and a final LLM call produces a justified recommendation.\n\n**Credentials needed:** OpenAI API key for the three openAi nodes to run for real. The httpRequest results/log nodes call fake placeholder domains and need no real credential.\n\nSee DAILY_TASKS/DAY_46_AI_Agent_Decision_Making.md for the full lesson this solves.",
-        "height": 300,
-        "width": 480
+        "content": "## Day 46 Solution: AI Agent Decision Making\n\nAn LLM assesses risk per option as structured JSON, a second LLM call does the same for reward/feasibility/timeline, a Code node parses both into real numbers, deterministic scoring weighs risk/reward/feasibility/timeline for each option, and a final LLM call produces a justified recommendation. The recommendation is then logged for real to Airtable and posted to Slack.\n\n**What changed from the audited version:** the `Math.random()` stand-ins for risk/reward/feasibility/timeline scores are gone — both OpenAI nodes now return strict JSON, parsed by a real Code node into `$json.risk_scores` / `$json.reward_scores` / etc. The fake \"send/log\" HTTP calls to `api.decision-service.com` / `api.decision-log.com` are gone, replaced with a real Airtable node and a real Slack node. A pre-existing bug where both `risk_assessment` and `strategic_analysis` in the final report read the same (wrong) field was also fixed to reference each OpenAI call by name.\n\n**Credentials needed to run for real:** OpenAI API key (three openAi nodes); Airtable Personal Access Token; Slack OAuth2.\n\nSee DAILY_TASKS/DAY_46_AI_Agent_Decision_Making.md for the full lesson this solves.",
+        "height": 400,
+        "width": 540
       }
     },
     {
@@ -53,7 +53,7 @@
           "assignments": [
             {
               "name": "decision_session_id",
-              "value": "={{ $now.format('YYYYMMDDHHmmss') }}"
+              "value": "={{ $now.format('yyyyMMddHHmmss') }}"
             },
             {
               "name": "decision_type",
@@ -89,7 +89,7 @@
             },
             {
               "name": "available_options",
-              "value": "={{ $json.options || ['Strategy A: Focus on enterprise clients', 'Strategy B: Target small businesses', 'Strategy C: Develop AI products'] }}"
+              "value": "={{ $json.options || ['Strategy A', 'Strategy B', 'Strategy C'] }}"
             },
             {
               "name": "decision_context",
@@ -115,22 +115,22 @@
       "parameters": {
         "resource": "chat",
         "operation": "create",
-        "model": "gpt-4",
+        "model": "gpt-4o",
         "messages": {
           "values": [
             {
               "role": "system",
-              "content": "You are a risk assessment AI that evaluates risks and opportunities for business decisions. Provide detailed risk analysis for each option."
+              "content": "You are a risk assessment AI that evaluates risks for business decisions. You MUST respond with ONLY valid JSON, no prose, no markdown fences. The JSON must be an object keyed by each option's exact name, where each value is an object with a numeric 'risk' field from 0-100 (higher = riskier) and a short string 'justification' field. Example: {\"Strategy A\": {\"risk\": 35, \"justification\": \"...\"}}"
             },
             {
               "role": "user",
-              "content": "={{ 'Decision Scenario: ' + $json.decision_scenario + '\\n\\nAvailable Options:\\n' + $json.available_options.join('\\n') + '\\n\\nContext: ' + $json.decision_context + '\\n\\nProvide risk assessment for each option including probability, impact, and mitigation strategies.' }}"
+              "content": "={{ 'Decision Scenario: ' + $json.decision_scenario + '\\n\\nAvailable Options:\\n' + $json.available_options.join('\\n') + '\\n\\nContext: ' + $json.decision_context + '\\n\\nReturn the risk JSON for each option.' }}"
             }
           ]
         },
         "options": {
           "temperature": 0.3,
-          "maxTokens": 800
+          "maxTokens": 500
         }
       }
     },
@@ -146,55 +146,36 @@
       "parameters": {
         "resource": "chat",
         "operation": "create",
-        "model": "gpt-4",
+        "model": "gpt-4o",
         "messages": {
           "values": [
             {
               "role": "system",
-              "content": "You are a strategic planning AI that analyzes long-term implications and strategic value of business decisions."
+              "content": "You are a strategic planning AI that analyzes long-term implications and strategic value of business decisions. You MUST respond with ONLY valid JSON, no prose, no markdown fences. The JSON must be an object keyed by each option's exact name, where each value is an object with numeric 'reward' (0-100), 'feasibility' (0-100), and 'timeline' (0-100, higher = faster) fields, plus a short string 'justification' field. Example: {\"Strategy A\": {\"reward\": 70, \"feasibility\": 80, \"timeline\": 60, \"justification\": \"...\"}}"
             },
             {
               "role": "user",
-              "content": "={{ 'Decision Scenario: ' + $json.decision_scenario + '\\n\\nAvailable Options:\\n' + $json.available_options.join('\\n') + '\\n\\nContext: ' + $json.decision_context + '\\n\\nProvide strategic analysis including long-term implications, competitive advantages, and strategic alignment.' }}"
+              "content": "={{ 'Decision Scenario: ' + $('Process Decision Request').item.json.decision_scenario + '\\n\\nAvailable Options:\\n' + $('Process Decision Request').item.json.available_options.join('\\n') + '\\n\\nContext: ' + $('Process Decision Request').item.json.decision_context + '\\n\\nReturn the reward/feasibility/timeline JSON for each option.' }}"
             }
           ]
         },
         "options": {
           "temperature": 0.3,
-          "maxTokens": 800
+          "maxTokens": 500
         }
       }
     },
     {
-      "id": "decision-algorithm-processing",
-      "name": "Decision Algorithm Processing",
-      "type": "n8n-nodes-base.set",
-      "typeVersion": 3.4,
+      "id": "parse-structured-scores",
+      "name": "Parse Structured Scores",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
       "position": [
         1440,
         300
       ],
       "parameters": {
-        "assignments": {
-          "assignments": [
-            {
-              "name": "risk_scores",
-              "value": "={{ { \"Strategy A\": Math.floor(Math.random() * 30) + 20, \"Strategy B\": Math.floor(Math.random() * 30) + 15, \"Strategy C\": Math.floor(Math.random() * 30) + 25 } }}"
-            },
-            {
-              "name": "reward_scores",
-              "value": "={{ { \"Strategy A\": Math.floor(Math.random() * 40) + 60, \"Strategy B\": Math.floor(Math.random() * 40) + 50, \"Strategy C\": Math.floor(Math.random() * 40) + 70 } }}"
-            },
-            {
-              "name": "feasibility_scores",
-              "value": "={{ { \"Strategy A\": Math.floor(Math.random() * 20) + 70, \"Strategy B\": Math.floor(Math.random() * 20) + 80, \"Strategy C\": Math.floor(Math.random() * 20) + 60 } }}"
-            },
-            {
-              "name": "timeline_scores",
-              "value": "={{ { \"Strategy A\": Math.floor(Math.random() * 20) + 60, \"Strategy B\": Math.floor(Math.random() * 20) + 80, \"Strategy C\": Math.floor(Math.random() * 20) + 50 } }}"
-            }
-          ]
-        }
+        "jsCode": "function parseJson(text) {\n  const cleaned = text.replace(/```json/g, '').replace(/```/g, '').trim();\n  return JSON.parse(cleaned);\n}\n\nconst riskRaw = $('Risk Assessment').item.json.message.content;\nconst strategicRaw = $('Strategic Analysis').item.json.message.content;\n\nconst riskParsed = parseJson(riskRaw);\nconst strategicParsed = parseJson(strategicRaw);\n\nconst risk_scores = {};\nconst reward_scores = {};\nconst feasibility_scores = {};\nconst timeline_scores = {};\n\nfor (const option of Object.keys(riskParsed)) {\n  risk_scores[option] = riskParsed[option].risk;\n}\nfor (const option of Object.keys(strategicParsed)) {\n  reward_scores[option] = strategicParsed[option].reward;\n  feasibility_scores[option] = strategicParsed[option].feasibility;\n  timeline_scores[option] = strategicParsed[option].timeline;\n}\n\nreturn [{ json: { risk_scores, reward_scores, feasibility_scores, timeline_scores } }];"
       }
     },
     {
@@ -241,16 +222,16 @@
       "parameters": {
         "resource": "chat",
         "operation": "create",
-        "model": "gpt-4",
+        "model": "gpt-4o",
         "messages": {
           "values": [
             {
               "role": "system",
-              "content": "You are a decision-making AI that provides comprehensive recommendations based on analysis and scoring."
+              "content": "You are a decision-making AI that provides comprehensive recommendations based on analysis and scoring. Justify the given optimal_strategy using the real scores provided; do not silently pick a different option."
             },
             {
               "role": "user",
-              "content": "={{ 'Decision Scenario: ' + $json.decision_scenario + '\\n\\nRisk Assessment: ' + $json.choices[0].message.content + '\\n\\nStrategic Analysis: ' + $json.choices[0].message.content + '\\n\\nScores: Strategy A: ' + $json.strategy_a_score + ', Strategy B: ' + $json.strategy_b_score + ', Strategy C: ' + $json.strategy_c_score + '\\n\\nOptimal Strategy: ' + $json.optimal_strategy + '\\n\\nProvide final recommendation with justification.' }}"
+              "content": "={{ 'Decision Scenario: ' + $('Process Decision Request').item.json.decision_scenario + '\\n\\nRisk Assessment: ' + $('Risk Assessment').item.json.message.content + '\\n\\nStrategic Analysis: ' + $('Strategic Analysis').item.json.message.content + '\\n\\nScores: Strategy A: ' + $json.strategy_a_score + ', Strategy B: ' + $json.strategy_b_score + ', Strategy C: ' + $json.strategy_c_score + '\\n\\nOptimal Strategy: ' + $json.optimal_strategy + '\\n\\nProvide final recommendation with justification.' }}"
             }
           ]
         },
@@ -274,7 +255,7 @@
           "assignments": [
             {
               "name": "decision_report",
-              "value": "={{ { \"decision_session_id\": $json.decision_session_id, \"decision_type\": $json.decision_type, \"start_time\": $json.start_time, \"decision_scenario\": $json.decision_scenario, \"available_options\": $json.available_options, \"decision_context\": $json.decision_context, \"decision_urgency\": $json.decision_urgency, \"decision_criteria\": $json.decision_criteria, \"risk_assessment\": $json.choices[0].message.content, \"strategic_analysis\": $json.choices[0].message.content, \"risk_scores\": $json.risk_scores, \"reward_scores\": $json.reward_scores, \"feasibility_scores\": $json.feasibility_scores, \"timeline_scores\": $json.timeline_scores, \"strategy_a_score\": $json.strategy_a_score, \"strategy_b_score\": $json.strategy_b_score, \"strategy_c_score\": $json.strategy_c_score, \"optimal_strategy\": $json.optimal_strategy, \"final_recommendation\": $json.choices[0].message.content, \"processing_time\": $now.diff($json.start_time, 'milliseconds'), \"completed_at\": $now } }}"
+              "value": "={{ { \"decision_session_id\": $('Initialize Decision System').item.json.decision_session_id, \"decision_type\": $('Initialize Decision System').item.json.decision_type, \"start_time\": $('Initialize Decision System').item.json.start_time, \"decision_scenario\": $('Process Decision Request').item.json.decision_scenario, \"available_options\": $('Process Decision Request').item.json.available_options, \"decision_context\": $('Process Decision Request').item.json.decision_context, \"decision_urgency\": $('Process Decision Request').item.json.decision_urgency, \"decision_criteria\": $('Initialize Decision System').item.json.decision_criteria, \"risk_assessment\": $('Risk Assessment').item.json.message.content, \"strategic_analysis\": $('Strategic Analysis').item.json.message.content, \"risk_scores\": $('Parse Structured Scores').item.json.risk_scores, \"reward_scores\": $('Parse Structured Scores').item.json.reward_scores, \"feasibility_scores\": $('Parse Structured Scores').item.json.feasibility_scores, \"timeline_scores\": $('Parse Structured Scores').item.json.timeline_scores, \"strategy_a_score\": $('Calculate Decision Scores').item.json.strategy_a_score, \"strategy_b_score\": $('Calculate Decision Scores').item.json.strategy_b_score, \"strategy_c_score\": $('Calculate Decision Scores').item.json.strategy_c_score, \"optimal_strategy\": $('Calculate Decision Scores').item.json.optimal_strategy, \"final_recommendation\": $json.message.content, \"processing_time\": $now.diff($('Initialize Decision System').item.json.start_time, 'milliseconds'), \"completed_at\": $now } }}"
             },
             {
               "name": "success_message",
@@ -285,49 +266,73 @@
       }
     },
     {
-      "id": "send-decision-results",
-      "name": "Send Decision Results",
-      "type": "n8n-nodes-base.httpRequest",
-      "typeVersion": 4.2,
+      "id": "log-decision-to-airtable",
+      "name": "Log Decision to Airtable",
+      "type": "n8n-nodes-base.airtable",
+      "typeVersion": 2.1,
       "position": [
         2400,
-        300
+        180
       ],
       "parameters": {
-        "method": "POST",
-        "url": "https://api.decision-service.com/results",
-        "bodyContentType": "json",
-        "jsonBody": "={{ { \"results\": $json.decision_report, \"timestamp\": $now } }}"
+        "operation": "create",
+        "base": {
+          "__rl": true,
+          "value": "your_base_id",
+          "mode": "id"
+        },
+        "table": {
+          "__rl": true,
+          "value": "decisions",
+          "mode": "id"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "decision_session_id": "={{ $json.decision_report.decision_session_id }}",
+            "decision_scenario": "={{ $json.decision_report.decision_scenario }}",
+            "optimal_strategy": "={{ $json.decision_report.optimal_strategy }}",
+            "final_recommendation": "={{ $json.decision_report.final_recommendation }}",
+            "completed_at": "={{ $json.decision_report.completed_at }}"
+          }
+        },
+        "options": {}
       }
     },
     {
-      "id": "log-decision-activity",
-      "name": "Log Decision Activity",
-      "type": "n8n-nodes-base.httpRequest",
-      "typeVersion": 4.2,
+      "id": "post-decision-to-slack",
+      "name": "Post Decision to Slack",
+      "type": "n8n-nodes-base.slack",
+      "typeVersion": 2.1,
       "position": [
-        2640,
-        300
+        2400,
+        420
       ],
       "parameters": {
-        "method": "POST",
-        "url": "https://api.decision-log.com/log",
-        "bodyContentType": "json",
-        "jsonBody": "={{ { \"type\": \"agent_decision_making\", \"data\": $json.decision_report, \"timestamp\": $now } }}"
+        "resource": "message",
+        "operation": "post",
+        "select": "channel",
+        "channelId": {
+          "__rl": true,
+          "value": "your_channel_id",
+          "mode": "id"
+        },
+        "text": "={{ '🎯 Decision recommendation for: ' + $('Generate Decision Report').item.json.decision_report.decision_scenario + '\\n\\nOptimal strategy: ' + $('Generate Decision Report').item.json.decision_report.optimal_strategy + '\\n\\n' + $('Generate Decision Report').item.json.decision_report.final_recommendation }}",
+        "otherOptions": {}
       }
     },
     {
       "id": "sticky-send-log",
-      "name": "Send/Log Placeholder",
+      "name": "Real Log Note",
       "type": "n8n-nodes-base.stickyNote",
       "typeVersion": 1,
       "position": [
         2400,
-        480
+        620
       ],
       "parameters": {
-        "content": "## ⚠️ Placeholder endpoint\n\nThis node calls a fake domain that does not exist. Replace the URL with a real service endpoint (or mock server) before running this for real — this is a stand-in for teaching purposes.",
-        "height": 160,
+        "content": "## ✅ Real, testable logging\n\nThese two nodes replace the fake \"Send Decision Results\" and \"Log Decision Activity\" calls to `api.decision-service.com` / `api.decision-log.com` with a real Airtable record and a real Slack post.",
+        "height": 150,
         "width": 460
       }
     },
@@ -410,14 +415,14 @@
       "main": [
         [
           {
-            "node": "Decision Algorithm Processing",
+            "node": "Parse Structured Scores",
             "type": "main",
             "index": 0
           }
         ]
       ]
     },
-    "Decision Algorithm Processing": {
+    "Parse Structured Scores": {
       "main": [
         [
           {
@@ -454,18 +459,18 @@
       "main": [
         [
           {
-            "node": "Send Decision Results",
+            "node": "Log Decision to Airtable",
             "type": "main",
             "index": 0
           }
         ]
       ]
     },
-    "Send Decision Results": {
+    "Log Decision to Airtable": {
       "main": [
         [
           {
-            "node": "Log Decision Activity",
+            "node": "Post Decision to Slack",
             "type": "main",
             "index": 0
           }
@@ -476,6 +481,6 @@
   "active": false,
   "settings": {},
   "pinData": {},
-  "versionId": "1",
+  "versionId": "2",
   "id": "day_46_solution"
 }

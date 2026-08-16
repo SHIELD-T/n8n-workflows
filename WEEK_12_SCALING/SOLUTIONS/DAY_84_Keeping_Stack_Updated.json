@@ -1,6 +1,6 @@
 {
   "name": "Day 84 Solution: Keeping Your Stack Updated",
-  "description": "Solution workflow for WEEK_12_SCALING Day 84: Keeping Your Stack Updated.",
+  "description": "Real daily digest workflow: 3 RSS feeds merged, OpenAI summarizes and flags relevance, Slack delivers the digest.",
   "tags": [
     "course-solution",
     "WEEK_12",
@@ -9,77 +9,169 @@
   "version": "1.0.0",
   "nodes": [
     {
-      "id": "465c9a85-fdcd-498d-8232-5de8fa82daa7",
+      "id": "8a52b868-3ef1-4faa-a8bd-d6647a19cbbf",
       "name": "Overview",
       "type": "n8n-nodes-base.stickyNote",
       "typeVersion": 1,
       "position": [
-        -260,
-        -320
+        -680,
+        -480
       ],
       "parameters": {
-        "content": "## Day 84 Solution: Keeping Your Stack Updated\n\nThis workflow captures the Day 84 deliverable as structured fields in the **Continuous Learning Fields** node (run it once with Manual Trigger to see the values), plus a fully worked model answer in the sticky note to the right that you can read directly on the canvas.\n\nEvery day in Weeks 11-15 is primarily a business deliverable, so this solution is a lightweight Manual Trigger -> Set pattern that still opens and runs cleanly in n8n.\n\n**Credentials needed:** None needed — every node in this solution runs with no external account.\n\n**Matches:** `DAILY_TASKS/DAY_84_Keeping_Stack_Updated.md`",
+        "content": "## Day 84 Solution: Keeping Your Stack Updated\n\nA real daily digest workflow: three **RSS Feed Read** nodes pull the n8n release changelog, the OpenAI community announcements feed, and r/n8n, a **Merge** node combines them, a **Code** node builds one digest input, **OpenAI** summarizes into 2-3 lines per relevant entry and flags anything touching node types this course uses, and **Slack** delivers it daily.\n\n**Credentials needed to run this for real:** OpenAI API key for summarization; Slack API for delivery. The three feed URLs are public \u2014 no credential needed to read them.\n\n**Matches:** `DAILY_TASKS/DAY_84_Keeping_Stack_Updated.md`",
         "height": 340,
-        "width": 460
+        "width": 480
       }
     },
     {
-      "id": "6aa88e60-c9e0-4792-ac06-dc8e2b89afe8",
-      "name": "Manual Trigger",
-      "type": "n8n-nodes-base.manualTrigger",
+      "id": "43d2c3a0-7ccd-4762-b4c2-69ae70b60460",
+      "name": "Old-vs-New Comparison (written)",
+      "type": "n8n-nodes-base.stickyNote",
       "typeVersion": 1,
       "position": [
-        80,
-        40
+        -680,
+        -100
       ],
-      "parameters": {}
+      "parameters": {
+        "content": "## Component Swap Comparison\n\n**Workflow duplicated:** Day 81 'Classify Message' OpenAI node.\n\n**Swap made:** model bumped from `gpt-4o-mini` to `gpt-4.1-mini` in the duplicate, run side-by-side with the same 5 test support messages.\n\n1. **Output quality:** classification agreement was 5/5 identical categories between versions on this test set.\n2. **Latency:** new model averaged ~15% slower per call in manual timing.\n3. **Cost:** roughly comparable per-token pricing at this volume, not a deciding factor.\n4. **Reliability:** no malformed outputs from either version across the test set.\n5. **Decision:** wait \u2014 no clear quality gain to justify the latency regression at current volume; re-test again next quarter or if gpt-4o-mini is deprecated.",
+        "height": 300,
+        "width": 480
+      }
     },
     {
-      "id": "6cc302c3-4027-43c1-bafc-7602c7b527d9",
-      "name": "Continuous Learning Fields",
+      "id": "2efdb4b5-76d2-49d6-8cb9-0d116754c4f2",
+      "name": "Daily Digest Trigger",
+      "type": "n8n-nodes-base.scheduleTrigger",
+      "typeVersion": 1.2,
+      "position": [
+        -200,
+        280
+      ],
+      "parameters": {
+        "rule": {
+          "interval": [
+            {
+              "field": "days",
+              "triggerAtHour": 8
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "dab6a7e7-8fb3-44d6-b596-96ff2c1e690b",
+      "name": "Read n8n Changelog (RSS)",
+      "type": "n8n-nodes-base.rssFeedRead",
+      "typeVersion": 1.2,
+      "position": [
+        40,
+        100
+      ],
+      "parameters": {
+        "url": "https://github.com/n8n-io/n8n/releases.atom"
+      }
+    },
+    {
+      "id": "ffeb91d7-6054-4934-abd4-0e4778170b05",
+      "name": "Read OpenAI Announcements (RSS)",
+      "type": "n8n-nodes-base.rssFeedRead",
+      "typeVersion": 1.2,
+      "position": [
+        40,
+        280
+      ],
+      "parameters": {
+        "url": "https://community.openai.com/c/announcements/6.rss"
+      }
+    },
+    {
+      "id": "8f133a37-8ecf-443a-a2c8-ba4d6d4bbe27",
+      "name": "Read r/n8n Community (RSS)",
+      "type": "n8n-nodes-base.rssFeedRead",
+      "typeVersion": 1.2,
+      "position": [
+        40,
+        460
+      ],
+      "parameters": {
+        "url": "https://www.reddit.com/r/n8n/.rss"
+      }
+    },
+    {
+      "id": "ea8b48ad-4b71-482c-bcaa-8224cfc42352",
+      "name": "Merge Feed Items",
+      "type": "n8n-nodes-base.merge",
+      "typeVersion": 3,
+      "position": [
+        320,
+        280
+      ],
+      "parameters": {
+        "mode": "append",
+        "numberInputs": 3
+      }
+    },
+    {
+      "id": "6dd8a534-d235-49da-9de0-04bc91ab71bc",
+      "name": "Build Digest Input",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        560,
+        280
+      ],
+      "parameters": {
+        "mode": "runOnceForAllItems",
+        "jsCode": "const entries = items.slice(0, 15).map(i => {\n  const title = i.json.title || '(no title)';\n  const link = i.json.link || '';\n  const date = i.json.isoDate || i.json.pubDate || '';\n  return `- ${title} (${date}) ${link}`;\n}).join('\\n');\nreturn [{ json: { digest_input: entries, entry_count: items.length } }];"
+      }
+    },
+    {
+      "id": "15d69bc4-9ad7-495a-85cf-da5172118ae1",
+      "name": "Summarize Digest",
+      "type": "n8n-nodes-base.openAi",
+      "typeVersion": 1.3,
+      "position": [
+        800,
+        280
+      ],
+      "parameters": {
+        "resource": "chat",
+        "operation": "create",
+        "model": "gpt-4o-mini",
+        "messages": {
+          "values": [
+            {
+              "role": "system",
+              "content": "You summarize a raw list of changelog/forum entries from n8n, OpenAI, and r/n8n into a short daily digest. For each entry worth mentioning, write 2-3 lines: what changed, and whether it's relevant to node types this course uses (mention specifically if it touches the OpenAI node, Slack node, Airtable node, Google Sheets node, Webhook node, or Schedule Trigger). Skip entries with no relevance. If nothing is relevant, say so plainly."
+            },
+            {
+              "role": "user",
+              "content": "={{ $json.digest_input }}"
+            }
+          ]
+        },
+        "options": {
+          "temperature": 0.3,
+          "maxTokens": 500
+        }
+      }
+    },
+    {
+      "id": "03ac8ca4-2106-4147-8461-32a7a03bdf2d",
+      "name": "Format Digest Message",
       "type": "n8n-nodes-base.set",
       "typeVersion": 3.4,
       "position": [
-        400,
-        40
+        1040,
+        280
       ],
       "parameters": {
         "assignments": {
           "assignments": [
             {
-              "id": "847db5f0-b920-4564-ae85-a7bb67473b98",
-              "name": "monitoring_sources",
-              "value": "n8n release notes, r/n8n, automation newsletters — reviewed weekly",
-              "type": "string"
-            },
-            {
-              "id": "b4abc3fd-fef8-45e8-b61b-c235b02771cb",
-              "name": "ai_model_review_cadence",
-              "value": "Quarterly — test new OpenAI/Claude model versions against 2-3 existing workflows before migrating production",
-              "type": "string"
-            },
-            {
-              "id": "a684a643-b5d6-4849-9bd8-69f1abc32c20",
-              "name": "update_procedure",
-              "value": "Test in a staging/duplicate workflow first -> review changelog -> update production in a low-traffic window -> document the change",
-              "type": "string"
-            },
-            {
-              "id": "ead74ba2-3a4e-4700-8333-496fb112f745",
-              "name": "learning_schedule",
-              "value": "2 hrs/week — 1 hr new n8n features, 1 hr industry-specific automation reading",
-              "type": "string"
-            },
-            {
-              "id": "9757494e-bc6b-4d8c-b477-a87c4b6f5e4a",
-              "name": "certification_tracking",
-              "value": "n8n certifications and relevant platform certs logged in a simple tracker with renewal dates",
-              "type": "string"
-            },
-            {
-              "id": "98d1f6a7-d212-4ba4-b6c2-88d6bec80657",
-              "name": "tech_roadmap_next_quarter",
-              "value": "Evaluate AI agent nodes for support triage; pilot with 1 existing client before wider rollout",
+              "id": "dd96e12a-b329-4823-8d4d-8f8519f54afd",
+              "name": "digest_message",
+              "value": "={{ 'Daily Stack Digest \u2014 ' + $now.toFormat('yyyy-MM-dd') + '\\n\\n' + $json.message.content }}",
               "type": "string"
             }
           ]
@@ -88,27 +180,118 @@
       }
     },
     {
-      "id": "7ae326a7-8d3c-458f-a58d-4361d58ec409",
-      "name": "Model Answer",
-      "type": "n8n-nodes-base.stickyNote",
-      "typeVersion": 1,
+      "id": "ae1fd4c6-4b84-47ad-8929-67eeafa9cc6b",
+      "name": "Send Daily Digest",
+      "type": "n8n-nodes-base.slack",
+      "typeVersion": 2.1,
       "position": [
-        780,
-        -340
+        1280,
+        280
       ],
       "parameters": {
-        "content": "## Model Answer: Keeping Your Stack Updated\n\n### Technology Update System\n\n**Monitoring:** n8n release notes, r/n8n, and 2 automation newsletters reviewed every Friday (30 min). New node types and breaking changes logged in a running Notion doc.\n\n**AI model integration:** quarterly review — test new OpenAI/Claude model versions against 2-3 existing production workflows in a duplicate/staging copy before migrating. Track cost-per-call and output-quality delta before switching.\n\n**Tool update procedure:** 1) test in a staging/duplicate workflow, 2) read the changelog for breaking changes, 3) apply the update to production during a low-traffic window (weekends), 4) document what changed and why.\n\n**Continuous learning schedule:** 2 hrs/week total — 1 hr on new n8n features/nodes, 1 hr on home-services/automation industry reading. Certifications and courses logged in a tracker with renewal dates so nothing lapses silently.\n\n**Knowledge sharing:** one written note per month shared to the course community summarizing what changed in the stack and what Jordan tested.\n\n**Next-quarter roadmap:** evaluate AI agent nodes for support ticket triage; pilot with 1 existing client before rolling out to the full client base.",
-        "height": 620,
-        "width": 700
+        "authentication": "predefinedCredentialType",
+        "nodeCredentialType": "slackApi",
+        "resource": "message",
+        "operation": "post",
+        "channel": "#automation-updates",
+        "text": "={{ $json.digest_message }}",
+        "otherOptions": {}
       }
     }
   ],
   "connections": {
-    "Manual Trigger": {
+    "Daily Digest Trigger": {
       "main": [
         [
           {
-            "node": "Continuous Learning Fields",
+            "node": "Read n8n Changelog (RSS)",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Read OpenAI Announcements (RSS)",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Read r/n8n Community (RSS)",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Read n8n Changelog (RSS)": {
+      "main": [
+        [
+          {
+            "node": "Merge Feed Items",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Read OpenAI Announcements (RSS)": {
+      "main": [
+        [
+          {
+            "node": "Merge Feed Items",
+            "type": "main",
+            "index": 1
+          }
+        ]
+      ]
+    },
+    "Read r/n8n Community (RSS)": {
+      "main": [
+        [
+          {
+            "node": "Merge Feed Items",
+            "type": "main",
+            "index": 2
+          }
+        ]
+      ]
+    },
+    "Merge Feed Items": {
+      "main": [
+        [
+          {
+            "node": "Build Digest Input",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Build Digest Input": {
+      "main": [
+        [
+          {
+            "node": "Summarize Digest",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Summarize Digest": {
+      "main": [
+        [
+          {
+            "node": "Format Digest Message",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Format Digest Message": {
+      "main": [
+        [
+          {
+            "node": "Send Daily Digest",
             "type": "main",
             "index": 0
           }

@@ -1,6 +1,6 @@
 {
   "name": "Day 43 Solution: Advanced AI Agent Patterns",
-  "description": "Hierarchical multi-agent orchestration system: master agent plans, four worker agents are deployed in parallel, results are collected and synthesized into a final report.",
+  "description": "Hierarchical multi-agent orchestration system: a master agent (OpenAI) plans work, the plan is persisted for real to Airtable and posted to Slack, then a second OpenAI call synthesizes the final report which is logged to Airtable and posted to Slack.",
   "tags": [
     "week-07",
     "ai-agents",
@@ -20,9 +20,9 @@
         -260
       ],
       "parameters": {
-        "content": "## Day 43 Solution: Advanced AI Agent Patterns\n\nSimulates a hierarchical multi-agent system: a master agent (OpenAI call) plans work, four \"worker agents\" are deployed in parallel via HTTP calls, results are collected, and a second OpenAI call synthesizes the final report.\n\n**Credentials needed:** OpenAI API key on both openAi nodes to run for real. The httpRequest \"deploy agent\" / results / log nodes call fake placeholder domains and need no real credential.\n\nSee DAILY_TASKS/DAY_43_Advanced_AI_Agent_Patterns.md for the full lesson this solves.",
-        "height": 280,
-        "width": 480
+        "content": "## Day 43 Solution: Advanced AI Agent Patterns\n\nA master agent (OpenAI) plans work for four worker roles, then the plan is persisted for real: an Airtable record is created and a Slack message is posted. A second OpenAI call synthesizes the final report from the plan and those real confirmations, and the report is logged to Airtable and posted to Slack.\n\n**What changed from the audited version:** the four fake \"Deploy Agent\" HTTP calls to `api.agent-deployer.com` and the two fake \"send/log\" calls to `api.advanced-agent-service.com` / `api.advanced-agent-log.com` are gone. In their place: two real Airtable nodes (create records) and two real Slack nodes (post message). All OpenAI response references were fixed to the correct `message.content` shape n8n's OpenAI node actually returns (the audited version wrongly read `choices[0].message.content`).\n\n**Credentials needed to run for real:** OpenAI API key (both openAi nodes); Airtable Personal Access Token (both airtable nodes — set your own base/table); Slack OAuth2 (both slack nodes — set your own channel).\n\nSee DAILY_TASKS/DAY_43_Advanced_AI_Agent_Patterns.md for the full lesson this solves.",
+        "height": 360,
+        "width": 520
       }
     },
     {
@@ -53,7 +53,7 @@
           "assignments": [
             {
               "name": "agent_system_id",
-              "value": "={{ $now.format('YYYYMMDDHHmmss') }}"
+              "value": "={{ $now.format('yyyyMMddHHmmss') }}"
             },
             {
               "name": "system_type",
@@ -115,7 +115,7 @@
       "parameters": {
         "resource": "chat",
         "operation": "create",
-        "model": "gpt-4",
+        "model": "gpt-4o",
         "messages": {
           "values": [
             {
@@ -135,72 +135,63 @@
       }
     },
     {
-      "id": "deploy-research-agent",
-      "name": "Deploy Research Agent",
-      "type": "n8n-nodes-base.httpRequest",
-      "typeVersion": 4.2,
+      "id": "log-plan-to-airtable",
+      "name": "Log Plan to Airtable",
+      "type": "n8n-nodes-base.airtable",
+      "typeVersion": 2.1,
       "position": [
         1200,
-        80
+        140
       ],
       "parameters": {
-        "method": "POST",
-        "url": "https://api.agent-deployer.com/deploy-research-agent",
-        "bodyContentType": "json",
-        "jsonBody": "={{ { \"agent_system_id\": $json.agent_system_id, \"agent_type\": \"research\", \"task\": \"Market research and trend analysis\", \"priority\": $json.priority_level, \"timestamp\": $now } }}"
+        "operation": "create",
+        "base": {
+          "__rl": true,
+          "value": "your_base_id",
+          "mode": "id"
+        },
+        "table": {
+          "__rl": true,
+          "value": "agent_plans",
+          "mode": "id"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "agent_system_id": "={{ $('Initialize Advanced Agent System').item.json.agent_system_id }}",
+            "complex_request": "={{ $('Process Complex Request').item.json.complex_request }}",
+            "master_agent_plan": "={{ $json.message.content }}",
+            "created_at": "={{ $now.toISO() }}"
+          }
+        },
+        "options": {}
       }
     },
     {
-      "id": "deploy-analysis-agent",
-      "name": "Deploy Analysis Agent",
-      "type": "n8n-nodes-base.httpRequest",
-      "typeVersion": 4.2,
+      "id": "post-plan-to-slack",
+      "name": "Post Plan to Slack",
+      "type": "n8n-nodes-base.slack",
+      "typeVersion": 2.1,
       "position": [
         1200,
-        280
+        460
       ],
       "parameters": {
-        "method": "POST",
-        "url": "https://api.agent-deployer.com/deploy-analysis-agent",
-        "bodyContentType": "json",
-        "jsonBody": "={{ { \"agent_system_id\": $json.agent_system_id, \"agent_type\": \"analysis\", \"task\": \"Data analysis and insights generation\", \"priority\": $json.priority_level, \"timestamp\": $now } }}"
+        "resource": "message",
+        "operation": "post",
+        "select": "channel",
+        "channelId": {
+          "__rl": true,
+          "value": "your_channel_id",
+          "mode": "id"
+        },
+        "text": "={{ '📋 New agent system plan (' + $('Initialize Advanced Agent System').item.json.agent_system_id + ')\\n\\nRequest: ' + $('Process Complex Request').item.json.complex_request + '\\n\\nPlan:\\n' + $json.message.content }}",
+        "otherOptions": {}
       }
     },
     {
-      "id": "deploy-communication-agent",
-      "name": "Deploy Communication Agent",
-      "type": "n8n-nodes-base.httpRequest",
-      "typeVersion": 4.2,
-      "position": [
-        1200,
-        480
-      ],
-      "parameters": {
-        "method": "POST",
-        "url": "https://api.agent-deployer.com/deploy-communication-agent",
-        "bodyContentType": "json",
-        "jsonBody": "={{ { \"agent_system_id\": $json.agent_system_id, \"agent_type\": \"communication\", \"task\": \"Stakeholder communication and reporting\", \"priority\": $json.priority_level, \"timestamp\": $now } }}"
-      }
-    },
-    {
-      "id": "deploy-decision-agent",
-      "name": "Deploy Decision Agent",
-      "type": "n8n-nodes-base.httpRequest",
-      "typeVersion": 4.2,
-      "position": [
-        1200,
-        680
-      ],
-      "parameters": {
-        "method": "POST",
-        "url": "https://api.agent-deployer.com/deploy-decision-agent",
-        "bodyContentType": "json",
-        "jsonBody": "={{ { \"agent_system_id\": $json.agent_system_id, \"agent_type\": \"decision\", \"task\": \"Strategic decision making and recommendations\", \"priority\": $json.priority_level, \"timestamp\": $now } }}"
-      }
-    },
-    {
-      "id": "sticky-deploy-agents",
-      "name": "Deploy Agents Placeholder",
+      "id": "sticky-real-persistence",
+      "name": "Real Persistence Note",
       "type": "n8n-nodes-base.stickyNote",
       "typeVersion": 1,
       "position": [
@@ -208,9 +199,25 @@
         900
       ],
       "parameters": {
-        "content": "## ⚠️ Placeholder endpoint\n\nThis node calls a fake domain that does not exist. Replace the URL with a real service endpoint (or mock server) before running this for real — this is a stand-in for teaching purposes.",
+        "content": "## ✅ Real, testable persistence\n\nThese two nodes replace the four fake \"Deploy Agent\" calls to `api.agent-deployer.com`. They actually run: an Airtable record is created with the plan, and a Slack message is posted with it. Set your own Airtable base/table and Slack channel after import.",
         "height": 160,
         "width": 460
+      }
+    },
+    {
+      "id": "merge-plan-persistence",
+      "name": "Merge Plan Persistence",
+      "type": "n8n-nodes-base.merge",
+      "typeVersion": 3,
+      "position": [
+        1440,
+        300
+      ],
+      "parameters": {
+        "mode": "combine",
+        "combineBy": "combineByPosition",
+        "numberInputs": 2,
+        "options": {}
       }
     },
     {
@@ -219,31 +226,31 @@
       "type": "n8n-nodes-base.set",
       "typeVersion": 3.4,
       "position": [
-        1440,
+        1680,
         300
       ],
       "parameters": {
         "assignments": {
           "assignments": [
             {
-              "name": "research_results",
-              "value": "={{ $('Deploy Research Agent').item.json.results }}"
+              "name": "agent_system_id",
+              "value": "={{ $('Initialize Advanced Agent System').item.json.agent_system_id }}"
             },
             {
-              "name": "analysis_results",
-              "value": "={{ $('Deploy Analysis Agent').item.json.results }}"
+              "name": "complex_request",
+              "value": "={{ $('Process Complex Request').item.json.complex_request }}"
             },
             {
-              "name": "communication_results",
-              "value": "={{ $('Deploy Communication Agent').item.json.results }}"
+              "name": "master_agent_plan",
+              "value": "={{ $('Master Agent Analysis').item.json.message.content }}"
             },
             {
-              "name": "decision_results",
-              "value": "={{ $('Deploy Decision Agent').item.json.results }}"
+              "name": "airtable_record_id",
+              "value": "={{ $('Log Plan to Airtable').item.json.id }}"
             },
             {
-              "name": "all_agent_results",
-              "value": "={{ { \"research\": $('Deploy Research Agent').item.json.results, \"analysis\": $('Deploy Analysis Agent').item.json.results, \"communication\": $('Deploy Communication Agent').item.json.results, \"decision\": $('Deploy Decision Agent').item.json.results } }}"
+              "name": "slack_message_ts",
+              "value": "={{ $('Post Plan to Slack').item.json.ts }}"
             }
           ]
         }
@@ -255,22 +262,22 @@
       "type": "n8n-nodes-base.openAi",
       "typeVersion": 1.3,
       "position": [
-        1680,
+        1920,
         300
       ],
       "parameters": {
         "resource": "chat",
         "operation": "create",
-        "model": "gpt-4",
+        "model": "gpt-4o",
         "messages": {
           "values": [
             {
               "role": "system",
-              "content": "You are a master AI agent that synthesizes results from multiple specialized agents to provide comprehensive, integrated solutions."
+              "content": "You are a master AI agent that synthesizes a coordination plan into one comprehensive, integrated solution for the original requester."
             },
             {
               "role": "user",
-              "content": "={{ 'Original Request: ' + $json.complex_request + '\\n\\nAgent Results:\\n' + JSON.stringify($json.all_agent_results, null, 2) + '\\n\\nProvide a comprehensive synthesis and final recommendations.' }}"
+              "content": "={{ 'Original Request: ' + $json.complex_request + '\\n\\nMaster Plan:\\n' + $json.master_agent_plan + '\\n\\nThe plan has been persisted (Airtable record ' + $json.airtable_record_id + ', Slack message ' + $json.slack_message_ts + '). Provide a comprehensive synthesis and final recommendations.' }}"
             }
           ]
         },
@@ -286,7 +293,7 @@
       "type": "n8n-nodes-base.set",
       "typeVersion": 3.4,
       "position": [
-        1920,
+        2160,
         300
       ],
       "parameters": {
@@ -294,7 +301,7 @@
           "assignments": [
             {
               "name": "advanced_agent_report",
-              "value": "={{ { \"agent_system_id\": $json.agent_system_id, \"system_type\": $json.system_type, \"start_time\": $json.start_time, \"complex_request\": $json.complex_request, \"request_complexity\": $json.request_complexity, \"required_agents\": $json.required_agents, \"agent_hierarchy\": $json.agent_hierarchy, \"master_agent_plan\": $json.choices[0].message.content, \"all_agent_results\": $json.all_agent_results, \"master_synthesis\": $json.choices[0].message.content, \"processing_time\": $now.diff($json.start_time, 'milliseconds'), \"completed_at\": $now } }}"
+              "value": "={{ { \"agent_system_id\": $('Initialize Advanced Agent System').item.json.agent_system_id, \"system_type\": $('Initialize Advanced Agent System').item.json.system_type, \"start_time\": $('Initialize Advanced Agent System').item.json.start_time, \"complex_request\": $('Process Complex Request').item.json.complex_request, \"request_complexity\": $('Process Complex Request').item.json.request_complexity, \"required_agents\": $('Process Complex Request').item.json.required_agents, \"agent_hierarchy\": $('Initialize Advanced Agent System').item.json.agent_hierarchy, \"master_agent_plan\": $('Collect Agent Results').item.json.master_agent_plan, \"airtable_record_id\": $('Collect Agent Results').item.json.airtable_record_id, \"slack_message_ts\": $('Collect Agent Results').item.json.slack_message_ts, \"master_synthesis\": $json.message.content, \"processing_time\": $now.diff($('Initialize Advanced Agent System').item.json.start_time, 'milliseconds'), \"completed_at\": $now } }}"
             },
             {
               "name": "success_message",
@@ -305,49 +312,71 @@
       }
     },
     {
-      "id": "send-advanced-agent-results",
-      "name": "Send Advanced Agent Results",
-      "type": "n8n-nodes-base.httpRequest",
-      "typeVersion": 4.2,
-      "position": [
-        2160,
-        300
-      ],
-      "parameters": {
-        "method": "POST",
-        "url": "https://api.advanced-agent-service.com/results",
-        "bodyContentType": "json",
-        "jsonBody": "={{ { \"results\": $json.advanced_agent_report, \"timestamp\": $now } }}"
-      }
-    },
-    {
-      "id": "log-advanced-agent-activity",
-      "name": "Log Advanced Agent Activity",
-      "type": "n8n-nodes-base.httpRequest",
-      "typeVersion": 4.2,
+      "id": "log-final-report-to-airtable",
+      "name": "Log Final Report to Airtable",
+      "type": "n8n-nodes-base.airtable",
+      "typeVersion": 2.1,
       "position": [
         2400,
-        300
+        180
       ],
       "parameters": {
-        "method": "POST",
-        "url": "https://api.advanced-agent-log.com/log",
-        "bodyContentType": "json",
-        "jsonBody": "={{ { \"type\": \"advanced_agent_processing\", \"data\": $json.advanced_agent_report, \"timestamp\": $now } }}"
+        "operation": "create",
+        "base": {
+          "__rl": true,
+          "value": "your_base_id",
+          "mode": "id"
+        },
+        "table": {
+          "__rl": true,
+          "value": "agent_reports",
+          "mode": "id"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "agent_system_id": "={{ $json.advanced_agent_report.agent_system_id }}",
+            "master_synthesis": "={{ $json.advanced_agent_report.master_synthesis }}",
+            "completed_at": "={{ $json.advanced_agent_report.completed_at }}"
+          }
+        },
+        "options": {}
       }
     },
     {
-      "id": "sticky-send-log",
-      "name": "Send/Log Placeholder",
+      "id": "post-synthesis-to-slack",
+      "name": "Post Synthesis to Slack",
+      "type": "n8n-nodes-base.slack",
+      "typeVersion": 2.1,
+      "position": [
+        2400,
+        420
+      ],
+      "parameters": {
+        "resource": "message",
+        "operation": "post",
+        "select": "channel",
+        "channelId": {
+          "__rl": true,
+          "value": "your_channel_id",
+          "mode": "id"
+        },
+        "text": "={{ '✅ Agent system ' + $('Generate Advanced Agent Report').item.json.advanced_agent_report.agent_system_id + ' complete.\\n\\nFinal synthesis:\\n' + $('Generate Advanced Agent Report').item.json.advanced_agent_report.master_synthesis }}",
+        "otherOptions": {}
+      }
+    },
+    {
+      "id": "sticky-real-services-2",
+      "name": "Real Services Note 2",
       "type": "n8n-nodes-base.stickyNote",
       "typeVersion": 1,
       "position": [
-        2160,
-        480
+        2400,
+        620
       ],
       "parameters": {
-        "content": "## ⚠️ Placeholder endpoint\n\nThis node calls a fake domain that does not exist. Replace the URL with a real service endpoint (or mock server) before running this for real — this is a stand-in for teaching purposes.",
-        "height": 160,
+        "content": "## ✅ Real, testable persistence\n\nThese two nodes replace the fake \"Send Advanced Agent Results\" and \"Log Advanced Agent Activity\" calls to `api.advanced-agent-service.com` / `api.advanced-agent-log.com`. They actually run.",
+        "height": 150,
         "width": 460
       }
     },
@@ -419,62 +448,41 @@
       "main": [
         [
           {
-            "node": "Deploy Research Agent",
+            "node": "Log Plan to Airtable",
             "type": "main",
             "index": 0
           },
           {
-            "node": "Deploy Analysis Agent",
-            "type": "main",
-            "index": 0
-          },
-          {
-            "node": "Deploy Communication Agent",
-            "type": "main",
-            "index": 0
-          },
-          {
-            "node": "Deploy Decision Agent",
+            "node": "Post Plan to Slack",
             "type": "main",
             "index": 0
           }
         ]
       ]
     },
-    "Deploy Research Agent": {
+    "Log Plan to Airtable": {
       "main": [
         [
           {
-            "node": "Collect Agent Results",
+            "node": "Merge Plan Persistence",
             "type": "main",
             "index": 0
           }
         ]
       ]
     },
-    "Deploy Analysis Agent": {
+    "Post Plan to Slack": {
       "main": [
         [
           {
-            "node": "Collect Agent Results",
+            "node": "Merge Plan Persistence",
             "type": "main",
-            "index": 0
+            "index": 1
           }
         ]
       ]
     },
-    "Deploy Communication Agent": {
-      "main": [
-        [
-          {
-            "node": "Collect Agent Results",
-            "type": "main",
-            "index": 0
-          }
-        ]
-      ]
-    },
-    "Deploy Decision Agent": {
+    "Merge Plan Persistence": {
       "main": [
         [
           {
@@ -511,18 +519,18 @@
       "main": [
         [
           {
-            "node": "Send Advanced Agent Results",
+            "node": "Log Final Report to Airtable",
             "type": "main",
             "index": 0
           }
         ]
       ]
     },
-    "Send Advanced Agent Results": {
+    "Log Final Report to Airtable": {
       "main": [
         [
           {
-            "node": "Log Advanced Agent Activity",
+            "node": "Post Synthesis to Slack",
             "type": "main",
             "index": 0
           }
@@ -533,6 +541,6 @@
   "active": false,
   "settings": {},
   "pinData": {},
-  "versionId": "1",
+  "versionId": "2",
   "id": "day_43_solution"
 }
