@@ -18,7 +18,7 @@
 5. Intentionally break Workflow 1: change `$json.name` to `$json.namee` (typo) in the Set node, execute, and read the red error banner — note exactly what error message n8n shows.
 6. Open **Executions** in the left sidebar, find the failed run from step 5, click into it, and confirm you can see exactly which node failed and why. Fix the typo and re-run to confirm it goes green.
 
-**Stuck?** Import `WEEK_01_FOUNDATION/EXAMPLES/example_workflow_2.json` and `WEEK_01_FOUNDATION/EXAMPLES/foundation_learning_progress_tracker.json` for two more complete reference workflows to explore in the canvas.
+**Stuck?** Import `WEEK_01_FOUNDATION/EXAMPLES/manual_trigger_to_file_export.json` and `WEEK_01_FOUNDATION/EXAMPLES/foundation_learning_progress_tracker.json` for two more complete reference workflows to explore in the canvas.
 
 ## 🔑 Credentials Needed
 None — today's three workflows use only Manual/Webhook/Schedule triggers and built-in Set/IF/Respond nodes.

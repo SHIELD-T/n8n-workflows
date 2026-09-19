@@ -30,4 +30,4 @@ A minimal, specific report is far more useful than a general "this is broken."
 
 ## License Note
 
-This course content is proprietary (all rights reserved) — see the [LICENSE section in the README](README.md#-license). Reporting issues and submitting small fixes is welcome; this does not grant redistribution rights to the course content itself.
+This course content is proprietary (all rights reserved) — see [LICENSE](LICENSE). Reporting issues and submitting small fixes is welcome; this does not grant redistribution rights to the course content itself.

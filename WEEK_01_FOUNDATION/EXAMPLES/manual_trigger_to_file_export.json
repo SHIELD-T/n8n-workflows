@@ -1,6 +1,6 @@
 {
-  "name": "Example Workflow 1",
-  "description": "Simple text processing workflow demonstrating basic n8n concepts: manual trigger, data manipulation, and HTTP requests. Perfect for Week 1 foundation learning.",
+  "name": "Manual Trigger to File Export",
+  "description": "Simple file-export workflow demonstrating manual triggers, data assignment, and writing data to a local file. Perfect for Week 1 foundation learning.",
   "tags": [
     "basics",
     "progress-tracking",
@@ -50,9 +50,9 @@
   },
   "meta": {
     "templateCredsSetupCompleted": true,
-    "instanceId": "course-Week 01-example_workflow_1",
+    "instanceId": "course-Week 01-manual_trigger_to_file_export",
     "course_version": "1.0",
-    "last_updated": "2025-09-07T14:31:15.340196"
+    "last_updated": "2025-09-07T14:31:15.347804"
   },
   "nodes": [
     {
@@ -65,13 +65,13 @@
         -160
       ],
       "parameters": {
-        "content": "## Example Workflow 1\n\nSimple text processing workflow demonstrating basic n8n concepts: manual trigger, data manipulation, and HTTP requests. Perfect for Week 1 foundation learning.\n\n**Credentials needed before running:** None — this workflow only uses built-in nodes and/or public test APIs (no login required).\n\n**How to use:** Import into n8n, add the credentials above under *Credentials*, then run manually (or trigger it) to test.",
+        "content": "## Manual Trigger to File Export\n\nSimple file-export workflow demonstrating manual triggers, data assignment, and writing data to a local file. Perfect for Week 1 foundation learning.\n\n**Credentials needed before running:** None — this workflow only uses built-in nodes and/or public test APIs (no login required).\n\n**How to use:** Import into n8n, add the credentials above under *Credentials*, then run manually (or trigger it) to test.",
         "height": 300,
         "width": 420
       }
     },
     {
-      "id": "manual-trigger-1",
+      "id": "manual-trigger-2",
       "name": "Manual Trigger",
       "type": "n8n-nodes-base.manualTrigger",
       "position": [
@@ -82,8 +82,8 @@
       "typeVersion": 1
     },
     {
-      "id": "set-node-1",
-      "name": "Set Message",
+      "id": "set-node-2",
+      "name": "Set Text Data",
       "type": "n8n-nodes-base.set",
       "position": [
         300,
@@ -93,12 +93,12 @@
         "assignments": {
           "assignments": [
             {
-              "name": "message",
-              "value": "Hello from n8n! This is my first workflow."
+              "name": "text",
+              "value": "This is my first n8n workflow!"
             },
             {
-              "name": "timestamp",
-              "value": "={{ $now }}"
+              "name": "filename",
+              "value": "output.txt"
             }
           ]
         }
@@ -106,21 +106,18 @@
       "typeVersion": 3.4
     },
     {
-      "id": "http-request-1",
-      "name": "Send to API",
-      "type": "n8n-nodes-base.httpRequest",
+      "id": "write-binary-file-1",
+      "name": "Write to File",
+      "type": "n8n-nodes-base.writeBinaryFile",
       "position": [
         500,
         100
       ],
       "parameters": {
-        "method": "POST",
-        "url": "https://httpbin.org/post",
-        "sendBody": true,
-        "bodyContentType": "json",
-        "jsonBody": "{\n  \"message\": \"{{ $json.message }}\",\n  \"timestamp\": \"{{ $json.timestamp }}\",\n  \"workflow\": \"First n8n Workflow\"\n}"
+        "fileName": "={{ $json.filename }}",
+        "data": "={{ $json.text }}"
       },
-      "typeVersion": 4.2
+      "typeVersion": 1
     }
   ],
   "connections": {
@@ -128,18 +125,18 @@
       "main": [
         [
           {
-            "node": "Set Message",
+            "node": "Set Text Data",
             "type": "main",
             "index": 0
           }
         ]
       ]
     },
-    "Set Message": {
+    "Set Text Data": {
       "main": [
         [
           {
-            "node": "Send to API",
+            "node": "Write to File",
             "type": "main",
             "index": 0
           }
@@ -151,5 +148,5 @@
   "settings": {},
   "pinData": {},
   "versionId": "1",
-  "id": "example_workflow_1"
+  "id": "manual_trigger_to_file_export"
 }

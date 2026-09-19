@@ -20,7 +20,7 @@ Today is about surveying your own world for automation opportunities and setting
 5. Create your "Automation Goals" doc with three sections — Personal, Professional, Business — and list at least 2 goals under each.
 6. Join the course community (Discord/Slack) and post a short introduction that includes your automation goals from step 5.
 
-**Stuck?** There's no example workflow for Day 1 — this is a planning day. If you want a preview of what you'll be building, skim `WEEK_01_FOUNDATION/EXAMPLES/example_workflow_1.json` in a text editor (don't worry about understanding every field yet).
+**Stuck?** There's no example workflow for Day 1 — this is a planning day. If you want a preview of what you'll be building, skim `WEEK_01_FOUNDATION/EXAMPLES/manual_trigger_to_api_request.json` in a text editor (don't worry about understanding every field yet).
 
 ## 🔑 Credentials Needed
 None — no external services today. You'll set up n8n and API credentials starting Day 2.

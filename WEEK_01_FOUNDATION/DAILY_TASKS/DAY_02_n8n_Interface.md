@@ -19,7 +19,7 @@
 6. Click **Execute Workflow**. Click each node in turn and check its **Output** panel (Table/JSON view) to confirm the message flowed through correctly and httpbin echoed it back.
 7. Now build a second, separate workflow: Manual Trigger → Set node (field `text` = `"This is my first n8n workflow!"`) → **Write Binary File** / **Read/Write Files from Disk** node (File Name: `output.txt`, Data: `{{ $json.text }}`). Execute it and confirm the file was written.
 
-**Stuck?** Import `WEEK_01_FOUNDATION/EXAMPLES/example_workflow_1.json` (Menu → Import from File in n8n) to see a working baseline, then compare its node structure to what you built.
+**Stuck?** Import `WEEK_01_FOUNDATION/EXAMPLES/manual_trigger_to_api_request.json` (Menu → Import from File in n8n) to see a working baseline, then compare its node structure to what you built.
 
 ## 🔑 Credentials Needed
 None — Manual Trigger, Set, HTTP Request (to a public test endpoint), and file nodes don't require API credentials today.

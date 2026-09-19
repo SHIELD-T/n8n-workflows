@@ -1,6 +1,6 @@
 {
-  "name": "Example Workflow 2",
-  "description": "Webhook-based workflow demonstrating trigger concepts, data validation, and response handling. Ideal for Week 1 webhook and API learning.",
+  "name": "Manual Trigger to API Request",
+  "description": "Simple text processing workflow demonstrating basic n8n concepts: manual trigger, data manipulation, and HTTP requests. Perfect for Week 1 foundation learning.",
   "tags": [
     "basics",
     "progress-tracking",
@@ -50,9 +50,9 @@
   },
   "meta": {
     "templateCredsSetupCompleted": true,
-    "instanceId": "course-Week 01-example_workflow_2",
+    "instanceId": "course-Week 01-manual_trigger_to_api_request",
     "course_version": "1.0",
-    "last_updated": "2025-09-07T14:31:15.347804"
+    "last_updated": "2025-09-07T14:31:15.340196"
   },
   "nodes": [
     {
@@ -65,13 +65,13 @@
         -160
       ],
       "parameters": {
-        "content": "## Example Workflow 2\n\nWebhook-based workflow demonstrating trigger concepts, data validation, and response handling. Ideal for Week 1 webhook and API learning.\n\n**Credentials needed before running:** None — this workflow only uses built-in nodes and/or public test APIs (no login required).\n\n**How to use:** Import into n8n, add the credentials above under *Credentials*, then run manually (or trigger it) to test.",
+        "content": "## Manual Trigger to API Request\n\nSimple text processing workflow demonstrating basic n8n concepts: manual trigger, data manipulation, and HTTP requests. Perfect for Week 1 foundation learning.\n\n**Credentials needed before running:** None — this workflow only uses built-in nodes and/or public test APIs (no login required).\n\n**How to use:** Import into n8n, add the credentials above under *Credentials*, then run manually (or trigger it) to test.",
         "height": 300,
         "width": 420
       }
     },
     {
-      "id": "manual-trigger-2",
+      "id": "manual-trigger-1",
       "name": "Manual Trigger",
       "type": "n8n-nodes-base.manualTrigger",
       "position": [
@@ -82,8 +82,8 @@
       "typeVersion": 1
     },
     {
-      "id": "set-node-2",
-      "name": "Set Text Data",
+      "id": "set-node-1",
+      "name": "Set Message",
       "type": "n8n-nodes-base.set",
       "position": [
         300,
@@ -93,12 +93,12 @@
         "assignments": {
           "assignments": [
             {
-              "name": "text",
-              "value": "This is my first n8n workflow!"
+              "name": "message",
+              "value": "Hello from n8n! This is my first workflow."
             },
             {
-              "name": "filename",
-              "value": "output.txt"
+              "name": "timestamp",
+              "value": "={{ $now }}"
             }
           ]
         }
@@ -106,18 +106,21 @@
       "typeVersion": 3.4
     },
     {
-      "id": "write-binary-file-1",
-      "name": "Write to File",
-      "type": "n8n-nodes-base.writeBinaryFile",
+      "id": "http-request-1",
+      "name": "Send to API",
+      "type": "n8n-nodes-base.httpRequest",
       "position": [
         500,
         100
       ],
       "parameters": {
-        "fileName": "={{ $json.filename }}",
-        "data": "={{ $json.text }}"
+        "method": "POST",
+        "url": "https://httpbin.org/post",
+        "sendBody": true,
+        "bodyContentType": "json",
+        "jsonBody": "{\n  \"message\": \"{{ $json.message }}\",\n  \"timestamp\": \"{{ $json.timestamp }}\",\n  \"workflow\": \"First n8n Workflow\"\n}"
       },
-      "typeVersion": 1
+      "typeVersion": 4.2
     }
   ],
   "connections": {
@@ -125,18 +128,18 @@
       "main": [
         [
           {
-            "node": "Set Text Data",
+            "node": "Set Message",
             "type": "main",
             "index": 0
           }
         ]
       ]
     },
-    "Set Text Data": {
+    "Set Message": {
       "main": [
         [
           {
-            "node": "Write to File",
+            "node": "Send to API",
             "type": "main",
             "index": 0
           }
@@ -148,5 +151,5 @@
   "settings": {},
   "pinData": {},
   "versionId": "1",
-  "id": "example_workflow_2"
+  "id": "manual_trigger_to_api_request"
 }

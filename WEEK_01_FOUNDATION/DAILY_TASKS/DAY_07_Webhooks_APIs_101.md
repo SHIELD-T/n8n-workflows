@@ -19,7 +19,7 @@
 6. Deliberately trigger a 401/403 by using a wrong or blank API key on one of the calls — read the exact status code and error body n8n shows you, and write down what it means.
 7. Deliberately trigger a 404 by mistyping a URL path — compare that error to the 401 from step 6 so you can tell them apart at a glance in future debugging.
 
-**Stuck?** Import `WEEK_01_FOUNDATION/EXAMPLES/example_workflow_1.json` or `example_workflow_2.json` for more HTTP Request node configuration examples.
+**Stuck?** Import `WEEK_01_FOUNDATION/EXAMPLES/manual_trigger_to_api_request.json` for more HTTP Request node configuration examples.
 
 ## 🔑 Credentials Needed
 - OpenWeatherMap API key (free tier)

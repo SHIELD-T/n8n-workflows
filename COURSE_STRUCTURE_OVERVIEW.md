@@ -56,8 +56,8 @@ n8n-workflows/
 │   │   ├── DAY_06_First_Automation.md
 │   │   └── DAY_07_Webhooks_APIs.md
 │   └── EXAMPLES/
-│       ├── example_workflow_1.json
-│       └── example_workflow_2.json
+│       ├── manual_trigger_to_api_request.json
+│       └── manual_trigger_to_file_export.json
 ├── WEEK_02_FOUNDATION/
 │   ├── README.md
 │   ├── DAILY_TASKS/

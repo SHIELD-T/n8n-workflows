@@ -2,11 +2,11 @@
 
 > **From Zero to Automation Agency: Build, Sell, and Scale with n8n & AI Agents**
 
-[![Course Status](https://img.shields.io/badge/Status-Complete-brightgreen)](https://github.com/sagebeme/n8n-workflows)
-[![Duration](https://img.shields.io/badge/Duration-15%20Weeks-blue)](https://github.com/sagebeme/n8n-workflows)
-[![Level](https://img.shields.io/badge/Level-Beginner%20to%20Expert-orange)](https://github.com/sagebeme/n8n-workflows)
-[![Workflows](https://img.shields.io/badge/Example%20Workflows-60-purple)](https://github.com/sagebeme/n8n-workflows)
-[![YouTube](https://img.shields.io/badge/YouTube-18%20Curated%20Videos-red)](https://github.com/sagebeme/n8n-workflows)
+[![Course Status](https://img.shields.io/badge/Status-Complete-brightgreen)](https://github.com/SHIELD-T/n8n-workflows)
+[![Duration](https://img.shields.io/badge/Duration-15%20Weeks-blue)](https://github.com/SHIELD-T/n8n-workflows)
+[![Level](https://img.shields.io/badge/Level-Beginner%20to%20Expert-orange)](https://github.com/SHIELD-T/n8n-workflows)
+[![Workflows](https://img.shields.io/badge/Example%20Workflows-60-purple)](https://github.com/SHIELD-T/n8n-workflows)
+[![YouTube](https://img.shields.io/badge/YouTube-18%20Curated%20Videos-red)](https://github.com/SHIELD-T/n8n-workflows)
 
 ## 🎯 **HYBRID LEARNING MODEL: Learn Together, Build Differently**
 
@@ -330,7 +330,7 @@ By the end of this course, you will be able to:
 
 ## 📄 LICENSE
 
-© 2026 — All rights reserved. This course content is proprietary; please do not redistribute without permission.
+© 2026 — All rights reserved. This course content is proprietary; please do not redistribute without permission. See [LICENSE](LICENSE) for the full terms.
 
 ---
 
