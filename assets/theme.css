@@ -1,6 +1,7 @@
-/* Automator Pro site theme. One bright look on purpose: it stays light in every
-   system theme. The dotted background is the n8n editor canvas; node colours
-   follow n8n's own logic (green trigger, blue action, purple AI, ...). */
+/* Automator Pro site theme. Bright by default; follows the device's dark mode
+   unless the visitor picks Light or Dark with the toggle (assets/theme.js sets
+   data-theme on <html>). The dotted background is the n8n editor canvas; node
+   colours follow n8n's own logic (green trigger, blue action, purple AI, ...). */
 :root{
   color-scheme:light;
   --canvas:#F6F8FB;
@@ -13,6 +14,8 @@
   --wire:#B4C1D1;
   --run:#FF6B35;          /* the Execute button */
   --run-ink:#FFFFFF;
+  --run-edge:#D4531F;
+  --on-color:#FFFFFF;     /* text on a filled phase/node colour */
   --ok:#16A34A;
   --trigger:#12A874;      /* phase 1 */
   --action:#2F7CF6;       /* phase 2 */
@@ -20,9 +23,38 @@
   --tools:#E8950C;        /* phase 4 */
   --biz:#E6457E;          /* phase 5 */
   --adv:#0B9FA3;          /* phase 6 */
+  --bar-bg:rgba(246,248,251,.94);
+  --code-bg:#1D2939;
+  --code-ink:#E6ECF3;
+  --flag-bg:#FFF3DB;
+  --flag-ink:#8A5A00;
+  --mark:#FFE7B3;
+  --win-bg:#E9F9EF;
+  --shadow:rgba(29,41,57,.08);
   --display:"Archivo","Segoe UI",system-ui,sans-serif;
   --body:"IBM Plex Sans","Segoe UI",system-ui,sans-serif;
   --mono:"IBM Plex Mono",ui-monospace,"SFMono-Regular",Menlo,monospace;
+}
+/* Dark: the n8n canvas at night. Same roles, brighter node colours. */
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    color-scheme:dark;
+    --canvas:#12171F; --dots:#28313D; --surface:#1A212B; --surface-2:#232C38;
+    --ink:#E6EDF5; --muted:#9AA8B8; --line:#2F3A48; --wire:#4B596B;
+    --run:#FF7A45; --run-ink:#1A0D05; --run-edge:#C4541F; --on-color:#0F141A; --ok:#2FC46A;
+    --trigger:#2FCB8E; --action:#5B9BFF; --ai:#A78BFA; --tools:#F5A524; --biz:#F472A6; --adv:#2CC5C9;
+    --bar-bg:rgba(18,23,31,.92); --code-bg:#0B0F15; --code-ink:#DCE4EE;
+    --flag-bg:#3A2C0E; --flag-ink:#FFD58A; --mark:#5A4413; --win-bg:#123222; --shadow:rgba(0,0,0,.35);
+  }
+}
+:root[data-theme="dark"]{
+  color-scheme:dark;
+  --canvas:#12171F; --dots:#28313D; --surface:#1A212B; --surface-2:#232C38;
+  --ink:#E6EDF5; --muted:#9AA8B8; --line:#2F3A48; --wire:#4B596B;
+  --run:#FF7A45; --run-ink:#1A0D05; --run-edge:#C4541F; --on-color:#0F141A; --ok:#2FC46A;
+  --trigger:#2FCB8E; --action:#5B9BFF; --ai:#A78BFA; --tools:#F5A524; --biz:#F472A6; --adv:#2CC5C9;
+  --bar-bg:rgba(18,23,31,.92); --code-bg:#0B0F15; --code-ink:#DCE4EE;
+  --flag-bg:#3A2C0E; --flag-ink:#FFD58A; --mark:#5A4413; --win-bg:#123222; --shadow:rgba(0,0,0,.35);
 }
 *{box-sizing:border-box}
 html{background:var(--canvas)}
@@ -51,16 +83,23 @@ a:focus-visible,button:focus-visible,summary:focus-visible,input:focus-visible{o
 .brand-mark i:nth-child(3){background:var(--action)}
 .chip{display:inline-flex;align-items:center;gap:6px;font-family:var(--display);font-weight:600;font-size:13.5px;background:var(--surface);border:1px solid var(--line);border-radius:999px;padding:5px 12px;color:var(--ink);text-decoration:none}
 
+/* theme toggle: Auto / Light / Dark */
+.theme-toggle{display:inline-flex;align-items:center;gap:7px;font-family:var(--display);font-weight:600;font-size:13.5px;background:var(--surface);color:var(--ink);border:1px solid var(--line);border-radius:999px;padding:5px 12px 5px 9px;cursor:pointer}
+.theme-toggle:hover{border-color:var(--ink)}
+.theme-toggle svg{width:16px;height:16px;stroke:currentColor;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+.top-right{display:flex;align-items:center;gap:8px}
+@media (max-width:520px){.theme-toggle span{display:none}.theme-toggle{padding:7px}.brand{font-size:16px}}
+
 /* buttons */
 .btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;font-family:var(--display);font-stretch:108%;font-weight:700;font-size:16.5px;text-decoration:none;border-radius:10px;padding:13px 22px;border:2px solid transparent;cursor:pointer;transition:transform .15s ease, box-shadow .15s ease}
 .btn:hover{transform:translateY(-1px)}
-.btn.run{background:var(--run);color:var(--run-ink);box-shadow:0 3px 0 #D4531F}
-.btn.run:active{transform:translateY(2px);box-shadow:0 1px 0 #D4531F}
+.btn.run{background:var(--run);color:var(--run-ink);box-shadow:0 3px 0 var(--run-edge)}
+.btn.run:active{transform:translateY(2px);box-shadow:0 1px 0 var(--run-edge)}
 .btn.ghost{background:var(--surface);color:var(--ink);border-color:var(--line)}
 .btn.ghost:hover{border-color:var(--ink)}
 
 /* a workflow node card */
-.node{background:var(--surface);border:1.5px solid var(--line);border-radius:12px;box-shadow:0 1px 2px rgba(29,41,57,.06)}
+.node{background:var(--surface);border:1.5px solid var(--line);border-radius:12px;box-shadow:0 1px 2px var(--shadow)}
 
 @media (prefers-reduced-motion:reduce){
   .btn{transition:none}

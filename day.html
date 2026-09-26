@@ -8,8 +8,9 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@100..125,500..800&family=IBM+Plex+Mono:wght@400;600&family=IBM+Plex+Sans:wght@400;600&display=swap">
 <link rel="stylesheet" href="assets/theme.css">
+<script src="assets/theme.js"></script>
 <style>
-.bar{position:sticky;top:env(safe-area-inset-top,0px);z-index:5;background:rgba(246,248,251,.94);backdrop-filter:blur(6px);border-bottom:1px solid var(--line);margin-inline:-20px;padding-inline:20px}
+.bar{position:sticky;top:env(safe-area-inset-top,0px);z-index:5;background:var(--bar-bg);backdrop-filter:blur(6px);border-bottom:1px solid var(--line);margin-inline:-20px;padding-inline:20px}
 .bar .top{max-width:780px;margin:0 auto;padding-block:10px}
 .meter{display:flex;align-items:center;gap:10px;font-family:var(--mono);font-size:12px;color:var(--muted);min-width:150px}
 .meter .track{flex:1;height:6px;background:var(--surface-2);border-radius:99px;overflow:hidden;min-width:80px}
@@ -33,7 +34,7 @@
 #content a.file{display:inline-flex;align-items:center;gap:6px;background:var(--surface);border:1.5px solid var(--line);border-radius:8px;padding:1px 8px;text-decoration:none;color:var(--ink)}
 #content a.file::before{content:"⬇";font-size:.85em;color:var(--action)}
 #content a.file:hover{border-color:var(--action)}
-#content pre{margin:0 0 16px;background:#1D2939;color:#E6ECF3;font-family:var(--mono);font-size:13.5px;line-height:1.6;padding:16px;border-radius:10px;overflow-x:auto}
+#content pre{margin:0 0 16px;background:var(--code-bg);color:var(--code-ink);font-family:var(--mono);font-size:13.5px;line-height:1.6;padding:16px;border-radius:10px;overflow-x:auto}
 #content pre code{background:none;padding:0;color:inherit;word-break:normal}
 .table-wrap{overflow-x:auto;margin:0 0 16px}
 #content table{border-collapse:collapse;width:100%;font-size:15px;background:var(--surface)}
@@ -46,8 +47,8 @@
 .sec > h2:first-child{margin-top:18px}
 .sec.done-sec{border-color:var(--c);border-width:2px}
 .sec.track-sec.mine{border-color:var(--tools)}
-.track-flag{display:inline-block;font-family:var(--mono);font-size:12px;font-weight:600;background:#FFF3DB;color:#8A5A00;border-radius:999px;padding:3px 10px;margin-bottom:10px}
-#content mark{background:#FFE7B3;color:inherit;border-radius:3px;padding:0 2px}
+.track-flag{display:inline-block;font-family:var(--mono);font-size:12px;font-weight:600;background:var(--flag-bg);color:var(--flag-ink);border-radius:999px;padding:3px 10px;margin-bottom:10px}
+#content mark{background:var(--mark);color:inherit;border-radius:3px;padding:0 2px}
 
 #content li.task{list-style:none;margin-left:-22px;display:flex;gap:12px;align-items:flex-start;padding:8px 10px;border-radius:10px}
 #content li.task:hover{background:var(--surface-2)}
@@ -58,7 +59,7 @@
 .solution h2{font-size:21px}
 .solution p{color:var(--muted)}
 .solution ol{margin:0;padding-left:20px;color:var(--ink);font-size:15.5px}
-.celebrate{background:#E9F9EF;border:2px solid var(--ok);border-radius:14px;padding:16px 20px;font-family:var(--display);font-weight:700;margin-bottom:18px}
+.celebrate{background:var(--win-bg);border:2px solid var(--ok);border-radius:14px;padding:16px 20px;font-family:var(--display);font-weight:700;margin-bottom:18px}
 
 .pager{display:grid;grid-template-columns:1fr 1fr;gap:12px;border-top:1px solid var(--line);padding-block:22px 48px}
 .pager a{display:block;text-decoration:none;color:var(--ink);background:var(--surface);border:1.5px solid var(--line);border-radius:12px;padding:14px 16px}
@@ -80,7 +81,10 @@
 <div class="bar">
   <nav class="top" aria-label="Course">
     <a class="brand" href="index.html#path"><span class="brand-mark" aria-hidden="true"><i></i><i></i><i></i></span>Automator Pro</a>
-    <div class="meter" id="meter" aria-label="Definition of Done progress"><div class="track"><span id="fill"></span></div><span id="pct">0%</span></div>
+    <div class="top-right">
+      <div class="meter" id="meter" aria-label="Definition of Done progress"><div class="track"><span id="fill"></span></div><span id="pct">0%</span></div>
+      <button class="theme-toggle" type="button" data-theme-toggle></button>
+    </div>
   </nav>
 </div>
 

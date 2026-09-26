@@ -9,6 +9,7 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@100..125,500..800&family=IBM+Plex+Mono:wght@400;600&family=IBM+Plex+Sans:wght@400;600&display=swap">
 <link rel="stylesheet" href="assets/theme.css">
+<script src="assets/theme.js"></script>
 <style>
 .wrap{max-width:1040px;margin:0 auto}
 .narrow{max-width:760px}
@@ -24,7 +25,7 @@
 .facts{display:flex;flex-wrap:wrap;gap:8px}
 
 /* demo canvas */
-.demo{padding:22px;display:grid;gap:16px;background:var(--surface);border:1.5px solid var(--line);border-radius:16px;box-shadow:0 12px 32px rgba(29,41,57,.08)}
+.demo{padding:22px;display:grid;gap:16px;background:var(--surface);border:1.5px solid var(--line);border-radius:16px;box-shadow:0 12px 32px var(--shadow)}
 .demo-head{display:flex;justify-content:space-between;align-items:center;gap:10px}
 .demo-head b{font-family:var(--mono);font-size:13px;font-weight:600;color:var(--muted)}
 .flow{position:relative;display:grid;grid-template-columns:1fr 1fr 1fr;gap:28px;padding-block:10px;background-image:radial-gradient(var(--dots) 1.2px, transparent 1.3px);background-size:18px 18px;border-radius:10px;padding:26px 14px}
@@ -34,12 +35,12 @@
 .flow .n:not(:last-of-type)::after{content:"";position:absolute;top:32px;left:calc(50% + 34px);width:calc(100% - 68px + 28px);height:2px;background:var(--wire)}
 .flow .label{font-family:var(--display);font-weight:700;font-size:13.5px;line-height:1.2}
 .flow .sub{font-family:var(--mono);font-size:11px;color:var(--muted)}
-.flow .tick{position:absolute;right:-8px;top:-8px;width:22px;height:22px;border-radius:50%;background:var(--ok);color:#fff;font-size:13px;display:flex;align-items:center;justify-content:center;opacity:0;transform:scale(.4);transition:all .2s ease}
+.flow .tick{position:absolute;right:-8px;top:-8px;width:22px;height:22px;border-radius:50%;background:var(--ok);color:var(--on-color);font-size:13px;display:flex;align-items:center;justify-content:center;opacity:0;transform:scale(.4);transition:all .2s ease}
 .flow .n.done .tick{opacity:1;transform:scale(1)}
 .flow .n.active .box{box-shadow:0 0 0 6px color-mix(in srgb, var(--c) 18%, transparent)}
 .packet{position:absolute;top:calc(26px + 32px - 6px);left:0;width:12px;height:12px;border-radius:50%;background:var(--run);opacity:0;pointer-events:none}
 .output{display:flex;gap:12px;align-items:flex-start;background:var(--surface-2);border-radius:10px;padding:12px 14px;font-size:15px;min-height:64px}
-.output .icon{flex:0 0 auto;width:34px;height:34px;border-radius:50%;background:var(--action);color:#fff;display:flex;align-items:center;justify-content:center;font-weight:700;font-family:var(--display)}
+.output .icon{flex:0 0 auto;width:34px;height:34px;border-radius:50%;background:var(--action);color:var(--on-color);display:flex;align-items:center;justify-content:center;font-weight:700;font-family:var(--display)}
 .output .msg{line-height:1.45}
 .output .msg b{font-family:var(--display)}
 .output.idle{color:var(--muted);align-items:center}
@@ -70,7 +71,7 @@ section{padding-block:56px}
 .tracks{display:flex;flex-wrap:wrap;gap:10px}
 .tracks button{font-family:var(--display);font-weight:600;font-size:15px;background:var(--surface);border:1.5px solid var(--line);border-radius:999px;padding:9px 16px;cursor:pointer;color:var(--ink)}
 .tracks button:hover{border-color:var(--ink)}
-.tracks button[aria-pressed="true"]{background:var(--ink);color:#fff;border-color:var(--ink)}
+.tracks button[aria-pressed="true"]{background:var(--ink);color:var(--surface);border-color:var(--ink)}
 .track-note{margin-top:14px;font-size:15.5px;color:var(--muted);min-height:1.6em}
 
 /* path: phases as a vertical workflow */
@@ -79,7 +80,7 @@ section{padding-block:56px}
 .phase::before{content:"";position:absolute;left:17px;top:38px;bottom:-2px;width:2px;background:var(--wire)}
 .phase:last-child::before{display:none}
 .pin{position:absolute;left:0;top:6px;width:36px;height:36px;border-radius:10px;background:var(--surface);border:2px solid var(--c);display:flex;align-items:center;justify-content:center;font-family:var(--display);font-weight:800;color:var(--c)}
-.phase.current .pin{background:var(--c);color:#fff}
+.phase.current .pin{background:var(--c);color:var(--on-color)}
 .phase > details{background:var(--surface);border:1.5px solid var(--line);border-radius:12px}
 .phase.current > details{border-color:var(--c)}
 .phase summary,.week summary{list-style:none;cursor:pointer}
@@ -145,7 +146,10 @@ footer a{color:var(--muted)}
 
 <nav class="top" aria-label="Site">
   <a class="brand" href="index.html"><span class="brand-mark" aria-hidden="true"><i></i><i></i><i></i></span>Automator Pro</a>
-  <a class="chip" id="track-chip" href="#tracks" hidden></a>
+  <div class="top-right">
+    <a class="chip" id="track-chip" href="#tracks" hidden></a>
+    <button class="theme-toggle" type="button" data-theme-toggle></button>
+  </div>
 </nav>
 
 <header class="hero">
