@@ -1,0 +1,283 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Automator Pro · Day</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@100..125,500..800&family=IBM+Plex+Mono:wght@400;600&family=IBM+Plex+Sans:wght@400;600&display=swap">
+<link rel="stylesheet" href="assets/theme.css">
+<style>
+.bar{position:sticky;top:env(safe-area-inset-top,0px);z-index:5;background:rgba(246,248,251,.94);backdrop-filter:blur(6px);border-bottom:1px solid var(--line);margin-inline:-20px;padding-inline:20px}
+.bar .top{max-width:780px;margin:0 auto;padding-block:10px}
+.meter{display:flex;align-items:center;gap:10px;font-family:var(--mono);font-size:12px;color:var(--muted);min-width:150px}
+.meter .track{flex:1;height:6px;background:var(--surface-2);border-radius:99px;overflow:hidden;min-width:80px}
+.meter .track span{display:block;height:100%;width:0;background:var(--c);transition:width .3s ease}
+.wrap{max-width:780px;margin:0 auto}
+
+.lesson-head{padding-block:34px 8px;display:grid;gap:12px}
+.lesson-head .eyebrow{color:var(--c)}
+.lesson-head h1{font-size:clamp(32px,6vw,48px);font-weight:800;letter-spacing:-.01em}
+.chips{display:flex;flex-wrap:wrap;gap:8px}
+
+#content{padding-bottom:10px}
+#content h2{font-size:22px;margin:34px 0 12px;display:flex;align-items:center;gap:10px}
+#content h3{font-size:18px;margin:24px 0 8px}
+#content p,#content ul,#content ol{margin:0 0 14px}
+#content li{margin-bottom:6px}
+#content ol{padding-left:22px}
+#content ol > li::marker{font-family:var(--mono);font-weight:600;color:var(--c)}
+#content code{font-family:var(--mono);font-size:.86em;background:var(--surface-2);padding:1px 6px;border-radius:5px;word-break:break-word}
+#content a code{background:transparent;padding:0;color:inherit}
+#content a.file{display:inline-flex;align-items:center;gap:6px;background:var(--surface);border:1.5px solid var(--line);border-radius:8px;padding:1px 8px;text-decoration:none;color:var(--ink)}
+#content a.file::before{content:"⬇";font-size:.85em;color:var(--action)}
+#content a.file:hover{border-color:var(--action)}
+#content pre{margin:0 0 16px;background:#1D2939;color:#E6ECF3;font-family:var(--mono);font-size:13.5px;line-height:1.6;padding:16px;border-radius:10px;overflow-x:auto}
+#content pre code{background:none;padding:0;color:inherit;word-break:normal}
+.table-wrap{overflow-x:auto;margin:0 0 16px}
+#content table{border-collapse:collapse;width:100%;font-size:15px;background:var(--surface)}
+#content th,#content td{border:1px solid var(--line);padding:8px 10px;text-align:left;vertical-align:top}
+#content th{font-family:var(--display);background:var(--surface-2)}
+#content blockquote{margin:16px 0;padding:12px 16px;background:var(--surface);border-left:4px solid var(--c);border-radius:0 10px 10px 0}
+
+/* each lesson section is a node card */
+.sec{background:var(--surface);border:1.5px solid var(--line);border-radius:14px;padding:4px 22px 10px;margin-bottom:18px}
+.sec > h2:first-child{margin-top:18px}
+.sec.done-sec{border-color:var(--c);border-width:2px}
+.sec.track-sec.mine{border-color:var(--tools)}
+.track-flag{display:inline-block;font-family:var(--mono);font-size:12px;font-weight:600;background:#FFF3DB;color:#8A5A00;border-radius:999px;padding:3px 10px;margin-bottom:10px}
+#content mark{background:#FFE7B3;color:inherit;border-radius:3px;padding:0 2px}
+
+#content li.task{list-style:none;margin-left:-22px;display:flex;gap:12px;align-items:flex-start;padding:8px 10px;border-radius:10px}
+#content li.task:hover{background:var(--surface-2)}
+#content li.task input{width:20px;height:20px;margin-top:3px;flex:0 0 auto;accent-color:var(--ok);cursor:pointer}
+#content li.task.done > span{color:var(--muted);text-decoration:line-through}
+
+.solution{background:var(--surface);border:2px dashed var(--wire);border-radius:14px;padding:22px;display:grid;gap:12px;margin-block:8px 18px}
+.solution h2{font-size:21px}
+.solution p{color:var(--muted)}
+.solution ol{margin:0;padding-left:20px;color:var(--ink);font-size:15.5px}
+.celebrate{background:#E9F9EF;border:2px solid var(--ok);border-radius:14px;padding:16px 20px;font-family:var(--display);font-weight:700;margin-bottom:18px}
+
+.pager{display:grid;grid-template-columns:1fr 1fr;gap:12px;border-top:1px solid var(--line);padding-block:22px 48px}
+.pager a{display:block;text-decoration:none;color:var(--ink);background:var(--surface);border:1.5px solid var(--line);border-radius:12px;padding:14px 16px}
+.pager a:hover{border-color:var(--c)}
+.pager small{display:block;font-family:var(--mono);font-size:12px;color:var(--muted)}
+.pager strong{font-family:var(--display);font-size:15.5px}
+.pager .next{text-align:right;grid-column:2}
+.notice{background:var(--surface);border:1.5px solid var(--line);border-radius:12px;padding:18px;display:grid;gap:8px}
+@media (max-width:520px){
+  body{font-size:16.5px}
+  .sec{padding:2px 16px 8px}
+  .meter{min-width:0}
+  .meter .track{min-width:50px}
+}
+@media (prefers-reduced-motion:reduce){.meter .track span{transition:none}}
+</style>
+</head>
+<body>
+<div class="bar">
+  <nav class="top" aria-label="Course">
+    <a class="brand" href="index.html#path"><span class="brand-mark" aria-hidden="true"><i></i><i></i><i></i></span>Automator Pro</a>
+    <div class="meter" id="meter" aria-label="Definition of Done progress"><div class="track"><span id="fill"></span></div><span id="pct">0%</span></div>
+  </nav>
+</div>
+
+<div class="wrap">
+  <header class="lesson-head">
+    <p class="eyebrow" id="eyebrow">Loading…</p>
+    <h1 id="title"></h1>
+    <div class="chips" id="chips"></div>
+  </header>
+  <div id="content"></div>
+  <nav class="pager" id="pager" aria-label="Other days"></nav>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/marked/18.0.13/lib/marked.umd.min.js"></script>
+<script src="assets/manifest.js"></script>
+<script src="assets/progress.js"></script>
+<script>
+(function () {
+  var C = window.AP_COURSE, days = C.days;
+  var colors = { 1: "--trigger", 2: "--action", 3: "--ai", 4: "--tools", 5: "--biz", 6: "--adv" };
+  var params = new URLSearchParams(location.search);
+  var n = parseInt(params.get("day"), 10);
+  if (!(n >= 1 && n <= days.length)) n = 1;
+  var viewSolution = params.get("view") === "solution";
+  var d = days[n - 1];
+  var week = C.weeks.filter(function (w) { return w.week === d.week; })[0];
+  var phase = C.phases.filter(function (p) { return p.weeks.indexOf(d.week) !== -1; })[0];
+  document.documentElement.style.setProperty("--c", "var(" + colors[phase.phase] + ")");
+
+  var content = document.getElementById("content");
+  var solIsWorkflow = d.solution && /\.json$/.test(d.solution);
+
+  document.getElementById("eyebrow").textContent =
+    "Day " + n + " of " + days.length + " · Week " + d.week + ": " + week.title;
+  document.getElementById("title").textContent = (viewSolution ? "Model answer: " : "") + d.title;
+  document.title = "Day " + n + ": " + d.title + " · Automator Pro";
+  var chips = document.getElementById("chips");
+  [d.time && "⏱ " + d.time, d.difficulty && "◆ " + d.difficulty, "Phase " + phase.phase + ": " + phase.name].forEach(function (t) {
+    if (!t) return;
+    var s = document.createElement("span"); s.className = "chip"; s.textContent = t; chips.appendChild(s);
+  });
+  if (viewSolution) {
+    document.getElementById("meter").hidden = true;
+    var back = document.createElement("a");
+    back.className = "chip"; back.href = "day.html?day=" + n; back.textContent = "← Back to the lesson";
+    chips.prepend(back);
+  }
+
+  fetch(viewSolution ? d.solution : d.lesson)
+    .then(function (r) { if (!r.ok) throw new Error(r.status); return r.text(); })
+    .then(function (md) {
+      var lines = md.split("\n");
+      // The lesson's own title and Week/Time line are shown in the header above.
+      if (/^#\s/.test(lines[0])) lines.shift();
+      if (lines[0] && /\*\*Week:\*\*/.test(lines[0])) lines.shift();
+      content.innerHTML = marked.parse(lines.join("\n"));
+      enhance();
+    })
+    .catch(function () {
+      content.innerHTML = '<div class="notice"><b>This page couldn\'t load.</b>' +
+        '<p>If you opened it straight from your computer, the browser blocks it from reading lesson files. ' +
+        'Run <code>python3 -m http.server 8000</code> in the course folder and open <code>http://localhost:8000</code>.</p></div>';
+    });
+
+  function enhance() {
+    var weekDir = d.lesson.split("/")[0];
+
+    // Turn file paths in the text into links: workflows download, lessons open here.
+    content.querySelectorAll("code").forEach(function (code) {
+      if (code.closest("pre") || code.closest("a")) return;
+      var t = code.textContent.trim();
+      var path = null;
+      if (/^WEEK_\d+_[A-Z_]+\/(EXAMPLES|SOLUTIONS|DAILY_TASKS)\/[\w.\-]+\.(json|md)$/.test(t)) path = t;
+      else if (/^(EXAMPLES|SOLUTIONS|DAILY_TASKS)\/[\w.\-]+\.(json|md)$/.test(t)) path = weekDir + "/" + t;
+      if (!path) return;
+      var a = document.createElement("a");
+      var lessonMatch = days.filter(function (x) { return x.lesson === path; })[0];
+      var solMatch = days.filter(function (x) { return x.solution === path && /\.md$/.test(path); })[0];
+      if (lessonMatch) a.href = "day.html?day=" + lessonMatch.day;
+      else if (solMatch) a.href = "day.html?day=" + solMatch.day + "&view=solution";
+      else { a.href = path; a.setAttribute("download", path.split("/").pop()); a.className = "file"; }
+      code.parentNode.insertBefore(a, code); a.appendChild(code);
+    });
+    content.querySelectorAll('a[href^="http"]').forEach(function (a) { a.target = "_blank"; a.rel = "noopener"; });
+    content.querySelectorAll("table").forEach(function (t) {
+      var w = document.createElement("div"); w.className = "table-wrap"; t.parentNode.insertBefore(w, t); w.appendChild(t);
+    });
+
+    // Group each h2 and what follows it into a node card.
+    var kids = Array.prototype.slice.call(content.childNodes), sec = null, frag = document.createDocumentFragment();
+    kids.forEach(function (k) {
+      if (k.nodeType === 1 && k.tagName === "H2") { sec = document.createElement("section"); sec.className = "sec"; frag.appendChild(sec); }
+      (sec || frag).appendChild(k);
+    });
+    content.innerHTML = ""; content.appendChild(frag);
+
+    if (viewSolution) return;
+
+    // Industry track: flag the section and highlight the learner's track.
+    var track = AP.trackById(AP.getTrack());
+    content.querySelectorAll(".sec").forEach(function (s) {
+      var h = s.querySelector("h2");
+      if (!h || !/Industry Track/i.test(h.textContent)) return;
+      s.classList.add("track-sec");
+      if (!track) {
+        var hint = document.createElement("p");
+        hint.innerHTML = '<a href="index.html#tracks">Pick your industry track</a> to have it highlighted here.';
+        hint.style.fontSize = "15px";
+        s.appendChild(hint);
+        return;
+      }
+      s.classList.add("mine");
+      var flag = document.createElement("span"); flag.className = "track-flag"; flag.textContent = "Your track: " + track.label;
+      h.insertAdjacentElement("afterend", flag);
+      var walker = document.createTreeWalker(s, NodeFilter.SHOW_TEXT), texts = [];
+      while (walker.nextNode()) texts.push(walker.currentNode);
+      texts.forEach(function (tn) {
+        var m = tn.nodeValue.match(track.match);
+        if (!m || tn.parentNode.closest(".track-flag")) return;
+        var after = tn.splitText(m.index); after.splitText(m[0].length);
+        var mark = document.createElement("mark"); mark.textContent = after.nodeValue;
+        after.parentNode.replaceChild(mark, after);
+      });
+    });
+
+    // Definition of Done checkboxes, saved per day.
+    var state = AP.load();
+    var boxes = Array.prototype.slice.call(content.querySelectorAll('li > input[type="checkbox"]'));
+    var saved = state[String(n)] || [];
+    var doneSec = null;
+    boxes.forEach(function (box, i) {
+      var li = box.parentNode;
+      li.classList.add("task");
+      var span = document.createElement("span");
+      while (box.nextSibling) span.appendChild(box.nextSibling);
+      li.appendChild(span);
+      box.disabled = false;
+      box.id = "d" + n + "-" + i;
+      box.setAttribute("aria-label", span.textContent.trim());
+      box.checked = !!saved[i];
+      li.classList.toggle("done", box.checked);
+      doneSec = li.closest(".sec");
+      box.addEventListener("change", function () {
+        li.classList.toggle("done", box.checked);
+        state[String(n)] = boxes.map(function (b) { return b.checked; });
+        AP.save(state);
+        update();
+      });
+    });
+    if (!state[String(n)]) state[String(n)] = boxes.map(function () { return false; });
+
+    // Solution panel right after the Definition of Done: try first, then reveal.
+    var panel = document.createElement("div");
+    panel.className = "solution";
+    panel.innerHTML = '<h2>Check your work</h2>' +
+      '<p>Try the build yourself first. When you\'re done, or properly stuck, compare with the answer.</p>' +
+      '<div><button class="btn ghost" type="button" id="reveal">Show the solution</button></div>' +
+      '<div id="sol-body" hidden></div>';
+    var body = panel.querySelector("#sol-body");
+    if (solIsWorkflow) {
+      body.innerHTML = '<ol><li>Download the solution workflow.</li><li>In n8n, open <b>Menu (☰) → Import from File</b>, or drag the file onto the canvas.</li><li>Read the sticky notes first: they list the credentials to connect.</li></ol>' +
+        '<p style="margin-top:12px"><a class="btn run" id="sol-link" download>⬇ Download solution workflow</a></p>';
+      body.querySelector("#sol-link").href = d.solution;
+      body.querySelector("#sol-link").setAttribute("download", d.solution.split("/").pop());
+    } else if (d.solution) {
+      body.innerHTML = '<p>Today\'s deliverable is written, not a workflow. Compare yours with the model answer.</p>' +
+        '<p style="margin-top:12px"><a class="btn run" href="day.html?day=' + n + '&view=solution">Read the model answer →</a></p>';
+    }
+    panel.querySelector("#reveal").addEventListener("click", function () { body.hidden = false; this.parentNode.hidden = true; });
+    var celebrate = document.createElement("div");
+    celebrate.className = "celebrate"; celebrate.hidden = true;
+    celebrate.textContent = n < days.length ? "✓ Day " + n + " done. Nice work. Day " + (n + 1) + " is ready when you are." : "✓ You've finished the whole course. Congratulations!";
+    (doneSec || content.lastChild).insertAdjacentElement("afterend", panel);
+    panel.insertAdjacentElement("beforebegin", celebrate);
+
+    function update() {
+      var pct = AP.percent(state, n);
+      document.getElementById("fill").style.width = pct + "%";
+      document.getElementById("pct").textContent = pct + "%";
+      celebrate.hidden = pct !== 100;
+      if (doneSec) doneSec.classList.toggle("done-sec", pct === 100);
+    }
+    update();
+  }
+
+  var pager = document.getElementById("pager");
+  function add(cls, day, label) {
+    var a = document.createElement("a");
+    a.className = cls; a.href = "day.html?day=" + day;
+    a.innerHTML = "<small></small><strong></strong>";
+    a.querySelector("small").textContent = label;
+    a.querySelector("strong").textContent = days[day - 1].title;
+    pager.appendChild(a);
+  }
+  if (n > 1) add("prev", n - 1, "← Day " + (n - 1));
+  if (n < days.length) add("next", n + 1, "Day " + (n + 1) + " →");
+})();
+</script>
+</body>
+</html>

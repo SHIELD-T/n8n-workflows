@@ -1,0 +1,68 @@
+/* Automator Pro site theme. One bright look on purpose: it stays light in every
+   system theme. The dotted background is the n8n editor canvas; node colours
+   follow n8n's own logic (green trigger, blue action, purple AI, ...). */
+:root{
+  color-scheme:light;
+  --canvas:#F6F8FB;
+  --dots:#D5DDE8;
+  --surface:#FFFFFF;
+  --surface-2:#EEF2F7;
+  --ink:#1D2939;
+  --muted:#5A6B80;
+  --line:#D8E0EA;
+  --wire:#B4C1D1;
+  --run:#FF6B35;          /* the Execute button */
+  --run-ink:#FFFFFF;
+  --ok:#16A34A;
+  --trigger:#12A874;      /* phase 1 */
+  --action:#2F7CF6;       /* phase 2 */
+  --ai:#8B5CF6;           /* phase 3 */
+  --tools:#E8950C;        /* phase 4 */
+  --biz:#E6457E;          /* phase 5 */
+  --adv:#0B9FA3;          /* phase 6 */
+  --display:"Archivo","Segoe UI",system-ui,sans-serif;
+  --body:"IBM Plex Sans","Segoe UI",system-ui,sans-serif;
+  --mono:"IBM Plex Mono",ui-monospace,"SFMono-Regular",Menlo,monospace;
+}
+*{box-sizing:border-box}
+html{background:var(--canvas)}
+body{
+  margin:0;color:var(--ink);font-family:var(--body);font-size:17px;line-height:1.65;
+  padding-inline:20px;-webkit-text-size-adjust:100%;
+  background-color:var(--canvas);
+  background-image:radial-gradient(var(--dots) 1.2px, transparent 1.3px);
+  background-size:22px 22px;
+}
+img{max-width:100%}
+[hidden]{display:none!important}
+h1,h2,h3,h4{font-family:var(--display);font-stretch:112%;line-height:1.12;text-wrap:balance;margin:0}
+p{margin:0}
+a{color:var(--action)}
+a:focus-visible,button:focus-visible,summary:focus-visible,input:focus-visible{outline:3px solid var(--run);outline-offset:3px;border-radius:8px}
+.eyebrow{font-family:var(--mono);font-size:12.5px;font-weight:600;letter-spacing:.06em;text-transform:uppercase;color:var(--muted)}
+
+/* top bar */
+.top{display:flex;justify-content:space-between;align-items:center;gap:12px;padding-block:16px}
+.brand{display:flex;align-items:center;gap:10px;font-family:var(--display);font-stretch:112%;font-weight:800;font-size:17px;text-decoration:none;color:var(--ink)}
+.brand-mark{display:flex;align-items:center;gap:3px}
+.brand-mark i{width:10px;height:10px;border-radius:3px;display:block}
+.brand-mark i:nth-child(1){background:var(--trigger)}
+.brand-mark i:nth-child(2){width:8px;height:2px;border-radius:2px;background:var(--wire)}
+.brand-mark i:nth-child(3){background:var(--action)}
+.chip{display:inline-flex;align-items:center;gap:6px;font-family:var(--display);font-weight:600;font-size:13.5px;background:var(--surface);border:1px solid var(--line);border-radius:999px;padding:5px 12px;color:var(--ink);text-decoration:none}
+
+/* buttons */
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;font-family:var(--display);font-stretch:108%;font-weight:700;font-size:16.5px;text-decoration:none;border-radius:10px;padding:13px 22px;border:2px solid transparent;cursor:pointer;transition:transform .15s ease, box-shadow .15s ease}
+.btn:hover{transform:translateY(-1px)}
+.btn.run{background:var(--run);color:var(--run-ink);box-shadow:0 3px 0 #D4531F}
+.btn.run:active{transform:translateY(2px);box-shadow:0 1px 0 #D4531F}
+.btn.ghost{background:var(--surface);color:var(--ink);border-color:var(--line)}
+.btn.ghost:hover{border-color:var(--ink)}
+
+/* a workflow node card */
+.node{background:var(--surface);border:1.5px solid var(--line);border-radius:12px;box-shadow:0 1px 2px rgba(29,41,57,.06)}
+
+@media (prefers-reduced-motion:reduce){
+  .btn{transition:none}
+  .btn:hover{transform:none}
+}
