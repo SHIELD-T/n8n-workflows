@@ -70,6 +70,38 @@ Each imported workflow includes sticky notes on the canvas listing exactly which
 
 ---
 
+## 🌐 COURSE WEBSITE
+
+The repo doubles as a static website for students: a landing page with a "Start Day 1" button, the six phases as a path, an optional industry-track picker, and a lesson page for every day with a tickable Definition of Done, one-click workflow downloads, and a try-first solution panel. Progress is saved in each student's browser, so there are no accounts or database.
+
+| File | Purpose |
+|---|---|
+| `index.html` | Landing page and course path |
+| `day.html` | Lesson viewer (`day.html?day=6`), renders the `DAILY_TASKS` Markdown |
+| `assets/manifest.js` | Day list generated from the lessons (do not edit by hand) |
+| `assets/theme.css`, `assets/progress.js` | Shared styles and progress tracking |
+| `scripts/build_site_manifest.py` | Regenerates `assets/manifest.js` |
+
+**After adding, renaming or retitling a lesson**, regenerate the manifest and commit it:
+
+```bash
+python3 scripts/build_site_manifest.py
+```
+
+**Preview locally** (browsers block opening the pages straight from disk):
+
+```bash
+python3 -m http.server 8000   # then open http://localhost:8000
+```
+
+**Deploy** (no build step on any host; every push to `main` redeploys):
+- **Vercel:** Add New → Project → import this repo → Deploy. `vercel.json` sets it up.
+- **Render:** New → Blueprint → pick this repo. `render.yaml` creates a free static site.
+- **Netlify:** Add new site → import this repo. `netlify.toml` sets it up.
+- **GitHub Pages:** Settings → Pages → deploy from `main`, root folder.
+
+---
+
 ## 📊 COURSE STATISTICS
 
 | **Component** | **Count** | **Description** |
