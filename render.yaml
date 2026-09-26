@@ -1,0 +1,8 @@
+# Render Blueprint: deploys the course website as a free static site.
+# In Render: New > Blueprint, then pick this repository.
+services:
+  - type: web
+    name: automator-pro
+    runtime: static
+    buildCommand: echo "No build step needed"
+    staticPublishPath: .
