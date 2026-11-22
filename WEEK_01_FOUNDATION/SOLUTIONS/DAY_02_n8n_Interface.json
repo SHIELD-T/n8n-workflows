@@ -1,6 +1,6 @@
 {
   "name": "Day 02 Solution: Intro to n8n Core Concepts",
-  "description": "Two reference chains: Manual Trigger -> Set -> HTTP Request, and Manual Trigger -> Set -> Code -> Write Binary File.",
+  "description": "Two reference chains: Manual Trigger -> Set -> HTTP Request, and Manual Trigger -> Set -> Convert to File -> Read/Write Files from Disk.",
   "tags": [
     "week-01",
     "day-02",
@@ -18,7 +18,7 @@
         -260
       ],
       "parameters": {
-        "content": "## Day 02 Solution: Intro to n8n Core Concepts\n\nTwo independent chains in one file, matching the two workflows Day 2 asks you to build: (1) Manual Trigger -> Set -> HTTP Request to httpbin, and (2) Manual Trigger -> Set -> Code (builds binary) -> Write Binary File.\n\nCredentials needed: None needed to test the logic.\n\nSee DAILY_TASKS/DAY_02_n8n_Interface.md.",
+        "content": "## Day 02 Solution: Intro to n8n Core Concepts\n\nTwo independent chains in one file, matching the two workflows Day 2 asks you to build: (1) Manual Trigger -> Set -> HTTP Request to httpbin, and (2) Manual Trigger -> Set -> Convert to File -> Read/Write Files from Disk (writes to /home/node/.n8n-files, the only folder n8n 2.x lets nodes write to; on n8n Cloud, download the file from Convert to File instead).\n\nCredentials needed: None needed to test the logic.\n\nSee DAILY_TASKS/DAY_02_n8n_Interface.md.",
         "height": 240,
         "width": 460
       }
@@ -104,29 +104,33 @@
     },
     {
       "id": "code1",
-      "name": "Create Binary Data",
-      "type": "n8n-nodes-base.code",
-      "typeVersion": 2,
+      "name": "Convert to Text File",
+      "type": "n8n-nodes-base.convertToFile",
+      "typeVersion": 1.1,
       "position": [
         560,
         380
       ],
       "parameters": {
-        "mode": "runOnceForAllItems",
-        "jsCode": "const text = $input.first().json.text;\nconst binary = await this.helpers.prepareBinaryData(Buffer.from(text, 'utf-8'), 'output.txt', 'text/plain');\nreturn [{ json: $input.first().json, binary: { data: binary } }];"
+        "operation": "toText",
+        "sourceProperty": "text",
+        "options": {
+          "fileName": "output.txt"
+        }
       }
     },
     {
       "id": "wbf1",
       "name": "Write Output File",
-      "type": "n8n-nodes-base.writeBinaryFile",
-      "typeVersion": 1,
+      "type": "n8n-nodes-base.readWriteFile",
+      "typeVersion": 1.1,
       "position": [
         800,
         380
       ],
       "parameters": {
-        "fileName": "output.txt",
+        "operation": "write",
+        "fileName": "/home/node/.n8n-files/output.txt",
         "dataPropertyName": "data"
       }
     }
@@ -169,14 +173,14 @@
       "main": [
         [
           {
-            "node": "Create Binary Data",
+            "node": "Convert to Text File",
             "type": "main",
             "index": 0
           }
         ]
       ]
     },
-    "Create Binary Data": {
+    "Convert to Text File": {
       "main": [
         [
           {
