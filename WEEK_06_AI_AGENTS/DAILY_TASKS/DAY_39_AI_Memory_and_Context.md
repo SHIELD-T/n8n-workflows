@@ -3,7 +3,7 @@
 
 ## 🎯 What You'll Learn
 - The difference between short-term (session) memory and long-term (retrieved) knowledge for an AI agent
-- How n8n's **Window Buffer Memory** node gives an AI Agent conversational recall
+- How n8n's **Simple Memory** node (called Window Buffer Memory in older versions) gives an AI Agent conversational recall
 - How Retrieval-Augmented Generation (RAG) works: embed documents, store them in a vector store, retrieve the closest matches, and feed them into the prompt
 - How to add source citations to a RAG answer so it's verifiable
 
@@ -11,7 +11,7 @@
 - [N8N Tutorial: Building N8N AI Agents (Beginner to Pro)](https://www.youtube.com/watch?v=lSwMtsm6oDU) — watch for the memory node walkthrough; pay attention to how session/context IDs are used to keep separate conversations from bleeding into each other.
 
 ## 🛠️ Build It: Step-by-Step
-1. **Conversation memory:** Build a **Webhook** trigger (Path `ai-memory`) → **AI Agent** node with an **OpenAI Chat Model** sub-node and a **Window Buffer Memory** sub-node. Set the Memory's Session Key to an expression: `{{ $json.conversation_id }}` so each `conversation_id` gets its own history.
+1. **Conversation memory:** Build a **Webhook** trigger (Path `ai-memory`) → **AI Agent** node with an **OpenAI Chat Model** sub-node and a **Simple Memory** sub-node. Set the Memory's Session Key to an expression: `{{ $json.conversation_id }}` so each `conversation_id` gets its own history.
 2. Test memory: send `{"conversation_id": "conv1", "message": "My name is Alex."}`, then send a second request `{"conversation_id": "conv1", "message": "What's my name?"}`. Confirm the agent correctly answers "Alex" — that's memory working.
 3. **RAG setup:** Add a new workflow. Use a **Set** node to hold 3-4 short paragraphs of text (your own "knowledge base," e.g. your industry's FAQ). Chain: **Default Data Loader** → **Recursive Character Text Splitter** (Chunk Size 200) → **Embeddings OpenAI** → **In-Memory Vector Store** (mode: Insert) to load the documents once.
 4. Build the retrieval workflow: **Webhook** (Path `rag-query`) → **Question and Answer Chain** (or **AI Agent** with a **Vector Store Tool**) connected to the same **In-Memory Vector Store** (mode: Retrieve, Top K = 3) and an **OpenAI Chat Model**. System prompt: "Answer using only the retrieved context below. If the answer isn't in the context, say you don't know. Cite which chunk you used."

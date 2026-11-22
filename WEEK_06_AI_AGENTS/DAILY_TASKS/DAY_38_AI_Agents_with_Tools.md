@@ -13,7 +13,7 @@
 ## 🛠️ Build It: Step-by-Step
 1. Build: **Webhook** trigger (Path `ai-agent`) → **Set** node with `user_request` = `{{ $json.request }}`.
 2. Add an **AI Agent** node (search "AI Agent" in the node panel — this is the LangChain-powered agent node, not the plain OpenAI node). Connect an **OpenAI Chat Model** sub-node as its Chat Model (model `gpt-4o-mini`).
-3. Add a **Window Buffer Memory** sub-node to the AI Agent so it retains conversation turns within a session (Context Window Length: 5).
+3. Add a **Simple Memory** sub-node (called Window Buffer Memory in older n8n versions) to the AI Agent so it retains conversation turns within a session (Context Window Length: 5).
 4. Add an **HTTP Request Tool** sub-node named "Wikipedia Search": Method GET, URL `https://en.wikipedia.org/w/api.php`, Query Params `action=query`, `list=search`, `srsearch={query}`, `format=json` — describe the tool as "Searches Wikipedia for background information on a topic."
 5. Add a **Code Tool** sub-node named "Word Counter" that takes a string input and returns `{ "word_count": $input.split(' ').length }` — describe it as "Counts words in a block of text."
 6. Set the Agent's system prompt: "You are a research assistant. Use the Wikipedia Search tool to look up unfamiliar topics before answering, and use the Word Counter tool if the user asks about text length. Always explain which tools you used."
@@ -33,7 +33,7 @@ OpenAI API key. (Wikipedia's API is public and needs no credential.)
 ## 🐛 Common Pitfalls
 - **Agent never calls a tool:** If the tool's description field is vague ("does stuff"), the agent can't judge when to use it — write a specific one-sentence description for every tool.
 - **HTTP Request Tool returns raw HTML instead of JSON:** Wikipedia defaults to a non-JSON response for some endpoints — double check `format=json` is present in the query string.
-- **Memory grows unbounded:** Without a Window Buffer Memory (or with too high a context length), long test sessions blow past the model's context window — keep it small (5-10 turns) while testing.
+- **Memory grows unbounded:** Without a Simple Memory (or with too high a context length), long test sessions blow past the model's context window — keep it small (5-10 turns) while testing.
 
 ## 🏭 Industry Track Application
 Give your agent one industry-specific tool: Fintech → an HTTP Request Tool hitting a public exchange-rate API so the agent can answer currency-conversion questions; HealthTech → a Code Tool that calculates BMI or a dosage ratio from numbers in the request; EdTech → an HTTP Request Tool against a public dictionary/definitions API so the agent can define unfamiliar vocabulary in a student's question.
