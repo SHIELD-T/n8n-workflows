@@ -13,7 +13,7 @@ No new video today — this is a review and build day. If any of this week's bui
 ## 🛠️ Build It: Step-by-Step
 1. Pick ONE real use case for your industry track that needs at least 3 of this week's techniques (e.g. an agent with a tool, memory, and a feedback step).
 2. Start from your Day 38 (Agents with Tools) workflow as the base — it already has an **AI Agent** node with a **Chat Model**, **Simple Memory** (formerly **Window Buffer Memory**), and a Tool.
-3. Add a RAG-style knowledge lookup from Day 39: connect a **Vector Store Tool** (backed by the same **In-Memory Vector Store** you built) to the AI Agent so it can cite your industry knowledge base alongside its other tools.
+3. Add a RAG-style knowledge lookup from Day 39: connect an **In-Memory Vector Store** node in Operation Mode: Retrieve Documents (As Tool for AI Agent), with the same Memory Key you loaded on Day 39, to the AI Agent so it can cite your industry knowledge base alongside its other tools.
 4. Add a lightweight feedback step from Day 40: after the agent responds, a **Set** node collects a mock `rating` field and an **If** node routes low ratings to a logging step (Sheets or file).
 5. Wrap every external call (OpenAI, HTTP Request Tool, Google Sheets) with n8n's built-in error output (right-click the node → "On Error" → "Continue Using Error Output") so a single failed call doesn't crash the whole run — connect error outputs to a shared **Set** node that builds a friendly `error_response`.
 6. Run the complete workflow end-to-end with 2 different test inputs and confirm: the agent uses its tool(s), memory persists across the two calls if they share a `conversation_id`, and the feedback branch fires correctly on at least one low-rated test.

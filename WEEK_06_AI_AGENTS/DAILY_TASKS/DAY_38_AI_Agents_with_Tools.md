@@ -11,11 +11,11 @@
 - [N8N Tutorial: Building N8N AI Agents (Beginner to Pro)](https://www.youtube.com/watch?v=lSwMtsm6oDU) — watch for the section on adding Tool nodes to the AI Agent node and how the agent decides which tool to invoke.
 
 ## 🛠️ Build It: Step-by-Step
-1. Build: **Webhook** trigger (Path `ai-agent`) → **Set** node with `user_request` = `{{ $json.request }}`.
+1. Build: **Webhook** trigger (Path `ai-agent`) → **Set** node with `user_request` = `{{ $json.body.request }}` and `session_id` = `{{ $json.body.session_id || 'default-session' }}`. (A Webhook puts the JSON you send under `body`, so `$json.request` on its own would be empty.)
 2. Add an **AI Agent** node (search "AI Agent" in the node panel — this is the LangChain-powered agent node, not the plain OpenAI node). Connect an **OpenAI Chat Model** sub-node as its Chat Model (model `gpt-4o-mini`).
-3. Add a **Simple Memory** sub-node (called Window Buffer Memory in older n8n versions) to the AI Agent so it retains conversation turns within a session (Context Window Length: 5).
-4. Add an **HTTP Request Tool** sub-node named "Wikipedia Search": Method GET, URL `https://en.wikipedia.org/w/api.php`, Query Params `action=query`, `list=search`, `srsearch={query}`, `format=json` — describe the tool as "Searches Wikipedia for background information on a topic."
-5. Add a **Code Tool** sub-node named "Word Counter" that takes a string input and returns `{ "word_count": $input.split(' ').length }` — describe it as "Counts words in a block of text."
+3. Add a **Simple Memory** sub-node (called Window Buffer Memory in older n8n versions) to the AI Agent so it retains conversation turns within a session (Session ID: Define below, Key `{{ $json.session_id }}`, Context Window Length: 5).
+4. Add an **HTTP Request Tool** sub-node named "Wikipedia Search": Method GET, URL `https://en.wikipedia.org/w/api.php`, Query Params `action=query`, `list=search`, `format=json`, and `srsearch` — for `srsearch`, click the ✨ button next to the value field ("Let the model define this parameter") so the agent fills in the search term itself; it writes `$fromAI(...)` for you. Describe the tool as "Searches Wikipedia for background information on a topic."
+5. Add a **Code Tool** sub-node named "Word Counter" with the JavaScript `return String(String(query).trim().split(/\s+/).filter(Boolean).length);` — a Code Tool receives the agent's input as `query` and must return a string. Describe it as "Counts words in a block of text."
 6. Set the Agent's system prompt: "You are a research assistant. Use the Wikipedia Search tool to look up unfamiliar topics before answering, and use the Word Counter tool if the user asks about text length. Always explain which tools you used."
 7. Test with `{"request": "How many words are in the phrase 'artificial intelligence agents automate research' and what is n8n?"}` sent to the webhook. Open the AI Agent node's execution output and confirm you can see both tool calls logged in order, and that the final answer references both results.
 

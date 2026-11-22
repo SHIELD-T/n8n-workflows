@@ -11,10 +11,10 @@
 - [N8N Tutorial: Building N8N AI Agents (Beginner to Pro)](https://www.youtube.com/watch?v=lSwMtsm6oDU) — watch for the memory node walkthrough; pay attention to how session/context IDs are used to keep separate conversations from bleeding into each other.
 
 ## 🛠️ Build It: Step-by-Step
-1. **Conversation memory:** Build a **Webhook** trigger (Path `ai-memory`) → **AI Agent** node with an **OpenAI Chat Model** sub-node and a **Simple Memory** sub-node. Set the Memory's Session Key to an expression: `{{ $json.conversation_id }}` so each `conversation_id` gets its own history.
+1. **Conversation memory:** Build a **Webhook** trigger (Path `ai-memory`) → **AI Agent** node with an **OpenAI Chat Model** sub-node and a **Simple Memory** sub-node. Set the Agent's Prompt to `{{ $json.body.message }}`, and in the Memory choose Session ID: Define below, Key `{{ $json.body.conversation_id }}` so each `conversation_id` gets its own history.
 2. Test memory: send `{"conversation_id": "conv1", "message": "My name is Alex."}`, then send a second request `{"conversation_id": "conv1", "message": "What's my name?"}`. Confirm the agent correctly answers "Alex" — that's memory working.
-3. **RAG setup:** Add a new workflow. Use a **Set** node to hold 3-4 short paragraphs of text (your own "knowledge base," e.g. your industry's FAQ). Chain: **Default Data Loader** → **Recursive Character Text Splitter** (Chunk Size 200) → **Embeddings OpenAI** → **In-Memory Vector Store** (mode: Insert) to load the documents once.
-4. Build the retrieval workflow: **Webhook** (Path `rag-query`) → **Question and Answer Chain** (or **AI Agent** with a **Vector Store Tool**) connected to the same **In-Memory Vector Store** (mode: Retrieve, Top K = 3) and an **OpenAI Chat Model**. System prompt: "Answer using only the retrieved context below. If the answer isn't in the context, say you don't know. Cite which chunk you used."
+3. **RAG setup:** Add a new workflow. Use a **Set** node to hold 3-4 short paragraphs of text (your own "knowledge base," e.g. your industry's FAQ). Connect it to an **In-Memory Vector Store** node (Operation Mode: Insert Documents, Memory Key: `course_knowledge_base`), then plug two sub-nodes into the vector store: **Embeddings OpenAI**, and a **Default Data Loader** (Type of Data: JSON, Mode: Load Specific Data, Data: `{{ $json.text }}`, Text Splitting: Custom) with a **Recursive Character Text Splitter** (Chunk Size 200) plugged into the loader. Run it once to load the documents.
+4. Build the retrieval workflow: **Webhook** (Path `rag-query`) → **AI Agent** (Prompt: `{{ $json.body.question }}`) with an **OpenAI Chat Model** and, as its tool, a second **In-Memory Vector Store** node (Operation Mode: Retrieve Documents (As Tool for AI Agent), the same Memory Key `course_knowledge_base`, Limit 3) with its own **Embeddings OpenAI** sub-node. System prompt: "Answer using only the retrieved context below. If the answer isn't in the context, say you don't know. Cite which chunk you used."
 5. Test with a question whose answer is only in your loaded paragraphs (e.g. "What's our refund window?" if one paragraph mentions it). Confirm the answer is grounded in your text, not generic model knowledge, and includes a citation.
 6. Try a question NOT covered by your documents and confirm the agent says it doesn't know rather than hallucinating.
 
@@ -31,7 +31,7 @@ OpenAI API key (used for both the Chat Model and the Embeddings node).
 
 ## 🐛 Common Pitfalls
 - **Memory bleeds across users:** Forgetting to key the Session ID off a real per-user/per-conversation field means every request shares one giant memory — always bind Session Key to an actual conversation identifier.
-- **In-Memory Vector Store resets on every execution:** It only persists for the life of the workflow's active session in the editor — for a real deployment you'd swap it for a persistent store (Pinecone, Qdrant, Postgres pgvector); note this limitation rather than being surprised your data "disappeared."
+- **In-Memory Vector Store is wiped when n8n restarts:** it lives in n8n's RAM, so it survives between requests but not a restart or a Render free-tier sleep — re-run your loader afterwards. For a real deployment you'd swap it for a persistent store (Pinecone, Qdrant, Postgres pgvector); note this limitation rather than being surprised your data "disappeared."
 - **Chunks too large:** Chunking at 2000+ characters dilutes retrieval relevance — start small (150-300 chars) and increase only if answers lack context.
 
 ## 🏭 Industry Track Application
