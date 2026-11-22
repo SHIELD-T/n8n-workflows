@@ -102,7 +102,7 @@
           "conditions": [
             {
               "id": "position-type-condition",
-              "leftValue": "={{ $json.positionType }}",
+              "leftValue": "={{ $json.body.positionType }}",
               "rightValue": "freelancer",
               "operator": {
                 "type": "string",

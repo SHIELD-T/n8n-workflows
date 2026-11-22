@@ -102,7 +102,7 @@
           "conditions": [
             {
               "id": "pricing-type-condition",
-              "leftValue": "={{ $json.pricingType }}",
+              "leftValue": "={{ $json.body.pricingType }}",
               "rightValue": "value-based",
               "operator": {
                 "type": "string",

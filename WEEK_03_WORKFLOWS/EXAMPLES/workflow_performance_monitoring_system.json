@@ -98,15 +98,15 @@
           "string": [
             {
               "name": "workflow_id",
-              "value": "={{ $json.workflow_id }}"
+              "value": "={{ $json.body.workflow_id }}"
             },
             {
               "name": "execution_time",
-              "value": "={{ $json.execution_time }}"
+              "value": "={{ $json.body.execution_time }}"
             },
             {
               "name": "success_rate",
-              "value": "={{ $json.success_rate }}"
+              "value": "={{ $json.body.success_rate }}"
             },
             {
               "name": "monitoring_timestamp",
@@ -114,7 +114,7 @@
             },
             {
               "name": "performance_notes",
-              "value": "={{ $json.performance_notes }}"
+              "value": "={{ $json.body.performance_notes }}"
             }
           ]
         },

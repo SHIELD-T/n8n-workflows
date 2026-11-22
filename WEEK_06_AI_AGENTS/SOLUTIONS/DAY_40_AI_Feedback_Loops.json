@@ -21,7 +21,7 @@
         40
       ],
       "parameters": {
-        "content": "## Day 40 Solution: AI Feedback Loops\n\nCaptures a user rating and turns it into structured feedback: an If node routes ratings >= 4 straight to an 'excellent' status, while lower ratings are appended to a Google Sheets log and fed to an OpenAI node that generates one specific, actionable improvement note.\n\n**Credentials needed to run for real:** OpenAI API key; Google Sheets OAuth2 credential (replace the placeholder spreadsheet ID on the Google Sheets node), or swap it for a local CSV write per the Day 40 fallback.\n\n**Reference:** WEEK_06_AI_AGENTS/DAILY_TASKS/DAY_40_AI_Feedback_Loops.md",
+        "content": "## Day 40 Solution: AI Feedback Loops\n\nCaptures a user rating and turns it into structured feedback: an If node routes ratings >= 4 straight to an 'excellent' status, while lower ratings are appended to a Google Sheets log and fed to an AI Agent node (with an OpenAI Chat Model) that generates one specific, actionable improvement note.\n\n**Credentials needed to run for real:** OpenAI API key; Google Sheets OAuth2 credential (replace the placeholder spreadsheet ID on the Google Sheets node), or swap it for a local CSV write per the Day 40 fallback.\n\n**Reference:** WEEK_06_AI_AGENTS/DAILY_TASKS/DAY_40_AI_Feedback_Loops.md",
         "height": 300,
         "width": 420
       }
@@ -55,19 +55,19 @@
           "assignments": [
             {
               "name": "user_rating",
-              "value": "={{ Number($json.rating) }}"
+              "value": "={{ Number($json.body.rating) }}"
             },
             {
               "name": "response_time_ms",
-              "value": "={{ $json.response_time_ms }}"
+              "value": "={{ $json.body.response_time_ms }}"
             },
             {
               "name": "had_error",
-              "value": "={{ $json.had_error || false }}"
+              "value": "={{ $json.body.had_error || false }}"
             },
             {
               "name": "original_prompt",
-              "value": "={{ $json.original_prompt || $json.text || 'N/A' }}"
+              "value": "={{ $json.body.original_prompt || $json.body.text || 'N/A' }}"
             }
           ]
         }
@@ -183,31 +183,17 @@
     {
       "id": "generate-improvement-note",
       "name": "Generate Improvement Note",
-      "type": "n8n-nodes-base.openAi",
-      "typeVersion": 1.3,
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 3.1,
       "position": [
         1360,
         540
       ],
       "parameters": {
-        "resource": "chat",
-        "operation": "create",
-        "model": "gpt-4o-mini",
-        "messages": {
-          "values": [
-            {
-              "role": "system",
-              "content": "You analyze a poor AI response's feedback and produce one specific, actionable instruction to add to the system prompt next time. Reference the actual rating, response time, and error flag in your answer — do not give generic advice."
-            },
-            {
-              "role": "user",
-              "content": "={{ 'Rating: ' + $('Capture Feedback').item.json.user_rating + '/5\\nResponse time: ' + $('Capture Feedback').item.json.response_time_ms + 'ms\\nHad error: ' + $('Capture Feedback').item.json.had_error + '\\nOriginal prompt: ' + $('Capture Feedback').item.json.original_prompt }}"
-            }
-          ]
-        },
+        "promptType": "define",
+        "text": "={{ 'Rating: ' + $('Capture Feedback').item.json.user_rating + '/5\\nResponse time: ' + $('Capture Feedback').item.json.response_time_ms + 'ms\\nHad error: ' + $('Capture Feedback').item.json.had_error + '\\nOriginal prompt: ' + $('Capture Feedback').item.json.original_prompt }}",
         "options": {
-          "temperature": 0.4,
-          "maxTokens": 300
+          "systemMessage": "You analyze a poor AI response's feedback and produce one specific, actionable instruction to add to the system prompt next time. Reference the actual rating, response time, and error flag in your answer — do not give generic advice."
         }
       }
     },
@@ -225,13 +211,34 @@
           "assignments": [
             {
               "name": "improvement_plan",
-              "value": "={{ $json.message.content }}"
+              "value": "={{ $json.output }}"
             },
             {
               "name": "overall_status",
               "value": "needs_improvement"
             }
           ]
+        }
+      }
+    },
+    {
+      "id": "openai-chat-model",
+      "name": "OpenAI Chat Model",
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+      "typeVersion": 1.3,
+      "position": [
+        1360,
+        780
+      ],
+      "parameters": {
+        "model": {
+          "__rl": true,
+          "mode": "list",
+          "value": "gpt-4o-mini"
+        },
+        "options": {
+          "temperature": 0.4,
+          "maxTokens": 300
         }
       }
     }
@@ -294,6 +301,17 @@
           {
             "node": "Build Improvement Plan",
             "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "OpenAI Chat Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "Generate Improvement Note",
+            "type": "ai_languageModel",
             "index": 0
           }
         ]

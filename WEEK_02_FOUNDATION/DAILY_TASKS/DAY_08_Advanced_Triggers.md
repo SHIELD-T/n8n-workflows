@@ -12,8 +12,8 @@
 
 ## 🛠️ Build It: Step-by-Step
 1. New workflow. Add a **Webhook** node named "Conditional Webhook" — HTTP Method `POST`, Path `advanced-webhook`. Copy its Test URL.
-2. Add an **IF** node "Validate Data" connected to it. Conditions (String, combinator AND): `{{ $json.type }}` "is not empty", and `{{ $json.data }}` "is not empty".
-3. On the true branch, add a **Set/Edit Fields** node "Process Valid Data" with fields: `processed_type` = `{{ $json.type }}`, `processed_data` = `{{ $json.data }}`, `processed_at` = `{{ $now }}`, `status` = `processed`.
+2. Add an **IF** node "Validate Data" connected to it. Conditions (String, combinator AND): `{{ $json.body.type }}` "is not empty", and `{{ $json.body.data }}` "is not empty".
+3. On the true branch, add a **Set/Edit Fields** node "Process Valid Data" with fields: `processed_type` = `{{ $json.body.type }}`, `processed_data` = `{{ $json.body.data }}`, `processed_at` = `{{ $now }}`, `status` = `processed`.
 4. Add a **Respond to Webhook** node after it: Respond With = JSON, Response Body = `{{ { "status": "success", "processed_at": $json.processed_at } } }}`.
 5. Click **Execute Workflow** (so it listens for a test call), then from a terminal run:
    `curl -X POST <your-webhook-test-url> -H "Content-Type: application/json" -d '{"type":"order","data":"test-payload"}'`
@@ -35,7 +35,7 @@ None — Webhook, Schedule Trigger, Manual Trigger, IF, and Set nodes require no
 
 ## 🐛 Common Pitfalls
 - **Testing before listening:** n8n only captures test webhook calls while it's actively listening (after clicking Execute Workflow) — a curl sent before that shows nothing.
-- **Test URL vs Production URL:** the Test URL only works while the editor is open and listening; the workflow must be Activated (toggle top-right) before its Production URL responds.
+- **Test URL vs Production URL:** the Test URL only works while the editor is open and listening; the workflow must be Published (**Publish** button, top-right) before its Production URL responds.
 - **Assumed OR logic:** IF node conditions default to AND — if you want "either field empty routes to error," check each condition individually rather than assuming it.
 
 ## 🏭 Industry Track Application

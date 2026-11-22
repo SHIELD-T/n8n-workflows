@@ -65,7 +65,7 @@
         -160
       ],
       "parameters": {
-        "content": "## Manual Trigger to File Export\n\nSimple file-export workflow demonstrating manual triggers, data assignment, and writing data to a local file. Perfect for Week 1 foundation learning.\n\n**Credentials needed before running:** None — this workflow only uses built-in nodes and/or public test APIs (no login required).\n\n**How to use:** Import into n8n, add the credentials above under *Credentials*, then run manually (or trigger it) to test.",
+        "content": "## Manual Trigger to File Export\n\nSimple file-export workflow demonstrating manual triggers, data assignment, and writing data to a local file (Convert to File, then Read/Write Files from Disk into /home/node/.n8n-files; on n8n Cloud, download the file from Convert to File instead). Perfect for Week 1 foundation learning.\n\n**Credentials needed before running:** None — this workflow only uses built-in nodes and/or public test APIs (no login required).\n\n**How to use:** Import into n8n, add the credentials above under *Credentials*, then run manually (or trigger it) to test.",
         "height": 300,
         "width": 420
       }
@@ -108,16 +108,34 @@
     {
       "id": "write-binary-file-1",
       "name": "Write to File",
-      "type": "n8n-nodes-base.writeBinaryFile",
+      "type": "n8n-nodes-base.readWriteFile",
+      "position": [
+        720,
+        100
+      ],
+      "parameters": {
+        "operation": "write",
+        "fileName": "=/home/node/.n8n-files/{{ $json.filename }}",
+        "dataPropertyName": "data"
+      },
+      "typeVersion": 1.1
+    },
+    {
+      "id": "convert-to-file-1",
+      "name": "Convert to Text File",
+      "type": "n8n-nodes-base.convertToFile",
+      "typeVersion": 1.1,
       "position": [
         500,
         100
       ],
       "parameters": {
-        "fileName": "={{ $json.filename }}",
-        "data": "={{ $json.text }}"
-      },
-      "typeVersion": 1
+        "operation": "toText",
+        "sourceProperty": "text",
+        "options": {
+          "fileName": "={{ $json.filename }}"
+        }
+      }
     }
   ],
   "connections": {
@@ -133,6 +151,17 @@
       ]
     },
     "Set Text Data": {
+      "main": [
+        [
+          {
+            "node": "Convert to Text File",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Convert to Text File": {
       "main": [
         [
           {

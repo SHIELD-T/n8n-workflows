@@ -15,7 +15,7 @@
 3. Add inline Sticky Notes next to any non-obvious node (a Set node doing a calculation, an IF node with a business rule) explaining what the expression does and why — target every node whose purpose isn't obvious from its name alone.
 4. Write one runbook entry for your most complex workflow: "If this fails, first check X, then Y, then Z" — based on the actual failure modes you've hit in Days 51-53 (rate limits, malformed payloads, credential expiry).
 5. Take a screenshot of one documented workflow's canvas (with Sticky Notes visible) and save it alongside your written docs as a visual reference.
-6. Run the "stranger test" on your Day 51 deployment workflow's documentation: could you activate, test, and roll it back using only what you wrote? Fix any gap you find.
+6. Run the "stranger test" on your Day 51 deployment workflow's documentation: could you publish, test, and roll it back using only what you wrote? Fix any gap you find.
 
 **Stuck?** Compare your documentation structure against the `course_metadata` block at the top of any `WEEK_08_AI_AGENTS/EXAMPLES/*.json` file (e.g. `ai_agent_quality_assurance_system.json`) — it models fields like `learning_objectives`, `prerequisites`, and `use_cases` that map onto a real documentation template.
 

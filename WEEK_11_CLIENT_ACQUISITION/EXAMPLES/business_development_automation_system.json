@@ -103,31 +103,31 @@
             },
             {
               "name": "business_name",
-              "value": "={{ $json.business_name }}"
+              "value": "={{ $json.body.business_name }}"
             },
             {
               "name": "business_type",
-              "value": "={{ $json.business_type }}"
+              "value": "={{ $json.body.business_type }}"
             },
             {
               "name": "industry",
-              "value": "={{ $json.industry }}"
+              "value": "={{ $json.body.industry }}"
             },
             {
               "name": "business_size",
-              "value": "={{ $json.business_size }}"
+              "value": "={{ $json.body.business_size }}"
             },
             {
               "name": "revenue",
-              "value": "={{ $json.revenue }}"
+              "value": "={{ $json.body.revenue }}"
             },
             {
               "name": "growth_stage",
-              "value": "={{ $json.growth_stage }}"
+              "value": "={{ $json.body.growth_stage }}"
             },
             {
               "name": "automation_needs",
-              "value": "={{ $json.automation_needs }}"
+              "value": "={{ $json.body.automation_needs }}"
             }
           ]
         }

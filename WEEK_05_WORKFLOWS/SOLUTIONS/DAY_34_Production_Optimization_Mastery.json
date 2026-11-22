@@ -48,7 +48,7 @@
       ],
       "parameters": {
         "mode": "runOnceForAllItems",
-        "jsCode": "const j = items[0].json;\nconst cpu = j.cpu_percentage || 0;\nconst mem = j.memory_percentage || 0;\nconst disk = j.disk_percentage || 0;\nconst latency = Math.max(1, j.network_latency_ms || 1);\nconst respTime = Math.max(1, j.avg_response_time_ms || 1);\nconst score = Math.round(100 - (cpu * 0.3 + mem * 0.25 + disk * 0.15 + Math.min(latency / 10, 15) + Math.min(respTime / 20, 15)));\nreturn [{ json: { ...j, optimization_score: Math.max(0, Math.min(100, score)) } }];"
+        "jsCode": "const j = items[0].json.body;\nconst cpu = j.cpu_percentage || 0;\nconst mem = j.memory_percentage || 0;\nconst disk = j.disk_percentage || 0;\nconst latency = Math.max(1, j.network_latency_ms || 1);\nconst respTime = Math.max(1, j.avg_response_time_ms || 1);\nconst score = Math.round(100 - (cpu * 0.3 + mem * 0.25 + disk * 0.15 + Math.min(latency / 10, 15) + Math.min(respTime / 20, 15)));\nreturn [{ json: { ...j, optimization_score: Math.max(0, Math.min(100, score)) } }];"
       }
     },
     {

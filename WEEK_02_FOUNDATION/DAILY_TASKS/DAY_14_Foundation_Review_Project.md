@@ -12,13 +12,13 @@
 
 ## 🛠️ Build It: Step-by-Step
 1. New workflow. Add a **Webhook Trigger** (path `foundation-project`) — this is your primary input path for today's capstone.
-2. Add **IF** node "Data Validation": String `{{ $json.data }}` is not empty.
-3. On true, add **Set** node "Process Data": `processed_data` = `{{ $json.data.trim().toUpperCase() }}`, `processed_at` = `{{ $now }}`, `status` = `processed`.
+2. Add **IF** node "Data Validation": String `{{ $json.body.data }}` is not empty.
+3. On true, add **Set** node "Process Data": `processed_data` = `{{ $json.body.data.trim().toUpperCase() }}`, `processed_at` = `{{ $now }}`, `status` = `processed`.
 4. Add **HTTP Request** node "API Integration": Method `POST`, URL `https://jsonplaceholder.typicode.com/posts` (stand-in external service), Body Content Type JSON, Body = `{{ { "data": $json.processed_data, "timestamp": $json.processed_at } } }}`, Options → Retry On Fail = 3 tries.
 5. Add **IF** node "Handle API Errors": Number `{{ $json.statusCode }}` ≥ 400. (jsonplaceholder always returns 201, so to actually exercise this branch, temporarily point the URL at `https://httpbin.org/status/500`, confirm the branch fires, then switch it back.)
 6. On the error branch, add **Set** node "Log Error" (`error_type`, `error_message`, `error_time`) feeding a **Slack/Telegram** node "Send Error Notification". On the success branch, add **Set** node "Log Success" feeding a **Slack/Telegram** node "Send Success Notification".
 7. On the Data Validation IF node's false branch, add a **Respond to Webhook** returning a 400 with `{{ { "status": "error", "message": "Missing data field" } } }}`.
-8. Activate the workflow and test all three paths independently:
+8. Publish the workflow and test all three paths independently:
    - Valid data: `curl -X POST <url> -d '{"data":"foundation project test"}'` → confirm a success notification arrives.
    - Missing data: `curl -X POST <url> -d '{}'` → confirm a 400 JSON response and no notification.
    - Forced API failure: temporarily swap the HTTP Request URL to the 500 endpoint, resend valid data, confirm the error notification arrives instead, then swap the URL back.

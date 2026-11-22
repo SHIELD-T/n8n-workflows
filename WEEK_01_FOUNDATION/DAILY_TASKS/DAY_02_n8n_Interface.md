@@ -17,7 +17,7 @@
 4. Open the Set node and add a field named `message` with the value `Hello from n8n!` (use "Add Field" → String).
 5. Add an **HTTP Request** node after the Set node. Configure: Method = `POST`, URL = `https://httpbin.org/post`, Body Content Type = JSON, and in the body use the expression `{{ $json.message }}`.
 6. Click **Execute Workflow**. Click each node in turn and check its **Output** panel (Table/JSON view) to confirm the message flowed through correctly and httpbin echoed it back.
-7. Now build a second, separate workflow: Manual Trigger → Set node (field `text` = `"This is my first n8n workflow!"`) → **Write Binary File** / **Read/Write Files from Disk** node (File Name: `output.txt`, Data: `{{ $json.text }}`). Execute it and confirm the file was written.
+7. Now build a second, separate workflow: Manual Trigger → Set node (field `text` = `"This is my first n8n workflow!"`) → **Convert to File** node (Operation: Convert to Text File, Text Input Field: `text`, and under Options set File Name to `output.txt`) → **Read/Write Files from Disk** node (Operation: Write File to Disk, File Path and Name: `/home/node/.n8n-files/output.txt`). Execute it and confirm the file was written. Two things to know: n8n can only write files inside its `.n8n-files` folder (`/home/node/.n8n-files` in Docker, `~/.n8n-files` if you installed with npm), and **n8n Cloud has no disk node at all** — on Cloud, stop at Convert to File and use the **Download** button in its output panel instead.
 
 **Stuck?** Import `WEEK_01_FOUNDATION/EXAMPLES/manual_trigger_to_api_request.json` (Menu → Import from File in n8n) to see a working baseline, then compare its node structure to what you built.
 
@@ -26,7 +26,7 @@ None — Manual Trigger, Set, HTTP Request (to a public test endpoint), and file
 
 ## ✅ Definition of Done
 - [ ] Your first workflow executes with a green checkmark on every node and the HTTP Request node's output shows your message echoed back from httpbin.org
-- [ ] Your second workflow creates `output.txt` and you've opened it to confirm it contains your exact text
+- [ ] Your second workflow creates `output.txt` (or, on n8n Cloud, you downloaded it from Convert to File) and you've opened it to confirm it contains your exact text
 - [ ] You can explain, in one sentence each, what a Manual Trigger, a Set node, and an HTTP Request node do
 - [ ] You've opened Execution History and located the run for at least one of today's workflows
 

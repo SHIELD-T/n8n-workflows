@@ -54,7 +54,7 @@
           "conditions": [
             {
               "id": "cond-items-nonempty-array",
-              "leftValue": "={{ Array.isArray($json.items) && $json.items.length > 0 }}",
+              "leftValue": "={{ Array.isArray($json.body.items) && $json.body.items.length > 0 }}",
               "rightValue": true,
               "operator": {
                 "type": "boolean",
@@ -108,11 +108,11 @@
             },
             {
               "name": "items",
-              "value": "={{ $json.items }}"
+              "value": "={{ $json.body.items }}"
             },
             {
               "name": "total_item_count",
-              "value": "={{ $json.items.length }}"
+              "value": "={{ $json.body.items.length }}"
             },
             {
               "name": "batch_start_time",

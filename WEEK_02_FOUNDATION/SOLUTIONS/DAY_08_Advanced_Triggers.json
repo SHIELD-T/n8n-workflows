@@ -50,11 +50,11 @@
         "conditions": {
           "string": [
             {
-              "value1": "={{ $json.type }}",
+              "value1": "={{ $json.body.type }}",
               "operation": "isNotEmpty"
             },
             {
-              "value1": "={{ $json.data }}",
+              "value1": "={{ $json.body.data }}",
               "operation": "isNotEmpty"
             }
           ]
@@ -75,11 +75,11 @@
           "assignments": [
             {
               "name": "processed_type",
-              "value": "={{ $json.type }}"
+              "value": "={{ $json.body.type }}"
             },
             {
               "name": "processed_data",
-              "value": "={{ $json.data }}"
+              "value": "={{ $json.body.data }}"
             },
             {
               "name": "processed_at",
@@ -284,11 +284,11 @@
         "conditions": {
           "string": [
             {
-              "value1": "={{ $json.type }}",
+              "value1": "={{ $json.body.type }}",
               "operation": "isNotEmpty"
             },
             {
-              "value1": "={{ $json.data }}",
+              "value1": "={{ $json.body.data }}",
               "operation": "isNotEmpty"
             }
           ]
@@ -309,11 +309,11 @@
           "assignments": [
             {
               "name": "processed_type",
-              "value": "={{ $json.type }}"
+              "value": "={{ $json.body.type }}"
             },
             {
               "name": "processed_data",
-              "value": "={{ $json.data }}"
+              "value": "={{ $json.body.data }}"
             }
           ]
         }

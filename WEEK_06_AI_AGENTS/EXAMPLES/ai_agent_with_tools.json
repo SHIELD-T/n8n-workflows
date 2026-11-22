@@ -1,6 +1,6 @@
 {
   "name": "Ai Agent With Tools",
-  "description": "Automated workflow for AI Integration phase learning objectives with intelligent processing and error handling.",
+  "description": "The basic wiring of a real n8n AI Agent: a Chat Model, Simple Memory and two tools (Calculator, Wikipedia Search) behind a webhook that returns the answer.",
   "tags": [
     "intelligence",
     "agents",
@@ -60,577 +60,211 @@
   },
   "nodes": [
     {
-      "id": "sticky-sticky-note",
+      "id": "sticky-overview",
       "name": "Sticky Note",
       "type": "n8n-nodes-base.stickyNote",
       "typeVersion": 1,
       "position": [
-        220,
-        40
+        -40,
+        -260
       ],
       "parameters": {
-        "content": "## Ai Agent With Tools\n\nAutomated workflow for AI Integration phase learning objectives with intelligent processing and error handling.\n\n**Credentials needed before running:**\n- OpenAI API key\n\n**How to use:** Import into n8n, add the credentials above under *Credentials*, then run manually (or trigger it) to test.",
-        "height": 300,
-        "width": 420
+        "content": "## AI Agent With Tools\n\nThe basic wiring of an n8n **AI Agent**: one trigger in, one answer out, and three sub-nodes plugged in underneath — a **Chat Model** (the brain), **Simple Memory** (remembers the last turns per `session_id`), and **tools** the agent may call when it decides it needs them: a **Calculator** and a **Wikipedia Search** HTTP Request Tool.\n\n**Credentials needed before running:**\n- OpenAI API key (on the OpenAI Chat Model node)\n\n**How to use:** Import into n8n, add the credential, click *Listen for test event* on the webhook, then:\n`curl -X POST <test-url> -H 'Content-Type: application/json' -d '{\"message\": \"What is 17% of 2,350, and who founded n8n?\", \"session_id\": \"demo\"}'`\nThe answer comes back in the curl response.",
+        "height": 400,
+        "width": 520
       }
     },
     {
-      "id": "sticky-sticky-note-1",
-      "name": "Sticky Note 1",
-      "type": "n8n-nodes-base.stickyNote",
-      "typeVersion": 1,
-      "position": [
-        1420,
-        100
-      ],
-      "parameters": {
-        "content": "## ⚠️ Placeholder endpoint\n\nReplace this URL with a real API before running. This is a stand-in for teaching purposes.",
-        "height": 160,
-        "width": 300
-      }
-    },
-    {
-      "id": "sticky-sticky-note-2",
-      "name": "Sticky Note 2",
-      "type": "n8n-nodes-base.stickyNote",
-      "typeVersion": 1,
-      "position": [
-        1420,
-        280
-      ],
-      "parameters": {
-        "content": "## ⚠️ Placeholder endpoint\n\nReplace this URL with a real API before running. This is a stand-in for teaching purposes.",
-        "height": 160,
-        "width": 300
-      }
-    },
-    {
-      "id": "sticky-sticky-note-3",
-      "name": "Sticky Note 3",
-      "type": "n8n-nodes-base.stickyNote",
-      "typeVersion": 1,
-      "position": [
-        2380,
-        100
-      ],
-      "parameters": {
-        "content": "## ⚠️ Placeholder endpoint\n\nReplace this URL with a real API before running. This is a stand-in for teaching purposes.",
-        "height": 160,
-        "width": 300
-      }
-    },
-    {
-      "id": "sticky-sticky-note-4",
-      "name": "Sticky Note 4",
-      "type": "n8n-nodes-base.stickyNote",
-      "typeVersion": 1,
-      "position": [
-        2620,
-        100
-      ],
-      "parameters": {
-        "content": "## ⚠️ Placeholder endpoint\n\nReplace this URL with a real API before running. This is a stand-in for teaching purposes.",
-        "height": 160,
-        "width": 300
-      }
-    },
-    {
-      "name": "AI Agent with Tools",
+      "id": "webhook-agent",
+      "name": "Chat Request",
       "type": "n8n-nodes-base.webhook",
-      "parameters": {
-        "path": "ai-agent-tools",
-        "httpMethod": "POST"
-      },
-      "id": "ai-agent-with-tools",
       "typeVersion": 2,
       "position": [
-        240,
-        300
-      ]
-    },
-    {
-      "name": "Initialize AI Agent",
-      "type": "n8n-nodes-base.set",
-      "parameters": {
-        "assignments": {
-          "assignments": [
-            {
-              "name": "agent_id",
-              "value": "={{ $now.format('YYYYMMDDHHmmss') }}"
-            },
-            {
-              "name": "agent_type",
-              "value": "intelligent_assistant"
-            },
-            {
-              "name": "start_time",
-              "value": "={{ $now }}"
-            },
-            {
-              "name": "available_tools",
-              "value": "={{ ['web_search', 'database_query', 'file_processing', 'email_send', 'slack_message'] }}"
-            }
-          ]
-        }
-      },
-      "id": "initialize-ai-agent",
-      "typeVersion": 3.4,
-      "position": [
-        480,
-        300
-      ]
-    },
-    {
-      "name": "Process Agent Request",
-      "type": "n8n-nodes-base.set",
-      "parameters": {
-        "assignments": {
-          "assignments": [
-            {
-              "name": "user_request",
-              "value": "={{ $json.request || 'Help me research and analyze market trends for AI automation tools.' }}"
-            },
-            {
-              "name": "request_type",
-              "value": "={{ $json.type || 'research' }}"
-            },
-            {
-              "name": "priority",
-              "value": "={{ $json.priority || 'medium' }}"
-            },
-            {
-              "name": "context",
-              "value": "={{ $json.context || 'Business research and analysis' }}"
-            }
-          ]
-        }
-      },
-      "id": "process-agent-request",
-      "typeVersion": 3.4,
-      "position": [
-        720,
-        300
-      ]
-    },
-    {
-      "name": "AI Agent Analysis",
-      "type": "n8n-nodes-base.openAi",
-      "parameters": {
-        "resource": "chat",
-        "operation": "create",
-        "model": "gpt-4",
-        "messages": {
-          "values": [
-            {
-              "role": "system",
-              "content": "You are an intelligent AI agent with access to multiple tools. Analyze the user request and determine which tools to use and in what order. Available tools: web_search, database_query, file_processing, email_send, slack_message."
-            },
-            {
-              "role": "user",
-              "content": "={{ 'User Request: ' + $json.user_request + '\\nRequest Type: ' + $json.request_type + '\\nPriority: ' + $json.priority + '\\nContext: ' + $json.context + '\\n\\nDetermine the best tools to use and create an execution plan.' }}"
-            }
-          ]
-        },
-        "options": {
-          "temperature": 0.3,
-          "maxTokens": 500
-        }
-      },
-      "id": "ai-agent-analysis",
-      "typeVersion": 1.3,
-      "position": [
-        960,
-        300
-      ]
-    },
-    {
-      "name": "Parse Agent Plan",
-      "type": "n8n-nodes-base.set",
-      "parameters": {
-        "assignments": {
-          "assignments": [
-            {
-              "name": "agent_plan",
-              "value": "={{ $json.choices[0].message.content }}"
-            },
-            {
-              "name": "tools_needed",
-              "value": "={{ ['web_search', 'database_query', 'file_processing'] }}"
-            },
-            {
-              "name": "execution_order",
-              "value": "={{ ['web_search', 'database_query', 'file_processing'] }}"
-            }
-          ]
-        }
-      },
-      "id": "parse-agent-plan",
-      "typeVersion": 3.4,
-      "position": [
-        1200,
-        300
-      ]
-    },
-    {
-      "name": "⚠️ Execute Web Search Tool (placeholder)",
-      "type": "n8n-nodes-base.httpRequest",
-      "parameters": {
-        "method": "GET",
-        "url": "https://api.search-service.com/search",
-        "qs": {
-          "query": "={{ $json.user_request }}",
-          "limit": "5"
-        },
-        "options": {
-          "response": {
-            "response": {
-              "responseFormat": "json"
-            }
-          }
-        }
-      },
-      "id": "execute-web-search-tool",
-      "typeVersion": 4.2,
-      "position": [
-        1440,
-        300
-      ]
-    },
-    {
-      "name": "⚠️ Execute Database Query Tool (placeholder)",
-      "type": "n8n-nodes-base.httpRequest",
-      "parameters": {
-        "method": "POST",
-        "url": "https://api.database-service.com/query",
-        "bodyContentType": "json",
-        "jsonBody": "={{ { \"query\": \"SELECT * FROM market_data WHERE category = 'AI automation' ORDER BY date DESC LIMIT 10\", \"database\": \"market_research\" } }}"
-      },
-      "id": "execute-database-query-tool",
-      "typeVersion": 4.2,
-      "position": [
-        1440,
-        480
-      ]
-    },
-    {
-      "name": "Execute File Processing Tool",
-      "type": "n8n-nodes-base.set",
-      "parameters": {
-        "assignments": {
-          "assignments": [
-            {
-              "name": "file_processing_result",
-              "value": "={{ { \"processed_files\": 3, \"analysis_summary\": \"Market trends show increasing demand for AI automation tools\", \"key_insights\": [\"Growing market size\", \"Competitive landscape\", \"Technology trends\"] } }}"
-            },
-            {
-              "name": "processing_status",
-              "value": "completed"
-            }
-          ]
-        }
-      },
-      "id": "execute-file-processing-tool",
-      "typeVersion": 3.4,
-      "position": [
-        1440,
-        660
-      ]
-    },
-    {
-      "name": "Aggregate Tool Results",
-      "type": "n8n-nodes-base.set",
-      "parameters": {
-        "assignments": {
-          "assignments": [
-            {
-              "name": "search_results",
-              "value": "={{ $('⚠️ Execute Web Search Tool (placeholder)').item.json.results }}"
-            },
-            {
-              "name": "database_results",
-              "value": "={{ $('⚠️ Execute Database Query Tool (placeholder)').item.json.data }}"
-            },
-            {
-              "name": "file_results",
-              "value": "={{ $('Execute File Processing Tool').item.json.file_processing_result }}"
-            },
-            {
-              "name": "all_tool_results",
-              "value": "={{ { \"web_search\": $('⚠️ Execute Web Search Tool (placeholder)').item.json.results, \"database_query\": $('⚠️ Execute Database Query Tool (placeholder)').item.json.data, \"file_processing\": $('Execute File Processing Tool').item.json.file_processing_result } }}"
-            }
-          ]
-        }
-      },
-      "id": "aggregate-tool-results",
-      "typeVersion": 3.4,
-      "position": [
-        1680,
-        300
-      ]
-    },
-    {
-      "name": "AI Agent Synthesis",
-      "type": "n8n-nodes-base.openAi",
-      "parameters": {
-        "resource": "chat",
-        "operation": "create",
-        "model": "gpt-4",
-        "messages": {
-          "values": [
-            {
-              "role": "system",
-              "content": "You are an AI agent that synthesizes information from multiple tools to provide comprehensive responses. Create a detailed analysis based on the tool results."
-            },
-            {
-              "role": "user",
-              "content": "={{ 'User Request: ' + $json.user_request + '\\n\\nTool Results:\\n' + JSON.stringify($json.all_tool_results, null, 2) + '\\n\\nProvide a comprehensive analysis and recommendations.' }}"
-            }
-          ]
-        },
-        "options": {
-          "temperature": 0.4,
-          "maxTokens": 1000
-        }
-      },
-      "id": "ai-agent-synthesis",
-      "typeVersion": 1.3,
-      "position": [
-        1920,
-        300
-      ]
-    },
-    {
-      "name": "Generate Agent Response",
-      "type": "n8n-nodes-base.set",
-      "parameters": {
-        "assignments": {
-          "assignments": [
-            {
-              "name": "agent_response",
-              "value": "={{ $json.choices[0].message.content }}"
-            },
-            {
-              "name": "tools_used",
-              "value": "={{ $json.tools_needed }}"
-            },
-            {
-              "name": "processing_time",
-              "value": "={{ $now.diff($json.start_time, 'milliseconds') }}"
-            },
-            {
-              "name": "agent_status",
-              "value": "completed"
-            }
-          ]
-        }
-      },
-      "id": "generate-agent-response",
-      "typeVersion": 3.4,
-      "position": [
-        2160,
-        300
-      ]
-    },
-    {
-      "name": "⚠️ Send Agent Response (placeholder)",
-      "type": "n8n-nodes-base.httpRequest",
-      "parameters": {
-        "method": "POST",
-        "url": "https://api.response-service.com/agent-response",
-        "bodyContentType": "json",
-        "jsonBody": "={{ { \"agent_id\": $json.agent_id, \"user_request\": $json.user_request, \"agent_response\": $json.agent_response, \"tools_used\": $json.tools_used, \"processing_time\": $json.processing_time, \"timestamp\": $now } }}"
-      },
-      "id": "send-agent-response",
-      "typeVersion": 4.2,
-      "position": [
-        2400,
-        300
-      ]
-    },
-    {
-      "name": "⚠️ Log Agent Activity (placeholder)",
-      "type": "n8n-nodes-base.httpRequest",
-      "parameters": {
-        "method": "POST",
-        "url": "https://api.agent-log.com/log",
-        "bodyContentType": "json",
-        "jsonBody": "={{ { \"type\": \"agent_activity\", \"agent_id\": $json.agent_id, \"agent_type\": $json.agent_type, \"user_request\": $json.user_request, \"tools_used\": $json.tools_used, \"agent_response\": $json.agent_response, \"processing_time\": $json.processing_time, \"timestamp\": $now } }}"
-      },
-      "id": "log-agent-activity",
-      "typeVersion": 4.2,
-      "position": [
-        2640,
-        300
-      ]
-    },
-    {
-      "name": "Handle Agent Error",
-      "type": "n8n-nodes-base.set",
-      "position": [
-        500,
-        300
+        0,
+        200
       ],
       "parameters": {
-        "assignments": {
-          "assignments": [
+        "httpMethod": "POST",
+        "path": "ai-agent-tools",
+        "options": {},
+        "responseMode": "responseNode"
+      }
+    },
+    {
+      "id": "ai-agent",
+      "name": "AI Agent",
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 3.1,
+      "position": [
+        260,
+        200
+      ],
+      "parameters": {
+        "promptType": "define",
+        "text": "={{ $json.body.message }}",
+        "options": {
+          "systemMessage": "You are a helpful assistant. Use the Calculator for any arithmetic and Wikipedia Search for facts you are not sure about. Say which tools you used."
+        }
+      }
+    },
+    {
+      "id": "chat-model",
+      "name": "OpenAI Chat Model",
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+      "typeVersion": 1.3,
+      "position": [
+        120,
+        440
+      ],
+      "parameters": {
+        "model": {
+          "__rl": true,
+          "mode": "list",
+          "value": "gpt-4o-mini"
+        },
+        "options": {}
+      }
+    },
+    {
+      "id": "memory",
+      "name": "Simple Memory",
+      "type": "@n8n/n8n-nodes-langchain.memoryBufferWindow",
+      "typeVersion": 1.3,
+      "position": [
+        280,
+        440
+      ],
+      "parameters": {
+        "sessionIdType": "customKey",
+        "sessionKey": "={{ $('Chat Request').item.json.body.session_id || 'default-session' }}",
+        "contextWindowLength": 5
+      }
+    },
+    {
+      "id": "calculator",
+      "name": "Calculator",
+      "type": "@n8n/n8n-nodes-langchain.toolCalculator",
+      "typeVersion": 1,
+      "position": [
+        440,
+        440
+      ],
+      "parameters": {}
+    },
+    {
+      "id": "wikipedia",
+      "name": "Wikipedia Search",
+      "type": "n8n-nodes-base.httpRequestTool",
+      "typeVersion": 4.2,
+      "position": [
+        600,
+        440
+      ],
+      "parameters": {
+        "url": "https://en.wikipedia.org/w/api.php",
+        "sendQuery": true,
+        "queryParameters": {
+          "parameters": [
             {
-              "name": "agent_error",
-              "value": "={{ { \"error_type\": \"agent_processing_failed\", \"agent_id\": $json.agent_id, \"message\": \"AI agent processing failed\", \"timestamp\": $now } }}"
+              "name": "action",
+              "value": "query"
             },
             {
-              "name": "error_response",
-              "value": "={{ { \"status\": \"error\", \"agent_id\": $json.agent_id, \"message\": \"AI agent workflow error\" } }}"
+              "name": "list",
+              "value": "search"
+            },
+            {
+              "name": "srsearch",
+              "value": "={{ $fromAI('search_term', 'The topic to look up on Wikipedia, in a few words', 'string') }}"
+            },
+            {
+              "name": "format",
+              "value": "json"
             }
           ]
-        }
-      },
-      "id": "handle-agent-error",
-      "typeVersion": 3.4
+        },
+        "options": {},
+        "toolDescription": "Searches Wikipedia for background information on a topic."
+      }
+    },
+    {
+      "id": "respond",
+      "name": "Send Answer",
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.1,
+      "position": [
+        560,
+        200
+      ],
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "={{ { answer: $json.output } }}",
+        "options": {}
+      }
     }
   ],
   "connections": {
-    "AI Agent with Tools": {
+    "Chat Request": {
       "main": [
         [
           {
-            "node": "Initialize AI Agent",
+            "node": "AI Agent",
             "type": "main",
             "index": 0
           }
         ]
       ]
     },
-    "Initialize AI Agent": {
+    "AI Agent": {
       "main": [
         [
           {
-            "node": "Process Agent Request",
+            "node": "Send Answer",
             "type": "main",
             "index": 0
           }
         ]
       ]
     },
-    "Process Agent Request": {
-      "main": [
+    "OpenAI Chat Model": {
+      "ai_languageModel": [
         [
           {
-            "node": "AI Agent Analysis",
-            "type": "main",
+            "node": "AI Agent",
+            "type": "ai_languageModel",
             "index": 0
           }
         ]
       ]
     },
-    "AI Agent Analysis": {
-      "main": [
+    "Simple Memory": {
+      "ai_memory": [
         [
           {
-            "node": "Parse Agent Plan",
-            "type": "main",
-            "index": 0
-          },
-          {
-            "node": "Handle Agent Error",
-            "type": "main",
+            "node": "AI Agent",
+            "type": "ai_memory",
             "index": 0
           }
         ]
       ]
     },
-    "Parse Agent Plan": {
-      "main": [
+    "Calculator": {
+      "ai_tool": [
         [
           {
-            "node": "⚠️ Execute Web Search Tool (placeholder)",
-            "type": "main",
-            "index": 0
-          },
-          {
-            "node": "⚠️ Execute Database Query Tool (placeholder)",
-            "type": "main",
-            "index": 0
-          },
-          {
-            "node": "Execute File Processing Tool",
-            "type": "main",
+            "node": "AI Agent",
+            "type": "ai_tool",
             "index": 0
           }
         ]
       ]
     },
-    "⚠️ Execute Web Search Tool (placeholder)": {
-      "main": [
+    "Wikipedia Search": {
+      "ai_tool": [
         [
           {
-            "node": "Aggregate Tool Results",
-            "type": "main",
-            "index": 0
-          }
-        ]
-      ]
-    },
-    "⚠️ Execute Database Query Tool (placeholder)": {
-      "main": [
-        [
-          {
-            "node": "Aggregate Tool Results",
-            "type": "main",
-            "index": 0
-          }
-        ]
-      ]
-    },
-    "Execute File Processing Tool": {
-      "main": [
-        [
-          {
-            "node": "Aggregate Tool Results",
-            "type": "main",
-            "index": 0
-          }
-        ]
-      ]
-    },
-    "Aggregate Tool Results": {
-      "main": [
-        [
-          {
-            "node": "AI Agent Synthesis",
-            "type": "main",
-            "index": 0
-          }
-        ]
-      ]
-    },
-    "AI Agent Synthesis": {
-      "main": [
-        [
-          {
-            "node": "Generate Agent Response",
-            "type": "main",
-            "index": 0
-          }
-        ]
-      ]
-    },
-    "Generate Agent Response": {
-      "main": [
-        [
-          {
-            "node": "⚠️ Send Agent Response (placeholder)",
-            "type": "main",
-            "index": 0
-          }
-        ]
-      ]
-    },
-    "⚠️ Send Agent Response (placeholder)": {
-      "main": [
-        [
-          {
-            "node": "⚠️ Log Agent Activity (placeholder)",
-            "type": "main",
+            "node": "AI Agent",
+            "type": "ai_tool",
             "index": 0
           }
         ]

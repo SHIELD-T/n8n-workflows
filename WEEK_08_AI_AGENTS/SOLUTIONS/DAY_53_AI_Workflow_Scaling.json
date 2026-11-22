@@ -50,7 +50,7 @@
           "assignments": [
             {
               "name": "items",
-              "value": "={{ $json.items || [] }}"
+              "value": "={{ $json.body.items || [] }}"
             },
             {
               "name": "batch_start_time",
@@ -58,7 +58,7 @@
             },
             {
               "name": "total_item_count",
-              "value": "={{ ($json.items || []).length }}"
+              "value": "={{ ($json.body.items || []).length }}"
             }
           ]
         }

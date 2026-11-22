@@ -50,11 +50,11 @@
         "conditions": {
           "string": [
             {
-              "value1": "={{ $json.email }}",
+              "value1": "={{ $json.body.email }}",
               "operation": "isNotEmpty"
             },
             {
-              "value1": "={{ $json.name }}",
+              "value1": "={{ $json.body.name }}",
               "operation": "isNotEmpty"
             }
           ]
@@ -83,7 +83,7 @@
             },
             {
               "name": "priority",
-              "value": "={{ $json.lead_score > 70 ? 'high' : ($json.lead_score > 40 ? 'medium' : 'low') }}"
+              "value": "={{ $json.body.lead_score > 70 ? 'high' : ($json.body.lead_score > 40 ? 'medium' : 'low') }}"
             }
           ]
         }

@@ -206,15 +206,15 @@
             },
             {
               "name": "optimization_type",
-              "value": "={{ $json.optimization_type || 'comprehensive' }}"
+              "value": "={{ $json.body.optimization_type || 'comprehensive' }}"
             },
             {
               "name": "target_integrations",
-              "value": "={{ $json.target_integrations || ['integration_a', 'integration_b', 'integration_c', 'integration_d', 'integration_e'] }}"
+              "value": "={{ $json.body.target_integrations || ['integration_a', 'integration_b', 'integration_c', 'integration_d', 'integration_e'] }}"
             },
             {
               "name": "optimization_goals",
-              "value": "={{ $json.optimization_goals || ['speed', 'efficiency', 'resource_usage', 'cost'] }}"
+              "value": "={{ $json.body.optimization_goals || ['speed', 'efficiency', 'resource_usage', 'cost'] }}"
             },
             {
               "name": "start_time",

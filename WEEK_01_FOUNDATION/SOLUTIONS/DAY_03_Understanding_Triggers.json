@@ -18,7 +18,7 @@
         -260
       ],
       "parameters": {
-        "content": "## Day 03 Solution: Understanding Triggers\n\nThree independent workflows in one file: (1) Manual trigger chain, (2) Webhook + IF + Set + Respond, (3) Schedule trigger chain. Test the webhook branch with curl against the Test URL, then Activate to get a Production URL.\n\nCredentials needed: None needed to test the logic.\n\nSee DAILY_TASKS/DAY_03_Understanding_Triggers.md.",
+        "content": "## Day 03 Solution: Understanding Triggers\n\nThree independent workflows in one file: (1) Manual trigger chain, (2) Webhook + IF + Set + Respond, (3) Schedule trigger chain. Test the webhook branch with curl against the Test URL, then Publish to get a Production URL.\n\nCredentials needed: None needed to test the logic.\n\nSee DAILY_TASKS/DAY_03_Understanding_Triggers.md.",
         "height": 260,
         "width": 480
       }
@@ -85,7 +85,7 @@
         "conditions": {
           "string": [
             {
-              "value1": "={{ $json.name }}",
+              "value1": "={{ $json.body.name }}",
               "operation": "isNotEmpty"
             }
           ]

@@ -95,15 +95,15 @@
           "string": [
             {
               "name": "operation_type",
-              "value": "={{ $json.operation_type }}"
+              "value": "={{ $json.body.operation_type }}"
             },
             {
               "name": "scaling_factor",
-              "value": "={{ $json.scaling_factor }}"
+              "value": "={{ $json.body.scaling_factor }}"
             },
             {
               "name": "scaling_status",
-              "value": "={{ $json.scaling_status }}"
+              "value": "={{ $json.body.scaling_status }}"
             },
             {
               "name": "scaling_timestamp",
@@ -111,7 +111,7 @@
             },
             {
               "name": "scaling_notes",
-              "value": "={{ $json.scaling_notes }}"
+              "value": "={{ $json.body.scaling_notes }}"
             }
           ]
         },

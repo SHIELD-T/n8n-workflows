@@ -145,7 +145,7 @@
             },
             {
               "name": "alert_what_failed",
-              "value": "={{ 'Ping response status was \\'' + ($json.status || 'unknown') + '\\' instead of \\'deployed\\' — the production webhook may be inactive or returning an unexpected payload.' }}"
+              "value": "={{ 'Ping response status was \\'' + ($json.status || 'unknown') + '\\' instead of \\'deployed\\' — the production webhook may be unpublished or returning an unexpected payload.' }}"
             }
           ]
         }

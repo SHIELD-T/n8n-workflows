@@ -95,15 +95,15 @@
           "string": [
             {
               "name": "student_id",
-              "value": "={{ $json.student_id }}"
+              "value": "={{ $json.body.student_id }}"
             },
             {
               "name": "skill_category",
-              "value": "={{ $json.skill_category }}"
+              "value": "={{ $json.body.skill_category }}"
             },
             {
               "name": "skill_level",
-              "value": "={{ $json.skill_level }}"
+              "value": "={{ $json.body.skill_level }}"
             },
             {
               "name": "assessment_timestamp",
@@ -111,7 +111,7 @@
             },
             {
               "name": "assessment_notes",
-              "value": "={{ $json.assessment_notes }}"
+              "value": "={{ $json.body.assessment_notes }}"
             }
           ]
         },

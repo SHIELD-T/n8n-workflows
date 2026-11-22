@@ -100,7 +100,7 @@
           "conditions": [
             {
               "id": "graduation-status-check",
-              "leftValue": "={{ $json.graduation_status }}",
+              "leftValue": "={{ $json.body.graduation_status }}",
               "rightValue": "achieved",
               "operator": {
                 "type": "string",

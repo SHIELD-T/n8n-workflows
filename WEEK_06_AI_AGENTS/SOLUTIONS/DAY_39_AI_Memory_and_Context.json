@@ -1,6 +1,6 @@
 {
   "name": "Day 39 Solution: AI Memory, Context & RAG",
-  "description": "Two independent webhook-triggered demos: a conversation-memory demo that builds a per-conversation_id transcript in a Set node before calling OpenAI, and a RAG demo that keyword-matches a question against a hardcoded knowledge base before calling OpenAI with a grounded, citation-required prompt.",
+  "description": "Real n8n AI nodes: an AI Agent with Simple Memory keyed by conversation_id, a one-off loader that embeds a small knowledge base into the In-Memory Vector Store, and a RAG agent that answers only from that store.",
   "tags": [
     "week-06",
     "ai-agents",
@@ -22,8 +22,8 @@
         40
       ],
       "parameters": {
-        "content": "## Day 39 Solution: AI Memory, Context & RAG\n\nTwo independent demos in one file. (1) Memory: a webhook builds a per-conversation transcript (keyed by conversation_id) in a Set node, then an OpenAI node answers using that transcript as context. (2) RAG: a Set node holds a small hardcoded knowledge base; a second Set node does simple keyword-match 'retrieval' against the incoming question, and an OpenAI node answers only from the matched chunk, citing it.\n\n**Credentials needed to run for real:** OpenAI API key.\n\n**Reference:** WEEK_06_AI_AGENTS/DAILY_TASKS/DAY_39_AI_Memory_and_Context.md",
-        "height": 300,
+        "content": "## Day 39 Solution: AI Memory, Context & RAG\n\nThree parts in one file.\n\n**1. Memory:** a webhook feeds an AI Agent with **Simple Memory**, keyed by `conversation_id`, so the agent remembers earlier turns of the same conversation.\n\n**2. Load the knowledge base (run once):** click *Execute workflow* on **Load Knowledge Base**. The text is split into chunks, turned into embeddings and stored in the **In-Memory Vector Store** under the key `course_knowledge_base`.\n\n**3. Ask questions (RAG):** a webhook feeds a second AI Agent whose only tool is that vector store, so it answers from your text and cites it.\n\n**Credentials needed to run for real:** OpenAI API key (Chat Model and Embeddings nodes).\n\n**Reference:** WEEK_06_AI_AGENTS/DAILY_TASKS/DAY_39_AI_Memory_and_Context.md",
+        "height": 420,
         "width": 460
       }
     },
@@ -37,9 +37,9 @@
         40
       ],
       "parameters": {
-        "content": "## Note: Session Memory\n\nThis Set node simulates per-conversation memory by building a running transcript keyed by conversation_id within a single execution. A real production deployment would persist this transcript in a database or Redis (keyed by conversation_id) and load/save it on every call — a single n8n execution can only demonstrate the shape of that memory record, not true cross-request persistence.",
-        "height": 260,
-        "width": 340
+        "content": "## Note: what survives a restart\n\nSimple Memory and the In-Memory Vector Store both live in n8n's RAM. They work across requests while n8n is running, but **a restart (or a Render free-tier sleep) wipes them**: re-run *Load Knowledge Base* afterwards. For production, swap Simple Memory for Postgres or Redis Chat Memory, and the in-memory store for Postgres PGVector, Supabase or Pinecone.",
+        "height": 300,
+        "width": 360
       }
     },
     {
@@ -49,7 +49,7 @@
       "typeVersion": 2,
       "position": [
         240,
-        400
+        520
       ],
       "parameters": {
         "httpMethod": "POST",
@@ -58,62 +58,148 @@
       }
     },
     {
-      "id": "update-conversation-memory",
-      "name": "Update Conversation Memory",
+      "id": "memory-chat-agent",
+      "name": "Memory Chat Agent",
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 3.1,
+      "position": [
+        520,
+        520
+      ],
+      "parameters": {
+        "promptType": "define",
+        "text": "={{ $json.body.message }}",
+        "options": {
+          "systemMessage": "You are a helpful assistant. Recall any facts the user has already told you in this conversation."
+        }
+      }
+    },
+    {
+      "id": "memory-chat-model",
+      "name": "OpenAI Chat Model",
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+      "typeVersion": 1.3,
+      "position": [
+        440,
+        760
+      ],
+      "parameters": {
+        "model": {
+          "__rl": true,
+          "mode": "list",
+          "value": "gpt-4o-mini"
+        },
+        "options": {}
+      }
+    },
+    {
+      "id": "conversation-memory",
+      "name": "Conversation Memory",
+      "type": "@n8n/n8n-nodes-langchain.memoryBufferWindow",
+      "typeVersion": 1.3,
+      "position": [
+        620,
+        760
+      ],
+      "parameters": {
+        "sessionIdType": "customKey",
+        "sessionKey": "={{ $('Memory Chat Trigger').item.json.body.conversation_id }}",
+        "contextWindowLength": 10
+      }
+    },
+    {
+      "id": "load-kb-trigger",
+      "name": "Load Knowledge Base",
+      "type": "n8n-nodes-base.manualTrigger",
+      "typeVersion": 1,
+      "position": [
+        240,
+        960
+      ],
+      "parameters": {}
+    },
+    {
+      "id": "knowledge-base",
+      "name": "Knowledge Base",
       "type": "n8n-nodes-base.set",
       "typeVersion": 3.4,
       "position": [
-        520,
-        400
+        480,
+        960
       ],
       "parameters": {
         "assignments": {
           "assignments": [
             {
-              "name": "conversation_id",
-              "value": "={{ $json.conversation_id }}"
-            },
-            {
-              "name": "new_message",
-              "value": "={{ $json.message }}"
-            },
-            {
-              "name": "transcript",
-              "value": "={{ ($json.prior_transcript || 'No prior turns in this execution.') + '\\nUser (' + $json.conversation_id + '): ' + $json.message }}"
+              "name": "text",
+              "value": "Refunds: Students may request a full refund within 14 days of purchasing a course, provided less than 25% of the course content has been completed. Refund requests after 14 days are evaluated case-by-case and are not guaranteed.\n\nCourse Access: Once enrolled, students have lifetime access to course materials, including any future updates to that course. Access does not expire and is not tied to a subscription.\n\nCertificates: A certificate of completion is issued automatically once a student finishes 100% of a course's required lessons and passes the final assessment with a score of 70% or higher.\n\nSupport Hours: Our support team responds to help-desk tickets Monday through Friday, 9am-6pm Eastern Time, with a target first-response time of one business day. Live chat is available during the same hours for enrolled students."
             }
           ]
         }
       }
     },
     {
-      "id": "memory-aware-chat-response",
-      "name": "Memory-Aware Chat Response",
-      "type": "n8n-nodes-base.openAi",
-      "typeVersion": 1.3,
+      "id": "insert-kb",
+      "name": "Insert into Vector Store",
+      "type": "@n8n/n8n-nodes-langchain.vectorStoreInMemory",
+      "typeVersion": 1.2,
       "position": [
-        800,
-        400
+        740,
+        960
       ],
       "parameters": {
-        "resource": "chat",
-        "operation": "create",
-        "model": "gpt-4o-mini",
-        "messages": {
-          "values": [
-            {
-              "role": "system",
-              "content": "You are a helpful assistant. Use the conversation transcript below — which is keyed to this specific conversation_id — to answer the latest message, recalling any facts the user has already told you in this session."
-            },
-            {
-              "role": "user",
-              "content": "={{ 'Conversation transcript so far:\\n' + $json.transcript + '\\n\\nRespond to the latest message: ' + $json.new_message }}"
-            }
-          ]
-        },
-        "options": {
-          "temperature": 0.4,
-          "maxTokens": 400
+        "mode": "insert",
+        "memoryKey": {
+          "__rl": true,
+          "mode": "list",
+          "value": "course_knowledge_base"
         }
+      }
+    },
+    {
+      "id": "data-loader",
+      "name": "Default Data Loader",
+      "type": "@n8n/n8n-nodes-langchain.documentDefaultDataLoader",
+      "typeVersion": 1.1,
+      "position": [
+        760,
+        1200
+      ],
+      "parameters": {
+        "dataType": "json",
+        "jsonMode": "expressionData",
+        "jsonData": "={{ $json.text }}",
+        "textSplittingMode": "custom",
+        "options": {}
+      }
+    },
+    {
+      "id": "text-splitter",
+      "name": "Recursive Character Text Splitter",
+      "type": "@n8n/n8n-nodes-langchain.textSplitterRecursiveCharacterTextSplitter",
+      "typeVersion": 1,
+      "position": [
+        860,
+        1420
+      ],
+      "parameters": {
+        "chunkSize": 200,
+        "chunkOverlap": 20,
+        "options": {}
+      }
+    },
+    {
+      "id": "openai-embeddings",
+      "name": "Embeddings OpenAI",
+      "type": "@n8n/n8n-nodes-langchain.embeddingsOpenAi",
+      "typeVersion": 1.2,
+      "position": [
+        1080,
+        1200
+      ],
+      "parameters": {
+        "model": "text-embedding-3-small",
+        "options": {}
       }
     },
     {
@@ -122,8 +208,8 @@
       "type": "n8n-nodes-base.webhook",
       "typeVersion": 2,
       "position": [
-        240,
-        760
+        1300,
+        960
       ],
       "parameters": {
         "httpMethod": "POST",
@@ -132,94 +218,59 @@
       }
     },
     {
-      "id": "knowledge-base",
-      "name": "Knowledge Base",
-      "type": "n8n-nodes-base.set",
-      "typeVersion": 3.4,
+      "id": "rag-agent",
+      "name": "RAG Agent",
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 3.1,
       "position": [
-        520,
-        760
+        1560,
+        960
       ],
       "parameters": {
-        "assignments": {
-          "assignments": [
-            {
-              "name": "question",
-              "value": "={{ $json.question }}"
-            },
-            {
-              "name": "kb_chunk_1",
-              "value": "Refunds: Students may request a full refund within 14 days of purchasing a course, provided less than 25% of the course content has been completed. Refund requests after 14 days are evaluated case-by-case and are not guaranteed."
-            },
-            {
-              "name": "kb_chunk_2",
-              "value": "Course Access: Once enrolled, students have lifetime access to course materials, including any future updates to that course. Access does not expire and is not tied to a subscription."
-            },
-            {
-              "name": "kb_chunk_3",
-              "value": "Certificates: A certificate of completion is issued automatically once a student finishes 100% of a course's required lessons and passes the final assessment with a score of 70% or higher."
-            },
-            {
-              "name": "kb_chunk_4",
-              "value": "Support Hours: Our support team responds to help-desk tickets Monday through Friday, 9am-6pm Eastern Time, with a target first-response time of one business day. Live chat is available during the same hours for enrolled students."
-            }
-          ]
+        "promptType": "define",
+        "text": "={{ $json.body.question }}",
+        "options": {
+          "systemMessage": "Answer using only what the knowledge_base tool returns. If the answer isn't there, say you don't know — do not use outside knowledge. Quote the sentence you used as your citation."
         }
       }
     },
     {
-      "id": "keyword-retrieval",
-      "name": "Keyword Retrieval",
-      "type": "n8n-nodes-base.set",
-      "typeVersion": 3.4,
-      "position": [
-        800,
-        760
-      ],
-      "parameters": {
-        "assignments": {
-          "assignments": [
-            {
-              "name": "matched_chunk",
-              "value": "={{ $json.question.toLowerCase().includes('refund') ? 'kb_chunk_1' : ($json.question.toLowerCase().includes('access') || $json.question.toLowerCase().includes('expire')) ? 'kb_chunk_2' : $json.question.toLowerCase().includes('certificate') ? 'kb_chunk_3' : ($json.question.toLowerCase().includes('support') || $json.question.toLowerCase().includes('help')) ? 'kb_chunk_4' : 'none' }}"
-            },
-            {
-              "name": "retrieved_context",
-              "value": "={{ $json.question.toLowerCase().includes('refund') ? $json.kb_chunk_1 : ($json.question.toLowerCase().includes('access') || $json.question.toLowerCase().includes('expire')) ? $json.kb_chunk_2 : $json.question.toLowerCase().includes('certificate') ? $json.kb_chunk_3 : ($json.question.toLowerCase().includes('support') || $json.question.toLowerCase().includes('help')) ? $json.kb_chunk_4 : 'No matching chunk found in the knowledge base.' }}"
-            }
-          ]
-        }
-      }
-    },
-    {
-      "id": "rag-answer",
-      "name": "RAG Answer",
-      "type": "n8n-nodes-base.openAi",
+      "id": "rag-chat-model",
+      "name": "RAG Chat Model",
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
       "typeVersion": 1.3,
       "position": [
-        1080,
-        760
+        1480,
+        1200
       ],
       "parameters": {
-        "resource": "chat",
-        "operation": "create",
-        "model": "gpt-4o-mini",
-        "messages": {
-          "values": [
-            {
-              "role": "system",
-              "content": "Answer using only the retrieved context below. If the answer isn't in the context, say you don't know — do not use outside knowledge. Cite which knowledge-base chunk you used (e.g. 'Source: kb_chunk_2')."
-            },
-            {
-              "role": "user",
-              "content": "={{ 'Retrieved context (' + $json.matched_chunk + '):\\n' + $json.retrieved_context + '\\n\\nQuestion: ' + $json.question }}"
-            }
-          ]
+        "model": {
+          "__rl": true,
+          "mode": "list",
+          "value": "gpt-4o-mini"
         },
-        "options": {
-          "temperature": 0.2,
-          "maxTokens": 400
-        }
+        "options": {}
+      }
+    },
+    {
+      "id": "kb-tool",
+      "name": "Knowledge Base Tool",
+      "type": "@n8n/n8n-nodes-langchain.vectorStoreInMemory",
+      "typeVersion": 1.2,
+      "position": [
+        1680,
+        1200
+      ],
+      "parameters": {
+        "mode": "retrieve-as-tool",
+        "toolName": "knowledge_base",
+        "toolDescription": "Searches the course's own knowledge base (refunds, access, certificates, support). Use it for any question about the course's policies.",
+        "memoryKey": {
+          "__rl": true,
+          "mode": "list",
+          "value": "course_knowledge_base"
+        },
+        "topK": 3
       }
     }
   ],
@@ -228,25 +279,36 @@
       "main": [
         [
           {
-            "node": "Update Conversation Memory",
+            "node": "Memory Chat Agent",
             "type": "main",
             "index": 0
           }
         ]
       ]
     },
-    "Update Conversation Memory": {
-      "main": [
+    "OpenAI Chat Model": {
+      "ai_languageModel": [
         [
           {
-            "node": "Memory-Aware Chat Response",
-            "type": "main",
+            "node": "Memory Chat Agent",
+            "type": "ai_languageModel",
             "index": 0
           }
         ]
       ]
     },
-    "RAG Query Trigger": {
+    "Conversation Memory": {
+      "ai_memory": [
+        [
+          {
+            "node": "Memory Chat Agent",
+            "type": "ai_memory",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Load Knowledge Base": {
       "main": [
         [
           {
@@ -261,19 +323,79 @@
       "main": [
         [
           {
-            "node": "Keyword Retrieval",
+            "node": "Insert into Vector Store",
             "type": "main",
             "index": 0
           }
         ]
       ]
     },
-    "Keyword Retrieval": {
+    "Default Data Loader": {
+      "ai_document": [
+        [
+          {
+            "node": "Insert into Vector Store",
+            "type": "ai_document",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Recursive Character Text Splitter": {
+      "ai_textSplitter": [
+        [
+          {
+            "node": "Default Data Loader",
+            "type": "ai_textSplitter",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Embeddings OpenAI": {
+      "ai_embedding": [
+        [
+          {
+            "node": "Insert into Vector Store",
+            "type": "ai_embedding",
+            "index": 0
+          },
+          {
+            "node": "Knowledge Base Tool",
+            "type": "ai_embedding",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "RAG Query Trigger": {
       "main": [
         [
           {
-            "node": "RAG Answer",
+            "node": "RAG Agent",
             "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "RAG Chat Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "RAG Agent",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Knowledge Base Tool": {
+      "ai_tool": [
+        [
+          {
+            "node": "RAG Agent",
+            "type": "ai_tool",
             "index": 0
           }
         ]

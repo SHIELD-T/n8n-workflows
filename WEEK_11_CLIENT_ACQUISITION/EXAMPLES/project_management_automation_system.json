@@ -101,31 +101,31 @@
             },
             {
               "name": "project_name",
-              "value": "={{ $json.project_name }}"
+              "value": "={{ $json.body.project_name }}"
             },
             {
               "name": "client_name",
-              "value": "={{ $json.client_name }}"
+              "value": "={{ $json.body.client_name }}"
             },
             {
               "name": "project_type",
-              "value": "={{ $json.project_type }}"
+              "value": "={{ $json.body.project_type }}"
             },
             {
               "name": "project_scope",
-              "value": "={{ $json.project_scope }}"
+              "value": "={{ $json.body.project_scope }}"
             },
             {
               "name": "budget",
-              "value": "={{ $json.budget }}"
+              "value": "={{ $json.body.budget }}"
             },
             {
               "name": "timeline",
-              "value": "={{ $json.timeline }}"
+              "value": "={{ $json.body.timeline }}"
             },
             {
               "name": "team_members",
-              "value": "={{ $json.team_members }}"
+              "value": "={{ $json.body.team_members }}"
             }
           ]
         }

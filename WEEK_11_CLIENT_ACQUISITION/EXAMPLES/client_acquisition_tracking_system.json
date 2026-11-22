@@ -95,15 +95,15 @@
           "string": [
             {
               "name": "client_id",
-              "value": "={{ $json.client_id }}"
+              "value": "={{ $json.body.client_id }}"
             },
             {
               "name": "acquisition_source",
-              "value": "={{ $json.acquisition_source }}"
+              "value": "={{ $json.body.acquisition_source }}"
             },
             {
               "name": "acquisition_status",
-              "value": "={{ $json.acquisition_status }}"
+              "value": "={{ $json.body.acquisition_status }}"
             },
             {
               "name": "acquisition_timestamp",
@@ -111,7 +111,7 @@
             },
             {
               "name": "acquisition_notes",
-              "value": "={{ $json.acquisition_notes }}"
+              "value": "={{ $json.body.acquisition_notes }}"
             }
           ]
         },

@@ -102,7 +102,7 @@
           "conditions": [
             {
               "id": "market-type-condition",
-              "leftValue": "={{ $json.marketType }}",
+              "leftValue": "={{ $json.body.marketType }}",
               "rightValue": "healthcare",
               "operator": {
                 "type": "string",

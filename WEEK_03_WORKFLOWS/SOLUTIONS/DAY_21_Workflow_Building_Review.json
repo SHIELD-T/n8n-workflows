@@ -71,7 +71,7 @@
           "assignments": [
             {
               "name": "input_data",
-              "value": "={{ $json.data || 'scheduled-run' }}"
+              "value": "={{ $json.body.data || 'scheduled-run' }}"
             },
             {
               "name": "processing_type",

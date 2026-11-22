@@ -101,35 +101,35 @@
             },
             {
               "name": "lead_source",
-              "value": "={{ $json.lead_source }}"
+              "value": "={{ $json.body.lead_source }}"
             },
             {
               "name": "company_name",
-              "value": "={{ $json.company_name }}"
+              "value": "={{ $json.body.company_name }}"
             },
             {
               "name": "contact_name",
-              "value": "={{ $json.contact_name }}"
+              "value": "={{ $json.body.contact_name }}"
             },
             {
               "name": "email",
-              "value": "={{ $json.email }}"
+              "value": "={{ $json.body.email }}"
             },
             {
               "name": "phone",
-              "value": "={{ $json.phone }}"
+              "value": "={{ $json.body.phone }}"
             },
             {
               "name": "company_size",
-              "value": "={{ $json.company_size }}"
+              "value": "={{ $json.body.company_size }}"
             },
             {
               "name": "industry",
-              "value": "={{ $json.industry }}"
+              "value": "={{ $json.body.industry }}"
             },
             {
               "name": "pain_points",
-              "value": "={{ $json.pain_points }}"
+              "value": "={{ $json.body.pain_points }}"
             }
           ]
         }

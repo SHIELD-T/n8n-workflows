@@ -16,7 +16,7 @@
 4. On the Unhealthy branch, add a **Set** node building an alert message (workflow name, timestamp, what failed). If you have Slack or Email credentials from earlier weeks, wire up a real notification node; otherwise simulate the alert payload with Set.
 5. On both branches, add a Set node that appends a maintenance log entry — `{{ $now.toISO() }}`, workflow checked, and result — written to a Google Sheet, Airtable, or at minimum captured in the node's output so you build the habit of logging.
 6. Manually execute the maintenance workflow once and confirm it correctly reaches the Healthy branch for your active Day 51 workflow.
-7. Deliberately deactivate your Day 51 workflow, re-run the maintenance check, and confirm it now correctly routes to Unhealthy — then reactivate Day 51's workflow.
+7. Deliberately unpublish your Day 51 workflow, re-run the maintenance check, and confirm it now correctly routes to Unhealthy — then publish Day 51's workflow again.
 
 **Stuck?** Import `WEEK_08_AI_AGENTS/EXAMPLES/ai_system_integration_workflow.json` to see a working "Monitor Integration Status" HTTP call pattern you can adapt into your own health check.
 

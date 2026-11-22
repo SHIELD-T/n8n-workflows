@@ -95,11 +95,11 @@
           "string": [
             {
               "name": "student_id",
-              "value": "={{ $json.student_id }}"
+              "value": "={{ $json.body.student_id }}"
             },
             {
               "name": "lesson_completed",
-              "value": "={{ $json.lesson_name }}"
+              "value": "={{ $json.body.lesson_name }}"
             },
             {
               "name": "completion_timestamp",
@@ -107,11 +107,11 @@
             },
             {
               "name": "progress_percentage",
-              "value": "={{ $json.progress_percentage }}"
+              "value": "={{ $json.body.progress_percentage }}"
             },
             {
               "name": "learning_notes",
-              "value": "={{ $json.learning_notes }}"
+              "value": "={{ $json.body.learning_notes }}"
             }
           ]
         },

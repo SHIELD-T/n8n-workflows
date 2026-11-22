@@ -98,15 +98,15 @@
           "string": [
             {
               "name": "tool_name",
-              "value": "={{ $json.tool_name }}"
+              "value": "={{ $json.body.tool_name }}"
             },
             {
               "name": "integration_status",
-              "value": "={{ $json.integration_status }}"
+              "value": "={{ $json.body.integration_status }}"
             },
             {
               "name": "integration_metric",
-              "value": "={{ $json.integration_metric }}"
+              "value": "={{ $json.body.integration_metric }}"
             },
             {
               "name": "integration_timestamp",
@@ -114,7 +114,7 @@
             },
             {
               "name": "integration_notes",
-              "value": "={{ $json.integration_notes }}"
+              "value": "={{ $json.body.integration_notes }}"
             }
           ]
         },

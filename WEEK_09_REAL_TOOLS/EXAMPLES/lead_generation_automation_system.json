@@ -101,27 +101,27 @@
             },
             {
               "name": "name",
-              "value": "={{ $json.name }}"
+              "value": "={{ $json.body.name }}"
             },
             {
               "name": "email",
-              "value": "={{ $json.email }}"
+              "value": "={{ $json.body.email }}"
             },
             {
               "name": "company",
-              "value": "={{ $json.company }}"
+              "value": "={{ $json.body.company }}"
             },
             {
               "name": "phone",
-              "value": "={{ $json.phone }}"
+              "value": "={{ $json.body.phone }}"
             },
             {
               "name": "message",
-              "value": "={{ $json.message }}"
+              "value": "={{ $json.body.message }}"
             },
             {
               "name": "source",
-              "value": "={{ $json.source || 'website' }}"
+              "value": "={{ $json.body.source || 'website' }}"
             }
           ]
         }

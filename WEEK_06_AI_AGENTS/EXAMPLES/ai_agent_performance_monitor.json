@@ -100,15 +100,15 @@
           "string": [
             {
               "name": "agent_id",
-              "value": "={{ $json.agent_id }}"
+              "value": "={{ $json.body.agent_id }}"
             },
             {
               "name": "performance_metric",
-              "value": "={{ $json.performance_metric }}"
+              "value": "={{ $json.body.performance_metric }}"
             },
             {
               "name": "performance_value",
-              "value": "={{ $json.performance_value }}"
+              "value": "={{ $json.body.performance_value }}"
             },
             {
               "name": "monitoring_timestamp",
@@ -116,7 +116,7 @@
             },
             {
               "name": "performance_notes",
-              "value": "={{ $json.performance_notes }}"
+              "value": "={{ $json.body.performance_notes }}"
             }
           ]
         },

@@ -12,14 +12,14 @@
 
 ## 🛠️ Build It: Step-by-Step
 1. In your Render dashboard, open your n8n web service from Week 1 (or create one) and go to Environment.
-2. Add/confirm these variables: `N8N_BASIC_AUTH_ACTIVE=true`, `N8N_BASIC_AUTH_USER`, `N8N_BASIC_AUTH_PASSWORD`, `WEBHOOK_URL=https://<your-app>.onrender.com`, `GENERIC_TIMEZONE=UTC`, `N8N_ENCRYPTION_KEY` (generate a random 32+ character value and save it somewhere safe — losing it locks you out of existing credentials).
+2. Add/confirm these variables: `WEBHOOK_URL=https://<your-app>.onrender.com`, `GENERIC_TIMEZONE=UTC`, `N8N_ENCRYPTION_KEY` (generate a random 32+ character value and save it somewhere safe — losing it locks you out of existing credentials).
 3. If you're using a Dockerfile, add: `HEALTHCHECK --interval=30s --timeout=3s --start-period=5s --retries=3 CMD curl -f http://localhost:10000/healthz || exit 1`.
 4. In `render.yaml` (or the dashboard's Health Check Path field), set `healthCheckPath: /healthz`.
 5. Confirm your PostgreSQL database is connected, then add `DB_POSTGRESDB_SSL_ENABLED=true`, `DB_POSTGRESDB_CONNECTION_TIMEOUT=10000`, `DB_POSTGRESDB_POOL_SIZE=10`.
 6. Deploy/redeploy. Once live, verify from your terminal:
    `curl -i https://<your-app>.onrender.com/healthz`
    Confirm you get an HTTP 200 response.
-7. Sign into your n8n instance with the basic-auth credentials you set — confirm you're prompted for a username/password and that login succeeds.
+7. Open your n8n URL in a private browser window and confirm it asks for your owner account's email and password, then sign in. If old `N8N_BASIC_AUTH_*` variables are still in your Environment list from an older guide, delete them: current n8n ignores them, so they only give a false sense of security.
 8. Set up a free UptimeRobot (or similar) monitor pointed at your `/healthz` URL with a 5-minute check interval, and confirm it shows "Up" after its first check.
 
 ## 🔑 Credentials Needed
@@ -27,7 +27,7 @@ Render account, PostgreSQL database (Render add-on), UptimeRobot (or similar) ac
 
 ## ✅ Definition of Done
 - [ ] `curl -i https://<your-app>.onrender.com/healthz` returns HTTP 200
-- [ ] Logging into your n8n URL requires the basic-auth username/password you configured
+- [ ] Opening your n8n URL in a private window shows the sign-in screen, not the editor, and no `N8N_BASIC_AUTH_*` variables remain
 - [ ] Your PostgreSQL connection has SSL enabled and a pool size set (visible in your env vars)
 - [ ] An external uptime monitor is actively checking your instance and reports it as up
 - [ ] You've written down your `N8N_ENCRYPTION_KEY` somewhere outside of Render (a password manager or secure note)

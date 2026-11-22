@@ -141,7 +141,7 @@
         "conditions": {
           "string": [
             {
-              "value1": "={{ $json.type }}",
+              "value1": "={{ $json.body.type }}",
               "operation": "equal",
               "value2": "urgent"
             }

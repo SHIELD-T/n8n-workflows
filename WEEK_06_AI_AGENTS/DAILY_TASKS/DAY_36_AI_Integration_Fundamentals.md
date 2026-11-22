@@ -13,10 +13,10 @@
 ## 🛠️ Build It: Step-by-Step
 1. Go to platform.openai.com/api-keys, create a new secret key, and add a payment method under Billing (the API returns 429 errors with no funded account, even with a free trial).
 2. In n8n, open Credentials → New → search "OpenAi", paste the key, and click **Test**.
-3. Build workflow: **Webhook** trigger (HTTP Method POST, Path `ai-workflow`) → **Edit Fields (Set)** node with fields `input_text` = `{{ $json.text }}` and `processing_mode` = `{{ $json.mode || 'summarize' }}`.
+3. Build workflow: **Webhook** trigger (HTTP Method POST, Path `ai-workflow`) → **Edit Fields (Set)** node with fields `input_text` = `{{ $json.body.text }}` and `processing_mode` = `{{ $json.body.mode || 'summarize' }}`.
 4. Add an **OpenAI** node (Resource: Text, Operation: Message a Model / Chat). Model: `gpt-4o-mini`. System message: "You are a helpful assistant that processes text based on the requested mode. Available modes: summarize, classify, enhance, analyze." User message (expression): `Mode: {{ $json.processing_mode }}\nText: {{ $json.input_text }}`. Set Temperature = 0.7, Max Tokens = 500.
 5. Add a second **OpenAI** node after it, same model, System message: "You are an AI analyst that provides insights and recommendations based on processed text." User message referencing the first node's output (`{{ $json.message.content }}`) plus the original input. Temperature = 0.5.
-6. Activate the workflow (or use "Listen for Test Event"), then send a test POST with `{"text": "Our Q3 support tickets are up 40% with no staffing change.", "mode": "analyze"}` via the webhook's test URL (curl or a REST client). Confirm both OpenAI nodes' output panels show real generated text, not an error.
+6. Click "Listen for Test Event" on the Webhook node, then send a test POST with `{"text": "Our Q3 support tickets are up 40% with no staffing change.", "mode": "analyze"}` via the webhook's test URL (curl or a REST client). Confirm both OpenAI nodes' output panels show real generated text, not an error.
 
 **Stuck?** Import `WEEK_06_AI_AGENTS/EXAMPLES/ai_text_processing_workflow.json` (Menu → Import from File in n8n) to see a working version, then compare it to what you built.
 

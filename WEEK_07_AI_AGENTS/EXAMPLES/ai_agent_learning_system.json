@@ -97,15 +97,15 @@
           "string": [
             {
               "name": "agent_id",
-              "value": "={{ $json.agent_id }}"
+              "value": "={{ $json.body.agent_id }}"
             },
             {
               "name": "learning_task",
-              "value": "={{ $json.learning_task }}"
+              "value": "={{ $json.body.learning_task }}"
             },
             {
               "name": "learning_progress",
-              "value": "={{ $json.learning_progress }}"
+              "value": "={{ $json.body.learning_progress }}"
             },
             {
               "name": "learning_timestamp",
@@ -113,7 +113,7 @@
             },
             {
               "name": "learning_notes",
-              "value": "={{ $json.learning_notes }}"
+              "value": "={{ $json.body.learning_notes }}"
             }
           ]
         },

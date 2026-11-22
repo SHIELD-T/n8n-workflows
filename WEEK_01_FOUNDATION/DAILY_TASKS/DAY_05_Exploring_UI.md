@@ -12,7 +12,7 @@
 
 ## 🛠️ Build It: Step-by-Step
 1. Build **Workflow 1 (Data Processing):** Manual Trigger → Set node (`name`, `email`, `timestamp`) → second Set node that transforms them: `processed_name = {{ $json.name.toUpperCase() }}`, `processed_email = {{ $json.email.toLowerCase() }}`. Execute and verify the transformation in the output.
-2. Build **Workflow 2 (Webhook + Branch):** Webhook node → **IF** node checking `{{ $json.name }}` `is not empty` → true branch: Set node with `status = "processed"`; false branch left unconnected for now. Add a **Respond to Webhook** node after the true branch returning `{{ {"status":"success","data":$json} }}`.
+2. Build **Workflow 2 (Webhook + Branch):** Webhook node → **IF** node checking `{{ $json.body.name }}` `is not empty` (a Webhook puts the JSON you send under `body`, so `$json.name` on its own would be empty) → true branch: Set node with `status = "processed"`; false branch left unconnected for now. Add a **Respond to Webhook** node after the true branch returning `{{ {"status":"success","data":$json} }}`.
 3. Test Workflow 2 twice with curl: once with a payload containing `name`, once without it — confirm the IF node routes each execution down the correct branch (check the node's color/highlight after execution).
 4. Build **Workflow 3 (Scheduled Report):** Schedule Trigger (every 1 hour) → Set node generating `report_id = {{ $now.format('YYYY-MM-DD-HH') }}` and `status = "Completed"`.
 5. Intentionally break Workflow 1: change `$json.name` to `$json.namee` (typo) in the Set node, execute, and read the red error banner — note exactly what error message n8n shows.
@@ -31,7 +31,7 @@ None — today's three workflows use only Manual/Webhook/Schedule triggers and b
 
 ## 🐛 Common Pitfalls
 - **IF node false branch left dead-ending:** n8n won't error on an unconnected branch, but nothing happens on that path — for real workflows, always terminate both branches (e.g., an error-response node on false).
-- **Confusing "workflow saved" with "workflow active":** A saved but inactive workflow won't respond to real webhook calls outside the editor — check the Active toggle in the top-right if a webhook you expect to fire doesn't.
+- **Confusing "saved" with "published":** n8n saves your edits automatically as a draft, but real webhook calls and schedules only run the last **published** version. If a webhook you expect to fire doesn't, or it runs your old logic, check the **Publish** button in the top-right: if it says there are unpublished changes, click it.
 - **Execution History filter hiding runs:** By default it may filter to "this workflow only" — if you can't find a run, check you're looking at the correct workflow's execution list, not the global one.
 
 ## 🏭 Industry Track Application

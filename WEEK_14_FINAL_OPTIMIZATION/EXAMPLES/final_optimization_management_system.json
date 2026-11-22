@@ -95,15 +95,15 @@
           "string": [
             {
               "name": "optimization_type",
-              "value": "={{ $json.optimization_type }}"
+              "value": "={{ $json.body.optimization_type }}"
             },
             {
               "name": "optimization_impact",
-              "value": "={{ $json.optimization_impact }}"
+              "value": "={{ $json.body.optimization_impact }}"
             },
             {
               "name": "optimization_status",
-              "value": "={{ $json.optimization_status }}"
+              "value": "={{ $json.body.optimization_status }}"
             },
             {
               "name": "optimization_timestamp",
@@ -111,7 +111,7 @@
             },
             {
               "name": "optimization_notes",
-              "value": "={{ $json.optimization_notes }}"
+              "value": "={{ $json.body.optimization_notes }}"
             }
           ]
         },

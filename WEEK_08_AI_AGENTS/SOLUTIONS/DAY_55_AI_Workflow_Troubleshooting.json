@@ -42,7 +42,7 @@
           "conditions": [
             {
               "id": "cond-user-message-notempty",
-              "leftValue": "={{ $json.user_message }}",
+              "leftValue": "={{ $json.body.user_message }}",
               "rightValue": "",
               "operator": {
                 "type": "string",
@@ -103,7 +103,7 @@
             },
             {
               "role": "user",
-              "content": "={{ $json.user_message }}"
+              "content": "={{ $json.body.user_message }}"
             }
           ]
         },
@@ -203,7 +203,7 @@
       "typeVersion": 1,
       "position": [1560, 20],
       "parameters": {
-        "content": "## Troubleshooting Guide\n\n| Symptom | Likely Cause | Where to Look | Fix |\n|---|---|---|---|\n| Immediate 400, no AI call made | Required field missing from webhook body | Validate Required Fields node's input data | Restore the missing field (e.g. `user_message`) in the caller's payload |\n| Execution fails on the AI node itself | Invalid/expired API key (401/403 in node error) | AI Troubleshoot Call node's error output | Regenerate the key in your provider's dashboard, update the n8n credential, reactivate the workflow |\n| Response cuts off mid-sentence/mid-JSON | max_tokens set too low | AI Troubleshoot Call node's options.maxTokens | Raise maxTokens (e.g. 400+) and re-run |\n| Execution fails with HTTP 429 | AI provider rate limit exceeded | The failing node's error message (`rate_limit_exceeded`) | Add/lengthen a Wait/throttle step (Day 53 pattern) between calls |\n| Execution hangs then times out | Wrong URL or unreachable host on an HTTP Request node | The HTTP Request node's error output and configured URL | Correct the URL, confirm the target service is reachable, add a reasonable timeout |\n| `content.length > 0` check fails downstream | Malformed/empty AI response reached Validate AI Response | Validate AI Response node's input JSON | Confirmed caught here — routes to Malformed Response Error instead of corrupting downstream data |",
+        "content": "## Troubleshooting Guide\n\n| Symptom | Likely Cause | Where to Look | Fix |\n|---|---|---|---|\n| Immediate 400, no AI call made | Required field missing from webhook body | Validate Required Fields node's input data | Restore the missing field (e.g. `user_message`) in the caller's payload |\n| Execution fails on the AI node itself | Invalid/expired API key (401/403 in node error) | AI Troubleshoot Call node's error output | Regenerate the key in your provider's dashboard, update the n8n credential, send one test request to confirm |\n| Response cuts off mid-sentence/mid-JSON | max_tokens set too low | AI Troubleshoot Call node's options.maxTokens | Raise maxTokens (e.g. 400+) and re-run |\n| Execution fails with HTTP 429 | AI provider rate limit exceeded | The failing node's error message (`rate_limit_exceeded`) | Add/lengthen a Wait/throttle step (Day 53 pattern) between calls |\n| Execution hangs then times out | Wrong URL or unreachable host on an HTTP Request node | The HTTP Request node's error output and configured URL | Correct the URL, confirm the target service is reachable, add a reasonable timeout |\n| `content.length > 0` check fails downstream | Malformed/empty AI response reached Validate AI Response | Validate AI Response node's input JSON | Confirmed caught here — routes to Malformed Response Error instead of corrupting downstream data |",
         "height": 360,
         "width": 560
       }

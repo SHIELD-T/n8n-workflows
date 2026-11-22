@@ -97,15 +97,15 @@
           "string": [
             {
               "name": "agent_id",
-              "value": "={{ $json.agent_id }}"
+              "value": "={{ $json.body.agent_id }}"
             },
             {
               "name": "quality_metric",
-              "value": "={{ $json.quality_metric }}"
+              "value": "={{ $json.body.quality_metric }}"
             },
             {
               "name": "quality_score",
-              "value": "={{ $json.quality_score }}"
+              "value": "={{ $json.body.quality_score }}"
             },
             {
               "name": "quality_timestamp",
@@ -113,7 +113,7 @@
             },
             {
               "name": "quality_notes",
-              "value": "={{ $json.quality_notes }}"
+              "value": "={{ $json.body.quality_notes }}"
             }
           ]
         },

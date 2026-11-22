@@ -103,7 +103,7 @@
           "conditions": [
             {
               "id": "template-type-condition",
-              "leftValue": "={{ $json.templateType }}",
+              "leftValue": "={{ $json.body.templateType }}",
               "rightValue": "lead-generation",
               "operator": {
                 "type": "string",
