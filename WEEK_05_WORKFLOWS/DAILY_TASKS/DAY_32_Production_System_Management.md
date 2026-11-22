@@ -17,7 +17,7 @@
 5. On the true (degraded) branch, add an **HTTP Request** node "Send Incident Alert" POSTing the full status detail to your webhook.site URL, and a **Set** node "Log Incident" recording a timestamped `incident_id`.
 6. Force a failure to prove the alert path works: temporarily change "Check External Dependency" to `https://httpstat.us/500`, then click **Execute Workflow**. Confirm the IF node's true branch fires and the incident alert lands in your webhook.site inbox.
 7. Revert the URL to `https://httpstat.us/200`, re-run, and confirm the IF node's false branch fires instead (`overall_health` stays `"healthy"`).
-8. Activate the workflow and let it run for 3 full cycles. Check Execution History shows 3 automatic runs, each completing in under 5 seconds (check the Duration column), then set the interval back to every 2 minutes if you'd changed it.
+8. Publish the workflow and let it run for 3 full cycles. Check Execution History shows 3 automatic runs, each completing in under 5 seconds (check the Duration column), then set the interval back to every 2 minutes if you'd changed it.
 
 **Stuck?** Import `WEEK_05_WORKFLOWS/EXAMPLES/maintenance_automation_system.json` (Menu → Import from File in n8n) — its multi-check-then-aggregate-then-alert pattern is the same shape, applied to maintenance tasks instead of live health checks.
 

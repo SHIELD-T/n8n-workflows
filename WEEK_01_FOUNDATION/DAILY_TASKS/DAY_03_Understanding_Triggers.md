@@ -15,7 +15,7 @@
 2. Build **Workflow 2 (Webhook):** Add a **Webhook** node, set HTTP Method to `POST` and Path to `test-webhook`. Click **Listen for Test Event** to activate the test URL.
 3. Open a terminal (or Postman) and send: `curl -X POST <your-test-url> -H "Content-Type: application/json" -d '{"name":"test"}'`.
 4. Confirm the payload `{"name":"test"}` appears in the Webhook node's output panel, then add a Set node after it that captures `received_data = {{ $json }}` and `processed_at = {{ $now }}`.
-5. Build **Workflow 3 (Schedule):** Add a **Schedule Trigger** node, set the interval to every 5 minutes. Add a Set node with `report_type`, `generated_at = {{ $now }}`, and `status = "Completed"`. Activate the workflow and wait for one execution to appear in Execution History (or temporarily set it to every 1 minute to see it fire faster, then reset).
+5. Build **Workflow 3 (Schedule):** Add a **Schedule Trigger** node, set the interval to every 5 minutes. Add a Set node with `report_type`, `generated_at = {{ $now }}`, and `status = "Completed"`. Click **Publish** (top-right of the canvas) and wait for one execution to appear in Execution History (or temporarily set it to every 1 minute to see it fire faster, then reset).
 6. For the Webhook workflow, test with at least 2 different HTTP methods or payloads (e.g., send a GET to the POST-only webhook and confirm it's rejected) to see how method restrictions behave.
 
 **Stuck?** Import `WEEK_01_FOUNDATION/EXAMPLES/webhook_processing_workflow.json` to see a complete webhook-based workflow, then compare its validation/response pattern to yours.
@@ -30,7 +30,7 @@ None — Manual, Webhook, and Schedule triggers all work without external servic
 - [ ] All three workflows show green (successful) executions
 
 ## 🐛 Common Pitfalls
-- **Webhook test URL vs. production URL:** The "Test URL" only works while you're actively listening (or the workflow is open in test mode) — you must **Activate** the workflow and use the production URL for it to respond outside the editor.
+- **Webhook test URL vs. production URL:** The "Test URL" only works while you're actively listening (or the workflow is open in test mode) — you must **Publish** the workflow and use the production URL for it to respond outside the editor.
 - **Wrong HTTP method:** If you configured the webhook for POST but curl defaults to GET, you'll get a 404. Always match `-X POST` in curl to the method set in the node.
 - **Schedule Trigger set too frequently:** A 1-minute interval is fine for testing but reset it to something reasonable (hourly/daily) before moving on — tight intervals can flood execution history and hosting resources.
 

@@ -18,7 +18,7 @@
 5. Add a **Slack** (or **Telegram**) node "Send Notification": connect your credential, set the channel/chat, Text = `{{ $json.notification_message }}`.
 6. Add a **Google Sheets** node "Log to Sheet": operation Append, pick your spreadsheet/sheet, map columns to `submission_id`, `processed_name`, `processed_email`, `processed_message`, `submitted_at`.
 7. Add a **Respond to Webhook** node returning `{{ { "status": "success", "submission_id": $json.submission_id } } }}`. On the IF node's false branch, add a second Respond to Webhook returning `{{ { "status": "error", "message": "Invalid form data" } } }}`.
-8. Activate the workflow. Test the full path:
+8. Publish the workflow. Test the full path:
    `curl -X POST <production-url> -H "Content-Type: application/json" -d '{"name":"Jane Doe","email":"jane@example.com","message":"Testing my automation"}'`
    Confirm: (a) curl gets back `{"status":"success",...}`, (b) a real message arrives in your Slack/Telegram, (c) a new row appears in your Google Sheet.
 9. Now test the failure path: `curl -X POST <production-url> -H "Content-Type: application/json" -d '{"name":"Jane Doe"}'` (missing email) and confirm you get back the error JSON with no notification sent and no sheet row created.

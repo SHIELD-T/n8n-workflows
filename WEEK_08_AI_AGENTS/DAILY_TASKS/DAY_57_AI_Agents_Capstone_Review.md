@@ -13,7 +13,7 @@ No dedicated video for today — this is the capstone review/build day closing o
 This is the heaviest build of Week 8 — a full capstone assembly, not a single new workflow.
 
 1. Choose (or build) 3 AI workflows that together form a coherent system (e.g. an intake workflow, a processing/decision workflow, and a reporting workflow) — reuse your Day 50 "deployment candidate" plus at least one workflow from Days 51-56.
-2. Deploy all 3 to production (Active toggle on, production webhook URLs confirmed via curl, same as Day 51) and chain them: workflow 1's success output triggers workflow 2 via an HTTP Request node calling workflow 2's production webhook, and workflow 2 triggers workflow 3 the same way.
+2. Deploy all 3 to production (Published, production webhook URLs confirmed via curl, same as Day 51) and chain them: workflow 1's success output triggers workflow 2 via an HTTP Request node calling workflow 2's production webhook, and workflow 2 triggers workflow 3 the same way.
 3. Add the maintenance layer from Day 52: one Schedule Trigger workflow that health-checks all 3 production webhooks and logs status for each.
 4. Add the scaling layer from Day 53: confirm at least one workflow in the chain uses Split In Batches + throttling for list/array input, and test the full chain with a batch of 10+ items end-to-end.
 5. Add the documentation layer from Day 54: Sticky Notes on all 3 workflows plus one written system-level doc describing how they connect (a simple diagram or ordered list is fine).

@@ -162,10 +162,10 @@ Build an "Advanced Optimization Engine" that only runs its optimization steps wh
 #### **Evening (1 hour):**
 - Share: Your finished platform and the bottleneck you found
 - Get: Feedback from the community
-- Plan: Deactivate every leftover Schedule Trigger before starting Week 6
+- Plan: Unpublish every leftover Schedule Trigger workflow before starting Week 6
 
 #### **📝 DAILY TASK:**
-Extend the orchestrator to chain all 4 Week 5 workflows, identify the platform's slowest node, export the finished workflow, and deactivate every Schedule Trigger built this week.
+Extend the orchestrator to chain all 4 Week 5 workflows, identify the platform's slowest node, export the finished workflow, and unpublish every Schedule Trigger workflow built this week.
 
 ---
 
@@ -302,7 +302,7 @@ Extend the orchestrator to chain all 4 Week 5 workflows, identify the platform's
 - [ ] Built a "Production Health Control Center" and proved both the alert path (forced 500) and the healthy path fire correctly (Day 32)
 - [ ] Chained the Day 29-31 workflows into a "Production Orchestrator" via Execute Workflow nodes, with linked sub-executions visible in Execution History (Day 33)
 - [ ] Built an "Advanced Optimization Engine" that only runs its optimization steps below a computed score threshold, with a measured Duration difference (Day 34)
-- [ ] Extended the orchestrator to chain all 4 Week 5 workflows, identified the platform's slowest node, exported the workflow, and deactivated every leftover Schedule Trigger (Day 35)
+- [ ] Extended the orchestrator to chain all 4 Week 5 workflows, identified the platform's slowest node, exported the workflow, and unpublished every leftover Schedule Trigger workflow (Day 35)
 - [ ] Joined the course community and posted at least one update
 
 ---

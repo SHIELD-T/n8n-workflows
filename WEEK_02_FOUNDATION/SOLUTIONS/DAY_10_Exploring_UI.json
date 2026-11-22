@@ -18,7 +18,7 @@
         -300
       ],
       "parameters": {
-        "content": "## Day 10 Solution: Exploring n8n UI\n\nThree workflows for practicing Execution History, Pin Data, and tags: (1) Manual -> IF -> two-step Set chain (pin {\"data\":\"hello world automation\"} on the trigger), (2) Webhook -> IF route by type, (3) Schedule every 1 minute (deactivate after testing).\n\nCredentials needed: None needed to test the logic.\n\nSee DAILY_TASKS/DAY_10_Exploring_UI.md.",
+        "content": "## Day 10 Solution: Exploring n8n UI\n\nThree workflows for practicing Execution History, Pin Data, and tags: (1) Manual -> IF -> two-step Set chain (pin {\"data\":\"hello world automation\"} on the trigger), (2) Webhook -> IF route by type, (3) Schedule every 1 minute (unpublish after testing).\n\nCredentials needed: None needed to test the logic.\n\nSee DAILY_TASKS/DAY_10_Exploring_UI.md.",
         "height": 280,
         "width": 480
       }

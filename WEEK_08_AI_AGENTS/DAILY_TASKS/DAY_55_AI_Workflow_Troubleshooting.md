@@ -32,7 +32,7 @@ Your AI provider credential (you'll temporarily invalidate/restore it as part of
 ## 🐛 Common Pitfalls
 - **Fixing the symptom without confirming the root cause:** restoring a workflow to green without reading the actual error can mask a recurring issue that resurfaces at higher volume.
 - **Only re-testing the happy path after a fix:** always re-trigger with the exact payload that caused the original failure, not a fresh clean one.
-- **Generic troubleshooting rows** ("check your API key") instead of specific ones ("if the error contains `invalid_api_key`, regenerate it in your provider's dashboard, update the n8n credential, then reactivate the workflow").
+- **Generic troubleshooting rows** ("check your API key") instead of specific ones ("if the error contains `invalid_api_key`, regenerate it in your provider's dashboard, update the n8n credential, then send one test request to confirm").
 
 ## 🏭 Industry Track Application
 Add one industry-specific failure scenario to your troubleshooting guide that a real client in your track would actually hit (e.g. a Fintech workflow receiving a currency your fraud-check logic doesn't handle, or a HealthTech workflow receiving a malformed date-of-birth) and write the fix.

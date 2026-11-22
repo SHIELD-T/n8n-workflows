@@ -16,7 +16,7 @@
 3. Add **IF** node "Check Severity": String `{{ $json.severity }}` equals `HIGH`.
 4. On true, add **Set** node "High Severity Alert" with `alert_message` = `🚨 HIGH SEVERITY ERROR: {{ $json.error_message }}`. On false, add **Set** node "Medium Severity Alert" with `alert_message` = `⚠️ MEDIUM SEVERITY: {{ $json.error_message }}`.
 5. Connect both branches into a single **Set** node "Log Error" recording `logged_at` = `{{ $now }}`.
-6. Activate the workflow and test both severities:
+6. Publish the workflow and test both severities:
    `curl -X POST <production-url> -H "Content-Type: application/json" -d '{"error_type":"API_TIMEOUT","error_message":"Connection timed out","severity":"HIGH"}'`
    `curl -X POST <production-url> -H "Content-Type: application/json" -d '{"error_type":"VALIDATION","error_message":"Missing field","severity":"LOW"}'`
    Confirm in Execution History that the HIGH call ran through "High Severity Alert" and the other through "Medium Severity Alert".

@@ -65,7 +65,7 @@ Deploy 1 AI workflow to production with a verified curl test and a written rollb
 #### **Afternoon (1 hour):**
 - Hands-on: Build a Schedule Trigger workflow that health-checks your Day 51 deployment
 - Practice: Healthy/Unhealthy branching and maintenance logging
-- Experiment: Deactivate the target workflow and confirm the check catches it
+- Experiment: Unpublish the target workflow and confirm the check catches it
 
 #### **Evening (30 minutes):**
 - Share: Your maintenance workflow and log entry

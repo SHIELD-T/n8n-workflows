@@ -31,7 +31,7 @@ None — today's three workflows use only Manual/Webhook/Schedule triggers and b
 
 ## 🐛 Common Pitfalls
 - **IF node false branch left dead-ending:** n8n won't error on an unconnected branch, but nothing happens on that path — for real workflows, always terminate both branches (e.g., an error-response node on false).
-- **Confusing "workflow saved" with "workflow active":** A saved but inactive workflow won't respond to real webhook calls outside the editor — check the Active toggle in the top-right if a webhook you expect to fire doesn't.
+- **Confusing "saved" with "published":** n8n saves your edits automatically as a draft, but real webhook calls and schedules only run the last **published** version. If a webhook you expect to fire doesn't, or it runs your old logic, check the **Publish** button in the top-right: if it says there are unpublished changes, click it.
 - **Execution History filter hiding runs:** By default it may filter to "this workflow only" — if you can't find a run, check you're looking at the correct workflow's execution list, not the global one.
 
 ## 🏭 Industry Track Application

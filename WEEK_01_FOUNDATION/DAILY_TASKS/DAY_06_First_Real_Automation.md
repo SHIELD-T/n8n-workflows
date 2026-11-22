@@ -12,7 +12,7 @@
 
 ## 🛠️ Build It: Step-by-Step
 1. Create a Google Form with fields: Name, Email, Message. In Google Forms, go to the responses spreadsheet (or use a form-to-webhook connector/Apps Script) so submissions can reach an external URL — alternatively, simulate this by sending curl requests shaped like form data if you don't want to configure Google Apps Script today.
-2. In n8n, create a new workflow with a **Webhook** node (path: `google-form-submission`, method POST). Activate the workflow and copy the production webhook URL.
+2. In n8n, create a new workflow with a **Webhook** node (path: `google-form-submission`, method POST). Click **Publish** and copy the production webhook URL.
 3. Message **@BotFather** on Telegram, run `/newbot`, follow the prompts, and copy the bot token it gives you.
 4. In n8n, add **Telegram** credentials (Credentials → New → Telegram API) and paste your bot token. Start a chat with your new bot in Telegram first (bots can't message you until you've messaged them).
 5. Add a Set node after the Webhook to normalize incoming fields: `name = {{ $json.name || 'Anonymous' }}`, `email = {{ $json.email || 'No email provided' }}`, `message = {{ $json.message || 'No message provided' }}`, `submitted_at = {{ $now }}`.
@@ -35,7 +35,7 @@
 ## 🐛 Common Pitfalls
 - **Telegram "chat not found" error:** You must message your bot first before it can message you back — Telegram bots cannot initiate conversations.
 - **Markdown parse errors:** Special characters like `_`, `*`, or `[` in user-submitted text can break Telegram's Markdown parser mid-message — for production use, consider Parse Mode "HTML" or escaping special characters.
-- **Webhook not firing outside the editor:** Remember to click the workflow's Active toggle — the "Listen for Test Event" URL only works while the editor is open and listening.
+- **Webhook not firing outside the editor:** Remember to click **Publish** (and publish again after every change) — the "Listen for Test Event" URL only works while the editor is open and listening.
 
 ## 🏭 Industry Track Application
 Adapt the notification content for your industry track — e.g., Fintech: a payment-received Telegram alert with amount/sender/timestamp; HealthTech: an appointment-booked alert; EdTech: a course-enrollment alert. Swap the Google Form's fields and the Set-node formatting to match, then re-test end-to-end with a curl payload shaped like your industry's real data.

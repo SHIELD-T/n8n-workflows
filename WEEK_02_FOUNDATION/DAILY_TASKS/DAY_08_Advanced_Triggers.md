@@ -35,7 +35,7 @@ None — Webhook, Schedule Trigger, Manual Trigger, IF, and Set nodes require no
 
 ## 🐛 Common Pitfalls
 - **Testing before listening:** n8n only captures test webhook calls while it's actively listening (after clicking Execute Workflow) — a curl sent before that shows nothing.
-- **Test URL vs Production URL:** the Test URL only works while the editor is open and listening; the workflow must be Activated (toggle top-right) before its Production URL responds.
+- **Test URL vs Production URL:** the Test URL only works while the editor is open and listening; the workflow must be Published (**Publish** button, top-right) before its Production URL responds.
 - **Assumed OR logic:** IF node conditions default to AND — if you want "either field empty routes to error," check each condition individually rather than assuming it.
 
 ## 🏭 Industry Track Application

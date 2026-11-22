@@ -182,7 +182,7 @@
       "typeVersion": 1,
       "position": [1240, 620],
       "parameters": {
-        "content": "## Deployment Record\n\n- **Production URL:** https://<your-n8n-domain>/webhook/ai-agent-deploy (redact before sharing)\n- **Activation date:** fill in when you toggle Active\n- **Rollback plan:** flip the Active toggle off (top-right of the canvas) to immediately stop the production webhook from accepting new requests; the workflow and its history stay intact for later re-activation.",
+        "content": "## Deployment Record\n\n- **Production URL:** https://<your-n8n-domain>/webhook/ai-agent-deploy (redact before sharing)\n- **Publish date and version:** fill in when you click Publish\n- **Rollback plan:** click the arrow next to **Publish** (top-right of the canvas) and choose Unpublish to immediately stop the production webhook from accepting new requests; the workflow and its history stay intact for later re-publishing.",
         "height": 200,
         "width": 340
       }

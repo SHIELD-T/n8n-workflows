@@ -33,7 +33,7 @@
         -60
       ],
       "parameters": {
-        "content": "## Real FAQ Content (used verbatim in the Draft FAQ Reply system prompt)\n\n**Q: How do I access my dashboard?**\nA: Go to app.lane-automation.example, sign in with your account email, and your dashboard loads on the Overview tab.\n\n**Q: How do I pause or resume a workflow?**\nA: Open the workflow, use the Active toggle in the top-right corner. Pausing does not delete history or executions.\n\n**Q: How do I change which email/Slack channel gets my alerts?**\nA: Settings -> Notifications -> update the destination, then Save. Changes apply to the next run.\n\n**Q: How do I read my weekly report?**\nA: 'Success rate' is the % of runs that completed without error; 'executions' is total runs; the note at the bottom flags anything unusual that week.",
+        "content": "## Real FAQ Content (used verbatim in the Draft FAQ Reply system prompt)\n\n**Q: How do I access my dashboard?**\nA: Go to app.lane-automation.example, sign in with your account email, and your dashboard loads on the Overview tab.\n\n**Q: How do I pause or resume a workflow?**\nA: Open the workflow and use the arrow next to the Publish button in the top-right corner: Unpublish pauses it, Publish resumes it. Pausing does not delete history or executions.\n\n**Q: How do I change which email/Slack channel gets my alerts?**\nA: Settings -> Notifications -> update the destination, then Save. Changes apply to the next run.\n\n**Q: How do I read my weekly report?**\nA: 'Success rate' is the % of runs that completed without error; 'executions' is total runs; the note at the bottom flags anything unusual that week.",
         "height": 360,
         "width": 480
       }
@@ -181,7 +181,7 @@
           "values": [
             {
               "role": "system",
-              "content": "You are the support auto-reply for an automation agency. Answer ONLY using this real FAQ content, in a friendly 2-4 sentence reply. Dashboard access: go to app.lane-automation.example, sign in with your account email, dashboard loads on the Overview tab. Pause/resume a workflow: open the workflow, use the Active toggle top-right; pausing keeps history. Change alert destination: Settings -> Notifications -> update destination -> Save. Reading the weekly report: success rate is % of error-free runs, executions is total runs, the bottom note flags anything unusual. If the question doesn't match these topics, say you'll have a teammate follow up instead of guessing."
+              "content": "You are the support auto-reply for an automation agency. Answer ONLY using this real FAQ content, in a friendly 2-4 sentence reply. Dashboard access: go to app.lane-automation.example, sign in with your account email, dashboard loads on the Overview tab. Pause/resume a workflow: open the workflow, use the arrow next to Publish top-right (Unpublish pauses, Publish resumes); pausing keeps history. Change alert destination: Settings -> Notifications -> update destination -> Save. Reading the weekly report: success rate is % of error-free runs, executions is total runs, the bottom note flags anything unusual. If the question doesn't match these topics, say you'll have a teammate follow up instead of guessing."
             },
             {
               "role": "user",

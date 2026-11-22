@@ -16,7 +16,7 @@
 4. From a terminal, hit the production URL with curl: `curl -X POST https://<your-n8n-domain>/webhook/<path> -H "Content-Type: application/json" -d '{"scenario":"test deployment"}'` — confirm you get a 200 response with the JSON payload you expect, not a "workflow not active" error.
 5. Add a **Respond to Webhook** node at the end of the success path returning `{"status":"deployed","workflow":"<name>"}`, and a separate one on the error path returning Response Code 500 with a distinct error message.
 6. Re-run the curl test with a deliberately malformed body (e.g. missing a required field) and confirm the error path triggers, returning your 500 response instead of a silent hang or a false 200.
-7. Write a short deployment record: production URL (redact before sharing publicly), activation date, and rollback plan — exactly how you'd deactivate or revert this workflow if it misbehaves.
+7. Write a short deployment record: production URL (redact before sharing publicly), publish date and version name, and rollback plan — exactly how you'd unpublish this workflow or restore an earlier version from its version history if it misbehaves.
 
 **Stuck?** Import `WEEK_08_AI_AGENTS/EXAMPLES/ai_workflow_orchestration_system.json` (Menu → Import from File in n8n) to see a working webhook-triggered, multi-step production workflow with success/error branches, then compare it to what you built.
 
@@ -24,13 +24,13 @@
 Your AI provider credential (OpenAI or similar) already configured from Week 7. No new credentials unless your workflow calls a new external API.
 
 ## ✅ Definition of Done
-- [ ] Workflow is toggled Active and the **production** webhook URL responds with 200 to a valid curl POST
+- [ ] Workflow is Published and the **production** webhook URL responds with 200 to a valid curl POST
 - [ ] A deliberately malformed request triggers the error path and returns a non-200 status
 - [ ] The workflow has an explicit Respond to Webhook node, not the default auto-response
-- [ ] You have a written rollback note describing how to deactivate/revert the deployed workflow
+- [ ] You have a written rollback note describing how to unpublish or roll back the deployed workflow
 
 ## 🐛 Common Pitfalls
-- **Testing against the Test URL:** it only listens while the editor is open and the workflow isn't active — always copy the Production URL after activating.
+- **Testing against the Test URL:** it only listens while the editor is open and listening for a test event — always copy the Production URL after publishing.
 - **No explicit response node:** n8n's default webhook response can return before your AI node finishes, so callers get an empty or premature response.
 - **No error branch:** an unhandled exception in an HTTP Request or AI node just shows as a failed execution in the n8n UI, with zero signal to whatever called the webhook.
 

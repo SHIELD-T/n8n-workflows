@@ -17,7 +17,7 @@
 5. On the true branch, add an **HTTP Request** node "Backup Current Production" — POST to your webhook.site URL with JSON body `{{ { deployment_id: $json.deployment_id, backup_type: "pre_deployment" } }}`.
 6. Add a second **HTTP Request** node "Health Check Green Environment" — GET your webhook.site URL — then an **IF** node checking the returned HTTP status code is `200`. Wire the false branch to a **Set** node "Execute Rollback" logging a `rollback_reason`.
 7. On the true branch, add an **HTTP Request** node "Switch Traffic to Green" (POST to webhook.site) followed by a **Set** node "Deployment Success" computing `deployment_duration` = `{{ $now.diff($json.start_time, 'milliseconds') }}`.
-8. Activate the workflow and test it: `curl -X POST http://localhost:5678/webhook/deploy-production -H "Content-Type: application/json" -d '{"version":"1.0.3"}'`. Open your webhook.site inbox and confirm the backup, health check, and traffic-switch requests arrived in order with the same `deployment_id` — then check n8n's Execution History shows the run as Success with the IF node's true branch taken.
+8. Publish the workflow and test it: `curl -X POST http://localhost:5678/webhook/deploy-production -H "Content-Type: application/json" -d '{"version":"1.0.3"}'`. Open your webhook.site inbox and confirm the backup, health check, and traffic-switch requests arrived in order with the same `deployment_id` — then check n8n's Execution History shows the run as Success with the IF node's true branch taken.
 
 **Stuck?** Import `WEEK_05_WORKFLOWS/EXAMPLES/production_deployment_workflow.json` (Menu → Import from File in n8n) to see a working version, then compare it to what you built — note it uses the same webhook/Set/IF/HTTP Request pattern, just pointed at real (fictional) API URLs instead of webhook.site.
 
@@ -31,8 +31,8 @@ None — no external services today. A free webhook.site capture URL (no signup 
 - [ ] You've tested the failure path by pointing the health check at `https://httpstat.us/500` instead of webhook.site and confirmed the rollback branch fires
 
 ## 🐛 Common Pitfalls
-- **Workflow saved but not activated:** the webhook only listens when the workflow's Active toggle is on — a saved-but-inactive workflow silently returns 404 on trigger.
-- **Test URL vs. Production URL confusion:** n8n gives you a different webhook URL for manual testing (Test URL, shown while editing) versus the live Production URL (used once activated) — curling the wrong one is the #1 reason "nothing happens."
+- **Workflow saved but not published:** the production webhook only listens once the workflow is published — an unpublished workflow silently returns 404, and a published one keeps running its *old* version until you publish your latest edits.
+- **Test URL vs. Production URL confusion:** n8n gives you a different webhook URL for manual testing (Test URL, shown while editing) versus the live Production URL (used once published) — curling the wrong one is the #1 reason "nothing happens."
 - **Type mismatch in the IF node:** an HTTP status code can arrive as a string `"200"` instead of a number — use the IF node's Number condition type, not String, or comparisons silently fail.
 
 ## 🏭 Industry Track Application
