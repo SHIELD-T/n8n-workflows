@@ -95,15 +95,15 @@
           "string": [
             {
               "name": "automation_type",
-              "value": "={{ $json.automation_type }}"
+              "value": "={{ $json.body.automation_type }}"
             },
             {
               "name": "tool_count",
-              "value": "={{ $json.tool_count }}"
+              "value": "={{ $json.body.tool_count }}"
             },
             {
               "name": "automation_complexity",
-              "value": "={{ $json.automation_complexity }}"
+              "value": "={{ $json.body.automation_complexity }}"
             },
             {
               "name": "automation_timestamp",
@@ -111,7 +111,7 @@
             },
             {
               "name": "automation_notes",
-              "value": "={{ $json.automation_notes }}"
+              "value": "={{ $json.body.automation_notes }}"
             }
           ]
         },

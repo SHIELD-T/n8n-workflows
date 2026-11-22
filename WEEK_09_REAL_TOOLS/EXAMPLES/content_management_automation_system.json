@@ -101,27 +101,27 @@
             },
             {
               "name": "content_type",
-              "value": "={{ $json.content_type }}"
+              "value": "={{ $json.body.content_type }}"
             },
             {
               "name": "title",
-              "value": "={{ $json.title }}"
+              "value": "={{ $json.body.title }}"
             },
             {
               "name": "description",
-              "value": "={{ $json.description }}"
+              "value": "={{ $json.body.description }}"
             },
             {
               "name": "author",
-              "value": "={{ $json.author }}"
+              "value": "={{ $json.body.author }}"
             },
             {
               "name": "category",
-              "value": "={{ $json.category }}"
+              "value": "={{ $json.body.category }}"
             },
             {
               "name": "tags",
-              "value": "={{ $json.tags }}"
+              "value": "={{ $json.body.tags }}"
             }
           ]
         }

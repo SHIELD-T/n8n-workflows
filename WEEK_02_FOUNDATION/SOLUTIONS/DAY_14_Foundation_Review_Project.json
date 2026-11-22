@@ -50,7 +50,7 @@
         "conditions": {
           "string": [
             {
-              "value1": "={{ $json.data }}",
+              "value1": "={{ $json.body.data }}",
               "operation": "isNotEmpty"
             }
           ]
@@ -71,7 +71,7 @@
           "assignments": [
             {
               "name": "processed_data",
-              "value": "={{ $json.data.trim().toUpperCase() }}"
+              "value": "={{ $json.body.data.trim().toUpperCase() }}"
             },
             {
               "name": "processed_at",

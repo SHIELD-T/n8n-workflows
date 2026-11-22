@@ -99,15 +99,15 @@
           "assignments": [
             {
               "name": "name",
-              "value": "={{ $json.name }}"
+              "value": "={{ $json.body.name }}"
             },
             {
               "name": "email",
-              "value": "={{ $json.email }}"
+              "value": "={{ $json.body.email }}"
             },
             {
               "name": "message",
-              "value": "={{ $json.message }}"
+              "value": "={{ $json.body.message }}"
             }
           ]
         }
@@ -258,15 +258,15 @@
           "assignments": [
             {
               "name": "name",
-              "value": "={{ $json.form_response.answers.find(a => a.field.id === 'name_field_id')?.text }}"
+              "value": "={{ $json.body.form_response.answers.find(a => a.field.id === 'name_field_id')?.text }}"
             },
             {
               "name": "email",
-              "value": "={{ $json.form_response.answers.find(a => a.field.id === 'email_field_id')?.email }}"
+              "value": "={{ $json.body.form_response.answers.find(a => a.field.id === 'email_field_id')?.email }}"
             },
             {
               "name": "message",
-              "value": "={{ $json.form_response.answers.find(a => a.field.id === 'message_field_id')?.text }}"
+              "value": "={{ $json.body.form_response.answers.find(a => a.field.id === 'message_field_id')?.text }}"
             }
           ]
         }

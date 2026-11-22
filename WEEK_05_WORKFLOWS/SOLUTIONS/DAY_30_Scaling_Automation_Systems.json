@@ -55,7 +55,7 @@
             },
             {
               "name": "current_load",
-              "value": "={{ $json.load_percentage }}"
+              "value": "={{ $json.body.load_percentage }}"
             }
           ]
         }

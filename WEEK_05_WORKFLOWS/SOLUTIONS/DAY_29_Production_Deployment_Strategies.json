@@ -59,7 +59,7 @@
             },
             {
               "name": "workflow_version",
-              "value": "={{ $json.version }}"
+              "value": "={{ $json.body.version }}"
             },
             {
               "name": "start_time",

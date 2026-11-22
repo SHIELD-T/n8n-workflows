@@ -100,7 +100,7 @@
           "conditions": [
             {
               "id": "portfolio-status-check",
-              "leftValue": "={{ $json.portfolio_status }}",
+              "leftValue": "={{ $json.body.portfolio_status }}",
               "rightValue": "finalized",
               "operator": {
                 "type": "string",

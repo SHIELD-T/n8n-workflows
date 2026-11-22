@@ -100,7 +100,7 @@
           "conditions": [
             {
               "id": "project-status-check",
-              "leftValue": "={{ $json.project_status }}",
+              "leftValue": "={{ $json.body.project_status }}",
               "rightValue": "complete",
               "operator": {
                 "type": "string",

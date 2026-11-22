@@ -102,7 +102,7 @@
           "conditions": [
             {
               "id": "legacy-type-condition",
-              "leftValue": "={{ $json.legacyType }}",
+              "leftValue": "={{ $json.body.legacyType }}",
               "rightValue": "knowledge",
               "operator": {
                 "type": "string",

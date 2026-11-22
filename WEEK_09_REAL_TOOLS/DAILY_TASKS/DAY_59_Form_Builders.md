@@ -17,7 +17,7 @@ Pay attention to: how the webhook trigger node captures the raw payload, and the
 2. In n8n, add a **Webhook** trigger node, copy its production URL, and paste it into Tally's integration/webhook settings.
 3. Add a **Set** node after the webhook to pull out `name`, `email`, and `message` from the Tally payload into clean top-level fields.
 4. Add an **IF** node that checks `email` and `name` are not empty — this is your validation gate before anything downstream runs.
-5. Repeat steps 1-3 for Typeform: create a form, connect its webhook to a second n8n workflow, and extract the answers using `$json.form_response.answers.find(...)` expressions (Typeform nests answers by field ID, unlike Tally).
+5. Repeat steps 1-3 for Typeform: create a form, connect its webhook to a second n8n workflow, and extract the answers using `$json.body.form_response.answers.find(...)` expressions (Typeform nests answers by field ID, unlike Tally).
 6. Wire both workflows to send a confirmation email (Gmail node) on successful validation, and log the submission to an Airtable base.
 7. Submit a real test entry to each form and confirm the email arrives and the Airtable row appears — don't just check for a "success" in n8n's execution log.
 8. Import `real_tools_integration_monitor.json` from this week's `EXAMPLES/` folder to see a more complete pattern for monitoring integration health, and compare it to what you just built.

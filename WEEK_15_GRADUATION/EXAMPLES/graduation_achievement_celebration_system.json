@@ -95,15 +95,15 @@
           "string": [
             {
               "name": "student_id",
-              "value": "={{ $json.student_id }}"
+              "value": "={{ $json.body.student_id }}"
             },
             {
               "name": "achievement_type",
-              "value": "={{ $json.achievement_type }}"
+              "value": "={{ $json.body.achievement_type }}"
             },
             {
               "name": "achievement_level",
-              "value": "={{ $json.achievement_level }}"
+              "value": "={{ $json.body.achievement_level }}"
             },
             {
               "name": "celebration_timestamp",
@@ -111,7 +111,7 @@
             },
             {
               "name": "celebration_notes",
-              "value": "={{ $json.celebration_notes }}"
+              "value": "={{ $json.body.celebration_notes }}"
             }
           ]
         },

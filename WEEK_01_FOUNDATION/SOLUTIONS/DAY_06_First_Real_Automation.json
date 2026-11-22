@@ -51,15 +51,15 @@
           "assignments": [
             {
               "name": "name",
-              "value": "={{ $json.name || 'Anonymous' }}"
+              "value": "={{ $json.body.name || 'Anonymous' }}"
             },
             {
               "name": "email",
-              "value": "={{ $json.email || 'No email provided' }}"
+              "value": "={{ $json.body.email || 'No email provided' }}"
             },
             {
               "name": "message",
-              "value": "={{ $json.message || 'No message provided' }}"
+              "value": "={{ $json.body.message || 'No message provided' }}"
             },
             {
               "name": "submitted_at",

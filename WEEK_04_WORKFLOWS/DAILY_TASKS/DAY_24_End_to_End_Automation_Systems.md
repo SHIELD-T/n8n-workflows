@@ -12,7 +12,7 @@
 
 ## 🛠️ Build It: Step-by-Step
 1. Webhook node "Multi-Source Lead Capture": path `lead-capture`, method POST.
-2. IF node "Lead Data Validation": both `{{ $json.email }}` and `{{ $json.name }}` not empty.
+2. IF node "Lead Data Validation": both `{{ $json.body.email }}` and `{{ $json.body.name }}` not empty.
 3. Set node "Enrich Lead Data": `lead_id` = `{{ $now.format('YYYYMMDDHHmmss') + Math.floor(Math.random() * 1000) }}`, `lead_score` = `{{ Math.floor(Math.random() * 100) }}`, `priority` = `{{ $json.lead_score > 70 ? 'high' : $json.lead_score > 40 ? 'medium' : 'low' }}`.
 4. Since you likely don't have a real CRM API, simulate the duplicate check with a Set node: `is_duplicate` = `{{ $json.email === 'duplicate@test.com' }}` — this lets you test both branches deterministically without a real backend.
 5. IF node "Process New Lead": false branch of `is_duplicate` → "Create CRM Lead" (a mocked HTTP Request to `https://jsonplaceholder.typicode.com/posts` standing in for the real CRM write — it accepts any POST body and echoes it back); true branch → "Handle Duplicate Lead" Set node.

@@ -68,19 +68,19 @@
             {
               "id": "88310326-0e71-4877-a0ee-5d1dcf372503",
               "name": "client_id",
-              "value": "={{ $json.client_id }}",
+              "value": "={{ $json.body.client_id }}",
               "type": "string"
             },
             {
               "id": "765dcb19-0f69-4b57-8b58-bab27ca33724",
               "name": "stage",
-              "value": "={{ $json.stage }}",
+              "value": "={{ $json.body.stage }}",
               "type": "string"
             },
             {
               "id": "9adec2fb-9fe3-47d4-8551-f08b8a135b3e",
               "name": "timestamp",
-              "value": "={{ $json.timestamp || $now.toISO() }}",
+              "value": "={{ $json.body.timestamp || $now.toISO() }}",
               "type": "string"
             }
           ]

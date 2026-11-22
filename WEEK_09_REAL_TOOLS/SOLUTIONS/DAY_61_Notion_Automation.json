@@ -90,7 +90,7 @@
             },
             {
               "role": "user",
-              "content": "={{ $json.raw_text }}"
+              "content": "={{ $json.body.raw_text }}"
             }
           ]
         },
@@ -211,18 +211,18 @@
         "operation": "update",
         "pageId": {
           "__rl": true,
-          "value": "={{ $json.pageId }}",
+          "value": "={{ $json.body.pageId }}",
           "mode": "id"
         },
         "propertiesUi": {
           "propertyValues": [
             {
               "key": "Status|select",
-              "selectValue": "={{ $json.status || 'Updated' }}"
+              "selectValue": "={{ $json.body.status || 'Updated' }}"
             },
             {
               "key": "Description|rich_text",
-              "textValue": "={{ $json.description }}"
+              "textValue": "={{ $json.body.description }}"
             }
           ]
         }
@@ -278,7 +278,7 @@
             },
             {
               "role": "user",
-              "content": "={{ $json.brief }}"
+              "content": "={{ $json.body.brief }}"
             }
           ]
         },

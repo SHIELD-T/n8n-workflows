@@ -126,11 +126,11 @@
             },
             {
               "name": "source_workflow",
-              "value": "={{ $json.source_workflow || 'template_workflow' }}"
+              "value": "={{ $json.body.source_workflow || 'template_workflow' }}"
             },
             {
               "name": "target_workflow",
-              "value": "={{ $json.target_workflow || 'cloned_workflow_' + $now.format('YYYYMMDDHHmmss') }}"
+              "value": "={{ $json.body.target_workflow || 'cloned_workflow_' + $now.format('YYYYMMDDHHmmss') }}"
             },
             {
               "name": "clone_type",

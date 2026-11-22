@@ -42,7 +42,7 @@
           "conditions": [
             {
               "id": "cond-user-message-notempty",
-              "leftValue": "={{ $json.user_message }}",
+              "leftValue": "={{ $json.body.user_message }}",
               "rightValue": "",
               "operator": {
                 "type": "string",
@@ -103,7 +103,7 @@
             },
             {
               "role": "user",
-              "content": "={{ $json.user_message }}"
+              "content": "={{ $json.body.user_message }}"
             }
           ]
         },

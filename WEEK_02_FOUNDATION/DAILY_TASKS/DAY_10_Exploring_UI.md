@@ -14,7 +14,7 @@
 1. Create Workflow 1: **Manual Trigger** → **IF** "Input Validation" (String: `{{ $json.data }}` is not empty) → **Set** "Step 1: Data Cleaning" (`cleaned_data` = `{{ $json.data.trim().toLowerCase() }}`) → **Set** "Step 2: Data Processing" (`processed_data` = `{{ $json.cleaned_data.split(' ').length }}`). Add the tag "week2-day10" via workflow settings.
 2. Execute it with no input — it should fail the IF check. Open Execution History and confirm you can see the failed run.
 3. Use **Pin Data** on the Manual Trigger to pin `{"data": "hello world automation"}`, then re-execute and confirm `processed_data` = 3.
-4. Create Workflow 2: **Webhook Trigger** (path `conditional-processing`) → **IF** "Route by Type" (String: `{{ $json.type }}` equals `urgent`) → two separate **Set** nodes ("Urgent Processing" sets `priority=HIGH`, "Normal Processing" sets `priority=NORMAL`). Publish it.
+4. Create Workflow 2: **Webhook Trigger** (path `conditional-processing`) → **IF** "Route by Type" (String: `{{ $json.body.type }}` equals `urgent`) → two separate **Set** nodes ("Urgent Processing" sets `priority=HIGH`, "Normal Processing" sets `priority=NORMAL`). Publish it.
 5. Test both branches:
    `curl -X POST <production-webhook-url> -H "Content-Type: application/json" -d '{"type":"urgent"}'`
    `curl -X POST <production-webhook-url> -H "Content-Type: application/json" -d '{"type":"other"}'`

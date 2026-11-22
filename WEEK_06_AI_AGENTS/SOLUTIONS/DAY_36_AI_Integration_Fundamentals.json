@@ -54,11 +54,11 @@
           "assignments": [
             {
               "name": "input_text",
-              "value": "={{ $json.text }}"
+              "value": "={{ $json.body.text }}"
             },
             {
               "name": "processing_mode",
-              "value": "={{ $json.mode || 'summarize' }}"
+              "value": "={{ $json.body.mode || 'summarize' }}"
             }
           ]
         }

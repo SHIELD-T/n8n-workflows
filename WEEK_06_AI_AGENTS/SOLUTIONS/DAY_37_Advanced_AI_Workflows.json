@@ -55,11 +55,11 @@
           "assignments": [
             {
               "name": "input_text",
-              "value": "={{ $json.text }}"
+              "value": "={{ $json.body.text }}"
             },
             {
               "name": "text_complexity",
-              "value": "={{ $json.complexity || 'high' }}"
+              "value": "={{ $json.body.complexity || 'high' }}"
             }
           ]
         }

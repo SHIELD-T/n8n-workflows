@@ -55,7 +55,7 @@
             },
             {
               "name": "records",
-              "value": "={{ $json.records || [{id:1,name:'Valid A',email:'a@test.com'},{id:2,name:'',email:''},{id:3,name:'Valid B',email:'b@test.com'}] }}"
+              "value": "={{ $json.body.records || [{id:1,name:'Valid A',email:'a@test.com'},{id:2,name:'',email:''},{id:3,name:'Valid B',email:'b@test.com'}] }}"
             }
           ]
         }

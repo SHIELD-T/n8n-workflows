@@ -51,19 +51,19 @@
           "assignments": [
             {
               "name": "error_type",
-              "value": "={{ $json.error_type || 'UNKNOWN' }}"
+              "value": "={{ $json.body.error_type || 'UNKNOWN' }}"
             },
             {
               "name": "error_message",
-              "value": "={{ $json.error_message || 'No error message provided' }}"
+              "value": "={{ $json.body.error_message || 'No error message provided' }}"
             },
             {
               "name": "error_code",
-              "value": "={{ $json.error_code || 'N/A' }}"
+              "value": "={{ $json.body.error_code || 'N/A' }}"
             },
             {
               "name": "severity",
-              "value": "={{ $json.severity || 'MEDIUM' }}"
+              "value": "={{ $json.body.severity || 'MEDIUM' }}"
             }
           ]
         }

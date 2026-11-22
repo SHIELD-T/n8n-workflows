@@ -102,7 +102,7 @@
           "conditions": [
             {
               "id": "content-type-condition",
-              "leftValue": "={{ $json.contentType }}",
+              "leftValue": "={{ $json.body.contentType }}",
               "rightValue": "educational",
               "operator": {
                 "type": "string",

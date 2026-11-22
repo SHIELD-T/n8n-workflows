@@ -11,7 +11,7 @@
 
 ## 🛠️ Build It: Step-by-Step
 1. Audit every AI workflow you built this week (Days 51-55) for hardcoded secrets: check each node's parameters for a literal API key, token, or password string instead of a Credential reference — move any you find into n8n's Credentials vault.
-2. Add input validation to your Day 51 deployment workflow: an IF node right after the webhook trigger checking required fields exist and have sane types (e.g. `{{ $json.scenario !== undefined && typeof $json.scenario === 'string' }}`), routing invalid input to an immediate 400-style error response instead of letting it flow into the AI node.
+2. Add input validation to your Day 51 deployment workflow: an IF node right after the webhook trigger checking required fields exist and have sane types (e.g. `{{ $json.body.scenario !== undefined && typeof $json.body.scenario === 'string' }}`), routing invalid input to an immediate 400-style error response instead of letting it flow into the AI node.
 3. Standardize error handling across at least 3 workflows: give each the same error response shape (`{"status":"error","message":"...","workflow":"..."}`), matching the pattern used in the "Handle ... Error" Set nodes across the EXAMPLES files.
 4. Add basic logging to your deployed workflow: a Set/HTTP node that records every execution (success or failure) with a timestamp to a Google Sheet, Airtable, or webhook.site endpoint, so you have an audit trail independent of n8n's own execution history.
 5. Review your AI node's system prompts across all workflows for prompt-injection resistance — confirm user-supplied text is clearly delimited from instructions (e.g. wrapped in a labeled block) rather than concatenated directly into the system prompt.

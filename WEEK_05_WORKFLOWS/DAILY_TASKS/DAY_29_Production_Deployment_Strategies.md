@@ -12,7 +12,7 @@
 ## 🛠️ Build It: Step-by-Step
 1. Get a free capture URL from [webhook.site](https://webhook.site) and copy your unique URL — it stands in for the external backup/monitoring services this pattern would normally call.
 2. Create a new workflow named **Production Deployment Pipeline**. Add a **Webhook** node named "Deployment Trigger" — HTTP Method `POST`, Path `deploy-production`.
-3. Add a **Set** node "Initialize Deployment" with fields: `deployment_id` = `{{ $now.format('yyyyMMddHHmmss') }}`, `deployment_type` = `blue_green`, `workflow_version` = `{{ $json.version }}`, `start_time` = `{{ $now }}`.
+3. Add a **Set** node "Initialize Deployment" with fields: `deployment_id` = `{{ $now.format('yyyyMMddHHmmss') }}`, `deployment_type` = `blue_green`, `workflow_version` = `{{ $json.body.version }}`, `start_time` = `{{ $now }}`.
 4. Add an **IF** node "Validate Deployment Request" checking `deployment_type` equals `blue_green` AND `workflow_version` is not empty.
 5. On the true branch, add an **HTTP Request** node "Backup Current Production" — POST to your webhook.site URL with JSON body `{{ { deployment_id: $json.deployment_id, backup_type: "pre_deployment" } }}`.
 6. Add a second **HTTP Request** node "Health Check Green Environment" — GET your webhook.site URL — then an **IF** node checking the returned HTTP status code is `200`. Wire the false branch to a **Set** node "Execute Rollback" logging a `rollback_reason`.

@@ -55,15 +55,15 @@
           "assignments": [
             {
               "name": "input_text",
-              "value": "={{ $json.text }}"
+              "value": "={{ $json.body.text }}"
             },
             {
               "name": "input_image_url",
-              "value": "={{ $json.image_url }}"
+              "value": "={{ $json.body.image_url }}"
             },
             {
               "name": "input_audio_url",
-              "value": "={{ $json.audio_url }}"
+              "value": "={{ $json.body.audio_url }}"
             }
           ]
         }

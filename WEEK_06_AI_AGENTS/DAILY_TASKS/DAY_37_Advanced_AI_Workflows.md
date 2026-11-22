@@ -11,7 +11,7 @@
 - [n8n Tutorial for Beginners 2025: Build AI Agents Step-by-Step](https://www.youtube.com/watch?v=PfdnYe2690E) — this file's own topic (multi-model workflows) isn't the video's main subject, so specifically watch for the segment on calling external AI APIs with the HTTP Request node — that's the technique you'll reuse for the non-OpenAI model below.
 
 ## 🛠️ Build It: Step-by-Step
-1. Build: **Webhook** trigger (Path `advanced-ai-workflow`) → **Set** node with `input_text` = `{{ $json.text }}` and `text_complexity` = `{{ $json.complexity || 'high' }}`.
+1. Build: **Webhook** trigger (Path `advanced-ai-workflow`) → **Set** node with `input_text` = `{{ $json.body.text }}` and `text_complexity` = `{{ $json.body.complexity || 'high' }}`.
 2. Add an **If** node: condition `{{ $json.text_complexity }}` equals `high`.
 3. On the **true** branch, add an **OpenAI** node (model `gpt-4o`, Temperature 0.3, Max Tokens 1000) with system prompt "You are an advanced AI assistant specializing in complex text analysis, summarization, and insights generation."
 4. In parallel (branching off the same Set node, not chained after OpenAI), add an **HTTP Request** node calling Anthropic directly: Method POST, URL `https://api.anthropic.com/v1/messages`, Header `x-api-key` = your Anthropic key (create an HTTP Header Auth or Generic credential), Header `anthropic-version` = `2023-06-01`, JSON body `{"model": "claude-3-5-sonnet-20241022", "max_tokens": 1000, "messages": [{"role": "user", "content": "={{ $json.input_text }}"}]}`.

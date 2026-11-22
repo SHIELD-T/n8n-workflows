@@ -95,15 +95,15 @@
           "string": [
             {
               "name": "workflow_id",
-              "value": "={{ $json.workflow_id }}"
+              "value": "={{ $json.body.workflow_id }}"
             },
             {
               "name": "scaling_action",
-              "value": "={{ $json.scaling_action }}"
+              "value": "={{ $json.body.scaling_action }}"
             },
             {
               "name": "scaling_factor",
-              "value": "={{ $json.scaling_factor }}"
+              "value": "={{ $json.body.scaling_factor }}"
             },
             {
               "name": "scaling_timestamp",
@@ -111,7 +111,7 @@
             },
             {
               "name": "scaling_notes",
-              "value": "={{ $json.scaling_notes }}"
+              "value": "={{ $json.body.scaling_notes }}"
             }
           ]
         },

@@ -101,27 +101,27 @@
             },
             {
               "name": "customer_name",
-              "value": "={{ $json.customer_name }}"
+              "value": "={{ $json.body.customer_name }}"
             },
             {
               "name": "customer_email",
-              "value": "={{ $json.customer_email }}"
+              "value": "={{ $json.body.customer_email }}"
             },
             {
               "name": "subject",
-              "value": "={{ $json.subject }}"
+              "value": "={{ $json.body.subject }}"
             },
             {
               "name": "description",
-              "value": "={{ $json.description }}"
+              "value": "={{ $json.body.description }}"
             },
             {
               "name": "priority",
-              "value": "={{ $json.priority || 'medium' }}"
+              "value": "={{ $json.body.priority || 'medium' }}"
             },
             {
               "name": "category",
-              "value": "={{ $json.category || 'general' }}"
+              "value": "={{ $json.body.category || 'general' }}"
             }
           ]
         }

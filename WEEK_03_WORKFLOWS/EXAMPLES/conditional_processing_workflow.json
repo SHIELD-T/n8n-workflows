@@ -96,7 +96,7 @@
         "conditions": {
           "string": [
             {
-              "value1": "={{ $json.source }}",
+              "value1": "={{ $json.body.source }}",
               "operation": "equal",
               "value2": "form"
             }
@@ -122,15 +122,15 @@
             },
             {
               "name": "processed_name",
-              "value": "={{ $json.name.trim() }}"
+              "value": "={{ $json.body.name.trim() }}"
             },
             {
               "name": "processed_email",
-              "value": "={{ $json.email.toLowerCase().trim() }}"
+              "value": "={{ $json.body.email.toLowerCase().trim() }}"
             },
             {
               "name": "processed_message",
-              "value": "={{ $json.message || 'No message' }}"
+              "value": "={{ $json.body.message || 'No message' }}"
             },
             {
               "name": "processed_at",
@@ -158,11 +158,11 @@
             },
             {
               "name": "processed_id",
-              "value": "={{ $json.id }}"
+              "value": "={{ $json.body.id }}"
             },
             {
               "name": "processed_title",
-              "value": "={{ $json.title }}"
+              "value": "={{ $json.body.title }}"
             },
             {
               "name": "processed_body",

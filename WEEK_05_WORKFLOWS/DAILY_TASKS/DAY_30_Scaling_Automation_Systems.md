@@ -11,7 +11,7 @@
 
 ## 🛠️ Build It: Step-by-Step
 1. Create a workflow named **Scalable Load Handler**. Add a **Webhook** node "Load Balancer Trigger" — HTTP Method `POST`, Path `scalable-processing`.
-2. Add a **Set** node "Initialize Scaling System" with `request_id` = `{{ $now.format('yyyyMMddHHmmss') }}`, `current_load` = `{{ $json.load_percentage }}`.
+2. Add a **Set** node "Initialize Scaling System" with `request_id` = `{{ $now.format('yyyyMMddHHmmss') }}`, `current_load` = `{{ $json.body.load_percentage }}`.
 3. Add a **Switch** node "Scaling Decision" with three routing rules: `current_load > 80` → output "scale_up", `current_load < 20` → output "scale_down", fallback output → "maintain".
 4. Wire "scale_up" to an **HTTP Request** node "Scale Up Instances" (POST to a [webhook.site](https://webhook.site) URL noting the target instance count); wire "scale_down" to a similar "Scale Down Instances" node; wire "maintain" straight through.
 5. Add a **Code** node "Process With Caching" that uses `$getWorkflowStaticData('global')` to keep a real running counter (e.g. `staticData.requestsServed = (staticData.requestsServed || 0) + 1`) — this demonstrates actual state persisted across executions, not just a fake per-run field.

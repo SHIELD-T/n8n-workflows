@@ -50,11 +50,11 @@
         "conditions": {
           "string": [
             {
-              "value1": "={{ $json.name }}",
+              "value1": "={{ $json.body.name }}",
               "operation": "isNotEmpty"
             },
             {
-              "value1": "={{ $json.email }}",
+              "value1": "={{ $json.body.email }}",
               "operation": "isNotEmpty"
             }
           ]
@@ -79,15 +79,15 @@
             },
             {
               "name": "processed_name",
-              "value": "={{ $json.name.trim() }}"
+              "value": "={{ $json.body.name.trim() }}"
             },
             {
               "name": "processed_email",
-              "value": "={{ $json.email.toLowerCase().trim() }}"
+              "value": "={{ $json.body.email.toLowerCase().trim() }}"
             },
             {
               "name": "processed_message",
-              "value": "={{ $json.message || 'No message provided' }}"
+              "value": "={{ $json.body.message || 'No message provided' }}"
             },
             {
               "name": "submitted_at",

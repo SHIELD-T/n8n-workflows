@@ -11,7 +11,7 @@
 - [How to Build AI Automations & Agents (Step-by-Step)](https://www.youtube.com/watch?v=bKX8t3QA04s) — watch for any section on evaluating and iterating on AI outputs; note how the presenter decides a response needs improvement.
 
 ## 🛠️ Build It: Step-by-Step
-1. Build: **Webhook** trigger (Path `ai-feedback`) → **Set** node with `user_rating` = `{{ $json.rating }}` (1-5), `response_time_ms` = `{{ $json.response_time_ms }}`, `had_error` = `{{ $json.had_error || false }}`.
+1. Build: **Webhook** trigger (Path `ai-feedback`) → **Set** node with `user_rating` = `{{ $json.body.rating }}` (1-5), `response_time_ms` = `{{ $json.body.response_time_ms }}`, `had_error` = `{{ $json.body.had_error || false }}`.
 2. Add an **If** node: `{{ $json.user_rating }}` is greater than or equal to `4` → true branch = "good", false branch = "needs improvement."
 3. On the false branch, add a **Google Sheets** node (Append row) writing to a "Feedback Log" sheet with columns `timestamp`, `rating`, `response_time_ms`, `had_error`, `original_prompt`. (No Google account handy? Use an **Edit Fields (Set)** node + **Read/Write Files from Disk** to append to a local CSV instead.)
 4. Add an **AI Agent** or **OpenAI** node named "Generate Improvement Note": system prompt "You analyze a poor AI response's feedback and produce one specific, actionable instruction to add to the system prompt next time." Feed it the rating, response time, and error flag.

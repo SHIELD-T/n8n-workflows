@@ -96,15 +96,15 @@
           "string": [
             {
               "name": "strategy_type",
-              "value": "={{ $json.strategy_type }}"
+              "value": "={{ $json.body.strategy_type }}"
             },
             {
               "name": "strategy_priority",
-              "value": "={{ $json.strategy_priority }}"
+              "value": "={{ $json.body.strategy_priority }}"
             },
             {
               "name": "strategy_status",
-              "value": "={{ $json.strategy_status }}"
+              "value": "={{ $json.body.strategy_status }}"
             },
             {
               "name": "strategy_timestamp",
@@ -112,7 +112,7 @@
             },
             {
               "name": "strategy_notes",
-              "value": "={{ $json.strategy_notes }}"
+              "value": "={{ $json.body.strategy_notes }}"
             }
           ]
         },

@@ -158,19 +158,19 @@
             },
             {
               "name": "sync_type",
-              "value": "={{ $json.sync_type || 'bidirectional' }}"
+              "value": "={{ $json.body.sync_type || 'bidirectional' }}"
             },
             {
               "name": "source_system",
-              "value": "={{ $json.source_system }}"
+              "value": "={{ $json.body.source_system }}"
             },
             {
               "name": "target_systems",
-              "value": "={{ $json.target_systems || ['system_b', 'system_c'] }}"
+              "value": "={{ $json.body.target_systems || ['system_b', 'system_c'] }}"
             },
             {
               "name": "sync_data",
-              "value": "={{ $json.sync_data }}"
+              "value": "={{ $json.body.sync_data }}"
             }
           ]
         }

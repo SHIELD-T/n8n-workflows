@@ -12,7 +12,7 @@
 
 ## 🛠️ Build It: Step-by-Step
 1. Build **Workflow 1 (Data Processing):** Manual Trigger → Set node (`name`, `email`, `timestamp`) → second Set node that transforms them: `processed_name = {{ $json.name.toUpperCase() }}`, `processed_email = {{ $json.email.toLowerCase() }}`. Execute and verify the transformation in the output.
-2. Build **Workflow 2 (Webhook + Branch):** Webhook node → **IF** node checking `{{ $json.name }}` `is not empty` → true branch: Set node with `status = "processed"`; false branch left unconnected for now. Add a **Respond to Webhook** node after the true branch returning `{{ {"status":"success","data":$json} }}`.
+2. Build **Workflow 2 (Webhook + Branch):** Webhook node → **IF** node checking `{{ $json.body.name }}` `is not empty` (a Webhook puts the JSON you send under `body`, so `$json.name` on its own would be empty) → true branch: Set node with `status = "processed"`; false branch left unconnected for now. Add a **Respond to Webhook** node after the true branch returning `{{ {"status":"success","data":$json} }}`.
 3. Test Workflow 2 twice with curl: once with a payload containing `name`, once without it — confirm the IF node routes each execution down the correct branch (check the node's color/highlight after execution).
 4. Build **Workflow 3 (Scheduled Report):** Schedule Trigger (every 1 hour) → Set node generating `report_id = {{ $now.format('YYYY-MM-DD-HH') }}` and `status = "Completed"`.
 5. Intentionally break Workflow 1: change `$json.name` to `$json.namee` (typo) in the Set node, execute, and read the red error banner — note exactly what error message n8n shows.

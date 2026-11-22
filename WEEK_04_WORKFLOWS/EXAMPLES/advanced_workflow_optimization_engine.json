@@ -96,15 +96,15 @@
           "string": [
             {
               "name": "workflow_id",
-              "value": "={{ $json.workflow_id }}"
+              "value": "={{ $json.body.workflow_id }}"
             },
             {
               "name": "optimization_type",
-              "value": "={{ $json.optimization_type }}"
+              "value": "={{ $json.body.optimization_type }}"
             },
             {
               "name": "improvement_percentage",
-              "value": "={{ $json.improvement_percentage }}"
+              "value": "={{ $json.body.improvement_percentage }}"
             },
             {
               "name": "optimization_timestamp",
@@ -112,7 +112,7 @@
             },
             {
               "name": "optimization_notes",
-              "value": "={{ $json.optimization_notes }}"
+              "value": "={{ $json.body.optimization_notes }}"
             }
           ]
         },

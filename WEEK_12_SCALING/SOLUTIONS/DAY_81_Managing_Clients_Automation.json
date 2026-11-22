@@ -74,7 +74,7 @@
             },
             {
               "role": "user",
-              "content": "={{ 'Subject: ' + $json.subject + '\\n\\nBody: ' + $json.body }}"
+              "content": "={{ 'Subject: ' + $json.body.subject + '\\n\\nBody: ' + $json.body }}"
             }
           ]
         },

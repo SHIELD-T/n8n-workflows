@@ -55,7 +55,7 @@
           "conditions": [
             {
               "id": "cond-scenario-notempty",
-              "leftValue": "={{ $json.scenario }}",
+              "leftValue": "={{ $json.body.scenario }}",
               "rightValue": "",
               "operator": {
                 "type": "string",
@@ -80,7 +80,7 @@
           "assignments": [
             {
               "name": "scenario",
-              "value": "={{ $json.scenario }}"
+              "value": "={{ $json.body.scenario }}"
             },
             {
               "name": "processing_status",

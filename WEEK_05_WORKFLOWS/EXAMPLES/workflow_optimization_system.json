@@ -232,7 +232,7 @@
             },
             {
               "name": "workflow_name",
-              "value": "={{ $json.workflow_name || 'sample_workflow' }}"
+              "value": "={{ $json.body.workflow_name || 'sample_workflow' }}"
             },
             {
               "name": "optimization_type",

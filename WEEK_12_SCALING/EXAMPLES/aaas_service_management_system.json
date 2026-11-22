@@ -102,7 +102,7 @@
           "conditions": [
             {
               "id": "service-tier-condition",
-              "leftValue": "={{ $json.serviceTier }}",
+              "leftValue": "={{ $json.body.serviceTier }}",
               "rightValue": "enterprise",
               "operator": {
                 "type": "string",

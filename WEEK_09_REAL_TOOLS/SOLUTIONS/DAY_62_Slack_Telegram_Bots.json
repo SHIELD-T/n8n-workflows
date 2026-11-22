@@ -83,19 +83,19 @@
           "assignments": [
             {
               "name": "user_id",
-              "value": "={{ $json.event?.user }}"
+              "value": "={{ $json.body.event?.user }}"
             },
             {
               "name": "channel_id",
-              "value": "={{ $json.event?.channel }}"
+              "value": "={{ $json.body.event?.channel }}"
             },
             {
               "name": "message_text",
-              "value": "={{ $json.event?.text }}"
+              "value": "={{ $json.body.event?.text }}"
             },
             {
               "name": "thread_ts",
-              "value": "={{ $json.event?.ts }}"
+              "value": "={{ $json.body.event?.ts }}"
             }
           ]
         }

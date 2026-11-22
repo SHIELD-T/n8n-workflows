@@ -12,8 +12,8 @@
 
 ## 🛠️ Build It: Step-by-Step
 1. New workflow. Add a **Webhook Trigger** (path `foundation-project`) — this is your primary input path for today's capstone.
-2. Add **IF** node "Data Validation": String `{{ $json.data }}` is not empty.
-3. On true, add **Set** node "Process Data": `processed_data` = `{{ $json.data.trim().toUpperCase() }}`, `processed_at` = `{{ $now }}`, `status` = `processed`.
+2. Add **IF** node "Data Validation": String `{{ $json.body.data }}` is not empty.
+3. On true, add **Set** node "Process Data": `processed_data` = `{{ $json.body.data.trim().toUpperCase() }}`, `processed_at` = `{{ $now }}`, `status` = `processed`.
 4. Add **HTTP Request** node "API Integration": Method `POST`, URL `https://jsonplaceholder.typicode.com/posts` (stand-in external service), Body Content Type JSON, Body = `{{ { "data": $json.processed_data, "timestamp": $json.processed_at } } }}`, Options → Retry On Fail = 3 tries.
 5. Add **IF** node "Handle API Errors": Number `{{ $json.statusCode }}` ≥ 400. (jsonplaceholder always returns 201, so to actually exercise this branch, temporarily point the URL at `https://httpbin.org/status/500`, confirm the branch fires, then switch it back.)
 6. On the error branch, add **Set** node "Log Error" (`error_type`, `error_message`, `error_time`) feeding a **Slack/Telegram** node "Send Error Notification". On the success branch, add **Set** node "Log Success" feeding a **Slack/Telegram** node "Send Success Notification".

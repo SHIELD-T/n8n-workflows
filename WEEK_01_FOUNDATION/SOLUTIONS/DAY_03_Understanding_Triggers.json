@@ -85,7 +85,7 @@
         "conditions": {
           "string": [
             {
-              "value1": "={{ $json.name }}",
+              "value1": "={{ $json.body.name }}",
               "operation": "isNotEmpty"
             }
           ]

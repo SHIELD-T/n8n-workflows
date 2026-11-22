@@ -55,19 +55,19 @@
           "assignments": [
             {
               "name": "user_rating",
-              "value": "={{ Number($json.rating) }}"
+              "value": "={{ Number($json.body.rating) }}"
             },
             {
               "name": "response_time_ms",
-              "value": "={{ $json.response_time_ms }}"
+              "value": "={{ $json.body.response_time_ms }}"
             },
             {
               "name": "had_error",
-              "value": "={{ $json.had_error || false }}"
+              "value": "={{ $json.body.had_error || false }}"
             },
             {
               "name": "original_prompt",
-              "value": "={{ $json.original_prompt || $json.text || 'N/A' }}"
+              "value": "={{ $json.body.original_prompt || $json.body.text || 'N/A' }}"
             }
           ]
         }

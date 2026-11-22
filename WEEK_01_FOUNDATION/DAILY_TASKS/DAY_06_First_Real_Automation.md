@@ -15,7 +15,7 @@
 2. In n8n, create a new workflow with a **Webhook** node (path: `google-form-submission`, method POST). Click **Publish** and copy the production webhook URL.
 3. Message **@BotFather** on Telegram, run `/newbot`, follow the prompts, and copy the bot token it gives you.
 4. In n8n, add **Telegram** credentials (Credentials → New → Telegram API) and paste your bot token. Start a chat with your new bot in Telegram first (bots can't message you until you've messaged them).
-5. Add a Set node after the Webhook to normalize incoming fields: `name = {{ $json.name || 'Anonymous' }}`, `email = {{ $json.email || 'No email provided' }}`, `message = {{ $json.message || 'No message provided' }}`, `submitted_at = {{ $now }}`.
+5. Add a Set node after the Webhook to normalize incoming fields: `name = {{ $json.body.name || 'Anonymous' }}`, `email = {{ $json.body.email || 'No email provided' }}`, `message = {{ $json.body.message || 'No message provided' }}`, `submitted_at = {{ $now }}`.
 6. Add a second Set node that builds the Telegram text: `telegram_message` combining name/email/message/timestamp with line breaks (`\n`) and Markdown bold (`*Name:*`).
 7. Add a **Telegram** node (operation: Send Message), select your credential, set Chat ID (your own chat ID from the bot conversation), Text = `{{ $json.telegram_message }}`, Parse Mode = Markdown.
 8. Test end-to-end: send a curl POST to your webhook URL with `name`, `email`, `message` fields and confirm the formatted message arrives in your Telegram chat within a few seconds.
